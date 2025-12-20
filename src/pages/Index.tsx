@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, MapPin, Users, Target, Medal, Building2, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Trophy, MapPin, Users, Target, Medal, Building2, CheckCircle2, Upload } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [tables, setTables] = useState<string[]>([]);
@@ -102,8 +104,14 @@ const Index = () => {
                 ))}
               </div>
             )}
-            <p className="mt-6 text-muted-foreground">
-              <strong>{tables.length} of 14 tables</strong> confirmed. The database schema is ready for CSV data import.
+            <p className="mt-6 text-muted-foreground flex items-center justify-between">
+              <span><strong>{tables.length} of 14 tables</strong> confirmed. The database schema is ready for CSV data import.</span>
+              <Button asChild variant="outline">
+                <Link to="/import">
+                  <Upload className="mr-2 h-4 w-4" />
+                  Import Data
+                </Link>
+              </Button>
             </p>
           </CardContent>
         </Card>
