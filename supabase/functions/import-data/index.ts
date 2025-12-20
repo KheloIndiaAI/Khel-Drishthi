@@ -28,10 +28,22 @@ serve(async (req) => {
     let errors: string[] = [];
 
     if (table === "centre_sport_links") {
-      for (let i = 0; i < data.length; i += batchSize) {
-        const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          bridge_id: row.bridge_id,
+      // First, deduplicate bridge_ids across entire dataset
+      const bridgeIdCount: Record<string, number> = {};
+      const deduplicatedData = data.map((row: any) => {
+        const originalBridgeId = row.bridge_id;
+        if (bridgeIdCount[originalBridgeId] === undefined) {
+          bridgeIdCount[originalBridgeId] = 0;
+        }
+        bridgeIdCount[originalBridgeId]++;
+        
+        // If this is a duplicate, create a unique bridge_id with suffix
+        const uniqueBridgeId = bridgeIdCount[originalBridgeId] > 1 
+          ? `${originalBridgeId}_${bridgeIdCount[originalBridgeId]}`
+          : originalBridgeId;
+        
+        return {
+          bridge_id: uniqueBridgeId,
           centre_id: row.centre_id,
           centre_type: row.centre_type || null,
           state: row.state || null,
@@ -43,11 +55,21 @@ serve(async (req) => {
           source_dataset: row.source_dataset || null,
           programme_subtype: row.programme_subtype || null,
           operational_status: row.operational_status || null,
-        }));
+        };
+      });
+
+      // Log duplicates found
+      const duplicates = Object.entries(bridgeIdCount).filter(([_, count]) => count > 1);
+      if (duplicates.length > 0) {
+        console.log(`Found ${duplicates.length} duplicate bridge_ids, auto-fixed with suffixes`);
+      }
+
+      for (let i = 0; i < deduplicatedData.length; i += batchSize) {
+        const batch = deduplicatedData.slice(i, i + batchSize);
         
         // Use upsert to handle duplicates - update if bridge_id exists
         const { error } = await supabase.from("centre_sport_links").upsert(
-          mappedData,
+          batch,
           { onConflict: 'bridge_id', ignoreDuplicates: false }
         );
         if (error) {
