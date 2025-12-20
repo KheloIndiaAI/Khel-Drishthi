@@ -15,7 +15,6 @@ import {
   History, 
   FileText,
   Medal,
-  Users,
   MapPin
 } from "lucide-react";
 
@@ -48,9 +47,10 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !!sportId,
   });
 
-  // Fetch centres for this sport
+  // Fetch centres for this sport from centre_sport_links
   const { data: centres } = useQuery({
     queryKey: ["sport-centres", sportId],
     queryFn: async () => {
@@ -61,6 +61,35 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !!sportId,
+  });
+
+  // Fetch NCOE capacity for this sport
+  const { data: ncoeCapacity } = useQuery({
+    queryKey: ["sport-ncoe", sportId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("ncoe_capacity")
+        .select("*")
+        .eq("sport_id", sportId);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!sportId,
+  });
+
+  // Fetch STC capacity for this sport
+  const { data: stcCapacity } = useQuery({
+    queryKey: ["sport-stc", sportId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stc_capacity")
+        .select("*")
+        .eq("sport_id", sportId);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!sportId,
   });
 
   // Fetch medals for this sport
@@ -75,6 +104,7 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !!sportId,
   });
 
   // Fetch notes for this sport
@@ -119,8 +149,13 @@ const SportDetail = () => {
     );
   }
 
+  // Calculate actual counts from data
   const la28Events = events?.filter((e) => e.present_la28 === 1) || [];
   const ag2026Events = events?.filter((e) => e.present_ag2026 === 1) || [];
+  const ncoeCentreCount = ncoeCapacity?.length || 0;
+  const stcCentreCount = stcCapacity?.length || 0;
+  const totalAthletes = (ncoeCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0) + 
+                        (stcCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0);
 
   return (
     <DashboardLayout>
@@ -185,7 +220,7 @@ const SportDetail = () => {
                 <CardTitle className="text-sm text-muted-foreground">LA28 Events</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-display">{sport.la28_events || 0}</p>
+                <p className="text-3xl font-display">{la28Events.length}</p>
               </CardContent>
             </Card>
             <Card>
@@ -193,7 +228,7 @@ const SportDetail = () => {
                 <CardTitle className="text-sm text-muted-foreground">AG2026 Events</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-display">{sport.ag2026_events || 0}</p>
+                <p className="text-3xl font-display">{ag2026Events.length}</p>
               </CardContent>
             </Card>
             <Card>
@@ -201,7 +236,7 @@ const SportDetail = () => {
                 <CardTitle className="text-sm text-muted-foreground">NCOE Centres</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-display">{sport.ncoe_centres || 0}</p>
+                <p className="text-3xl font-display">{ncoeCentreCount}</p>
               </CardContent>
             </Card>
             <Card>
@@ -209,7 +244,7 @@ const SportDetail = () => {
                 <CardTitle className="text-sm text-muted-foreground">STC Centres</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-display">{sport.stc_centres || 0}</p>
+                <p className="text-3xl font-display">{stcCentreCount}</p>
               </CardContent>
             </Card>
           </div>
@@ -234,7 +269,7 @@ const SportDetail = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Athletes</p>
-                  <p className="font-medium">{sport.existing_athletes || 0}</p>
+                  <p className="font-medium">{totalAthletes.toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
@@ -292,32 +327,107 @@ const SportDetail = () => {
 
         {/* Infrastructure Tab */}
         <TabsContent value="infrastructure" className="space-y-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {centres?.map((link) => (
-              <Card key={link.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Building2 className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{link.centres?.centre_name || link.centre_id}</p>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {link.centres?.state || link.state}
-                      </p>
-                      <Badge variant="outline" className="mt-2 text-xs">
-                        {link.centre_type || link.centres?.centre_type}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            {(!centres || centres.length === 0) && (
-              <p className="text-muted-foreground col-span-full">No training centres found</p>
-            )}
-          </div>
+          {/* NCOE Centres */}
+          {ncoeCapacity && ncoeCapacity.length > 0 && (
+            <div>
+              <h3 className="font-display text-xl mb-4 flex items-center gap-2">
+                <Badge className="bg-saffron text-white">NCOE</Badge>
+                {ncoeCapacity.length} Centres
+              </h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {ncoeCapacity.map((centre) => (
+                  <Card key={centre.id}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-saffron/10">
+                          <Building2 className="h-5 w-5 text-saffron" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{centre.centre_name}</p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {centre.state}
+                          </p>
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            Athletes: {centre.ex_grand_total || 0} / {centre.san_grand_total || 0}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* STC Centres */}
+          {stcCapacity && stcCapacity.length > 0 && (
+            <div>
+              <h3 className="font-display text-xl mb-4 flex items-center gap-2">
+                <Badge className="bg-india-green text-white">STC</Badge>
+                {stcCapacity.length} Centres
+              </h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {stcCapacity.map((centre) => (
+                  <Card key={centre.id}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-india-green/10">
+                          <Building2 className="h-5 w-5 text-india-green" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{centre.centre_name}</p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {centre.state}
+                          </p>
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            Athletes: {centre.ex_grand_total || 0} / {centre.san_grand_total || 0}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Legacy centre_sport_links */}
+          {centres && centres.length > 0 && (
+            <div>
+              <h3 className="font-display text-xl mb-4">Other Training Centres</h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {centres.map((link) => (
+                  <Card key={link.id}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <Building2 className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{link.centres?.centre_name || link.centre_id}</p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {link.centres?.state || link.state}
+                          </p>
+                          <Badge variant="outline" className="mt-2 text-xs">
+                            {link.centre_type || link.centres?.centre_type}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(!ncoeCapacity || ncoeCapacity.length === 0) && 
+           (!stcCapacity || stcCapacity.length === 0) && 
+           (!centres || centres.length === 0) && (
+            <p className="text-muted-foreground">No training centres found for this sport</p>
+          )}
         </TabsContent>
 
         {/* History Tab */}

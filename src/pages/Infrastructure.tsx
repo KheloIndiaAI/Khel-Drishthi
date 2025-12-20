@@ -14,7 +14,8 @@ import {
   Grid3X3, 
   List, 
   Search,
-  Filter
+  Filter,
+  Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ const Infrastructure = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [centreTypeFilter, setCentreTypeFilter] = useState<string>("all");
   const [stateFilter, setStateFilter] = useState<string>("all");
+  const [sportFilter, setSportFilter] = useState<string>("all");
 
   // Fetch centres
   const { data: centres, isLoading } = useQuery({
@@ -50,9 +52,26 @@ const Infrastructure = () => {
     },
   });
 
+  // Fetch centre-sport links for sport filter
+  const { data: centreSportLinks } = useQuery({
+    queryKey: ["centre-sport-links"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("centre_sport_links")
+        .select("centre_id, sport_id");
+      if (error) throw error;
+      return data;
+    },
+  });
+
   // Get unique centre types and states
-  const centreTypes = [...new Set(centres?.map((c) => c.centre_type) || [])];
+  const centreTypes = [...new Set(centres?.map((c) => c.centre_type) || [])].sort();
   const states = [...new Set(centres?.map((c) => c.state) || [])].sort();
+
+  // Get centre IDs for selected sport
+  const sportCentreIds = sportFilter !== "all" && centreSportLinks
+    ? new Set(centreSportLinks.filter(l => l.sport_id === sportFilter).map(l => l.centre_id))
+    : null;
 
   // Filter centres
   const filteredCentres = centres?.filter((centre) => {
@@ -61,7 +80,8 @@ const Infrastructure = () => {
       centre.district?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = centreTypeFilter === "all" || centre.centre_type === centreTypeFilter;
     const matchesState = stateFilter === "all" || centre.state === stateFilter;
-    return matchesSearch && matchesType && matchesState;
+    const matchesSport = !sportCentreIds || sportCentreIds.has(centre.centre_id);
+    return matchesSearch && matchesType && matchesState && matchesSport;
   }) || [];
 
   const centreTypeColors: Record<string, string> = {
@@ -70,6 +90,15 @@ const Infrastructure = () => {
     KISCE: "bg-india-navy text-white",
     KIC: "bg-purple-600 text-white",
   };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setCentreTypeFilter("all");
+    setStateFilter("all");
+    setSportFilter("all");
+  };
+
+  const hasActiveFilters = searchTerm || centreTypeFilter !== "all" || stateFilter !== "all" || sportFilter !== "all";
 
   return (
     <DashboardLayout>
@@ -82,58 +111,81 @@ const Infrastructure = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search centres..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+      <div className="space-y-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search centres..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          
+          <div className="flex gap-1">
+            <Button
+              variant={viewMode === "grid" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("grid")}
+            >
+              <Grid3X3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-        
-        <Select value={centreTypeFilter} onValueChange={setCentreTypeFilter}>
-          <SelectTrigger className="w-full md:w-48">
-            <Filter className="h-4 w-4 mr-2" />
-            <SelectValue placeholder="Centre Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            {centreTypes.map((type) => (
-              <SelectItem key={type} value={type}>{type}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
 
-        <Select value={stateFilter} onValueChange={setStateFilter}>
-          <SelectTrigger className="w-full md:w-48">
-            <MapPin className="h-4 w-4 mr-2" />
-            <SelectValue placeholder="State" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All States</SelectItem>
-            {states.map((state) => (
-              <SelectItem key={state} value={state}>{state}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Select value={centreTypeFilter} onValueChange={setCentreTypeFilter}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Centre Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              {centreTypes.map((type) => (
+                <SelectItem key={type} value={type}>{type}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        <div className="flex gap-1">
-          <Button
-            variant={viewMode === "grid" ? "default" : "outline"}
-            size="icon"
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid3X3 className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "list" ? "default" : "outline"}
-            size="icon"
-            onClick={() => setViewMode("list")}
-          >
-            <List className="h-4 w-4" />
-          </Button>
+          <Select value={stateFilter} onValueChange={setStateFilter}>
+            <SelectTrigger className="w-full sm:w-48">
+              <MapPin className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="State" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All States</SelectItem>
+              {states.map((state) => (
+                <SelectItem key={state} value={state}>{state}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={sportFilter} onValueChange={setSportFilter}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Target className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Sport" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sports</SelectItem>
+              {sports?.map((sport) => (
+                <SelectItem key={sport.sport_id} value={sport.sport_id}>{sport.sport_name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {hasActiveFilters && (
+            <Button variant="outline" onClick={clearFilters}>
+              Clear Filters
+            </Button>
+          )}
         </div>
       </div>
 
