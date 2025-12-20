@@ -7,7 +7,7 @@ import Home from "./pages/Home";
 import SportDetail from "./pages/SportDetail";
 import Infrastructure from "./pages/Infrastructure";
 import Capacity from "./pages/Capacity";
-import History from "./pages/History";
+import Medals from "./pages/Medals";
 import Admin from "./pages/Admin";
 import ImportData from "./pages/ImportData";
 import NotFound from "./pages/NotFound";
@@ -25,7 +25,8 @@ const App = () => (
           <Route path="/sport/:sportId" element={<SportDetail />} />
           <Route path="/infrastructure" element={<Infrastructure />} />
           <Route path="/capacity" element={<Capacity />} />
-          <Route path="/history" element={<History />} />
+          <Route path="/medals" element={<Medals />} />
+          <Route path="/history" element={<Medals />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/import" element={<ImportData />} />
           <Route path="*" element={<NotFound />} />

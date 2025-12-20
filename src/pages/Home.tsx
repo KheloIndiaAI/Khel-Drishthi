@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import CountdownCard from "@/components/home/CountdownCard";
 import StatsCard from "@/components/home/StatsCard";
-import MedalChart from "@/components/home/MedalChart";
 import SportsGrid from "@/components/home/SportsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
@@ -57,17 +56,15 @@ const Home = () => {
     },
   });
 
-  // Fetch medal history
-  const { data: medals } = useQuery({
-    queryKey: ["olympic-medals"],
+  // Fetch medals count
+  const { data: totalMedals } = useQuery({
+    queryKey: ["medals-count"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from("olympic_medals")
-        .select("*")
-        .gte("year", 1996)
-        .order("year");
+        .select("*", { count: "exact", head: true });
       if (error) throw error;
-      return data;
+      return count || 0;
     },
   });
 
@@ -96,26 +93,6 @@ const Home = () => {
 
   // Calculate total athletes
   const totalAthletes = (ncoeCapacity || 0) + (stcCapacity || 0);
-
-  // Process medal data for chart
-  const medalChartData = medals
-    ? Object.entries(
-        medals.reduce((acc: Record<number, { gold: number; silver: number; bronze: number }>, medal) => {
-          const year = medal.year;
-          if (!acc[year]) acc[year] = { gold: 0, silver: 0, bronze: 0 };
-          if (medal.medal === "Gold") acc[year].gold++;
-          else if (medal.medal === "Silver") acc[year].silver++;
-          else if (medal.medal === "Bronze") acc[year].bronze++;
-          return acc;
-        }, {})
-      ).map(([year, counts]) => ({
-        year: parseInt(year),
-        ...counts,
-      }))
-    : [];
-
-  // Total medals count
-  const totalMedals = medals?.length || 0;
 
   return (
     <DashboardLayout>
@@ -152,58 +129,57 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Clickable */}
       <section className="mb-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <StatsCard
             title="Sports"
-            value={sports?.length || 57}
+            value={sports?.length || 0}
             icon={Target}
             variant="saffron"
+            href="/#sports"
           />
           <StatsCard
             title="Centres"
-            value={centresCount || 1147}
+            value={centresCount || 0}
             icon={Building2}
             variant="green"
+            href="/infrastructure"
           />
           <StatsCard
             title="Athletes"
-            value={totalAthletes.toLocaleString() || "8,053"}
+            value={totalAthletes.toLocaleString()}
             icon={Users}
             variant="navy"
+            href="/capacity"
           />
           <StatsCard
             title="Events"
-            value={eventsCount || 351}
+            value={eventsCount || 0}
             icon={Trophy}
             variant="saffron"
           />
           <StatsCard
             title="Olympic Medals"
-            value={totalMedals || 27}
+            value={totalMedals || 0}
             icon={Medal}
             variant="green"
+            href="/medals"
           />
         </div>
       </section>
 
-      {/* Medal History Chart */}
-      <section className="mb-8">
-        <MedalChart data={medalChartData} />
-      </section>
-
       {/* Sports Grid */}
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-3xl">All Sports</h2>
-          <p className="text-muted-foreground">{sports?.length || 0} sports</p>
+      <section id="sports">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-2xl md:text-3xl">All Sports</h2>
+          <p className="text-muted-foreground text-sm">{sports?.length || 0} sports</p>
         </div>
         
         {sportsLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 rounded-xl" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {Array.from({ length: 18 }).map((_, i) => (
+              <Skeleton key={i} className="h-28 rounded-lg" />
             ))}
           </div>
         ) : (
