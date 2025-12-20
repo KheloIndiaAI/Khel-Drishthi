@@ -116,6 +116,109 @@ serve(async (req) => {
           console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
         }
       }
+    } else if (table === "event_overlap") {
+      // Clear existing data first
+      await supabase.from("event_overlap").delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      for (let i = 0; i < data.length; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
+        const mappedData = batch.map((row: any) => ({
+          sport_std: row.sport_std,
+          events_total: parseInt(row.events_total) || 0,
+          la28_events: parseInt(row.la28_events) || 0,
+          ag_events: parseInt(row.ag_events) || 0,
+          both_events: parseInt(row.both_events) || 0,
+          only_la28: parseInt(row.only_la28) || 0,
+          only_ag: parseInt(row.only_ag) || 0,
+        }));
+        
+        const { error } = await supabase.from("event_overlap").insert(mappedData);
+        if (error) {
+          console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+        } else {
+          inserted += batch.length;
+          console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
+        }
+      }
+    } else if (table === "ncoe_capacity") {
+      // Clear existing data first
+      await supabase.from("ncoe_capacity").delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      for (let i = 0; i < data.length; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
+        const mappedData = batch.map((row: any) => ({
+          centre_id: row.centre_id || null,
+          centre_name: row.centre || row.centre_name_std || null,
+          region: row.region || null,
+          state: row.state_std || row.state || null,
+          sport_id: row.sport_id || null,
+          discipline_raw: row.discipline_raw || null,
+          san_res_boys: parseInt(row.san_res_b) || 0,
+          san_res_girls: parseInt(row.san_res_g) || 0,
+          san_res_total: parseInt(row.san_res_t) || 0,
+          san_nonres_boys: parseInt(row.san_nonres_b) || 0,
+          san_nonres_girls: parseInt(row.san_nonres_g) || 0,
+          san_nonres_total: parseInt(row.san_nonres_t) || 0,
+          san_grand_total: parseInt(row.san_gt) || 0,
+          ex_res_boys: parseInt(row.ex_res_b) || 0,
+          ex_res_girls: parseInt(row.ex_res_g) || 0,
+          ex_res_total: parseInt(row.ex_res_t) || 0,
+          ex_nonres_boys: parseInt(row.ex_nonres_b) || 0,
+          ex_nonres_girls: parseInt(row.ex_nonres_g) || 0,
+          ex_nonres_total: parseInt(row.ex_nonres_t) || 0,
+          ex_grand_total: parseInt(row.ex_gt) || 0,
+          is_para: row.is_para === 'True' || row.is_para === true,
+        }));
+        
+        const { error } = await supabase.from("ncoe_capacity").insert(mappedData);
+        if (error) {
+          console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+        } else {
+          inserted += batch.length;
+          console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
+        }
+      }
+    } else if (table === "stc_capacity") {
+      // Clear existing data first
+      await supabase.from("stc_capacity").delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      for (let i = 0; i < data.length; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
+        const mappedData = batch.map((row: any) => ({
+          centre_id: row.centre_id || null,
+          centre_name: row.centre || row.centre_name_std || null,
+          region: row.region || null,
+          state: row.state_std || row.state || null,
+          sport_id: row.sport_id || null,
+          discipline_raw: row.discipline_raw || null,
+          san_res_boys: parseInt(row.san_res_b) || 0,
+          san_res_girls: parseInt(row.san_res_g) || 0,
+          san_res_total: parseInt(row.san_res_t) || 0,
+          san_nonres_boys: parseInt(row.san_nonres_b) || 0,
+          san_nonres_girls: parseInt(row.san_nonres_g) || 0,
+          san_nonres_total: parseInt(row.san_nonres_t) || 0,
+          san_grand_total: parseInt(row.san_gt) || 0,
+          ex_res_boys: parseInt(row.ex_res_b) || 0,
+          ex_res_girls: parseInt(row.ex_res_g) || 0,
+          ex_res_total: parseInt(row.ex_res_t) || 0,
+          ex_nonres_boys: parseInt(row.ex_nonres_b) || 0,
+          ex_nonres_girls: parseInt(row.ex_nonres_g) || 0,
+          ex_nonres_total: parseInt(row.ex_nonres_t) || 0,
+          ex_grand_total: parseInt(row.ex_gt) || 0,
+          is_para: row.is_para === 'True' || row.is_para === true,
+        }));
+        
+        const { error } = await supabase.from("stc_capacity").insert(mappedData);
+        if (error) {
+          console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+        } else {
+          inserted += batch.length;
+          console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
+        }
+      }
     }
 
     console.log(`Import complete: ${inserted}/${data.length} records, ${errors.length} errors`);

@@ -1,0 +1,110 @@
+centre,region,state,discipline_raw,san_res_b,san_res_g,san_res_t,san_nonres_b,san_nonres_g,san_nonres_t,san_gt,ex_res_b,ex_res_g,ex_res_t,ex_nonres_b,ex_nonres_g,ex_nonres_t,ex_gt,is_total_row,is_yet_to_start,discipline_base,is_para,sport_id,centre_type,state_std,centre_name_std,centre_id
+Alleppey,LNCPE,Kerala,Kayaking & Canoeing,25,25,50,5,5,10,60,19,24,43,5,4,9,52,False,False,Kayaking & Canoeing,False,SPORT_CANOEING,NCOE,Kerala,Alleppey,CENTRE_NCOE_KER_4661D0B161
+Alleppey,LNCPE,Kerala,Kayaking & Canoeing-Para,4,2,6,0,0,0,6,0,0,0,0,0,0,0,False,False,Kayaking & Canoeing,True,SPORT_CANOEING,NCOE,Kerala,Alleppey,CENTRE_NCOE_KER_4661D0B161
+Alleppey,LNCPE,Kerala,Rowing,25,32,57,5,5,10,67,22,35,57,1,4,5,62,False,False,Rowing,False,SPORT_ROWING,NCOE,Kerala,Alleppey,CENTRE_NCOE_KER_4661D0B161
+Trivandrum,LNCPE,Kerala,Athletics,45,36,81,0,0,0,81,41,34,75,0,0,0,75,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Athletics-Para,3,3,6,0,0,0,6,3,0,3,0,0,0,3,False,False,Athletics,True,SPORT_ATHLETICS,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Cycling,15,25,40,0,0,0,40,15,24,39,0,0,0,39,False,False,Cycling,False,SPORT_CYCLING,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Football,21,0,21,0,0,0,21,11,0,11,0,0,0,11,False,False,Football,False,SPORT_FOOTBALL,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Taekwondo,15,15,30,0,0,0,30,15,15,30,0,0,0,30,False,False,Taekwondo,False,SPORT_TAEKWONDO,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Taekwondo-Para,4,4,8,0,0,0,8,1,0,1,0,0,0,1,False,False,Taekwondo,True,SPORT_TAEKWONDO,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Volleyball,17,30,47,0,0,0,47,19,29,48,0,0,0,48,False,False,Volleyball,False,SPORT_VOLLEYBALL,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Trivandrum,LNCPE,Kerala,Fencing,0,20,20,0,0,0,20,0,17,17,0,0,0,17,False,False,Fencing,False,SPORT_FENCING,NCOE,Kerala,Trivandrum,CENTRE_NCOE_KER_8BA090ED8C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Archery,20,12,32,0,0,0,32,18,7,25,0,0,0,25,False,False,Archery,False,SPORT_ARCHERY,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Archery-Para,5,3,8,0,0,0,8,4,1,5,0,0,0,5,False,False,Archery,True,SPORT_ARCHERY,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Boxing,16,18,34,0,0,0,34,16,18,34,0,0,0,34,False,False,Boxing,False,SPORT_BOXING,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Fencing,21,23,44,0,0,0,44,21,23,44,0,0,0,44,False,False,Fencing,False,SPORT_FENCING,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Fencing-Para,5,3,8,0,0,0,8,5,2,7,0,0,0,7,False,False,Fencing,True,SPORT_FENCING,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Gymnastics,6,14,20,0,0,0,20,4,11,15,0,0,0,15,False,False,Gymnastics,False,SPORT_GYMNASTICS,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Hockey,40,0,40,0,0,0,40,27,0,27,0,0,0,27,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Chatrapati Sambhajinagar,Mumbai,Maharashtra,Weightlifting,30,19,49,0,0,0,49,30,19,49,0,0,0,49,False,False,Weightlifting,False,SPORT_WEIGHTLIFTING,NCOE,Maharashtra,Chatrapati Sambhajinagar,CENTRE_NCOE_MAH_99B9A5F16C
+Kandivali,Mumbai,Maharashtra,Hockey,0,40,40,0,0,0,40,0,33,33,0,0,0,33,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Maharashtra,Kandivali,CENTRE_NCOE_MAH_B8ACC3E7FD
+Kandivali,Mumbai,Maharashtra,Wrestling,38,18,56,0,0,0,56,33,13,46,0,0,0,46,False,False,Wrestling,False,SPORT_WRESTLING,NCOE,Maharashtra,Kandivali,CENTRE_NCOE_MAH_B8ACC3E7FD
+Bangalore,Bangalore,Karnataka,Athletics,65,51,116,0,0,0,116,65,34,99,0,0,0,99,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Karnataka,Bangalore,CENTRE_NCOE_KAR_F27E91EC8E
+Bangalore,Bangalore,Karnataka,Athletics-Para,10,10,20,0,0,0,20,13,6,19,0,0,0,19,False,False,Athletics,True,SPORT_ATHLETICS,NCOE,Karnataka,Bangalore,CENTRE_NCOE_KAR_F27E91EC8E
+Bangalore,Bangalore,Karnataka,Hockey,40,41,81,0,0,0,81,40,41,81,0,0,0,81,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Karnataka,Bangalore,CENTRE_NCOE_KAR_F27E91EC8E
+Bangalore,Bangalore,Karnataka,Volleyball,27,0,27,0,0,0,27,23,0,23,0,0,0,23,False,False,Volleyball,False,SPORT_VOLLEYBALL,NCOE,Karnataka,Bangalore,CENTRE_NCOE_KAR_F27E91EC8E
+Bhopal,Bhopal,Madhya Pradesh,Athletics,25,23,48,0,0,0,48,25,21,46,0,0,0,46,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Madhya Pradesh,Bhopal,CENTRE_NCOE_MAD_F4D3F8CFCA
+Bhopal,Bhopal,Madhya Pradesh,Hockey,34,55,89,0,0,0,89,33,55,88,0,0,0,88,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Madhya Pradesh,Bhopal,CENTRE_NCOE_MAD_F4D3F8CFCA
+Bhopal,Bhopal,Madhya Pradesh,Judo,55,66,121,0,0,0,121,57,66,123,0,0,0,123,False,False,Judo,False,SPORT_JUDO,NCOE,Madhya Pradesh,Bhopal,CENTRE_NCOE_MAD_F4D3F8CFCA
+Bhopal,Bhopal,Madhya Pradesh,Judo- Para,5,5,10,0,0,0,10,3,2,5,0,0,0,5,False,False,Judo,True,SPORT_JUDO,NCOE,Madhya Pradesh,Bhopal,CENTRE_NCOE_MAD_F4D3F8CFCA
+Bhopal,Bhopal,Madhya Pradesh,K&C,25,25,50,0,0,0,50,24,18,42,0,0,0,42,False,False,Kayaking & Canoeing,False,SPORT_CANOEING,NCOE,Madhya Pradesh,Bhopal,CENTRE_NCOE_MAD_F4D3F8CFCA
+Zirakpur,Zirakpur,Punjab,Yet to be Started,0,0,0,0,0,0,0,0,0,0,0,0,0,0,False,True,Yet to be Started,False,,NCOE,Punjab,Zirakpur,CENTRE_NCOE_PUN_26D9C7A402
+Dharamshala,Zirakpur,Himachal Pradesh,Kabaddi,0,30,30,0,0,0,30,0,30,30,0,0,0,30,False,False,Kabaddi,False,SPORT_KABADDI,NCOE,Himachal Pradesh,Dharamshala,CENTRE_NCOE_HIM_0DABEEDD5C
+Dharamshala,Zirakpur,Himachal Pradesh,Volleyball,0,24,24,0,0,0,24,0,24,24,0,0,0,24,False,False,Volleyball,False,SPORT_VOLLEYBALL,NCOE,Himachal Pradesh,Dharamshala,CENTRE_NCOE_HIM_0DABEEDD5C
+Hamirpur,Zirakpur,Himachal Pradesh,Athletics,0,0,0,10,10,20,20,0,0,0,10,10,20,20,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Hamirpur,Zirakpur,Himachal Pradesh,Badminton,0,0,0,10,10,20,20,0,0,0,10,10,20,20,False,False,Badminton,False,SPORT_BADMINTON,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Hamirpur,Zirakpur,Himachal Pradesh,Boxing,0,0,0,10,10,20,20,0,0,0,10,6,16,16,False,False,Boxing,False,SPORT_BOXING,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Hamirpur,Zirakpur,Himachal Pradesh,Hockey,0,0,0,12,13,25,25,0,0,0,5,9,14,14,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Hamirpur,Zirakpur,Himachal Pradesh,Judo,0,0,0,15,15,30,30,0,0,0,15,14,29,29,False,False,Judo,False,SPORT_JUDO,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Hamirpur,Zirakpur,Himachal Pradesh,Wrestling,0,0,0,20,10,30,30,0,0,0,20,7,27,27,False,False,Wrestling,False,SPORT_WRESTLING,NCOE,Himachal Pradesh,Hamirpur,CENTRE_NCOE_HIM_BAD2DB3E1F
+Guwahati,Guwahati,Assam,Archery,5,5,10,5,5,10,20,5,5,10,5,5,10,20,False,False,Archery,False,SPORT_ARCHERY,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Guwahati,Guwahati,Assam,Boxing,0,30,30,0,15,15,45,0,28,28,0,15,15,43,False,False,Boxing,False,SPORT_BOXING,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Guwahati,Guwahati,Assam,Cycling,27,11,38,0,0,0,38,28,10,38,0,0,0,38,False,False,Cycling,False,SPORT_CYCLING,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Guwahati,Guwahati,Assam,Fencing,9,11,20,5,5,10,30,4,11,15,2,3,5,20,False,False,Fencing,False,SPORT_FENCING,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Guwahati,Guwahati,Assam,Football,10,0,10,20,0,20,30,10,0,10,20,0,20,30,False,False,Football,False,SPORT_FOOTBALL,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Guwahati,Guwahati,Assam,Taekwondo,10,10,20,5,5,10,30,10,10,20,5,5,10,30,False,False,Taekwondo,False,SPORT_TAEKWONDO,NCOE,Assam,Guwahati,CENTRE_NCOE_ASS_CB6546AA89
+Itanagar,Guwahati,Arunachal Pradesh,Archery,0,0,0,10,10,20,20,0,0,0,9,5,14,14,False,False,Archery,False,SPORT_ARCHERY,NCOE,Arunachal Pradesh,Itanagar,CENTRE_NCOE_ARU_5173B2B287
+Itanagar,Guwahati,Arunachal Pradesh,Boxing,10,3,13,0,0,0,13,10,2,12,0,0,0,12,False,False,Boxing,False,SPORT_BOXING,NCOE,Arunachal Pradesh,Itanagar,CENTRE_NCOE_ARU_5173B2B287
+Itanagar,Guwahati,Arunachal Pradesh,Weightlifting,10,10,20,0,0,0,20,8,10,18,0,0,0,18,False,False,Weightlifting,False,SPORT_WEIGHTLIFTING,NCOE,Arunachal Pradesh,Itanagar,CENTRE_NCOE_ARU_5173B2B287
+Itanagar,Guwahati,Arunachal Pradesh,Wushu,11,11,22,5,5,10,32,15,10,25,4,5,9,34,False,False,Wushu,False,SPORT_WUSHU,NCOE,Arunachal Pradesh,Itanagar,CENTRE_NCOE_ARU_5173B2B287
+Gandhinagar,Gandhinagar,Gujarat,Handball,30,30,60,0,0,0,60,30,30,60,0,0,0,60,False,False,Handball,False,SPORT_HANDBALL,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Kabaddi,60,30,90,0,0,0,90,57,32,89,0,0,0,89,False,False,Kabaddi,False,SPORT_KABADDI,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Kho-Kho,15,15,30,0,0,0,30,15,15,30,0,0,0,30,False,False,Kho-Kho,False,SPORT_KHO_KHO,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Athletics-Para,30,10,40,0,0,0,40,23,7,30,0,0,0,30,False,False,Athletics,True,SPORT_ATHLETICS,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Badminton-Para,6,6,12,0,0,0,12,8,1,9,0,0,0,9,False,False,Badminton,True,SPORT_BADMINTON,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Fencing-Para,11,9,20,0,0,0,20,11,5,16,0,0,0,16,False,False,Fencing,True,SPORT_FENCING,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Powerlifting-Para,8,8,16,0,0,0,16,10,2,12,0,0,0,12,False,False,Powerlifting,True,SPORT_POWERLIFTING,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Swimming-Para,15,5,20,0,0,0,20,14,2,16,0,0,0,16,False,False,Swimming,True,SPORT_AQUATICS,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Gandhinagar,Gandhinagar,Gujarat,Table Tennis-Para,10,10,20,0,0,0,20,7,7,14,0,0,0,14,False,False,Table Tennis,True,SPORT_TABLE_TENNIS,NCOE,Gujarat,Gandhinagar,CENTRE_NCOE_GUJ_B785F40009
+Naranpura,Gandhinagar,Gujarat,Basketball,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Basketball,False,SPORT_BASKETBALL,NCOE,Gujarat,Naranpura,CENTRE_NCOE_GUJ_84CB1F5B89
+Naranpura,Gandhinagar,Gujarat,Wushu,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Wushu,False,SPORT_WUSHU,NCOE,Gujarat,Naranpura,CENTRE_NCOE_GUJ_84CB1F5B89
+Naranpura,Gandhinagar,Gujarat,Taekwondo,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Taekwondo,False,SPORT_TAEKWONDO,NCOE,Gujarat,Naranpura,CENTRE_NCOE_GUJ_84CB1F5B89
+Naranpura,Gandhinagar,Gujarat,Volleyball,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Volleyball,False,SPORT_VOLLEYBALL,NCOE,Gujarat,Naranpura,CENTRE_NCOE_GUJ_84CB1F5B89
+Imphal,Imphal,Manipur,Archery,11,12,23,5,5,10,33,8,6,14,3,3,6,20,False,False,Archery,False,SPORT_ARCHERY,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Cycling,17,14,31,0,0,0,31,16,14,30,0,0,0,30,False,False,Cycling,False,SPORT_CYCLING,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Fencing,11,9,20,0,0,0,20,10,8,18,0,0,0,18,False,False,Fencing,False,SPORT_FENCING,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Football,17,17,34,0,0,0,34,12,13,25,0,0,0,25,False,False,Football,False,SPORT_FOOTBALL,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Hockey,30,20,50,0,0,0,50,26,18,44,0,0,0,44,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Judo,7,8,15,0,0,0,15,12,10,22,0,0,0,22,False,False,Judo,False,SPORT_JUDO,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Weightlifting,10,15,25,0,0,0,25,9,14,23,0,0,0,23,False,False,Weightlifting,False,SPORT_WEIGHTLIFTING,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Imphal,Imphal,Manipur,Wushu,15,20,35,5,5,10,45,12,14,26,4,3,7,33,False,False,Wushu,False,SPORT_WUSHU,NCOE,Manipur,Imphal,CENTRE_NCOE_MAN_15F87D44CB
+Kolkata,Kolkata,West Bengal,Archery,25,20,45,0,0,0,45,25,20,45,0,0,0,45,False,False,Archery,False,SPORT_ARCHERY,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Archery-Para,5,5,10,0,0,0,10,2,0,2,0,0,0,2,False,False,Archery,True,SPORT_ARCHERY,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Athletics,12,10,22,0,0,0,22,13,11,24,0,0,0,24,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Athletics-Para,5,5,10,0,0,0,10,3,1,4,0,0,0,4,False,False,Athletics,True,SPORT_ATHLETICS,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Gymnastics,18,18,36,0,0,0,36,19,21,40,0,0,0,40,False,False,Gymnastics,False,SPORT_GYMNASTICS,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Hockey,0,40,40,0,0,0,40,0,38,38,0,0,0,38,False,False,Hockey,False,SPORT_HOCKEY,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Kolkata,Kolkata,West Bengal,Table Tennis,11,11,22,15,15,30,52,11,8,19,10,15,25,44,False,False,Table Tennis,False,SPORT_TABLE_TENNIS,NCOE,West Bengal,Kolkata,CENTRE_NCOE_WES_2FFEF63EEA
+Jagatpur,Kolkata,Odisha,Kayaking & Canoeing,30,30,60,5,5,10,70,30,27,57,5,2,7,64,False,False,Kayaking & Canoeing,False,SPORT_CANOEING,NCOE,Odisha,Jagatpur,CENTRE_NCOE_ODI_E6282C9C97
+Jagatpur,Kolkata,Odisha,Rowing,23,23,46,5,5,10,56,24,22,46,0,0,0,46,False,False,Rowing,False,SPORT_ROWING,NCOE,Odisha,Jagatpur,CENTRE_NCOE_ODI_E6282C9C97
+Lucknow,Lucknow,Uttar Pradesh,Athletics,0,10,10,0,0,0,10,0,6,6,0,0,0,6,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Hockey,40,45,85,0,0,0,85,40,40,80,0,0,0,80,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Powerlifting-para,5,5,10,0,0,0,10,3,4,7,0,0,0,7,False,False,Powerlifting,True,SPORT_POWERLIFTING,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Taekwondo,18,20,38,0,0,0,38,18,20,38,0,0,0,38,False,False,Taekwondo,False,SPORT_TAEKWONDO,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Taekwondo-Para,5,5,10,0,0,0,10,3,5,8,0,0,0,8,False,False,Taekwondo,True,SPORT_TAEKWONDO,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Weightlifting,20,25,45,0,0,0,45,16,19,35,0,0,0,35,False,False,Weightlifting,False,SPORT_WEIGHTLIFTING,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Lucknow,Lucknow,Uttar Pradesh,Wrestling,0,33,33,0,0,0,33,0,32,32,0,0,0,32,False,False,Wrestling,False,SPORT_WRESTLING,NCOE,Uttar Pradesh,Lucknow,CENTRE_NCOE_UTT_6F2E287259
+Sigra,Lucknow,Uttar Pradesh,Fencing,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Fencing,False,SPORT_FENCING,NCOE,Uttar Pradesh,Sigra,CENTRE_NCOE_UTT_36A452D3DD
+Sigra,Lucknow,Uttar Pradesh,Wrestling,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Wrestling,False,SPORT_WRESTLING,NCOE,Uttar Pradesh,Sigra,CENTRE_NCOE_UTT_36A452D3DD
+Sigra,Lucknow,Uttar Pradesh,Boxing,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Boxing,False,SPORT_BOXING,NCOE,Uttar Pradesh,Sigra,CENTRE_NCOE_UTT_36A452D3DD
+Sigra,Lucknow,Uttar Pradesh,Shooting,20,20,40,0,0,0,40,0,0,0,0,0,0,0,False,False,Shooting,False,SPORT_SHOOTING,NCOE,Uttar Pradesh,Sigra,CENTRE_NCOE_UTT_36A452D3DD
+Patiala,NSNIS,Punjab,Athletics,49,31,80,0,0,0,80,49,31,80,0,0,0,80,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Punjab,Patiala,CENTRE_NCOE_PUN_6C57591EDB
+Patiala,NSNIS,Punjab,Cycling,40,25,65,0,0,0,65,37,24,61,0,0,0,61,False,False,Cycling,False,SPORT_CYCLING,NCOE,Punjab,Patiala,CENTRE_NCOE_PUN_6C57591EDB
+Patiala,NSNIS,Punjab,Cycling-Para,5,5,10,0,0,0,10,0,0,0,0,0,0,0,False,False,Cycling,True,SPORT_CYCLING,NCOE,Punjab,Patiala,CENTRE_NCOE_PUN_6C57591EDB
+Patiala,NSNIS,Punjab,Fencing,25,14,39,0,0,0,39,23,14,37,0,0,0,37,False,False,Fencing,False,SPORT_FENCING,NCOE,Punjab,Patiala,CENTRE_NCOE_PUN_6C57591EDB
+Patiala,NSNIS,Punjab,Weightlifting,30,30,60,0,0,0,60,29,24,53,0,0,0,53,False,False,Weightlifting,False,SPORT_WEIGHTLIFTING,NCOE,Punjab,Patiala,CENTRE_NCOE_PUN_6C57591EDB
+Rohtak,Sonepat,Haryana,Boxing,100,80,180,0,0,0,180,94,76,170,0,0,0,170,False,False,Boxing,False,SPORT_BOXING,NCOE,Haryana,Rohtak,CENTRE_NCOE_HAR_16FB0F58A2
+Sonepat,Sonepat,Haryana,Archery,59,40,99,0,0,0,99,51,32,83,0,0,0,83,False,False,Archery,False,SPORT_ARCHERY,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+Sonepat,Sonepat,Haryana,Archery-Para,4,3,7,0,0,0,7,4,3,7,0,0,0,7,False,False,Archery,True,SPORT_ARCHERY,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+Sonepat,Sonepat,Haryana,Athletics,15,15,30,0,0,0,30,14,14,28,0,0,0,28,False,False,Athletics,False,SPORT_ATHLETICS,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+Sonepat,Sonepat,Haryana,Hockey,40,38,78,0,0,0,78,39,33,72,0,0,0,72,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+Sonepat,Sonepat,Haryana,Kabaddi,22,22,44,0,0,0,44,22,20,42,0,0,0,42,False,False,Kabaddi,False,SPORT_KABADDI,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+Sonepat,Sonepat,Haryana,Wrestling,70,0,70,0,0,0,70,56,0,56,0,0,0,56,False,False,Wrestling,False,SPORT_WRESTLING,NCOE,Haryana,Sonepat,CENTRE_NCOE_HAR_8E99586BD4
+I.G. Stadium,Head Office,Delhi,Cycling,15,9,24,0,0,0,24,15,9,24,0,0,0,24,False,False,Cycling,False,SPORT_CYCLING,NCOE,Delhi,I.G. Stadium,CENTRE_NCOE_DEL_7E07358D63
+I.G. Stadium,Head Office,Delhi,Cycling-Para,5,5,10,0,0,0,10,0,0,0,0,0,0,0,False,False,Cycling,True,SPORT_CYCLING,NCOE,Delhi,I.G. Stadium,CENTRE_NCOE_DEL_7E07358D63
+I.G. Stadium,Head Office,Delhi,Gymnastics,25,15,40,0,0,0,40,25,10,35,0,0,0,35,False,False,Gymnastics,False,SPORT_GYMNASTICS,NCOE,Delhi,I.G. Stadium,CENTRE_NCOE_DEL_7E07358D63
+MDCNS,Head Office,Delhi,Hockey,35,30,65,0,0,0,65,35,27,62,0,0,0,62,False,False,Hockey,False,SPORT_HOCKEY,NCOE,Delhi,MDCNS,CENTRE_NCOE_DEL_E77640C099
+Dr. SPMSPC,Head Office,Delhi,Swimming,10,10,20,7,8,15,35,10,10,20,3,7,10,30,False,False,Swimming,False,SPORT_AQUATICS,NCOE,Delhi,Dr. SPMSPC,CENTRE_NCOE_DEL_830BEE3159
+Dr. KSSR,Head Office,Delhi,Shooting,50,39,89,25,25,50,139,50,39,89,25,20,45,134,False,False,Shooting,False,SPORT_SHOOTING,NCOE,Delhi,Dr. KSSR,CENTRE_NCOE_DEL_CF1083744F
+Dr. KSSR,Head Office,Delhi,Shooting-Para,15,10,25,0,0,0,25,17,4,21,1,1,2,23,False,False,Shooting,True,SPORT_SHOOTING,NCOE,Delhi,Dr. KSSR,CENTRE_NCOE_DEL_CF1083744F
