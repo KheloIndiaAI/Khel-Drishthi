@@ -97,34 +97,54 @@ const Home = () => {
   return (
     <DashboardLayout>
       {/* Hero Section */}
-      <section className="mb-8">
-        <div className="text-center mb-8">
-          <h1 className="font-display text-4xl md:text-6xl tracking-wider mb-2">
-            <span className="text-saffron">Khel</span>{" "}
-            <span className="text-india-green">Drishti</span>
-          </h1>
-          <p className="text-muted-foreground text-lg">
+      <section className="mb-8 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-saffron/10 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-india-green/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-60 w-60 rounded-full bg-india-navy/5 blur-3xl" />
+        </div>
+
+        <div className="text-center mb-8 pt-4">
+          <div className="animate-fade-in">
+            <h1 className="font-display text-5xl md:text-7xl tracking-wider mb-3">
+              <span className="text-saffron drop-shadow-sm inline-block hover:scale-105 transition-transform duration-300">Khel</span>{" "}
+              <span className="text-india-green drop-shadow-sm inline-block hover:scale-105 transition-transform duration-300">Drishti</span>
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg md:text-xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Indian Sports Ecosystem Intelligence
           </p>
+          <div className="mt-4 flex justify-center gap-1 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="h-1 w-12 rounded-full bg-saffron" />
+            <div className="h-1 w-12 rounded-full bg-white border border-border" />
+            <div className="h-1 w-12 rounded-full bg-india-green" />
+          </div>
         </div>
 
         {/* Countdown Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <CountdownCard
-            title="LA 2028 Olympics"
-            date={LA28_DATE}
-            variant="saffron"
-          />
-          <CountdownCard
-            title="Asian Games 2026"
-            date={AG2026_DATE}
-            variant="green"
-          />
-          <CountdownCard
-            title="CWG 2026"
-            date={CWG2026_DATE}
-            variant="navy"
-          />
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <CountdownCard
+              title="LA 2028 Olympics"
+              date={LA28_DATE}
+              variant="saffron"
+            />
+          </div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <CountdownCard
+              title="Asian Games 2026"
+              date={AG2026_DATE}
+              variant="green"
+            />
+          </div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <CountdownCard
+              title="CWG 2026"
+              date={CWG2026_DATE}
+              variant="navy"
+            />
+          </div>
         </div>
       </section>
 
