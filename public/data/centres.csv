@@ -1,0 +1,1148 @@
+centre_id,centre_type,centre_name_std,centre_name_raw,state,district,region_unit,programme_subtype,operational_status,source_dataset,is_active
+CENTRE_KIC_ANDAMA_23EC146DD4,KIC,"Armed Police Unit, A&N Police","Armed Police Unit, A&N Police",Andaman & Nicobar,South Andaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_DDE2B792D3,KIC,"BJR Stadium, Car Nicobar","BJR Stadium, Car Nicobar",Andaman & Nicobar,Nicobar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_9E8F8877BF,KIC,"Directorate of Sports and Youth Affairs, Netaji Stadium Complex, Sri Vijaya Puram (Port Blair)","Directorate of Sports and Youth Affairs, Netaji Stadium Complex, Sri Vijaya Puram (Port Blair)",Andaman & Nicobar,South Andaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_1CD02B5603,KIC,"Football Ground, Mini Stadium, Campbell Bay, A& -744307","Football Ground, Mini Stadium, Campbell Bay, A& -744307",Andaman & Nicobar,Nicobar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_8C34EAFB9A,KIC,"Forest ground Baratang, Sri Vijaya Puram, A&N - 744210","Forest ground Baratang, Sri Vijaya Puram, A&N - 744210",Andaman & Nicobar,North and Middle Andaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_0DF6B87C4D,KIC,"India Reserve Battalion, A&N Police at HQ, Port Mout","India Reserve Battalion, A&N Police at HQ, Port Mout",Andaman & Nicobar,South Andaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_D8E7C65720,KIC,"Indira Park Ground, Kamorta, A&N- 744303","Indira Park Ground, Kamorta, A&N- 744303",Andaman & Nicobar,Nicobar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_762C2E70AB,KIC,Netaji Stadium-Matabunder,Netaji Stadium-Matabunder,Andaman & Nicobar,North and Middle Andaman,,,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDAMA_EC5DB38BEB,KIC,"Vivekananda Stadium Opposite side of Asst. Commissioner Office, Diglipur","Vivekananda Stadium Opposite side of Asst. Commissioner Office, Diglipur",Andaman & Nicobar,North and Middle Andaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_6972FCF432,KIC,"AU, Ground Visakhapatnam","AU, Ground Visakhapatnam",Andhra Pradesh,Visakhapatnam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_0A5C1C5E61,KIC,"Andhra Loyola College, Vijayawada","Andhra Loyola College, Vijayawada",Andhra Pradesh,Krishna,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_0F5F246383,KIC,"DBA, Chittoor","DBA, Chittoor",Andhra Pradesh,Chittoor,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_BCDCFDFE04,KIC,"DSA Annamayya District, Rayachoty","DSA Annamayya District, Rayachoty",Andhra Pradesh,Annamayya,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_F488D04A62,KIC,DSA Sri Sathya Sai District Puttaparthi,DSA Sri Sathya Sai District Puttaparthi,Andhra Pradesh,Sri Sathya Sai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_A1B4C611D7,KIC,"DSA Sub Centre, Narasaraopet Stadium, Guntur District","DSA Sub Centre, Narasaraopet Stadium, Guntur District",Andhra Pradesh,Palnadu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_F9B8A98921,KIC,"DSA, Bapatla","DSA, Bapatla",Andhra Pradesh,Bapatla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_A3E2AE04D6,KIC,"DSA, Dr. B.R. Ambedkar Konaseema District GMC Balayiogi Stadium, Amalapuram","DSA, Dr. B.R. Ambedkar Konaseema District GMC Balayiogi Stadium, Amalapuram",Andhra Pradesh,Dr. B.R Ambedkar Konaseema,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_552577D2BA,KIC,"DSA, East Godavari, Rajamahendravaram","DSA, East Godavari, Rajamahendravaram",Andhra Pradesh,East Godavari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_11CE35671E,KIC,"DSA, Guntur","DSA, Guntur",Andhra Pradesh,Guntur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_51A2EBF911,KIC,"DSA, Head Quarters Parvathipuram Manyam","DSA, Head Quarters Parvathipuram Manyam",Andhra Pradesh,Parvathipuram Manyam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_C6CB0AAC52,KIC,"DSA, Machilipatnam","DSA, Machilipatnam",Andhra Pradesh,Krishna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_E68580D0E8,KIC,"DSA, Nandyal","DSA, Nandyal",Andhra Pradesh,Nandyal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_AC805F397C,KIC,"District Sports Authority Stadium, Krishna","District Sports Authority Stadium, Krishna",Andhra Pradesh,NTR,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_41E6B350A1,KIC,"District Sports Authority, Anantpur","District Sports Authority, Anantpur",Andhra Pradesh,Anantpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_AB38C6C802,KIC,"District Sports Authority, East Godavari, Kakinada","District Sports Authority, East Godavari, Kakinada",Andhra Pradesh,Kakinada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_D2BB98A78B,KIC,"District Sports Authority, Godavari","District Sports Authority, Godavari",Andhra Pradesh,Eluru,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_BBFB33DC0C,KIC,"District Sports Authority, Kurnool","District Sports Authority, Kurnool",Andhra Pradesh,Kurnool,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_B0914C3082,KIC,"District Sports Authority, Nellore","District Sports Authority, Nellore",Andhra Pradesh,Sri Potti Sriramulu Nellore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_F4D065DAC1,KIC,"District Sports Authority, Vizianagaram","District Sports Authority, Vizianagaram",Andhra Pradesh,Vizianagaram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_EBCDDE1D3A,KIC,"Dr. P. Anand DSA Mini Stadium, Ongole","Dr. P. Anand DSA Mini Stadium, Ongole",Andhra Pradesh,Prakasam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_0EFC4F59B0,KIC,"Dr. YSR Integrated Sports Complex, Pulivendula","Dr. YSR Integrated Sports Complex, Pulivendula",Andhra Pradesh,Y.S.R.,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_8C9D14D0C7,KIC,Govt High School (Boy),Govt High School (Boy),Andhra Pradesh,Tirupati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_7E4C48A9B6,KIC,"Multi-Purpose Indoor Sports Complex, Patrunivalasa","Multi-Purpose Indoor Sports Complex, Patrunivalasa",Andhra Pradesh,Srikakulam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_C23EB2A709,KIC,"PMRC Building, ITDA Rampachodavaram","PMRC Building, ITDA Rampachodavaram",Andhra Pradesh,Alluri Sitharama Raju,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_1F301CE471,KIC,"SVGZP High School, Materu, Bhimavaram","SVGZP High School, Materu, Bhimavaram",Andhra Pradesh,West Godavari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ANDHRA_31177FD63E,KIC,"ZPHS, Lankalapalem","ZPHS, Lankalapalem",Andhra Pradesh,Anakapalli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_6FC0F8639E,KIC,Archery Arena At D.K Govt. Hs School Ziro,Archery Arena At D.K Govt. Hs School Ziro,Arunachal Pradesh,Lower Subansiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_EB775A93CC,KIC,"Archery Arena At Govt. Hs School ,Anini","Archery Arena At Govt. Hs School ,Anini",Arunachal Pradesh,Upper Dibang Valley,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_7A7167D510,KIC,Archery High Altitude Stadium Tawang,Archery High Altitude Stadium Tawang,Arunachal Pradesh,Tawang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_FDC47177F2,KIC,Athletic at Multipurpose Out Door Stadium Pasighat,Athletic at Multipurpose Out Door Stadium Pasighat,Arunachal Pradesh,East Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_080BD6CDF7,KIC,"Badminton Hall At Govt. H.S School ,Mechuka","Badminton Hall At Govt. H.S School ,Mechuka",Arunachal Pradesh,Shi Yomi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_47D11B443E,KIC,Badminton Hall At Govt. Hs Anini,Badminton Hall At Govt. Hs Anini,Arunachal Pradesh,Upper Dibang Valley,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_1061F0C9FA,KIC,Badminton Hall Govt H.S School Doimukh,Badminton Hall Govt H.S School Doimukh,Arunachal Pradesh,Papum Pare,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_24929EE211,KIC,Badminton Hall at Govt HS. School Daporijio,Badminton Hall at Govt HS. School Daporijio,Arunachal Pradesh,Upper Subansiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_35A2FC264B,KIC,Badminton Hall at Govt HS. School Seijosa,Badminton Hall at Govt HS. School Seijosa,Arunachal Pradesh,Pakke Kessang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_6BB2084DCC,KIC,Badminton Hall at Govt Hs Palin,Badminton Hall at Govt Hs Palin,Arunachal Pradesh,Kra Daadi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_461B3BC00F,KIC,"Badminton Hall at Govt, HS School Raga","Badminton Hall at Govt, HS School Raga",Arunachal Pradesh,Kamle,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_0CB905C59D,KIC,Badminton Hall at Govt. HS School Hawai,Badminton Hall at Govt. HS School Hawai,Arunachal Pradesh,Anjaw,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_14AFC2E58C,KIC,"Badminton Hall at Govt. HS. School ,Namsai","Badminton Hall at Govt. HS. School ,Namsai",Arunachal Pradesh,Namsai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_FA0A232063,KIC,"Badminton Hall at Govt. Hs. School, Bordumsa","Badminton Hall at Govt. Hs. School, Bordumsa",Arunachal Pradesh,Changlang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_8352F01638,KIC,"Badminton Indoor Hall ,Layang Sangram","Badminton Indoor Hall ,Layang Sangram",Arunachal Pradesh,Kurung Kumey,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_EDBFCB7707,KIC,"Boxing Community Hall ,Khonsa","Boxing Community Hall ,Khonsa",Arunachal Pradesh,Tirap,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_8EC1E4C028,KIC,Boxing Hall at Govt . HS School Bomila,Boxing Hall at Govt . HS School Bomila,Arunachal Pradesh,West Kameng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_7871962932,KIC,Boxing Hall at Govt. HS School Basar,Boxing Hall at Govt. HS School Basar,Arunachal Pradesh,Lepa Rada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_B7D45429FB,KIC,Boxing Indoor Hall at Govt HS School longding,Boxing Indoor Hall at Govt HS School longding,Arunachal Pradesh,Longding,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_4176DF603B,KIC,"Changlang District, Miao","Changlang District, Miao",Arunachal Pradesh,Changlang,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_293AC57CC7,KIC,Football General Ground Pasighat,Football General Ground Pasighat,Arunachal Pradesh,East Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_3FE631BC40,KIC,"Football Gernal Ground ,Aalo","Football Gernal Ground ,Aalo",Arunachal Pradesh,West Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_7BFCBAE9F8,KIC,"Football Ground At Govt HS School, Seppa","Football Ground At Govt HS School, Seppa",Arunachal Pradesh,East Kameng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_2AB3C1EE56,KIC,"Football Ground At Govt. Hs School, Model Village Naharlagum","Football Ground At Govt. Hs School, Model Village Naharlagum",Arunachal Pradesh,Itanagar Capital Complex,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_3AF772D167,KIC,Football Ground Gov. Hr. Sec. Upper Nyapin,Football Ground Gov. Hr. Sec. Upper Nyapin,Arunachal Pradesh,Kurung Kumey,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_732505DA69,KIC,Football Ground Govt. Hr Sec School Tezu,Football Ground Govt. Hr Sec School Tezu,Arunachal Pradesh,Lohit,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_9DAC448757,KIC,"Football Ground at Govt HS School ,Yingkiong","Football Ground at Govt HS School ,Yingkiong",Arunachal Pradesh,Upper Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_D871C5D4A6,KIC,Football Ground at Govt HS School Daporijio,Football Ground at Govt HS School Daporijio,Arunachal Pradesh,Upper Subansiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_6C93B2B3C1,KIC,Football Ground at Govt HS School Nari,Football Ground at Govt HS School Nari,Arunachal Pradesh,Lower Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_6A03910900,KIC,Football Ground at Govt HS School Roing,Football Ground at Govt HS School Roing,Arunachal Pradesh,Lower Dibang Valley,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_BDC505778A,KIC,"Football Ground at Govt Sec. School ,Lemmi","Football Ground at Govt Sec. School ,Lemmi",Arunachal Pradesh,Pakke Kessang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_68AFFAD9C7,KIC,"Football Ground at Govt. H.S School ,Rumgong","Football Ground at Govt. H.S School ,Rumgong",Arunachal Pradesh,Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_91CF9B5E8B,KIC,Football Ground at Govt. HS School Basar,Football Ground at Govt. HS School Basar,Arunachal Pradesh,Lepa Rada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_9D2FD7B57A,KIC,Football Ground at govt. HS School Yazali,Football Ground at govt. HS School Yazali,Arunachal Pradesh,Lower Subansiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_B4DE67F7FF,KIC,Football Hall at Govt. H.S School Chowkham,Football Hall at Govt. H.S School Chowkham,Arunachal Pradesh,Namsai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_BA1955C921,KIC,Football High Altitude Stadium Tawang,Football High Altitude Stadium Tawang,Arunachal Pradesh,Tawang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_5D7827570F,KIC,General Football Ground At Yada,General Football Ground At Yada,Arunachal Pradesh,Kamle,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_C9E361AA4C,KIC,General Football Ground Longding,General Football Ground Longding,Arunachal Pradesh,Longding,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_5AF8A36D82,KIC,"Hockey Ground at Govt. HS School, Boleng","Hockey Ground at Govt. HS School, Boleng",Arunachal Pradesh,Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_B1B69BC860,KIC,"Independent Golden Jubilee HS School, Passighat, Siang","Independent Golden Jubilee HS School, Passighat, Siang",Arunachal Pradesh,East Siang,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_81F3D48B51,KIC,Ita –Pulu Badminton Hall Roing,Ita –Pulu Badminton Hall Roing,Arunachal Pradesh,Lower Dibang Valley,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_0119889FE4,KIC,Judo Multipurpose Hall Yingkiong,Judo Multipurpose Hall Yingkiong,Arunachal Pradesh,Upper Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_53E296D75A,KIC,Judo Town Hall Khonsa,Judo Town Hall Khonsa,Arunachal Pradesh,Tirap,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_30ECEDD34A,KIC,"SetongSena Stadium HS School, Jairampur","SetongSena Stadium HS School, Jairampur",Arunachal Pradesh,Changlang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_DC3BFF4133,KIC,Table Tennis Kalikho pul indoor Hall Tezu,Table Tennis Kalikho pul indoor Hall Tezu,Arunachal Pradesh,Lohit,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_4923591BE4,KIC,"Table Tennis at Govt. HS School ,Mechuka","Table Tennis at Govt. HS School ,Mechuka",Arunachal Pradesh,Shi Yomi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_FE27366202,KIC,Table- Tennis at Govt. Hs School Hawai,Table- Tennis at Govt. Hs School Hawai,Arunachal Pradesh,Anjaw,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_53D9917184,KIC,Table-Tennis Multi- Sports Indoor Hall,Table-Tennis Multi- Sports Indoor Hall,Arunachal Pradesh,West Kameng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_00C1A3C834,KIC,Weightlifting Hall At Govt HS School Bana,Weightlifting Hall At Govt HS School Bana,Arunachal Pradesh,East Kameng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_89C191C055,KIC,Weightlifting Hall Govt HS Palin,Weightlifting Hall Govt HS Palin,Arunachal Pradesh,Kra Daadi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_350BBF2246,KIC,Weightlifting Hall at Govt HS School Likabali,Weightlifting Hall at Govt HS School Likabali,Arunachal Pradesh,Lower Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_6BA7A4F740,KIC,Weightlifting Hall at Govt. HS School Itanagar,Weightlifting Hall at Govt. HS School Itanagar,Arunachal Pradesh,Itanagar Capital Complex,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_EA6AD5B6EF,KIC,Weightlifting Hall at Sagalee,Weightlifting Hall at Sagalee,Arunachal Pradesh,Papum Pare,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ARUNAC_5413907BDB,KIC,Weightlifting Hall at Sports Complex Darka,Weightlifting Hall at Sports Complex Darka,Arunachal Pradesh,West Siang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_7619A35B53,KIC,Agomani HS School,Agomani HS School,Assam,Dhubri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_35058B64CB,KIC,Amteka High School,Amteka High School,Assam,Chirang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_D4C9136FF9,KIC,"Bajali Krida Sanstha Playground, Pathshala, Dist. Barpeta","Bajali Krida Sanstha Playground, Pathshala, Dist. Barpeta",Assam,Barpeta,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_3DB18FBDC4,KIC,Bampather Bengenabari H.S. School,Bampather Bengenabari H.S. School,Assam,Charaideo,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_65923D9DC3,KIC,Bardamal Football Coaching Centre,Bardamal Football Coaching Centre,Assam,Goalpara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_A1D4D6E5B0,KIC,Bhakatpara Bodo Sports Club,Bhakatpara Bodo Sports Club,Assam,Darrang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_308B1E73E2,KIC,Bihaguri Stadium,Bihaguri Stadium,Assam,Sonitpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_8278AEB279,KIC,Biswanath District Amaeture Boxing Association,Biswanath District Amaeture Boxing Association,Assam,Biswanath,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_6FB991EFD0,KIC,Boithalangso HS School,Boithalangso HS School,Assam,West Karbi Anglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_DB737BB24B,KIC,Bongaigaon Football Coaching Centre,Bongaigaon Football Coaching Centre,Assam,Bongaigaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_AD235516B0,KIC,Bongaigaon Hockey Association,Bongaigaon Hockey Association,Assam,Bongaigaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_98148649C3,KIC,"Dakshin Kamrup Rural Stadiumm, Mirza,","Dakshin Kamrup Rural Stadiumm, Mirza,",Assam,Kamrup,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_9869FF86A5,KIC,"Dhaneshwar Basumatary Boxing Training Centre, Udalguri","Dhaneshwar Basumatary Boxing Training Centre, Udalguri",Assam,Udalguri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_4AC8445A73,KIC,Dhemaji Football Coaching Centre,Dhemaji Football Coaching Centre,Assam,Dhemaji,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_6A306870C2,KIC,Dikhowmukh Health & Athletics Club,Dikhowmukh Health & Athletics Club,Assam,Sivasagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_6D704DB0E4,KIC,"District Level Khelo India Centre, Tinsukia","District Level Khelo India Centre, Tinsukia",Assam,Tinsukia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_999F46C08B,KIC,"District Sports Complex, Baksa","District Sports Complex, Baksa",Assam,Baksa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_47B2B56DCC,KIC,"District Sports Complex, Baksa, Mushalpur","District Sports Complex, Baksa, Mushalpur",Assam,Baksa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_3F30828ACE,KIC,"District Sports Office, Dima Haso","District Sports Office, Dima Haso",Assam,Dima Hasao,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_EC8AA17EAA,KIC,"District Sports Office, Kamrup","District Sports Office, Kamrup",Assam,Kamrup,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_293CBB0537,KIC,"District Sports Office, Nagaon","District Sports Office, Nagaon",Assam,Nagaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_F9EF6AF806,KIC,"District Sports Office, Tamulpur","District Sports Office, Tamulpur",Assam,Tamulpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_C07607C166,KIC,"District Sports Officer, Dibrugarh","District Sports Officer, Dibrugarh",Assam,Dibrugarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_FA1CBDAD0F,KIC,"District Sports Officer, Golaghat","District Sports Officer, Golaghat",Assam,Golaghat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_E6A7FDA832,KIC,"District Sports Officer, Morigaon","District Sports Officer, Morigaon",Assam,Morigaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_0F28D36D08,KIC,"District Sports Officer, South Salmara Mankachar","District Sports Officer, South Salmara Mankachar",Assam,South Salmara Mankachar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_A0E67F7A73,KIC,"District Sports Officer, Tamulpur","District Sports Officer, Tamulpur",Assam,Tamulpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_9E21D2EF52,KIC,"District Weightlifting Hall, Sonari Town, Near Circuit House, Sonari, Charaideo","District Weightlifting Hall, Sonari Town, Near Circuit House, Sonari, Charaideo",Assam,Charaideo,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_5A6E515709,KIC,"Don Bosco School, Guwahati","Don Bosco School, Guwahati",Assam,Kamrup Metropolitan,,Converted,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_D09EB70E5B,KIC,"Dotma HS School, Dotma","Dotma HS School, Dotma",Assam,Kokrajhar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_1E43A85AED,KIC,Hailakhandi Sepak Takraw Coaching Centre,Hailakhandi Sepak Takraw Coaching Centre,Assam,Hailakandi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_3F27062051,KIC,"Hanjanlangso Sports Association Playground, PO. Sarihajan, Bokajan, Karbianglong","Hanjanlangso Sports Association Playground, PO. Sarihajan, Bokajan, Karbianglong",Assam,Karbi Anglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_66253D1F54,KIC,Hojai Stadium Ground,Hojai Stadium Ground,Assam,Hojai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_DCBD181FC4,KIC,Howraghat HS School,Howraghat HS School,Assam,Karbi Anglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_48E5611CB8,KIC,"Jengraimukh High School Playground, Rajiv Gandhi Sports Complex","Jengraimukh High School Playground, Rajiv Gandhi Sports Complex",Assam,Majuli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_6E344E8CC5,KIC,"Jengraimukh Sports Complex, Near Jengraimukh High School, PO. Jengraimukh, Majuli","Jengraimukh Sports Complex, Near Jengraimukh High School, PO. Jengraimukh, Majuli",Assam,Majuli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_1E4253CA5B,KIC,Jonai Football Coaching Center,Jonai Football Coaching Center,Assam,Dhemaji,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_19495C2D30,KIC,Kalabari HS School,Kalabari HS School,Assam,Biswanath,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_86C8CD5173,KIC,Katichera Athletics Coaching Centre,Katichera Athletics Coaching Centre,Assam,Hailakandi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_1B782097A7,KIC,"Kayaking & Canoeing Centre, Charan Bill, Morigoan","Kayaking & Canoeing Centre, Charan Bill, Morigoan",Assam,Morigaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_4A04D2A319,KIC,Kho-Kho Coaching Centre,Kho-Kho Coaching Centre,Assam,Nalbari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_A1F4987413,KIC,Kokrajhar Govt HS & MP School,Kokrajhar Govt HS & MP School,Assam,Kokrajhar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_A9333E0DDC,KIC,Lakhimpur District Cycling Coaching Centre,Lakhimpur District Cycling Coaching Centre,Assam,Lakhimpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_E4AE645B66,KIC,"Lakhimpur Sports Academy, Town Bantow, PO. Khalmati, North Lakhimpur, Lakhimpur","Lakhimpur Sports Academy, Town Bantow, PO. Khalmati, North Lakhimpur, Lakhimpur",Assam,Lakhimpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_CD1787FF65,KIC,Lanka Sports Association Playground,Lanka Sports Association Playground,Assam,Hojai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_1A0052763B,KIC,Makhibaha HS School ( In collaboration with MakhibahaKrira Sangha Makhibada),Makhibaha HS School ( In collaboration with MakhibahaKrira Sangha Makhibada),Assam,Nalbari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_C0749A4A5F,KIC,"Multipurpose Indoor Sports Hall , Dibrugarh","Multipurpose Indoor Sports Hall , Dibrugarh",Assam,Dibrugarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_968D324D43,KIC,"N. L. Daulagupu Sports Complex, Halflong","N. L. Daulagupu Sports Complex, Halflong",Assam,Dima Hasao,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_7C6D1E6ED4,KIC,Nakachari HS School Playfield,Nakachari HS School Playfield,Assam,Jorhat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_B0DD3CF2C0,KIC,Patbausi High School Playground,Patbausi High School Playground,Assam,Barpeta,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_C6F7E9F770,KIC,"Probin Gogoi Multipurpose Indoor Hall, Golaghat","Probin Gogoi Multipurpose Indoor Hall, Golaghat",Assam,Golaghat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_7FA76E229C,KIC,Rabha Hasong Football Coaching Centre,Rabha Hasong Football Coaching Centre,Assam,Goalpara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_070DDB1167,KIC,Rabi Kachary Mini Stadium Harisinga,Rabi Kachary Mini Stadium Harisinga,Assam,Udalguri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_474F933F49,KIC,Rangamati HS School Playground,Rangamati HS School Playground,Assam,Darrang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_D2C40F6A85,KIC,"Rising Sun Athletics Academy, Gargaon","Rising Sun Athletics Academy, Gargaon",Assam,Sivasagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_30C51294F8,KIC,Samabay High School Playground,Samabay High School Playground,Assam,Karimganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_0B39385873,KIC,Sangin Sangha Amilapatty Nagoan,Sangin Sangha Amilapatty Nagoan,Assam,Nagaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_EA2A443BA5,KIC,"Sapatgram Amalgamated Academy ,Sapatgram","Sapatgram Amalgamated Academy ,Sapatgram",Assam,Dhubri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_C4EFA74BB4,KIC,Sidli Kashikotra H.S School,Sidli Kashikotra H.S School,Assam,Chirang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_5E9131B1E0,KIC,Sonapur HS School,Sonapur HS School,Assam,Kamrup Metropolitan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_34503F5182,KIC,Teok High School Playfield,Teok High School Playfield,Assam,Jorhat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_ADDBCBBF99,KIC,Tezpur District Sports Association,Tezpur District Sports Association,Assam,Sonitpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_47B98E9399,KIC,"Tinsukia Commerce College ,Tinsukia","Tinsukia Commerce College ,Tinsukia",Assam,Tinsukia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_61B6054D06,KIC,"Tumpreng Higher Secondary School Playground, Dongkamukam, West Karbianglong","Tumpreng Higher Secondary School Playground, Dongkamukam, West Karbianglong",Assam,West Karbi Anglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_4FFE8BE758,KIC,Ulubari Boxing Club,Ulubari Boxing Club,Assam,Kamrup Metropolitan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ASSAM_56B4C46E24,KIC,"Viking Sports & Social Culture Organization, BSF Camp Road, Maizdhi, PO. Settlement Road, Karimganj","Viking Sports & Social Culture Organization, BSF Camp Road, Maizdhi, PO. Settlement Road, Karimganj",Assam,Karimganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_FEC53728AD,KIC,B.P. Mandal Indoor Stadium,B.P. Mandal Indoor Stadium,Bihar,Madhepura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_E2589021C1,KIC,Collectoriate Campus,Collectoriate Campus,Bihar,Araria,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_4A2280B6EF,KIC,"D/O Narayan Shah,Thana, Sitamarahi Ward 16,Rampur Parori","D/O Narayan Shah,Thana, Sitamarahi Ward 16,Rampur Parori",Bihar,Sitamarhi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_C19553A073,KIC,District Khel Bhawan,District Khel Bhawan,Bihar,Jehanabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_99E2C9A303,KIC,"District Khel Bhawan, Saran","District Khel Bhawan, Saran",Bihar,Saran,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_5CAFC0F7A2,KIC,"District Khel Bhawan, Sheikhpura","District Khel Bhawan, Sheikhpura",Bihar,Sheikhpura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_B53304E6F9,KIC,"Goraul Hockey Ground,Vaishali","Goraul Hockey Ground,Vaishali",Bihar,Vaishali,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_EF013897FE,KIC,"High School Amain, Parasbigha","High School Amain, Parasbigha",Bihar,Pashchim Champaran,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_F27D312D3C,KIC,Indoor Stadium,Indoor Stadium,Bihar,Munger,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_AB0974AAA6,KIC,"Indoor Stadium, Aurangabad","Indoor Stadium, Aurangabad",Bihar,Aurangabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_C50D6D188A,KIC,Jagjiwan Stadium Bhabhua,Jagjiwan Stadium Bhabhua,Bihar,Kaimur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_59F7357ED1,KIC,"Khel Bhawan, Kisanganj","Khel Bhawan, Kisanganj",Bihar,Kishanganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_8FE691F7EA,KIC,"Khel Bhawan, Saharsha","Khel Bhawan, Saharsha",Bihar,Saharsa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_D1E33B68C1,KIC,"Koshi College Hockey Ground, Ward-25, Koshi","Koshi College Hockey Ground, Ward-25, Koshi",Bihar,Khagaria,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_D75DB82762,KIC,Koshi High School Playgroung Birpur,Koshi High School Playgroung Birpur,Bihar,Supaul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_C8991CBF3B,KIC,Kuwaridhi Bhore,Kuwaridhi Bhore,Bihar,Gopalganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_30007C3ADD,KIC,"Mahatma Gandhi High School, Bihar and Vaidhai Ballabh Sharma, Bihar","Mahatma Gandhi High School, Bihar and Vaidhai Ballabh Sharma, Bihar",Bihar,Begusarai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_47560930E3,KIC,Nehru Stadium Laheriasari,Nehru Stadium Laheriasari,Bihar,Darbhanga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_5987453E97,KIC,"New Stadium, Fazalganj","New Stadium, Fazalganj",Bihar,Rohtas,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_BEDF039AA1,KIC,"Patel Field,Samastipur","Patel Field,Samastipur",Bihar,Samastipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_B22EC869FD,KIC,Patiputra Sports Complex,Patiputra Sports Complex,Bihar,Patna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_63897D9DFF,KIC,"Purani Bazaar Ward, Surajpur","Purani Bazaar Ward, Surajpur",Bihar,Lakhisarai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_6C0BD9EAC5,KIC,"RHMTB High School, Goga","RHMTB High School, Goga",Bihar,Bhagalpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_B986C75123,KIC,"Rugby Club Mirjapur, Nawada","Rugby Club Mirjapur, Nawada",Bihar,Nawada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_B0616830BD,KIC,Rugby Football Association of Arwal,Rugby Football Association of Arwal,Bihar,Arwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_CEEB3BE5A9,KIC,"Shri Krishna Singh,Stadium, Jamui","Shri Krishna Singh,Stadium, Jamui",Bihar,Jamui,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_E29C38EA76,KIC,"Thakur Ramanandan Uchh Vidyalaya, Fatehpur, Seohar","Thakur Ramanandan Uchh Vidyalaya, Fatehpur, Seohar",Bihar,Seohar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_D4FBABA64D,KIC,"Veer Kunwar Sing Stadium,Ramna Maidan","Veer Kunwar Sing Stadium,Ramna Maidan",Bihar,Bhojpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_89CC67D2CA,KIC,"Vill PO Brahampur, Buxar","Vill PO Brahampur, Buxar",Bihar,Buxar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_711BFB27F3,KIC,"Village Gorgama, P.O. – Gorgama, P.S.- Amarpur, Dist. - Banka","Village Gorgama, P.O. – Gorgama, P.S.- Amarpur, Dist. - Banka",Bihar,Banka,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_C76DCD80E5,KIC,Village Kapatiya,Village Kapatiya,Bihar,Nalanda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_F6D096381F,KIC,"Village Lachhimpur PO, Seotapur","Village Lachhimpur PO, Seotapur",Bihar,Siwan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_857B3DDB63,KIC,Zila High School,Zila High School,Bihar,Gaya,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_BIHAR_F052B65226,KIC,"Zila School, Purnea","Zila School, Purnea",Bihar,Purnea,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHANDI_E9810B553D,KIC,Punjab University Chandigarh,Punjab University Chandigarh,Chandigarh,Chandigarh,,Converted,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHANDI_0B608593FF,KIC,"Sports Complex, Sector-42, Chandigarh","Sports Complex, Sector-42, Chandigarh",Chandigarh,Chandigarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_7608FD6E17,KIC,Archery Prasieshan kendra Sports & Youth Welfare Dept Dantewada,Archery Prasieshan kendra Sports & Youth Welfare Dept Dantewada,Chhattisgarh,Dakshin Bastar Dantewada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_741997E561,KIC,Archery Training Centre & Youth Welfare Dept Mahasamund,Archery Training Centre & Youth Welfare Dept Mahasamund,Chhattisgarh,Mahasamund,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_AEB91E687B,KIC,BSPUMVIC 02 Auditorium Dallirajha,BSPUMVIC 02 Auditorium Dallirajha,Chhattisgarh,Balod,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_D082A1381D,KIC,Badminton Training Centre,Badminton Training Centre,Chhattisgarh,Korea,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_52BEF1755D,KIC,"Badminton Training Centre,Raigarh Sports & Youth Welfare","Badminton Training Centre,Raigarh Sports & Youth Welfare",Chhattisgarh,Raigarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_F0C65EF16A,KIC,Bijapur Sports Academy (B.S.A) Sports & Youth Welfare Bijapur,Bijapur Sports Academy (B.S.A) Sports & Youth Welfare Bijapur,Chhattisgarh,Bijapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_41DF94837A,KIC,District Footbal Training Centre Sports & Youth Welfare Kasdol,District Footbal Training Centre Sports & Youth Welfare Kasdol,Chhattisgarh,Baloda Bazar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_A95E87EB87,KIC,District Football Training Centre,District Football Training Centre,Chhattisgarh,Sarangarh-Bilaigarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_B49401CC35,KIC,"District Kabbadi Training Centre,Patan Sports & Youth Welfare","District Kabbadi Training Centre,Patan Sports & Youth Welfare",Chhattisgarh,Durg,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_AD352AEFB1,KIC,"District Training Centre, Sports & Youth Welfare","District Training Centre, Sports & Youth Welfare",Chhattisgarh,Kondagaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_7C1330A45B,KIC,Football Training Centre,Football Training Centre,Chhattisgarh,Sakti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_DD5BFE3706,KIC,"Football Training Centre Sports & Youth Welfare Dept, Surajpur","Football Training Centre Sports & Youth Welfare Dept, Surajpur",Chhattisgarh,Surajpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_F5852F889D,KIC,"Football Training Centre, Ambagarh Chowki","Football Training Centre, Ambagarh Chowki",Chhattisgarh,Mohla-Manpur-Ambagarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_C3ECB33FA3,KIC,"Football Training Centre, Khairgarh","Football Training Centre, Khairgarh",Chhattisgarh,Khairgarh-Chuikhadan-Gandai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_C829F12927,KIC,Hockey Training Centre Sports & Youth Welfare Jashpur,Hockey Training Centre Sports & Youth Welfare Jashpur,Chhattisgarh,Jashpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_20F8620361,KIC,Hockey Training Centre sports & Youth Welfare Rajnandgaon,Hockey Training Centre sports & Youth Welfare Rajnandgaon,Chhattisgarh,Rajnandgaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_C2B54DEFC7,KIC,"Hockey Training Centre,Pandripani,Jagdalpur ,Bastar Sports & Youth Welfare","Hockey Training Centre,Pandripani,Jagdalpur ,Bastar Sports & Youth Welfare",Chhattisgarh,Bastar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_27F1B30E76,KIC,Jila Prashishan Kendra,Jila Prashishan Kendra,Chhattisgarh,Kabirdham,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_CE53B57749,KIC,"Kabaddi Prashikshan, Pendra","Kabaddi Prashikshan, Pendra",Chhattisgarh,Gaurela-Pendra-Marwahi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_39B408E322,KIC,Kabaddi Training Centre,Kabaddi Training Centre,Chhattisgarh,Manendragarh-Chirmiri-Bharatpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_EBA9A5E7E3,KIC,Khel Parisar (Malkhambh) Narayanpur,Khel Parisar (Malkhambh) Narayanpur,Chhattisgarh,Narayanpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_DB8374E1B7,KIC,"Kho-Kho Prashikshan Kendra, Kanker Sports & Youth Welfare","Kho-Kho Prashikshan Kendra, Kanker Sports & Youth Welfare",Chhattisgarh,Uttar Bastar Kanker,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_8F690C2A10,KIC,"Priyadarshani Indira Stadium,Dist.Korba Sports & Youth Welfare","Priyadarshani Indira Stadium,Dist.Korba Sports & Youth Welfare",Chhattisgarh,Korba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_E962EE4D43,KIC,"Pt.Shyam Prasad Mukharji, Football Training Centre Sports & Youth Welare Dept, Mungeli","Pt.Shyam Prasad Mukharji, Football Training Centre Sports & Youth Welare Dept, Mungeli",Chhattisgarh,Mungeli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_422955AE8D,KIC,"Shivtarai Training Centre, Sports and Youth Welfare Bilaspur","Shivtarai Training Centre, Sports and Youth Welfare Bilaspur",Chhattisgarh,Bilaspur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_FA12419D0A,KIC,Sports & Youth Welfare Dept Balrampur (C.G),Sports & Youth Welfare Dept Balrampur (C.G),Chhattisgarh,Balrampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_601DEF2B66,KIC,Sports & Youth Welfare Dept Bametara (C.G),Sports & Youth Welfare Dept Bametara (C.G),Chhattisgarh,Bametara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_0BAE024649,KIC,Sports & Youth Welfare Foot,Sports & Youth Welfare Foot,Chhattisgarh,Sukma,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_1A84CDA5D2,KIC,"Sports & Youth Welfare Weightlifiting Centre, Raipur","Sports & Youth Welfare Weightlifiting Centre, Raipur",Chhattisgarh,Raipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_132ED66C71,KIC,"Sports Training Centre Janjgir,Sports & Youth Welfare Dept, Janjgir (C.G)","Sports Training Centre Janjgir,Sports & Youth Welfare Dept, Janjgir (C.G)",Chhattisgarh,Janjgir - Champa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_44B7D2527D,KIC,"Sports Training Centre, Sports & Youth Welfare Dept, Dhamtri","Sports Training Centre, Sports & Youth Welfare Dept, Dhamtri",Chhattisgarh,Dhamtari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_286AC4E4F2,KIC,Sports and Youth Welfare Surguja,Sports and Youth Welfare Surguja,Chhattisgarh,Surguja,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_CHHATT_D0BF3FBF09,KIC,Volleyball Curt Govt Veer Surendra Sai College,Volleyball Curt Govt Veer Surendra Sai College,Chhattisgarh,Gariaband,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DADRA__A5D0DBD164,KIC,"Daman Sports Society, Daman","Daman Sports Society, Daman",Dadra and Nagar Haveli and Daman and Diu,Daman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DADRA__EC94A8AEE6,KIC,"Diu District Sports Council, Diu","Diu District Sports Council, Diu",Dadra and Nagar Haveli and Daman and Diu,Diu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DADRA__629EA18652,KIC,NANI Daman-Govt. College Daman,NANI Daman-Govt. College Daman,Dadra and Nagar Haveli and Daman and Diu,Daman,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DADRA__B31D1B5869,KIC,"Sports Council, Silvassa","Sports Council, Silvassa",Dadra and Nagar Haveli and Daman and Diu,Dadra and Nagar Haveli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_D908E9233E,KIC,"BCP SKV Babarpur, Shahdara, Delhi- 110092","BCP SKV Babarpur, Shahdara, Delhi- 110092",Delhi,North East,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_335D1F9C79,KIC,East Vinod nagar Sports Complex,East Vinod nagar Sports Complex,Delhi,East,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_25B57A4392,KIC,"Govt. Girls Sr. Sec. School,No 3 Badarpur, Near DDA Flats, New Delhi- 110044","Govt. Girls Sr. Sec. School,No 3 Badarpur, Near DDA Flats, New Delhi- 110044",Delhi,South East Delhi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_479AB22AA7,KIC,"Kair Sports Complex, Village Kair,New Delhi - 110043","Kair Sports Complex, Village Kair,New Delhi - 110043",Delhi,South East,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_AC37B6D3B2,KIC,"Mamta Modern School, Vikas Puri","Mamta Modern School, Vikas Puri",Delhi,West,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_4DA3A495EA,KIC,Rajiv Gandhi Sports Complex Singhu,Rajiv Gandhi Sports Complex Singhu,Delhi,North,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_3DF1D34B77,KIC,S.K. V No 1 Gandhi Nagar,S.K. V No 1 Gandhi Nagar,Delhi,Shahdara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_DC231B92AE,KIC,"Sarvodaya Co. Ed, Vidyalaya, Shahpur Jat, New Delhi -110049","Sarvodaya Co. Ed, Vidyalaya, Shahpur Jat, New Delhi -110049",Delhi,South,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_0FFE532EA9,KIC,"Sarvodaya Vidyalaya, Rouse Avenue, New Delhi- 110002","Sarvodaya Vidyalaya, Rouse Avenue, New Delhi- 110002",Delhi,Central Delhi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_AECC2EE64C,KIC,Sports Complex F- Block Vikaspuri,Sports Complex F- Block Vikaspuri,Delhi,West,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_94804F9BCB,KIC,"Sports Complex GBSSS, Pehladpur","Sports Complex GBSSS, Pehladpur",Delhi,North West,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_8066833C38,KIC,"Tyagraj Stadium, INA Colony, New Delhi","Tyagraj Stadium, INA Colony, New Delhi",Delhi,New Delhi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_DELHI_A767BFFF67,KIC,"V S Agriculture Sr Sec School, Jai Bharat Academy, Khera Gari, Delhi","V S Agriculture Sr Sec School, Jai Bharat Academy, Khera Gari, Delhi",Delhi,North,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GOA_793A5A57F8,KIC,"PJNS Fatorda Sports Complex, Fatorda Goa","PJNS Fatorda Sports Complex, Fatorda Goa",Goa,South Goa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GOA_C8456FC220,KIC,"Peddem Sports Complex Peddem, Mapusa Goa","Peddem Sports Complex Peddem, Mapusa Goa",Goa,North Goa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_519CDE4EF4,KIC,Aamsaran Rifle & Adventure Sports Academy,Aamsaran Rifle & Adventure Sports Academy,Gujarat,Kheda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_AD2A368722,KIC,Ace Tennis & Sports Association,Ace Tennis & Sports Association,Gujarat,Gandhinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_673AE9154E,KIC,Aids Sports Complex,Aids Sports Complex,Gujarat,Bharuch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_67F65F54DD,KIC,Ashwamegh Secondary & Higer Secondary School,Ashwamegh Secondary & Higer Secondary School,Gujarat,Devbhumi Dwarka,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_5028564070,KIC,Baroda Football Academy,Baroda Football Academy,Gujarat,Vadodara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_83E664D81B,KIC,"Distric Sports Coaching Centre, Porbandar","Distric Sports Coaching Centre, Porbandar",Gujarat,Porbandar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_427B82311A,KIC,District Sports Coaching Centre Amreli,District Sports Coaching Centre Amreli,Gujarat,Amreli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_11ED54AA8D,KIC,"District Sports Coaching Centre, Anand","District Sports Coaching Centre, Anand",Gujarat,Anand,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_A0B1E3E7A6,KIC,"District Sports Coaching Centre, Dang","District Sports Coaching Centre, Dang",Gujarat,Dangs,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_EDD8B162BF,KIC,"District Sports Coaching Centre, Devgadh Baria","District Sports Coaching Centre, Devgadh Baria",Gujarat,Dahod,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_BC8C9E424C,KIC,"District Sports Coaching Centre, Limbdi","District Sports Coaching Centre, Limbdi",Gujarat,Surendranagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_E3BB6AD96B,KIC,"District Sports Coaching Centre, Mehsana","District Sports Coaching Centre, Mehsana",Gujarat,Mehsana,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_6B423EB2AD,KIC,"District Sports Coaching Centre, Navsari","District Sports Coaching Centre, Navsari",Gujarat,Navsari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_C24528EBF2,KIC,"District Sports Coaching Centre, Patan","District Sports Coaching Centre, Patan",Gujarat,Patan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_C7CF8B0CAE,KIC,"District Sports Coaching Centre, Rajkot","District Sports Coaching Centre, Rajkot",Gujarat,Rajkot,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_01235F094F,KIC,"District-Sabarkantha, KIC-District Sports Coaching Centre, Himmatnagar","District-Sabarkantha, KIC-District Sports Coaching Centre, Himmatnagar",Gujarat,Sabar Kantha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_A040A2F77C,KIC,Distt. Sports Coaching Centre,Distt. Sports Coaching Centre,Gujarat,Junagadh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_355F93DD40,KIC,Eklavya Modal Residential School,Eklavya Modal Residential School,Gujarat,Valsad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_DBC1953B68,KIC,"EklavyaVyayam Shala, Naswadi","EklavyaVyayam Shala, Naswadi",Gujarat,Chhota Udepur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_E120AFE097,KIC,"Girl Literacy Residential School, Dediyapada","Girl Literacy Residential School, Dediyapada",Gujarat,Narmada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_50AA844976,KIC,Gurukul Songadh,Gurukul Songadh,Gujarat,Bhavnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_41E8297411,KIC,"Limbhola, Unnati Yuvak Mandal, Kadana","Limbhola, Unnati Yuvak Mandal, Kadana",Gujarat,Mahisagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_1AB3E64087,KIC,"Nalanda Vidhyalaya, Morbi","Nalanda Vidhyalaya, Morbi",Gujarat,Morbi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_E4B8CC349F,KIC,"P.M Shree G.L.R.S Babarghat, Tapi","P.M Shree G.L.R.S Babarghat, Tapi",Gujarat,Tapi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_A9F4E64B7F,KIC,"Regional Coaching Centre, Khokhra","Regional Coaching Centre, Khokhra",Gujarat,Ahmadabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_5E0C672219,KIC,SAG Gandhidham Sports Complex,SAG Gandhidham Sports Complex,Gujarat,Kachchh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_BF62972C7B,KIC,Sardar Patel Sports Complex,Sardar Patel Sports Complex,Gujarat,Bhavnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_58E0B99346,KIC,Shree Alau Prathamik Shala,Shree Alau Prathamik Shala,Gujarat,Botad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_71FA1538CF,KIC,Shree Banaskantha District Hockey Association,Shree Banaskantha District Hockey Association,Gujarat,Banas Kantha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_86624334A6,KIC,Shree K.K. Mori High School,Shree K.K. Mori High School,Gujarat,Gir Somnath,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_04ADC39634,KIC,"Shree Satya Sai Vidhyalay, Jamnagar","Shree Satya Sai Vidhyalay, Jamnagar",Gujarat,Jamnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_9EC4988B62,KIC,"Sports Complex, Kanelav Lake, Godhra","Sports Complex, Kanelav Lake, Godhra",Gujarat,Panchmahal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_ACEFBA5AB4,KIC,"Surya EklavyaSainik School, Kherancha","Surya EklavyaSainik School, Kherancha",Gujarat,Aravalli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_GUJARA_7124778C2D,KIC,Target Rifle Shooting Academy,Target Rifle Shooting Academy,Gujarat,Surat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_5C5B75A873,KIC,"Arjun Stadium, Jind","Arjun Stadium, Jind",Haryana,Jind,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_E20E3FB48C,KIC,"Arya Kanya Gurukul Sr.Sec. School, Mor Majra, Karnal","Arya Kanya Gurukul Sr.Sec. School, Mor Majra, Karnal",Haryana,Karnal,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_10286E4418,KIC,"Bhodia Khera Stadium, Village BhdiaKhera, Distt Fatehabad","Bhodia Khera Stadium, Village BhdiaKhera, Distt Fatehabad",Haryana,Fatehabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_3E5E9D5739,KIC,"Ch. Pratap Singh Memorial Samiti, Kharkhoda","Ch. Pratap Singh Memorial Samiti, Kharkhoda",Haryana,Sonipat,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_61A8A50A8C,KIC,Convent Som Gurukul,Convent Som Gurukul,Haryana,Kurukshetra,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_CFA69FB438,KIC,"Distt. Sports Officer, Panchkula","Distt. Sports Officer, Panchkula",Haryana,Panchkula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_1609311F39,KIC,Guru Nanak Khalsa College,Guru Nanak Khalsa College,Haryana,Kurukshetra,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_405A2C416F,KIC,"Gurukul University, Khel Stadium, Jhajjar","Gurukul University, Khel Stadium, Jhajjar",Haryana,Jhajjar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_5634C4CB0C,KIC,Kurukshetra University,Kurukshetra University,Haryana,Kurukshetra,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_008D877F0C,KIC,"Lord Krishna Public School, Samalkha (Panipat)","Lord Krishna Public School, Samalkha (Panipat)",Haryana,Panipat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_D032FEEAA4,KIC,Markandeshwar Hockey Stadium Shahabad,Markandeshwar Hockey Stadium Shahabad,Haryana,Kurukshetra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_D96C05317A,KIC,"Meham Boxing Club Ashok Nagar Meham, Rohtak","Meham Boxing Club Ashok Nagar Meham, Rohtak",Haryana,Rohtak,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_A1D72AB505,KIC,Rajiv Gandhi Khel Parisar Village Banchari,Rajiv Gandhi Khel Parisar Village Banchari,Haryana,Palwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_510D79054F,KIC,"Rajiv Gandhi Khel Parisar, Khanda Kheri, Hansi, Hisar","Rajiv Gandhi Khel Parisar, Khanda Kheri, Hansi, Hisar",Haryana,Hisar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_537E23011B,KIC,"Rajiv Gandhi Mini Stadium Rohera, Kaithal","Rajiv Gandhi Mini Stadium Rohera, Kaithal",Haryana,Kaithal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_BB42CF7792,KIC,Rajiv Gandhi Stadium,Rajiv Gandhi Stadium,Haryana,Ambala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_6878CD107B,KIC,"Rupana Boxing Club, Charki Dadri","Rupana Boxing Club, Charki Dadri",Haryana,Charki Dadri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_E7D6EFBF86,KIC,"Sawaiman Sports Academy, Near ITI, Tankri, the-Bawal, Distt. Rewari","Sawaiman Sports Academy, Near ITI, Tankri, the-Bawal, Distt. Rewari",Haryana,Rewari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_F16A47B614,KIC,"Sports Complex, Sec-12, Faridabad","Sports Complex, Sec-12, Faridabad",Haryana,Faridabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_3526F2F3D4,KIC,"Subash Chander Bose Khel Stadium, Bhiwani","Subash Chander Bose Khel Stadium, Bhiwani",Haryana,Bhiwani,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_0FFBCDDA90,KIC,"Tejli Sports Complex, Yamunanagar","Tejli Sports Complex, Yamunanagar",Haryana,Yamunanagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HARYAN_12AA470428,KIC,Yogeshwar Dutt Sports & Education Trust,Yogeshwar Dutt Sports & Education Trust,Haryana,Sonipat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_B2282D3095,KIC,Almighty Education Society,Almighty Education Society,Himachal Pradesh,Hamirpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_4C59D12BB1,KIC,"Boxing Coaching Centre Reckongpeo, Youth Service & Sports Himachal Pradesh","Boxing Coaching Centre Reckongpeo, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Kinnaur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_4CD1571EB0,KIC,"Chamba, DYSSO Ground, Youth Service & Sports Himachal Pradesh","Chamba, DYSSO Ground, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Chamba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_21E497DCD8,KIC,"Coaching Centre, Khel Maidan Ranguwal","Coaching Centre, Khel Maidan Ranguwal",Himachal Pradesh,Solan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_267440C498,KIC,"District Football Association, Padal Maidan, Distt. Mandi","District Football Association, Padal Maidan, Distt. Mandi",Himachal Pradesh,Mandi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_A4295D5679,KIC,"Indira Gandhi State Sports Complex , Shimla, Youth Service & Sports Himachal Pradesh","Indira Gandhi State Sports Complex , Shimla, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Shimla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_A8DFF71D27,KIC,Indra Stadium Una Youth Service & Sports Himachal Pradesh,Indra Stadium Una Youth Service & Sports Himachal Pradesh,Himachal Pradesh,Una,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_C2AD273324,KIC,"Kapoor Badminton Academy, Dehra","Kapoor Badminton Academy, Dehra",Himachal Pradesh,Kangra,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_6C9A28B34C,KIC,"Maharaj Laxman Smarak Mahavidyalaya College, Sunder Nagar","Maharaj Laxman Smarak Mahavidyalaya College, Sunder Nagar",Himachal Pradesh,Mandi,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_0307187F2A,KIC,PGSSS Rampur Burshahr,PGSSS Rampur Burshahr,Himachal Pradesh,Shimla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_A829AC178C,KIC,"Sirda Sports Academy, Sundernagar","Sirda Sports Academy, Sundernagar",Himachal Pradesh,Mandi,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_1273E64544,KIC,"Sports Complex Dhalpur Ground , Kullu, Youth Service & Sports Himachal Pradesh","Sports Complex Dhalpur Ground , Kullu, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Kullu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_439F155115,KIC,"Sports Complex Dharmshala, Youth Service & Sports Himachal Pradesh","Sports Complex Dharmshala, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Kangra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_504F93CBC3,KIC,"Sports Complex Luhnu, Bilaspur, Youth Service & Sports Himachal Pradesh","Sports Complex Luhnu, Bilaspur, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Bilaspur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_9035AE2034,KIC,Sports and Cultural Club Sandhole Naingal,Sports and Cultural Club Sandhole Naingal,Himachal Pradesh,Mandi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_09242C895A,KIC,"State Coaching Centre Lahul, Kaza, Youth Service & Sports Himachal Pradesh","State Coaching Centre Lahul, Kaza, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Lahul & Spiti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_911BF4EC62,KIC,"State Coaching Centre Sirmaur at Nahan Indoor /Outdoor sports complex, Youth Service & Sports Himachal Pradesh","State Coaching Centre Sirmaur at Nahan Indoor /Outdoor sports complex, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Sirmaur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_HIMACH_F0AF79A5EA,KIC,"Synthetics Track , Anu Hamirpur, Youth Service & Sports Himachal Pradesh","Synthetics Track , Anu Hamirpur, Youth Service & Sports Himachal Pradesh",Himachal Pradesh,Hamirpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__F4558C6A5C,KIC,"Football Field Polo Ground, Srinagar","Football Field Polo Ground, Srinagar",Jammu & Kashmir,Srinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__A0D9354F38,KIC,"Hockey Ground Polo View, Srinagar","Hockey Ground Polo View, Srinagar",Jammu & Kashmir,Srinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__FFF8F4E624,KIC,Indoor Hall Udhampur,Indoor Hall Udhampur,Jammu & Kashmir,Udhampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__DDA70DFFE0,KIC,"Indoor Hall, Qaimoh","Indoor Hall, Qaimoh",Jammu & Kashmir,Kulgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C47D2BDB5A,KIC,"Indoor Hall, Sehpora","Indoor Hall, Sehpora",Jammu & Kashmir,Ganderbal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__CB4B06CA86,KIC,"Indoor Sports Hall , Doda","Indoor Sports Hall , Doda",Jammu & Kashmir,Doda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__43486D333F,KIC,"Indoor Sports Hall , Gool Ramban","Indoor Sports Hall , Gool Ramban",Jammu & Kashmir,Ramban,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__EE10AAE10E,KIC,"Indoor Sports Hall ,Reasi","Indoor Sports Hall ,Reasi",Jammu & Kashmir,Reasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__60D772FE50,KIC,Indoor Sports Hall - Badgam,Indoor Sports Hall - Badgam,Jammu & Kashmir,Badgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__87D96EE534,KIC,"Indoor Sports Hall -Handwara, Kupwara","Indoor Sports Hall -Handwara, Kupwara",Jammu & Kashmir,Kupwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__762D6D8814,KIC,Indoor Sports Hall -Polo Ground Srinagar,Indoor Sports Hall -Polo Ground Srinagar,Jammu & Kashmir,Srinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__459FFC1FC5,KIC,Indoor Sports Hall Bijbehara Anantnag,Indoor Sports Hall Bijbehara Anantnag,Jammu & Kashmir,Anantnag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__A3EBDD5CF3,KIC,"Indoor Sports Hall Billawar, Kathua","Indoor Sports Hall Billawar, Kathua",Jammu & Kashmir,Kathua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__88A0DDECC7,KIC,Indoor Sports Hall Kathua,Indoor Sports Hall Kathua,Jammu & Kashmir,Kathua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__B1463CA83D,KIC,"Indoor Sports Hall Nilandrusu, Bijbehara","Indoor Sports Hall Nilandrusu, Bijbehara",Jammu & Kashmir,Anantnag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__7E4F44A167,KIC,Indoor Sports Hall Ramnagar,Indoor Sports Hall Ramnagar,Jammu & Kashmir,Udhampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__1BD67C3687,KIC,"Indoor Sports Hall Sehpora, Ganderbal","Indoor Sports Hall Sehpora, Ganderbal",Jammu & Kashmir,Ganderbal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__05828D2AE5,KIC,Indoor Sports Hall Shadipora-Bandipore,Indoor Sports Hall Shadipora-Bandipore,Jammu & Kashmir,Bandipore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5F68B19DA2,KIC,Indoor Sports Hall Shupiyan,Indoor Sports Hall Shupiyan,Jammu & Kashmir,Shupiyan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__1902208416,KIC,Indoor Sports Hall at HSS Bhaderwah,Indoor Sports Hall at HSS Bhaderwah,Jammu & Kashmir,Doda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__1E83822C60,KIC,"Indoor Sports Hall, Badgam","Indoor Sports Hall, Badgam",Jammu & Kashmir,Badgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__39318FDA3C,KIC,"Indoor Sports Hall, Doda","Indoor Sports Hall, Doda",Jammu & Kashmir,Doda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__8C63D89CB7,KIC,"Indoor Sports Hall, Doda,","Indoor Sports Hall, Doda,",Jammu & Kashmir,Doda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__7976887B02,KIC,"Indoor Sports Hall, Elahibagh","Indoor Sports Hall, Elahibagh",Jammu & Kashmir,Srinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__ABB9B1E66E,KIC,"Indoor Sports Hall, Gool Ramban","Indoor Sports Hall, Gool Ramban",Jammu & Kashmir,Ramban,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__42AD3E54C7,KIC,"Indoor Sports Hall, Handwara","Indoor Sports Hall, Handwara",Jammu & Kashmir,Kupwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__8712A612C1,KIC,"Indoor Sports Hall, Kishtwar","Indoor Sports Hall, Kishtwar",Jammu & Kashmir,Kishtwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__11C8F9B3E4,KIC,"Indoor Sports Hall, Kishtwar,","Indoor Sports Hall, Kishtwar,",Jammu & Kashmir,Kishtwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__E0D7FD0DCE,KIC,"Indoor Sports Hall, Koteranka","Indoor Sports Hall, Koteranka",Jammu & Kashmir,Rajouri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__099ED001D0,KIC,"Indoor Sports Hall, Mandi","Indoor Sports Hall, Mandi",Jammu & Kashmir,Poonch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__9D26E3CB76,KIC,"Indoor Sports Hall, Mirgund Pattan","Indoor Sports Hall, Mirgund Pattan",Jammu & Kashmir,Baramula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__D2E6AC2D7F,KIC,"Indoor Sports Hall, Rajpora","Indoor Sports Hall, Rajpora",Jammu & Kashmir,Pulwama,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__22520C8E5A,KIC,"Indoor Sports Hall, Reasi","Indoor Sports Hall, Reasi",Jammu & Kashmir,Reasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__6825202AF3,KIC,"Indoor Sports Hall, Samba","Indoor Sports Hall, Samba",Jammu & Kashmir,Samba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__4B75C0C234,KIC,"Indoor Sports Hall, Samba,","Indoor Sports Hall, Samba,",Jammu & Kashmir,Samba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__6F3D57EE0A,KIC,"Indoor Sports Hall, Shadipora","Indoor Sports Hall, Shadipora",Jammu & Kashmir,Bandipore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__0275BC9AD6,KIC,"Indoor Sports Hall, Shopian","Indoor Sports Hall, Shopian",Jammu & Kashmir,Shupiyan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__CEB3C65431,KIC,"Indoor Sports Hall, Shupiyan","Indoor Sports Hall, Shupiyan",Jammu & Kashmir,Shupiyan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C1C981BB06,KIC,"Indoor Sports Hall, Tral-pulwama","Indoor Sports Hall, Tral-pulwama",Jammu & Kashmir,Pulwama,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__D976BC5604,KIC,Indoor Sports Stadium,Indoor Sports Stadium,Jammu & Kashmir,Udhampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__BBA3AA86A2,KIC,"Indoor Sports, Hall Bhagwati Nagar, Jammu","Indoor Sports, Hall Bhagwati Nagar, Jammu",Jammu & Kashmir,Jammu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__68B4E4C4EF,KIC,Indoor Stadium Hall Punch,Indoor Stadium Hall Punch,Jammu & Kashmir,Poonch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__8F940EDD98,KIC,Indoor Stadium Hall Qaimoh Kulgam,Indoor Stadium Hall Qaimoh Kulgam,Jammu & Kashmir,Kulgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__CCEE4F99CB,KIC,"Indoor Stadium, Janbazpora","Indoor Stadium, Janbazpora",Jammu & Kashmir,Baramula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__6FBA7F66D6,KIC,Indoor sports Hall Rajouri,Indoor sports Hall Rajouri,Jammu & Kashmir,Rajouri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__4C0DAD456F,KIC,K.K. Hakhu Stadium,K.K. Hakhu Stadium,Jammu & Kashmir,Jammu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__73E06E3068,KIC,"Khushaal Stadium , Sopore","Khushaal Stadium , Sopore",Jammu & Kashmir,Baramula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5951D342E8,KIC,"Madr-I- Meharban Stadium, Ganderbal","Madr-I- Meharban Stadium, Ganderbal",Jammu & Kashmir,Ganderbal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__97153DAB20,KIC,Mini Stadium Kulgam,Mini Stadium Kulgam,Jammu & Kashmir,Kulgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__557DB01184,KIC,"Mini Stadium, Baramula","Mini Stadium, Baramula",Jammu & Kashmir,Baramula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__4780967F92,KIC,"Multi Sports Centre, Gindun-Rajbagh, Srinagar","Multi Sports Centre, Gindun-Rajbagh, Srinagar",Jammu & Kashmir,Srinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__83FB0AA872,KIC,"Old Indoor Hall, MA Stadium","Old Indoor Hall, MA Stadium",Jammu & Kashmir,Jammu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__B6B7FF68C4,KIC,"Old Indoor Sports Complex, M A Stadium, Jammu","Old Indoor Sports Complex, M A Stadium, Jammu",Jammu & Kashmir,Jammu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__540401E93B,KIC,Play Field Bajwani Tral,Play Field Bajwani Tral,Jammu & Kashmir,Pulwama,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__259B8DF16D,KIC,Play Field Beeru,Play Field Beeru,Jammu & Kashmir,Badgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5E2EDBA4B1,KIC,Play Field Behibagh,Play Field Behibagh,Jammu & Kashmir,Kulgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__645D16ABA3,KIC,Play Field Charalluah Faizabad,Play Field Charalluah Faizabad,Jammu & Kashmir,Poonch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__B9307511B0,KIC,Play Field Chattergam,Play Field Chattergam,Jammu & Kashmir,Shupiyan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C18A048ADF,KIC,Play Field Chattroo,Play Field Chattroo,Jammu & Kashmir,Kishtwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__870271F6C5,KIC,"Play Field Chattroo,","Play Field Chattroo,",Jammu & Kashmir,Kishtwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__7AB1ECF764,KIC,Play Field ChowganThail,Play Field ChowganThail,Jammu & Kashmir,Udhampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__2FBF961B33,KIC,Play Field Devsar,Play Field Devsar,Jammu & Kashmir,Kulgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__99DA542EB4,KIC,Play Field Dharmari,Play Field Dharmari,Jammu & Kashmir,Reasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__8DA593A187,KIC,Play Field Dooru,Play Field Dooru,Jammu & Kashmir,Anantnag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C2405AC7D0,KIC,Play Field Gurha Salathia,Play Field Gurha Salathia,Jammu & Kashmir,Samba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5319BAC12B,KIC,Play Field Hira Nagar,Play Field Hira Nagar,Jammu & Kashmir,Kathua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__B3830870CB,KIC,Play Field Ismailpur,Play Field Ismailpur,Jammu & Kashmir,Samba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C519F450A8,KIC,Play Field Kadlabal Pampore,Play Field Kadlabal Pampore,Jammu & Kashmir,Pulwama,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__7719C8921E,KIC,Play Field Kralpathri,Play Field Kralpathri,Jammu & Kashmir,Badgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__B61D223E0B,KIC,"Play Field Kulangam,","Play Field Kulangam,",Jammu & Kashmir,Kupwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__BFC438B069,KIC,Play Field Kutlari Mawar,Play Field Kutlari Mawar,Jammu & Kashmir,Kupwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__200DD8CBEB,KIC,Play Field Lamber Banihal,Play Field Lamber Banihal,Jammu & Kashmir,Ramban,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__87D58B7E96,KIC,Play Field Lar,Play Field Lar,Jammu & Kashmir,Ganderbal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__7B63CB0875,KIC,Play Field Manjakot,Play Field Manjakot,Jammu & Kashmir,Rajouri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C2BEE4403E,KIC,Play Field Naidkhai,Play Field Naidkhai,Jammu & Kashmir,Bandipore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__21B6E1A721,KIC,Play Field Pahalgham,Play Field Pahalgham,Jammu & Kashmir,Anantnag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__6932FD907B,KIC,Play Field Qamariya,Play Field Qamariya,Jammu & Kashmir,Ganderbal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__712374EE91,KIC,Playfield Lambar Banihall,Playfield Lambar Banihall,Jammu & Kashmir,Ramban,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__0E2C74620B,KIC,"Playing Field Banihal ,Ramban","Playing Field Banihal ,Ramban",Jammu & Kashmir,Ramban,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__928C80942C,KIC,Playing Field Handwara Kupwara,Playing Field Handwara Kupwara,Jammu & Kashmir,Kupwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__27E841B9F0,KIC,"Playing Field, Chatroo, Kishtaw","Playing Field, Chatroo, Kishtaw",Jammu & Kashmir,Kishtwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__0FE1205BCF,KIC,"S.A.Sports Stadium , Baramula","S.A.Sports Stadium , Baramula",Jammu & Kashmir,Baramula,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__34EAA89466,KIC,"S.K. Stadium, Bandipore","S.K. Stadium, Bandipore",Jammu & Kashmir,Bandipore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__D9E02072D6,KIC,"Sports Stadium , Pulwama","Sports Stadium , Pulwama",Jammu & Kashmir,Pulwama,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__2FC1BB2759,KIC,Sports Stadium Anantnag,Sports Stadium Anantnag,Jammu & Kashmir,Anantnag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__4CD2662FE2,KIC,Sports Stadium Kathua,Sports Stadium Kathua,Jammu & Kashmir,Kathua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__3C82E89148,KIC,Sports Stadium Punch,Sports Stadium Punch,Jammu & Kashmir,Poonch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__519AFCB076,KIC,Sports Stadium Rajouri,Sports Stadium Rajouri,Jammu & Kashmir,Rajouri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__96B0F3B5B6,KIC,"Sports Stadium Rajouri,","Sports Stadium Rajouri,",Jammu & Kashmir,Rajouri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__118D25EA57,KIC,Sports Stadium Reasi,Sports Stadium Reasi,Jammu & Kashmir,Reasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__0403567420,KIC,Sports Stadium Samba,Sports Stadium Samba,Jammu & Kashmir,Samba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__8ED046DB6C,KIC,Sports Stadium Shupiyan,Sports Stadium Shupiyan,Jammu & Kashmir,Shupiyan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__6C98F0151F,KIC,"Sports Stadium, Bandipore","Sports Stadium, Bandipore",Jammu & Kashmir,Bandipore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__26A8082EF6,KIC,"Sports Stadium, Doda","Sports Stadium, Doda",Jammu & Kashmir,Doda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5E80F7B145,KIC,"Sports Stadium, Punch","Sports Stadium, Punch",Jammu & Kashmir,Poonch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__5628EC45F2,KIC,"Sports Stadium, Reasi","Sports Stadium, Reasi",Jammu & Kashmir,Reasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__9022846F45,KIC,Sports Staduim Kerawa Badgam,Sports Staduim Kerawa Badgam,Jammu & Kashmir,Badgam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__599448F79E,KIC,"Subash Stadium , Udhampur","Subash Stadium , Udhampur",Jammu & Kashmir,Udhampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__FD62530598,KIC,"Tennis Court, MA Stadium","Tennis Court, MA Stadium",Jammu & Kashmir,Jammu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JAMMU__C68274ECB5,KIC,"Water Sports Centre, Basohli","Water Sports Centre, Basohli",Jammu & Kashmir,Kathua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_C37D69F035,KIC,"Baghitand Stadium, Kodarma","Baghitand Stadium, Kodarma",Jharkhand,Kodarma,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_D8AF3F0A90,KIC,"Bisra Football Stadium, Khunti","Bisra Football Stadium, Khunti",Jharkhand,Khunti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_225B88CD56,KIC,"Bisra Munda Stadium, Dhanbad","Bisra Munda Stadium, Dhanbad",Jharkhand,Dhanbad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_694FBB624C,KIC,"Champi Stadium in Panchayat Poradiha at Potka Block, East Singhbhum","Champi Stadium in Panchayat Poradiha at Potka Block, East Singhbhum",Jharkhand,Purbi Singhbhum,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_C48267A2A6,KIC,"Chand-Bhairav Indoor Stadium, Sahibganj","Chand-Bhairav Indoor Stadium, Sahibganj",Jharkhand,Sahibganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_7EB7BECA24,KIC,"Curzon Stadium, Hazaribagh","Curzon Stadium, Hazaribagh",Jharkhand,Hazaribagh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_63A1C21699,KIC,"Day-Boarding Archery Centre (Boys/Girls) Chandankiyari, Bokaro","Day-Boarding Archery Centre (Boys/Girls) Chandankiyari, Bokaro",Jharkhand,Bokaro,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_04FE9D380F,KIC,"District Level Stadium (Bank Colony), Pakur","District Level Stadium (Bank Colony), Pakur",Jharkhand,Pakur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_3E644988BA,KIC,"GLA College Stadium, Palamu","GLA College Stadium, Palamu",Jharkhand,Palamu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_BF69DA9EFC,KIC,Gandhi Maidan Godda,Gandhi Maidan Godda,Jharkhand,Godda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_F5E89053A1,KIC,"Indoor Stadium, Jamtara","Indoor Stadium, Jamtara",Jharkhand,Jamtara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_665BD7B6A5,KIC,"Jamua Stadium, Giridih","Jamua Stadium, Giridih",Jharkhand,Giridih,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_6D7D32E623,KIC,"Jawahar Lal Nehru Stadium, Under Nagar Parishad","Jawahar Lal Nehru Stadium, Under Nagar Parishad",Jharkhand,Chatra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_0BF193C832,KIC,"Kamar Dudhani Stadium, Dumka","Kamar Dudhani Stadium, Dumka",Jharkhand,Dumka,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_9D067C3227,KIC,"Mega Sports Complex Kumaitha, Deoghar","Mega Sports Complex Kumaitha, Deoghar",Jharkhand,Deoghar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_D2AA8D571F,KIC,Rama Sahu Outdoor Stadium Garhwa,Rama Sahu Outdoor Stadium Garhwa,Jharkhand,Garhwa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_6DA83D8794,KIC,"Residential Archery Training Centre Dungi, Saraikela","Residential Archery Training Centre Dungi, Saraikela",Jharkhand,Saraikela-kharsawan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_BBA26B44BB,KIC,"Residential Archery Training Centre Kumardungi, West Singhbhuum","Residential Archery Training Centre Kumardungi, West Singhbhuum",Jharkhand,Pashchimi Singhbhum,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_54BCA1EF2B,KIC,Residential Athletics Boy’s Training Centre Gumla,Residential Athletics Boy’s Training Centre Gumla,Jharkhand,Gumla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_977D3F5A71,KIC,Residential Football (Boys/Girls) Training Centre,Residential Football (Boys/Girls) Training Centre,Jharkhand,Ranchi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_1AB142CB40,KIC,"Residential Sports Training Centre, SSV, Latehar","Residential Sports Training Centre, SSV, Latehar",Jharkhand,Latehar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_52B9CECFB5,KIC,"Sidhu Kanhu District Ground, Ramgarh","Sidhu Kanhu District Ground, Ramgarh",Jharkhand,Ramgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_071A478D55,KIC,"Sports Complex, Simdega","Sports Complex, Simdega",Jharkhand,Simdega,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_JHARKH_3603C1DA3F,KIC,"UPG High School Bitpi, Bhandra","UPG High School Bitpi, Bhandra",Jharkhand,Lohardaga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_9CB86ADB78,KIC,Adde Vishwanath Pura,Adde Vishwanath Pura,Karnataka,Bengaluru Rural,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_84AE031E01,KIC,Chamundivihar Stadium Nazarbad,Chamundivihar Stadium Nazarbad,Karnataka,Mysuru,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_117B943009,KIC,Chandrashekar Patil District Stadium,Chandrashekar Patil District Stadium,Karnataka,Kalaburagi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_75F4F8F8BF,KIC,District Centenary Stadium,District Centenary Stadium,Karnataka,Chikkamagaluru,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_85B1A4FECA,KIC,District Stadium Ballari,District Stadium Ballari,Karnataka,Ballari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_3C5BB52D18,KIC,District Stadium Behind Govt. Collage,District Stadium Behind Govt. Collage,Karnataka,Tumakuru,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_A482A2786B,KIC,District Stadium Chittapurroad,District Stadium Chittapurroad,Karnataka,Yadgir,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_97B94E9DDA,KIC,District Stadium Davanagere,District Stadium Davanagere,Karnataka,Davanagere,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_B50469ADAC,KIC,District Stadium Koppal,District Stadium Koppal,Karnataka,Koppal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_F8D4222310,KIC,District Stadium Municipal High School,District Stadium Municipal High School,Karnataka,Haveri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_8A4D6669EF,KIC,District Stadium Near Govt College,District Stadium Near Govt College,Karnataka,Hassan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_00E613819C,KIC,District Stadium Sri M. Vishweshraiah Zilla,District Stadium Sri M. Vishweshraiah Zilla,Karnataka,Mandya,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_EC7BC6969A,KIC,District Stadium Station Road Ramanagara,District Stadium Station Road Ramanagara,Karnataka,Ramanagara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_1340E8C66E,KIC,Dr B.K Ambedkar Stadium Navanagar,Dr B.K Ambedkar Stadium Navanagar,Karnataka,Bagalkot,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_7615B5D619,KIC,Dr.B.R Ambedkar Stadium,Dr.B.R Ambedkar Stadium,Karnataka,Vijayapura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_105C23C2A5,KIC,Gandhi District Stadium,Gandhi District Stadium,Karnataka,Udupi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_582F2ADD39,KIC,Haliyal Sports School,Haliyal Sports School,Karnataka,Uttara Kannada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_85B33D64F5,KIC,J S Medical College Nehru Nagar,J S Medical College Nehru Nagar,Karnataka,Belagavi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_6FE5AB16AF,KIC,K.H Patil District Stadium,K.H Patil District Stadium,Karnataka,Gadag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_227FB4BD22,KIC,"Karnataka Sahasakala Academy, Sri Ramdevara Hills Road, Ramanagara","Karnataka Sahasakala Academy, Sri Ramdevara Hills Road, Ramanagara",Karnataka,Ramanagara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_B4BBB1D98F,KIC,M.V District Stadium,M.V District Stadium,Karnataka,Chikkaballapura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_058D222C63,KIC,M.V District Stadium Bellary,M.V District Stadium Bellary,Karnataka,Vijayanagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_18D3495AF1,KIC,Mahatma Gandhi Stadium,Mahatma Gandhi Stadium,Karnataka,Raichur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_231646053E,KIC,Mangala Stadium Mangalore,Mangala Stadium Mangalore,Karnataka,Dakshina Kannada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_7FAE094605,KIC,Nehru Stadium,Nehru Stadium,Karnataka,Shivamogga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_AF4EBF5C94,KIC,Nehru Stadium Pavilion Building,Nehru Stadium Pavilion Building,Karnataka,Bidar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_E2971B978B,KIC,Ponnampet Sports School,Ponnampet Sports School,Karnataka,Kodagu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_4B1556E351,KIC,R.N Shetty District Stadium,R.N Shetty District Stadium,Karnataka,Dharwad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_F6C1A09426,KIC,Santhemaranahally Archery And Fencing Sports Hostel,Santhemaranahally Archery And Fencing Sports Hostel,Karnataka,Chamarajanagara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_C8BAC39A86,KIC,Sri Vishweshraiah District Stadium,Sri Vishweshraiah District Stadium,Karnataka,Kolar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_CF64B2515F,KIC,Sri kanteerava Stadium,Sri kanteerava Stadium,Karnataka,Bangalore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KARNAT_0F12C450EF,KIC,Veer Vanithe Obavva Stadium,Veer Vanithe Obavva Stadium,Karnataka,Chitradurga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_4927BCD964,KIC,"Christ College, Irinjalakuda","Christ College, Irinjalakuda",Kerala,Thrissur,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_2372CE69EE,KIC,District Sports Academy Alappuzha,District Sports Academy Alappuzha,Kerala,Alappuzha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_C7DF88178D,KIC,District Sports Academy Ernakulam,District Sports Academy Ernakulam,Kerala,Ernakulam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_C342F7FBBF,KIC,District Sports Academy Idukki,District Sports Academy Idukki,Kerala,Idukki,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_44CA09D03A,KIC,District Sports Academy Kasaragod,District Sports Academy Kasaragod,Kerala,Kasaragod,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_4F8E521E9B,KIC,District Sports Academy Kollam,District Sports Academy Kollam,Kerala,Kollam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_17468972DF,KIC,District Sports Academy Kottayam,District Sports Academy Kottayam,Kerala,Kottayam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_28D52E5364,KIC,District Sports Academy Kozhikode,District Sports Academy Kozhikode,Kerala,Kozhikode,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_F7A51CBDE0,KIC,District Sports Academy Manjeri,District Sports Academy Manjeri,Kerala,Malappuram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_775745D1A4,KIC,District Sports Academy Palakkad,District Sports Academy Palakkad,Kerala,Palakkad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_763CA7F86E,KIC,District Sports Academy Pathanamthitta,District Sports Academy Pathanamthitta,Kerala,Pathanamthitta,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_7F41D3CAC9,KIC,District Sports Academy Pirappancode,District Sports Academy Pirappancode,Kerala,Thiruvananthapuram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_7364EE1831,KIC,District Sports Academy Pulpally,District Sports Academy Pulpally,Kerala,Wayanad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_FB22BE3440,KIC,GVHSS (Boys) Kunnamkulam,GVHSS (Boys) Kunnamkulam,Kerala,Thrissur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_DBD690F4B7,KIC,GVHSS (Sports) Tallap,GVHSS (Sports) Tallap,Kerala,Kannur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_14B93273A2,KIC,"Kalladi Hr. Sec. School, Kumaramputhur","Kalladi Hr. Sec. School, Kumaramputhur",Kerala,Palakkad,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_60991B09C5,KIC,"Kottayam Raja’s H. School, Pathiriyad","Kottayam Raja’s H. School, Pathiriyad",Kerala,Kannur,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_3730F64BF8,KIC,"Mar Basil Higher Sec. School, Kothamangalam","Mar Basil Higher Sec. School, Kothamangalam",Kerala,Ernakulam,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_311F265739,KIC,"Marian College, Kuttikkanam","Marian College, Kuttikkanam",Kerala,Idukki,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_4EA215EE41,KIC,"Mary Matha High School, Panthalampadam","Mary Matha High School, Panthalampadam",Kerala,Ernakulam,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_63C436F02C,KIC,"Mundur High School, Mundur","Mundur High School, Mundur",Kerala,Palakkad,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_E5C6E57481,KIC,Parli High School,Parli High School,Kerala,Palakkad,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_3CE5793372,KIC,"Sree Durga Vilasan Higher Sec. School, Peramangalam","Sree Durga Vilasan Higher Sec. School, Peramangalam",Kerala,Thrissur,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_KERALA_883DEB5F7F,KIC,"St. Michaels College, Cherthala","St. Michaels College, Cherthala",Kerala,Alappuzha,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LADAKH_C572380CBB,KIC,Department of Youth Service and Sports leh,Department of Youth Service and Sports leh,Ladakh,Leh,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LADAKH_EF8C9084EB,KIC,Indoor Stadium kargil,Indoor Stadium kargil,Ladakh,Kargil,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LADAKH_D599BCD4EB,KIC,Lamdon Sr. Sec. School,Lamdon Sr. Sec. School,Ladakh,Leh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LAKSHA_E9ECDBA0B4,KIC,"Department of Sports & Youth Affairs,Kavaratti, Lakshadweep","Department of Sports & Youth Affairs,Kavaratti, Lakshadweep",Lakshadweep,Lakshadweep,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LAKSHA_44D39021E2,KIC,Khelo India Centre for Athletics,Khelo India Centre for Athletics,Lakshadweep,Lakshadweep,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_LAKSHA_97B1D51711,KIC,Khelo India Centre for Volleyball,Khelo India Centre for Volleyball,Lakshadweep,Lakshadweep,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_53CA871111,KIC,Badminton Training Centre Najarbag Stadium,Badminton Training Centre Najarbag Stadium,Madhya Pradesh,Panna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_5E11912197,KIC,"Boxing Shed, District Sports & Youth Welfare Department, Alirajpur","Boxing Shed, District Sports & Youth Welfare Department, Alirajpur",Madhya Pradesh,Alirajpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_7726C5C3F4,KIC,Church Ground (Brahad Stadium) Sehore,Church Ground (Brahad Stadium) Sehore,Madhya Pradesh,Sehore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_9A0E93CA8A,KIC,"Club Ground Baiora, Rajgarh","Club Ground Baiora, Rajgarh",Madhya Pradesh,Rajgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_D84FEB9659,KIC,"DHA, Amar Saheed Bhagat Singh Stadium, Umaria","DHA, Amar Saheed Bhagat Singh Stadium, Umaria",Madhya Pradesh,Umaria,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_7C45DDB173,KIC,"Dada Sukhendra Singh stadium, Jawahar Nagar, Satna","Dada Sukhendra Singh stadium, Jawahar Nagar, Satna",Madhya Pradesh,Satna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_B20FF1E02E,KIC,"Day Boarding Football Centre High School Stadium Ground Harifatak, Mhow","Day Boarding Football Centre High School Stadium Ground Harifatak, Mhow",Madhya Pradesh,Indore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_809FEFC007,KIC,"Directorate of Sports and youth welfare, Govt of MP","Directorate of Sports and youth welfare, Govt of MP",Madhya Pradesh,Anuppur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_FDA2613863,KIC,"District Sports Complex, Rewa","District Sports Complex, Rewa",Madhya Pradesh,Rewa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_055E37E904,KIC,"District Sports Complex, Wrestling Center, Ratlam","District Sports Complex, Wrestling Center, Ratlam",Madhya Pradesh,Ratlam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_3E7AF01F31,KIC,"District Sports Indoor Stadium, Dindori","District Sports Indoor Stadium, Dindori",Madhya Pradesh,Dindori,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_165B418B3F,KIC,"District Table Tennis Centre, Veer Sawrkar Stadium, Sheopur","District Table Tennis Centre, Veer Sawrkar Stadium, Sheopur",Madhya Pradesh,Sheopur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_6E5C4248E9,KIC,"District Table –Tennis Centre, Agar","District Table –Tennis Centre, Agar",Madhya Pradesh,Agar Malwa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_818C1333F5,KIC,Dr. B.R. Ambedkar Stadium Morena,Dr. B.R. Ambedkar Stadium Morena,Madhya Pradesh,Morena,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_3E96B568E8,KIC,"Forester Khel Maidan, Near Main Station","Forester Khel Maidan, Near Main Station",Madhya Pradesh,Katni,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_C10536365C,KIC,Govt. Boys Excellent School,Govt. Boys Excellent School,Madhya Pradesh,Mauganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_01C1490F4E,KIC,"Head Quater Sports Center, Football Ground, Mohammadpura, Burhanpur","Head Quater Sports Center, Football Ground, Mohammadpura, Burhanpur",Madhya Pradesh,Burhanpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_819FA037CA,KIC,Hockey Astroturf stadium Damoh,Hockey Astroturf stadium Damoh,Madhya Pradesh,Damoh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_5F083DA82F,KIC,"Hockey Feeder Center, Govt. Girls School Playground, Neemuch, MP","Hockey Feeder Center, Govt. Girls School Playground, Neemuch, MP",Madhya Pradesh,Neemuch,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_E3E90537C4,KIC,"Hockey Feeder Center, Govt. Higher Secondary School Playground, Mandideep, Raisen, MP","Hockey Feeder Center, Govt. Higher Secondary School Playground, Mandideep, Raisen, MP",Madhya Pradesh,Raisen,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_C5B82F3F6C,KIC,"Indoor Hall, Civil Lines,Harda","Indoor Hall, Civil Lines,Harda",Madhya Pradesh,Harda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_9A82FA9919,KIC,"Indoor Stadium Kolua Road Behind SBI Training Centre, Ashoknagar","Indoor Stadium Kolua Road Behind SBI Training Centre, Ashoknagar",Madhya Pradesh,Ashoknagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_E31EA0A047,KIC,"Jila Badminton (Indoor Hall), Sports & Youth Welfare Officer Police Control Room, Dhar","Jila Badminton (Indoor Hall), Sports & Youth Welfare Officer Police Control Room, Dhar",Madhya Pradesh,Dhar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_D201F64777,KIC,"Judo Training Centre District Sports & Youth Welfare Department, Narsimhapur","Judo Training Centre District Sports & Youth Welfare Department, Narsimhapur",Madhya Pradesh,Narsimhapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_16BFD0644E,KIC,"Khel Aur Yuva Kalyan Vibhag, Khel Parisar Tikamgarh","Khel Aur Yuva Kalyan Vibhag, Khel Parisar Tikamgarh",Madhya Pradesh,Tikamgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_88872BD7A6,KIC,Khel Parisar Stadium Sagar Front of SBI bank Civil Line Sagar,Khel Parisar Stadium Sagar Front of SBI bank Civil Line Sagar,Madhya Pradesh,Sagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_470254AA16,KIC,"Khel Yuva KlyanVibhag Stadium Ground Nearby Bistan Road, Khargone","Khel Yuva KlyanVibhag Stadium Ground Nearby Bistan Road, Khargone",Madhya Pradesh,West Nimar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_A05B367A88,KIC,Kushabhu Thakre Indoor Badminton Hall Vikas Ganar Dewas,Kushabhu Thakre Indoor Badminton Hall Vikas Ganar Dewas,Madhya Pradesh,Dewas,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_29656D727C,KIC,"Lala Ka Taal Water Sports Center, Datia","Lala Ka Taal Water Sports Center, Datia",Madhya Pradesh,Datia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_C0BC0E16A6,KIC,Late Jaypal Munda Sports Ground,Late Jaypal Munda Sports Ground,Madhya Pradesh,Shahdol,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_02FF2B4DE0,KIC,"Mahananda Sports Arena, Ujjain","Mahananda Sports Arena, Ujjain",Madhya Pradesh,Ujjain,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_5398A31A09,KIC,"Major Dhyan chand Synthetic Hockey Stadium , Kothi Bazar, betul","Major Dhyan chand Synthetic Hockey Stadium , Kothi Bazar, betul",Madhya Pradesh,Betul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_F965005DFD,KIC,Major Dhyan chand Synthetic Hockey Stadium Seoni,Major Dhyan chand Synthetic Hockey Stadium Seoni,Madhya Pradesh,Seoni,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_4EA2099217,KIC,Mandsaur Hockey feeder centre Mandsaur,Mandsaur Hockey feeder centre Mandsaur,Madhya Pradesh,Mandsaur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_1237DFB965,KIC,"Mulna Athletics Stadium Ground, Balaghat","Mulna Athletics Stadium Ground, Balaghat",Madhya Pradesh,Balaghat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_FA5C743F6B,KIC,"Multipurpose Sports Complex Ground, Jhabua","Multipurpose Sports Complex Ground, Jhabua",Madhya Pradesh,Jhabua,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_55C92A63DF,KIC,"New Synthetic Hockey Turf Ground , Hoshangabad","New Synthetic Hockey Turf Ground , Hoshangabad",Madhya Pradesh,Hoshangabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_15010B61B3,KIC,"Officers Club, Judo Training Hall, Chhatarpur","Officers Club, Judo Training Hall, Chhatarpur",Madhya Pradesh,Chhatarpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_84CC99F4B5,KIC,"Olympic Football Stadium, Chhindwara, MP","Olympic Football Stadium, Chhindwara, MP",Madhya Pradesh,Chhindwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_8A0FCED31B,KIC,"Police Line Swimming Centre Mandla, MP","Police Line Swimming Centre Mandla, MP",Madhya Pradesh,Mandla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_158267F7A5,KIC,"Police Line, Nagarpalika Stadium","Police Line, Nagarpalika Stadium",Madhya Pradesh,Padhurna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_D2AAF6E13B,KIC,"Police line ground Hockey Centre, Vidisha","Police line ground Hockey Centre, Vidisha",Madhya Pradesh,Vidisha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_4A8D5FD522,KIC,Ramnagar Sports Complex,Ramnagar Sports Complex,Madhya Pradesh,Maihar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_70C369F551,KIC,"Shrimant Madhavrao Scindia Sports Complex Synthetic Hockey Stadium, Shivpuri","Shrimant Madhavrao Scindia Sports Complex Synthetic Hockey Stadium, Shivpuri",Madhya Pradesh,Shivpuri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_4AA611D0A2,KIC,"Shrimant Rajmata stadium Scindia Khel Parisar, Gwalior, MP","Shrimant Rajmata stadium Scindia Khel Parisar, Gwalior, MP",Madhya Pradesh,Gwalior,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_014D8EA6C4,KIC,"Shyama Prasad Mukharji Indoor Stadium, Khandawa","Shyama Prasad Mukharji Indoor Stadium, Khandawa",Madhya Pradesh,East Nimar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_E206580AEE,KIC,Shyama Prasad Mukharji Stadium Guna,Shyama Prasad Mukharji Stadium Guna,Madhya Pradesh,Guna,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_FE33D51040,KIC,"Sports Complex,Niwari","Sports Complex,Niwari",Madhya Pradesh,Niwari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_D34894E005,KIC,"Tatya Tope Nagar Stadium, Bhopal M.P","Tatya Tope Nagar Stadium, Bhopal M.P",Madhya Pradesh,Shajapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_C288EC786B,KIC,"Tatya Tope Stadium, Pay & Play Scheme, Boxing Training Center, Bhopal","Tatya Tope Stadium, Pay & Play Scheme, Boxing Training Center, Bhopal",Madhya Pradesh,Bhopal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_C6610367F2,KIC,"Verrangna Rani Durgawati Khel Parisar, Ranital Sports Complex, Jabalpur","Verrangna Rani Durgawati Khel Parisar, Ranital Sports Complex, Jabalpur",Madhya Pradesh,Jabalpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MADHYA_7A8547E4A4,KIC,"Water Sports , Gauri Sarovar, Bhind Old R.I Office Police line Bhind","Water Sports , Gauri Sarovar, Bhind Old R.I Office Police line Bhind",Madhya Pradesh,Bhind,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_7ED1828335,KIC,District HQ Senapati,District HQ Senapati,Manipur,Senapati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_8ED2DE35BE,KIC,District HQs,District HQs,Manipur,Pherzawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_05EB9442F1,KIC,District HQs Kamjong,District HQs Kamjong,Manipur,Kamjong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_229F1CB024,KIC,District HQs Kangpokpi,District HQs Kangpokpi,Manipur,Kangpokpi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_DBD2410310,KIC,District HQs Noney,District HQs Noney,Manipur,Noney,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_F0794227D6,KIC,District HQs Tengnoupal,District HQs Tengnoupal,Manipur,Tengnoupal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_4FDBF7E5CE,KIC,"District HQs, Kamjong","District HQs, Kamjong",Manipur,Kamjong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_0C300398E3,KIC,"District HQs, Noney","District HQs, Noney",Manipur,Noney,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_9866606708,KIC,"District HQs, Pherzawl","District HQs, Pherzawl",Manipur,Pherzawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_E68EEEBD67,KIC,"District HQs, Tengnoupal","District HQs, Tengnoupal",Manipur,Tengnoupal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_87CC9FAD82,KIC,District Sports Complex Chandel,District Sports Complex Chandel,Manipur,Chandel,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_188F863D89,KIC,District Sports Complex Jiriban,District Sports Complex Jiriban,Manipur,Jiribam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_816370C068,KIC,District Sports Complex Tamenglong,District Sports Complex Tamenglong,Manipur,Tamenglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_FCEA70FFBF,KIC,District Sports Complex Tuibong,District Sports Complex Tuibong,Manipur,Churachandpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_44D9215A1A,KIC,District Sports Complex Ukhrul,District Sports Complex Ukhrul,Manipur,Ukhrul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_698C38F5C6,KIC,District Sports Complex Wangjing,District Sports Complex Wangjing,Manipur,Thoubal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_641A40A0E9,KIC,"District Sports Complex, Chandel","District Sports Complex, Chandel",Manipur,Chandel,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_74AC489F84,KIC,"District Sports Complex, Jiribam","District Sports Complex, Jiribam",Manipur,Jiribam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_DEADC9EA82,KIC,"District Sports Complex, Tamenglong","District Sports Complex, Tamenglong",Manipur,Tamenglong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_30BFD898E6,KIC,"District Sports Complex, Thoubal","District Sports Complex, Thoubal",Manipur,Thoubal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_8A41343341,KIC,"District Sports Complex, Tuibong","District Sports Complex, Tuibong",Manipur,Churachandpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_3CC6DCD6BB,KIC,"District Sports Complex, Ukhrul","District Sports Complex, Ukhrul",Manipur,Ukhrul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_DB59C3F85D,KIC,"Heingang, Imphal East","Heingang, Imphal East",Manipur,Imphal East,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_515546D0B5,KIC,Khuman Lampak Sports Complex,Khuman Lampak Sports Complex,Manipur,Imphal West,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_86DC201B2E,KIC,Khuman Lampak Sports Complex East,Khuman Lampak Sports Complex East,Manipur,Imphal East,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_95E8E4050C,KIC,Khuman Lampak Sports Complex West,Khuman Lampak Sports Complex West,Manipur,Imphal West,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_98AD1FD43A,KIC,"Kuki Football Academy, Kangpokpi","Kuki Football Academy, Kangpokpi",Manipur,Kangpokpi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_85B7A7F517,KIC,Mangolnganbi College Indoor Hall,Mangolnganbi College Indoor Hall,Manipur,Bishnupur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_89F6C75072,KIC,Multi-Purpose indoor Hall,Multi-Purpose indoor Hall,Manipur,Kakching,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_D5741D4C74,KIC,"Multipurpose Indoor Hall, Kakching","Multipurpose Indoor Hall, Kakching",Manipur,Kakching,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_6377EDF76D,KIC,"Multipurpose Indoor Hall, Senapati HQs","Multipurpose Indoor Hall, Senapati HQs",Manipur,Senapati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_87C5AD1174,KIC,"Sainik School, Imphal East","Sainik School, Imphal East",Manipur,Imphal East,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_27E65DC905,KIC,"Sarita Regional Boxing Academy, Mayang","Sarita Regional Boxing Academy, Mayang",Manipur,Imphal West,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_5FF2D544C0,KIC,Th. Birachandra Singh Football Academy,Th. Birachandra Singh Football Academy,Manipur,Imphal West,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MANIPU_A0A501DB0A,KIC,Water Sports Complex Morirang,Water Sports Complex Morirang,Manipur,Bishnupur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_6F0BABB6EA,KIC,Ampati Government Higher Secondary School,Ampati Government Higher Secondary School,Meghalaya,South West Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_93E1046A9E,KIC,"Anderson Higher Secondary School,Upper New Nongstoin ,West Khasi Hills, Meghalaya","Anderson Higher Secondary School,Upper New Nongstoin ,West Khasi Hills, Meghalaya",Meghalaya,West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_0159DE8C77,KIC,Baghmara Goverermnet Higher Secondary School,Baghmara Goverermnet Higher Secondary School,Meghalaya,South Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_0A20F04D5E,KIC,Governing Girls Higher Secondary School,Governing Girls Higher Secondary School,Meghalaya,West Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_D6505833A8,KIC,Government Boys Higher Secondary School,Government Boys Higher Secondary School,Meghalaya,West Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_B35A865C42,KIC,"Govt Boys Higher Secondary School,Jowai,West Jaintia Hills,Meghalaya","Govt Boys Higher Secondary School,Jowai,West Jaintia Hills,Meghalaya",Meghalaya,West Jaintia Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_F4A4730B5F,KIC,Kiang Nangah Government College,Kiang Nangah Government College,Meghalaya,West Jaintia Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_69B792DC46,KIC,Mahram Government Higher Secondary School,Mahram Government Higher Secondary School,Meghalaya,South West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_371701BFEB,KIC,Myngken Christian higher Secondary School,Myngken Christian higher Secondary School,Meghalaya,Ribhoi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_77FE04FA63,KIC,Nativity Higher Secondary School,Nativity Higher Secondary School,Meghalaya,South West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_CF2112C2D6,KIC,"Nirupama Memorial Sec School,Garobadha ,South West Garo Hills, Meghalaya","Nirupama Memorial Sec School,Garobadha ,South West Garo Hills, Meghalaya",Meghalaya,South West Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_688EFE544C,KIC,Rangku memorial Girl Secondary School,Rangku memorial Girl Secondary School,Meghalaya,South Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_A5E4F4AB3E,KIC,Resubelpara Girl Higher Secondary School,Resubelpara Girl Higher Secondary School,Meghalaya,North Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_6EE104B5E4,KIC,Resubelpara Government Secondary School,Resubelpara Government Secondary School,Meghalaya,North Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_F8CF4F78A2,KIC,Rongrenggiri Government Higher Secondary School,Rongrenggiri Government Higher Secondary School,Meghalaya,East Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_D03384C437,KIC,Rongrenggri Model Deficit Secondary School,Rongrenggri Model Deficit Secondary School,Meghalaya,East Garo Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_C26757C722,KIC,Rymbai Government Secondary School,Rymbai Government Secondary School,Meghalaya,East Jaintia Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_7CEF302F99,KIC,SIB Memorial Government Higher Secondary School,SIB Memorial Government Higher Secondary School,Meghalaya,West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_E10A4CB633,KIC,Seinjait tuber Higher Secondary School,Seinjait tuber Higher Secondary School,Meghalaya,East Jaintia Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_B8224CDCAE,KIC,Shilong public School,Shilong public School,Meghalaya,East Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_A3198EB156,KIC,St. Alfred's Secondary School,St. Alfred's Secondary School,Meghalaya,Ribhoi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_40D0E45D84,KIC,"St.Anthony Higher Sec School,East Khasi Hills,Meghalaya","St.Anthony Higher Sec School,East Khasi Hills,Meghalaya",Meghalaya,East Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_5D4A490935,KIC,"St.Joseph Higher Sec. School,Nongkasen,Eastern West Khasi Hils,Meghalaya","St.Joseph Higher Sec. School,Nongkasen,Eastern West Khasi Hils,Meghalaya",Meghalaya,Eastern West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MEGHAL_2A8CAED94A,KIC,"St.Thomas Higher Secondary School, Pyndegumiong Mairang,Eastern West Khasi Hills, Meghalaya","St.Thomas Higher Secondary School, Pyndegumiong Mairang,Eastern West Khasi Hills, Meghalaya",Meghalaya,Eastern West Khasi Hills,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_B88D9158BB,KIC,Boys Hockey Academy,Boys Hockey Academy,Mizoram,Kolasib,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_B8B84DD099,KIC,Electrical Veng badminton Hall,Electrical Veng badminton Hall,Mizoram,Lawngtlai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_B8B0862B30,KIC,"GHSS Boxing Training Institute, Siaha","GHSS Boxing Training Institute, Siaha",Mizoram,Siaha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_D5CC9FEE5B,KIC,Hnahthial Judo Hall,Hnahthial Judo Hall,Mizoram,Hnahthial,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_600544E5EE,KIC,Hnahthial Playground,Hnahthial Playground,Mizoram,Hnahthial,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_D0BF518810,KIC,Keifang Centenary Sports Complex,Keifang Centenary Sports Complex,Mizoram,Saitual,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_280F491C62,KIC,Khawzawl Mualvawm Field,Khawzawl Mualvawm Field,Mizoram,Khawzawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_7D77EE57F6,KIC,"Lena Stadium, Lunglei","Lena Stadium, Lunglei",Mizoram,Lunglei,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_5A5524AF30,KIC,Lunglawn Table Tennis Hall,Lunglawn Table Tennis Hall,Mizoram,Lunglei,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_C4B6CD7DB2,KIC,Mamit Football Ground,Mamit Football Ground,Mizoram,Mamit,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_0D573F883A,KIC,New Siha Badminton Hall,New Siha Badminton Hall,Mizoram,Siaha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_9E38974D18,KIC,"Rebel Gym, Mission Veng","Rebel Gym, Mission Veng",Mizoram,Aizawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_04EA405E93,KIC,Regional Sports Training Centre Football Academy,Regional Sports Training Centre Football Academy,Mizoram,Kolasib,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_E3AC1358E4,KIC,Republic Archery Hall,Republic Archery Hall,Mizoram,Aizawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_53812B584E,KIC,SYS Multipurpose Hall,SYS Multipurpose Hall,Mizoram,Lawngtlai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_CADE73DD34,KIC,Saidan Hall,Saidan Hall,Mizoram,Kolasib,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_ABE815BCA7,KIC,Saitual Wrestling Hall,Saitual Wrestling Hall,Mizoram,Saitual,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_A580DBB0DB,KIC,Serchhip District Boxing Hall,Serchhip District Boxing Hall,Mizoram,Serchhip,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_916C191AB6,KIC,Serchip District Badminton (SIDBA),Serchip District Badminton (SIDBA),Mizoram,Serchhip,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_9C5A142EC8,KIC,"Taekwondo Training Centre, Khawzawl","Taekwondo Training Centre, Khawzawl",Mizoram,Khawzawl,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_4D7FF106AA,KIC,"Taekwondo Training Centre, Mamit","Taekwondo Training Centre, Mamit",Mizoram,Mamit,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_8CAA2AE47F,KIC,Vanlallawma Indoor Stadium (VANIS),Vanlallawma Indoor Stadium (VANIS),Mizoram,Champhai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_MIZORA_C236B585E1,KIC,Zotlang Weightlifting Hall,Zotlang Weightlifting Hall,Mizoram,Champhai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_5882310B14,KIC,"3rd Mile, Chekiye Village","3rd Mile, Chekiye Village",Nagaland,Chumoukedima,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_D359F7C991,KIC,"4th Mile, Near Agri Expo","4th Mile, Near Agri Expo",Nagaland,Chumoukedima,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_48B00C1921,KIC,"Aries Rife & Pistol Shooting Acadmey , NSTC, Colony , Dimapur","Aries Rife & Pistol Shooting Acadmey , NSTC, Colony , Dimapur",Nagaland,Dimapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_C5D0CDEC03,KIC,Badminton Stadium Pungro,Badminton Stadium Pungro,Nagaland,Kiphire,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_25E79925EC,KIC,"Baptist Hr.Sec School, Tseminyu","Baptist Hr.Sec School, Tseminyu",Nagaland,Tseminyu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_AF95180885,KIC,Government High school Noklak,Government High school Noklak,Nagaland,Noklak,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_D305495450,KIC,"Government Higher Sec School Indoor Badminton Stadium, Wokha","Government Higher Sec School Indoor Badminton Stadium, Wokha",Nagaland,Wokha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_778E51D59F,KIC,"Greenwood School , Kuda B Village , Nagarjan Dimapur","Greenwood School , Kuda B Village , Nagarjan Dimapur",Nagaland,Dimapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_C3BA201C20,KIC,Indira Gandhi Academy Ruleizou,Indira Gandhi Academy Ruleizou,Nagaland,Kohima,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_54403224B0,KIC,"Indoor Badminton Hall, Longleng","Indoor Badminton Hall, Longleng",Nagaland,Longleng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_287AB7642A,KIC,Indoor Badminton Satdium Ahthibung,Indoor Badminton Satdium Ahthibung,Nagaland,Peren,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_5D520F8FC6,KIC,Indoor Badminton Satdium Main Town,Indoor Badminton Satdium Main Town,Nagaland,Mokokchung,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_2AB886B924,KIC,Indoor Badminton Satdium Pfutsero,Indoor Badminton Satdium Pfutsero,Nagaland,Phek,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_B3405E992C,KIC,Indoor Stadium Main Town,Indoor Stadium Main Town,Nagaland,Tuensang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_D41E0B574A,KIC,"Indoor Stadium, Town Hall, Meluri","Indoor Stadium, Town Hall, Meluri",Nagaland,Meluri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_CE42BDB311,KIC,Indoor badminton Stadium Mon,Indoor badminton Stadium Mon,Nagaland,Mon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_8739D40858,KIC,Khughovi Village Niuland,Khughovi Village Niuland,Nagaland,Niuland,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_EDEB9B6F20,KIC,Ladybird School Shooting Academy,Ladybird School Shooting Academy,Nagaland,Mokokchung,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_F6F4EECDB8,KIC,Local Ground Kiphire,Local Ground Kiphire,Nagaland,Kiphire,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_E573B92828,KIC,Local Ground Mon,Local Ground Mon,Nagaland,Mon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_C5315D8A22,KIC,"Local Ground Near AR Camp, Shamtor","Local Ground Near AR Camp, Shamtor",Nagaland,Shamator,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_88C4CED4A9,KIC,"Local Ground, Longleng","Local Ground, Longleng",Nagaland,Longleng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_8934ADEFF6,KIC,"Local Ground, Noklak","Local Ground, Noklak",Nagaland,Noklak,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_A509833858,KIC,"Local Ground, Shamator","Local Ground, Shamator",Nagaland,Shamator,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_64FF915BA5,KIC,"Local Ground, Tuensang","Local Ground, Tuensang",Nagaland,Tuensang,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_D59139F12A,KIC,Loyala Higher Secondary School Jakhma,Loyala Higher Secondary School Jakhma,Nagaland,Kohima,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_D41312201C,KIC,"Multi-Disciplinary Sports Complex, Meluri","Multi-Disciplinary Sports Complex, Meluri",Nagaland,Meluri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_E4CF7910A4,KIC,"Multi-Disciplinary Sports Complex, Nuiland","Multi-Disciplinary Sports Complex, Nuiland",Nagaland,Niuland,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_122B6AA873,KIC,Olympic Higher Secondary School,Olympic Higher Secondary School,Nagaland,Zunheboto,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_9DCC890E87,KIC,"Regimental Multi-Purpose Hall, DEF, Wokha","Regimental Multi-Purpose Hall, DEF, Wokha",Nagaland,Wokha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_75FB1F21AC,KIC,St. Xavier College Peren,St. Xavier College Peren,Nagaland,Peren,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_83FFE93E07,KIC,"Table Tennis Club ,Step By Step School Zunheboto","Table Tennis Club ,Step By Step School Zunheboto",Nagaland,Zunheboto,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_B2EE3878C3,KIC,Thenyizu Wrestling Institute,Thenyizu Wrestling Institute,Nagaland,Phek,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_NAGALA_5B0ECA6AFA,KIC,"Vanguard Academy, Tseminyu","Vanguard Academy, Tseminyu",Nagaland,Tseminyu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_FBDBA8B550,KIC,"AJO High School, Phulbani","AJO High School, Phulbani",Odisha,Kandhamal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_D70005682F,KIC,Angul Govt. High School,Angul Govt. High School,Odisha,Angul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_9706F7E6AD,KIC,"B.M. Bagurai High School, Bhadrak","B.M. Bagurai High School, Bhadrak",Odisha,Bhadrak,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_98E532FDA8,KIC,"Balia Govt. High School, Bhagabatpur","Balia Govt. High School, Bhagabatpur",Odisha,Kendrapada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_01EE7B4CA5,KIC,"Cementnagar High School, Bardol","Cementnagar High School, Bardol",Odisha,Bargarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_0C5E8C37FA,KIC,"EMRS, Siriguda, Rayagada","EMRS, Siriguda, Rayagada",Odisha,Rayagada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_3095BDCF2A,KIC,"Government SSD High School, Bhamini","Government SSD High School, Bhamini",Odisha,Nabarangpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_5CEE26D21F,KIC,"Government SSD High School, Govindpally","Government SSD High School, Govindpally",Odisha,Malkangiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_715069C3F5,KIC,"Government SSD High School, Lanjigarh","Government SSD High School, Lanjigarh",Odisha,Kalahandi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_BF057B7D3D,KIC,"Government UP School, Badasahi, Mayurbhanj","Government UP School, Badasahi, Mayurbhanj",Odisha,Mayurbhanj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_0ABAD35957,KIC,"Govt. Girls High School, Kinjirma","Govt. Girls High School, Kinjirma",Odisha,Sundergarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_82E44F97BA,KIC,"Govt. Girls High School, Nishagadia","Govt. Girls High School, Nishagadia",Odisha,Kendujhar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_D0B65F4A83,KIC,"Govt. Girls High School, Subarnapur","Govt. Girls High School, Subarnapur",Odisha,Subarnapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_3757DFEA3E,KIC,"Govt. High School, Koraput","Govt. High School, Koraput",Odisha,Koraput,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_1A59F5DC00,KIC,"Govt. High School, Puranakatak","Govt. High School, Puranakatak",Odisha,Boudh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_CB9C9DF0E2,KIC,Govt. Queen of the Mission High School,Govt. Queen of the Mission High School,Odisha,Gajnam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_DC1FDE73F3,KIC,Govt. S V T High School,Govt. S V T High School,Odisha,Gajapati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_F18F41E472,KIC,"J.P. Govt. High School, Sindurpank","J.P. Govt. High School, Sindurpank",Odisha,Sambalpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_C77323E90E,KIC,"K.C. Govt. High School, Tapang","K.C. Govt. High School, Tapang",Odisha,Khordha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_50C7FC4BE1,KIC,"Kabi Prasanna Pattasanu High School, Muninda","Kabi Prasanna Pattasanu High School, Muninda",Odisha,Puri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_71E48435BE,KIC,"Kalinga Institute of Technical Training (KITT), Bhubaneswar","Kalinga Institute of Technical Training (KITT), Bhubaneswar",Odisha,Khordha,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_E6A106321D,KIC,"Mahagiri Govt. High School, Kuhika","Mahagiri Govt. High School, Kuhika",Odisha,Jajpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_4E40E8F0C5,KIC,Manichara Sarala Academy,Manichara Sarala Academy,Odisha,Jagatsinghpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_84E73A107A,KIC,Municipal Govt. High School,Municipal Govt. High School,Odisha,Balasore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_9B2BDF4E90,KIC,Narayan Govt. High School,Narayan Govt. High School,Odisha,Nayagarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_F75948DBED,KIC,"National Govt. High School, Nuapada","National Govt. High School, Nuapada",Odisha,Nuapada,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_0E340C7D57,KIC,R K Govt. High School,R K Govt. High School,Odisha,Jharsuguda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_EE5A4D4ABA,KIC,Raghunath Jew Vidya Mandir,Raghunath Jew Vidya Mandir,Odisha,Dhenkanal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_5F2E10A507,KIC,"Ravenshaw Collegiate School, Cuttack","Ravenshaw Collegiate School, Cuttack",Odisha,Cuttack,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_798BC5D3B1,KIC,Teleibani P S High School,Teleibani P S High School,Odisha,Deoghar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_ODISHA_AE20710D0B,KIC,"Town Government High School, Belangir","Town Government High School, Belangir",Odisha,Belangir,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUDUCH_F4FCD4AD76,KIC,"Puducherry State Sports Council (Athletics Coaching Centre – Yanam, Puducherry)","Puducherry State Sports Council (Athletics Coaching Centre – Yanam, Puducherry)",Puducherry,Yanam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUDUCH_B97389E2E8,KIC,Puducherry State Sports Council (Badminton Coaching Center),Puducherry State Sports Council (Badminton Coaching Center),Puducherry,Karaikal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUDUCH_BCF0CF9654,KIC,Puducherry State Sports Council (Football Coaching Centre),Puducherry State Sports Council (Football Coaching Centre),Puducherry,Puducherry,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUDUCH_F5CA1BC7CB,KIC,Puducherry State Sports Council (Volleyball Coaching Centre),Puducherry State Sports Council (Volleyball Coaching Centre),Puducherry,Mahe,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_10699C9732,KIC,Amol football Academy,Amol football Academy,Punjab,Moga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_6A7416FAF6,KIC,Badminton Coaching Centre,Badminton Coaching Centre,Punjab,Barnala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_28D17B00C5,KIC,"Chakwal National Sr. Sec. School, Kurali","Chakwal National Sr. Sec. School, Kurali",Punjab,Sahibzada Ajit Singh Nagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_B7F05C4BD9,KIC,Cycling Velodrome PAU,Cycling Velodrome PAU,Punjab,Ludhiana,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_425DF5F955,KIC,"Dashmesh Khalsa College, Zirakpur (Extension Centre)","Dashmesh Khalsa College, Zirakpur (Extension Centre)",Punjab,Sahibzada Ajit Singh Nagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_2BA129E1A7,KIC,"District Sports Officer ,SBS Nagar","District Sports Officer ,SBS Nagar",Punjab,Shahid Bhagat Singh Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_BC01E6B252,KIC,"District Sports Officer ,Shri Muktsar Sahib","District Sports Officer ,Shri Muktsar Sahib",Punjab,Sri Mukatsar Sahib,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_6021C51F56,KIC,District Sports Officer Faridkot,District Sports Officer Faridkot,Punjab,Faridkot,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_9E450E25A6,KIC,District Sports Officer Fazilka,District Sports Officer Fazilka,Punjab,Fazilka,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_967397AC9A,KIC,District Sports Officer Sangrur,District Sports Officer Sangrur,Punjab,Sangrur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_43382C8476,KIC,"District sports officer, Fatehgrah Sahib","District sports officer, Fatehgrah Sahib",Punjab,Fatehgarh Sahib,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_559644ADCA,KIC,"District sports officer, Hoshiarpur","District sports officer, Hoshiarpur",Punjab,Hoshiarpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_C7B4F77F81,KIC,"District sports officer, Jalandhar","District sports officer, Jalandhar",Punjab,Jalandhar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_73E73DE87F,KIC,"District sports officer, Malerkotla","District sports officer, Malerkotla",Punjab,Malerkotla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_7620D04057,KIC,"District sports officer, Mansa","District sports officer, Mansa",Punjab,Mansa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_C7887A9FEE,KIC,"District sports officer, Patiala","District sports officer, Patiala",Punjab,Patiala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_31410C5DD2,KIC,"District sports officer, Tarn Taran","District sports officer, Tarn Taran",Punjab,Tarn Taran,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_BE39DB98D1,KIC,"District sports officer,Amritsar","District sports officer,Amritsar",Punjab,Amritsar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_3E0B5F6B8F,KIC,"Football Coaching centre, Kapurthala","Football Coaching centre, Kapurthala",Punjab,Kapurthala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_94A4CFA219,KIC,"Football Coaching centre, Sahibzada Ajit Singh Nagar","Football Coaching centre, Sahibzada Ajit Singh Nagar",Punjab,Sahibzada Ajit Singh Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_26FDB37325,KIC,"Govt. College, Kala Afghana, Gurdaspur","Govt. College, Kala Afghana, Gurdaspur",Punjab,Gurdaspur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_5741B33EA9,KIC,Guru Arjun Dev Sports Stadium,Guru Arjun Dev Sports Stadium,Punjab,Tarn Taran,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_3EBCEB1559,KIC,Gurunanak Dev University,Gurunanak Dev University,Punjab,Amritsar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_572753AF34,KIC,"Khalsa Senior Secondary School, Ropar","Khalsa Senior Secondary School, Ropar",Punjab,Rupnagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_9CA6E1D2D2,KIC,Multipurpose Sports Stadium Laminin Pathankot,Multipurpose Sports Stadium Laminin Pathankot,Punjab,Pathankot,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_584E8274AB,KIC,"Nehru Stadium, Rupnagar","Nehru Stadium, Rupnagar",Punjab,Rupnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_A1CFC0DA0E,KIC,Royal Hockey academy,Royal Hockey academy,Punjab,Gurdaspur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_B1E55DCA70,KIC,"Shri Guru Ramdas Sports Stadium, Guru Har Sahai, Firozpur","Shri Guru Ramdas Sports Stadium, Guru Har Sahai, Firozpur",Punjab,Firozpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_PUNJAB_9BBFAEA802,KIC,Wrestling Coaching Centre,Wrestling Coaching Centre,Punjab,Bathinda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_A32928EBE0,KIC,"Arivind Pavilion,Sirohi","Arivind Pavilion,Sirohi",Rajasthan,Sirohi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_E85E61868B,KIC,D.L. Gupta Government Upper Primary School,D.L. Gupta Government Upper Primary School,Rajasthan,Deeg,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_D8658E3220,KIC,"DBS (SAI) Girl Centre, Bawadi, Sikar (Extension Centre)","DBS (SAI) Girl Centre, Bawadi, Sikar (Extension Centre)",Rajasthan,Sikar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_8B2D32A2BD,KIC,"District Sports Coaching Centre, Gangapur City","District Sports Coaching Centre, Gangapur City",Rajasthan,Gangapur City,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_9749D7FC50,KIC,"District Sports Coaching Centre, Tonk","District Sports Coaching Centre, Tonk",Rajasthan,Tonk,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_2223A37D6D,KIC,"District Sports Coaching Centre,Khel Sankul,Bundi","District Sports Coaching Centre,Khel Sankul,Bundi",Rajasthan,Bundi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_B8F1224F02,KIC,"District Sports Council, Churu","District Sports Council, Churu",Rajasthan,Churu,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_497BC4FD86,KIC,"District sports coaching centre,Banswara","District sports coaching centre,Banswara",Rajasthan,Banswara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_5DFB1524CC,KIC,Dr. A.P.J. Abdul Kalam Stadium,Dr. A.P.J. Abdul Kalam Stadium,Rajasthan,Anupgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_E0837B8EBD,KIC,Dushara Maidan Sawai Madhopur,Dushara Maidan Sawai Madhopur,Rajasthan,Sawai Madhopur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_770A186079,KIC,Gajananda Modi Goverment Senior School,Gajananda Modi Goverment Senior School,Rajasthan,Neem Ka Thana,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_676732714D,KIC,Government Secondary School,Government Secondary School,Rajasthan,Salumber,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_B68000D5CC,KIC,Government Senior Secondary School,Government Senior Secondary School,Rajasthan,Khertal-Tijara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_DEA3F226BC,KIC,Government Stadium,Government Stadium,Rajasthan,Didwana-Kuchaman,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_BCF91B2C6D,KIC,"Govt. Adarsh Sr. Sec. School, Loha","Govt. Adarsh Sr. Sec. School, Loha",Rajasthan,Churu,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_940BF941FB,KIC,"Govt. Sec. School, Sadulpur, District Churu","Govt. Sec. School, Sadulpur, District Churu",Rajasthan,Churu,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_543363CD9D,KIC,"Govt. Sr. Sec. School, Gajuwas, Rajasthan","Govt. Sr. Sec. School, Gajuwas, Rajasthan",Rajasthan,Churu,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_90FDFF0035,KIC,"Indira Indoor Stadium,Samroad,Jaisalmer","Indira Indoor Stadium,Samroad,Jaisalmer",Rajasthan,Jaisalmer,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_968A7102B7,KIC,"Indra Gandhi Stadium, Chittaurgarh","Indra Gandhi Stadium, Chittaurgarh",Rajasthan,Chittaurgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_09197E46D6,KIC,"Maharaja Ganga Singh , Shri Ganganagar","Maharaja Ganga Singh , Shri Ganganagar",Rajasthan,Ganganagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_5D86BDD1E3,KIC,Major Shetan Singh Nagar Stadium,Major Shetan Singh Nagar Stadium,Rajasthan,Phalodi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_382E1624EA,KIC,More Lal Shah School,More Lal Shah School,Rajasthan,Kotputali,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_F783E376E4,KIC,Multipurpose Indoor Stadium Khel Gav Back side AvasiyaVidhaliya,Multipurpose Indoor Stadium Khel Gav Back side AvasiyaVidhaliya,Rajasthan,Pratapgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_537AF90CEE,KIC,Nagar Palika Tarantal,Nagar Palika Tarantal,Rajasthan,Shahpura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_0E87A4C7E6,KIC,Nosegay Public School,Nosegay Public School,Rajasthan,Ganganagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_32258A6FC0,KIC,P.R. Chouhan Stadium,P.R. Chouhan Stadium,Rajasthan,Beawar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_1F1BEAEC91,KIC,Pal Stadium,Pal Stadium,Rajasthan,Jhodpur (Rural),,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_83BE5849FD,KIC,Patel Stadium,Patel Stadium,Rajasthan,Kekri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_934D7CD112,KIC,"Patel Stadium, Ajmer","Patel Stadium, Ajmer",Rajasthan,Ajmer,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_343332723D,KIC,Raj Samrat Senior School,Raj Samrat Senior School,Rajasthan,Dudu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_851FA41747,KIC,"Rajasthan Sports Council, Jaipur","Rajasthan Sports Council, Jaipur",Rajasthan,Jaipur (Urban),,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_17B91628B7,KIC,"Rajasthan Sports Council, Jaipur, Alwar","Rajasthan Sports Council, Jaipur, Alwar",Rajasthan,Alwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_FEBCF3E059,KIC,"Rajasthan Sports Council, Jaipur, Baran","Rajasthan Sports Council, Jaipur, Baran",Rajasthan,Baran,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_2072BD6A7D,KIC,"Rajasthan Sports Council, Jaipur, Barmer","Rajasthan Sports Council, Jaipur, Barmer",Rajasthan,Barmer,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_B773CF0F3E,KIC,"Rajasthan Sports Council, Jaipur, Bharatpur","Rajasthan Sports Council, Jaipur, Bharatpur",Rajasthan,Bharatpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_FFAF2E79EB,KIC,"Rajasthan Sports Council, Jaipur, Bhilwara","Rajasthan Sports Council, Jaipur, Bhilwara",Rajasthan,Bhilwara,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_8F246097D8,KIC,"Rajasthan Sports Council, Jaipur, Bikaner","Rajasthan Sports Council, Jaipur, Bikaner",Rajasthan,Bikaner,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_178E5886FF,KIC,"Rajasthan Sports Council, Jaipur, Churu","Rajasthan Sports Council, Jaipur, Churu",Rajasthan,Churu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_2FE789115E,KIC,"Rajasthan Sports Council, Jaipur, Dausa","Rajasthan Sports Council, Jaipur, Dausa",Rajasthan,Dausa,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_90D33B170F,KIC,"Rajasthan Sports Council, Jaipur, Dhaulpur","Rajasthan Sports Council, Jaipur, Dhaulpur",Rajasthan,Dhaulpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_21B43308D9,KIC,"Rajasthan Sports Council, Jaipur, Dungarpur","Rajasthan Sports Council, Jaipur, Dungarpur",Rajasthan,Dungarpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_F3A6F29EDE,KIC,"Rajasthan Sports Council, Jaipur, Karauli","Rajasthan Sports Council, Jaipur, Karauli",Rajasthan,Karauli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_F69968C354,KIC,"Rajasthan Sports Council, Jaipur, Nagaur","Rajasthan Sports Council, Jaipur, Nagaur",Rajasthan,Nagaur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_C5282528C9,KIC,"Rajasthan Sports Council, Jaipur, Pali","Rajasthan Sports Council, Jaipur, Pali",Rajasthan,Pali,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_24A4E96707,KIC,"Rajasthan Sports Council, Jaipur, Rajsamand","Rajasthan Sports Council, Jaipur, Rajsamand",Rajasthan,Rajsamand,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_20E9B1789F,KIC,"Rajasthan Sports Council, Jaipur, Sikar","Rajasthan Sports Council, Jaipur, Sikar",Rajasthan,Sikar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_C415AF5EB6,KIC,"Rajeev Gandhi Stadium, Hanumangarh Juntion","Rajeev Gandhi Stadium, Hanumangarh Juntion",Rajasthan,Hanumangarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_FB5315DFA5,KIC,Saraswati Girl School,Saraswati Girl School,Rajasthan,Hanumangarh,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_EB7B01B7CB,KIC,"Shah Punjali Genaji Stadium,Jalor","Shah Punjali Genaji Stadium,Jalor",Rajasthan,Jalor,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_6784DECCBA,KIC,Shahpura Stadium,Shahpura Stadium,Rajasthan,Jaipur (Rural),,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_9D84EB1925,KIC,Shaid Bhagat Singh Stadium,Shaid Bhagat Singh Stadium,Rajasthan,Balotra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_F94EAB908F,KIC,Shri Ummed Rajkiya Stadium Jhodhpur,Shri Ummed Rajkiya Stadium Jhodhpur,Rajasthan,Jhodpur (urban),,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_1567C30DD0,KIC,"Sirohi Maharan Partap Khelgaw,Judo Training Centre, Udaipur","Sirohi Maharan Partap Khelgaw,Judo Training Centre, Udaipur",Rajasthan,Udaipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_B85346CA3C,KIC,"Smt. Vijayraje Scindia Rajkiya Khel Sankul,Jhalawar","Smt. Vijayraje Scindia Rajkiya Khel Sankul,Jhalawar",Rajasthan,Jhalawar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_8709D4AEDA,KIC,Sophia College,Sophia College,Rajasthan,Ajmer,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_3323602BFE,KIC,"Sports complex, JK,Pavilion, Nayapura","Sports complex, JK,Pavilion, Nayapura",Rajasthan,Kota,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_6245DA1FC7,KIC,"Sri Gurunanak Girls PG College, Rajasthan","Sri Gurunanak Girls PG College, Rajasthan",Rajasthan,Ganganagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_8D0CC850B9,KIC,Srigurunanak Girls Sr. Sec.School,Srigurunanak Girls Sr. Sec.School,Rajasthan,Ganganagar,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_C207338F71,KIC,"Swarn Jaynti Stadium, Mandawa road, Jhunjhunu","Swarn Jaynti Stadium, Mandawa road, Jhunjhunu",Rajasthan,Jhunjhunu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_RAJAST_1BE02A8FE1,KIC,Ward No. 05 Pahad Pura.,Ward No. 05 Pahad Pura.,Rajasthan,Sanchore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_E43841E73A,KIC,Ark Academy Namchebong,Ark Academy Namchebong,Sikkim,Pakyong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_C4999C0CA7,KIC,"Bahichung Stadium Namchi , South Sikkim","Bahichung Stadium Namchi , South Sikkim",Sikkim,Namchi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_4102D25FAA,KIC,Bhaichung Stadium,Bhaichung Stadium,Sikkim,Namchi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_6AC1C039F1,KIC,Boxing Training Centre White Hall Complex Gangtok,Boxing Training Centre White Hall Complex Gangtok,Sikkim,Gangtok,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_BB45FEAE86,KIC,KYONGSA Sports Complex Geyzing West Sikkim,KYONGSA Sports Complex Geyzing West Sikkim,Sikkim,Gyalshing,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_EC044A6645,KIC,Mangan Pentok Ground,Mangan Pentok Ground,Sikkim,Mangan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_76515B27B6,KIC,"Mangshila, Boxing Training Centre P.O Thinghchim Mangshila North Sikkim","Mangshila, Boxing Training Centre P.O Thinghchim Mangshila North Sikkim",Sikkim,Mangan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_8ACAD910D2,KIC,Multipurpose Indoor Hall Soreng,Multipurpose Indoor Hall Soreng,Sikkim,Soreng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_62B1434D40,KIC,"Multipurpose Indoor Hall, Soreng","Multipurpose Indoor Hall, Soreng",Sikkim,Soreng,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_D005E7AB3F,KIC,"St. Xavier's School Ground, District Pakyong","St. Xavier's School Ground, District Pakyong",Sikkim,Pakyong,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_SIKKIM_4F38CE1880,KIC,State Archery Coaching Centre,State Archery Coaching Centre,Sikkim,Gyalshing,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__5CF806329A,KIC,"Anna Stadium, Cuddalore - 607001","Anna Stadium, Cuddalore - 607001",Tamil Nadu,Cuddalore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__0F4E6B4B75,KIC,"Anna Stadium, Nagercoil - 629001","Anna Stadium, Nagercoil - 629001",Tamil Nadu,Kanniyakumari,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__EC18F983E2,KIC,"District Sports Stadium, Ariyalur - 621704","District Sports Stadium, Ariyalur - 621704",Tamil Nadu,Ariyalur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__D15BD80691,KIC,"District Sports Stadium, Dharmapuri - 636701","District Sports Stadium, Dharmapuri - 636701",Tamil Nadu,Dharmapuri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__6622DA3B32,KIC,"District Stadium, Karur - 639005","District Stadium, Karur - 639005",Tamil Nadu,Karur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__8AD2B8B92E,KIC,"Dr. M. G. R. Stadium, Madurai - 625002","Dr. M. G. R. Stadium, Madurai - 625002",Tamil Nadu,Madurai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__5EF146EAEA,KIC,"Government Boys Higher Secondary School, Nanganallur - 600061","Government Boys Higher Secondary School, Nanganallur - 600061",Tamil Nadu,Chengalpattu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__D0C062A1B3,KIC,"Government Boys Higher Secondary School, Thiyagadurugam - 606206","Government Boys Higher Secondary School, Thiyagadurugam - 606206",Tamil Nadu,Kallakurichchi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__5219D10B86,KIC,"Government Higher Secondary School, Ranipet - 632401","Government Higher Secondary School, Ranipet - 632401",Tamil Nadu,Ranipet,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__137B3C8298,KIC,"Nehru Stadium, Coimbatore - 641018","Nehru Stadium, Coimbatore - 641018",Tamil Nadu,Coimbatore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__2AB31F6EF3,KIC,"Perarignar Anna District Sports Stadium, Kanchipuram - 631502","Perarignar Anna District Sports Stadium, Kanchipuram - 631502",Tamil Nadu,Kanchipuram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__F0A40EF142,KIC,"S.M. Hindu Higher Secondary School, Sirkali - 609110","S.M. Hindu Higher Secondary School, Sirkali - 609110",Tamil Nadu,Mayiladuthurai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__E0482E2543,KIC,"SDAT Anna Stadium, Palayamkottai, Tirunelveli - 627002","SDAT Anna Stadium, Palayamkottai, Tirunelveli - 627002",Tamil Nadu,Tirunelveli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__2CCC591A5F,KIC,"SDAT Anna Stadium, Tiruchirappalli - 62002","SDAT Anna Stadium, Tiruchirappalli - 62002",Tamil Nadu,Tiruchirappalli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__DC302ECC8A,KIC,"SDAT Annai Sathya Stadium, Thanjavur - 613007","SDAT Annai Sathya Stadium, Thanjavur - 613007",Tamil Nadu,Thanjavur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__9DE2060A47,KIC,"SDAT District Sports Stadium, Theni - 625531","SDAT District Sports Stadium, Theni - 625531",Tamil Nadu,Theni,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__9712DBB611,KIC,"SDAT District Sports Unit, Collectorate Complex, Perambalur - 621212","SDAT District Sports Unit, Collectorate Complex, Perambalur - 621212",Tamil Nadu,Perambalur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__E9CB116D98,KIC,"SDAT District Sports Unit, V.O.C. Park, Erode - 638001","SDAT District Sports Unit, V.O.C. Park, Erode - 638001",Tamil Nadu,Erode,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__01495E2736,KIC,"SDAT District Stadium, Katpadi, Vellore - 632007","SDAT District Stadium, Katpadi, Vellore - 632007",Tamil Nadu,Vellore,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__C22EB6701D,KIC,"SDAT District Stadium, Nagapattinam - 611003","SDAT District Stadium, Nagapattinam - 611003",Tamil Nadu,Nagapattinam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__D96319FC91,KIC,"SDAT District Stadium, Namakkal - 637003","SDAT District Stadium, Namakkal - 637003",Tamil Nadu,Namakkal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__4A944CB76A,KIC,"SDAT District Stadium, Pudukkottai - 622003","SDAT District Stadium, Pudukkottai - 622003",Tamil Nadu,Pudukkottai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__A89B162921,KIC,"SDAT District Stadium, The Nilgiris","SDAT District Stadium, The Nilgiris",Tamil Nadu,The Nilgiris,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__0E2CE2775F,KIC,"SDAT District Stadium, Thiruvallur - 602001","SDAT District Stadium, Thiruvallur - 602001",Tamil Nadu,Thiruvallur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__A11D35EA06,KIC,"SDAT District Stadium, Thiruvarur - 610004","SDAT District Stadium, Thiruvarur - 610004",Tamil Nadu,Thiruvarur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__334097B81E,KIC,"SDAT District Stadium, Thoothukkudi - 628001","SDAT District Stadium, Thoothukkudi - 628001",Tamil Nadu,Thoothukkudi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__06B90753FE,KIC,"SDAT District Stadium, Tiruvannamalai - 606604","SDAT District Stadium, Tiruvannamalai - 606604",Tamil Nadu,Tiruvannamalai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__B127C0D3CA,KIC,"SDAT District Stadium, Viluppuram - 605602","SDAT District Stadium, Viluppuram - 605602",Tamil Nadu,Viluppuram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__B00969FC85,KIC,"SDAT Mahathma Gandhi Stadium, Salem - 636007","SDAT Mahathma Gandhi Stadium, Salem - 636007",Tamil Nadu,Salem,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__520C5D399F,KIC,"SDAT Mini Stadium, Jolarpet, Tiruppattur District - 635851","SDAT Mini Stadium, Jolarpet, Tiruppattur District - 635851",Tamil Nadu,Tiruppattur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__C9DC8159A2,KIC,"SDAT Multipurpose Indoor Stadium, Tiruppur - 641602","SDAT Multipurpose Indoor Stadium, Tiruppur - 641602",Tamil Nadu,Tiruppur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__C84FD34FE2,KIC,"SDAT Open Air Stadium, Sivaganga - 630561","SDAT Open Air Stadium, Sivaganga - 630561",Tamil Nadu,Sivaganga,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__BBF45B3C54,KIC,"SDAT Outdoor Stadium, Virudhunagar - 626002","SDAT Outdoor Stadium, Virudhunagar - 626002",Tamil Nadu,Virudhunagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__E2007A3363,KIC,"SDAT Seethakathi Sethupathy Stadium, Ramanathapuram - 623503","SDAT Seethakathi Sethupathy Stadium, Ramanathapuram - 623503",Tamil Nadu,Ramanathapuram,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__ED27E7AAA2,KIC,"SDAT, District Sports Stadium, Krishnagiri - 635001","SDAT, District Sports Stadium, Krishnagiri - 635001",Tamil Nadu,Krishnagiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__E1F85ABB27,KIC,"SDAT, District Stadium, Dindigul - 624004","SDAT, District Stadium, Dindigul - 624004",Tamil Nadu,Dindigul,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__A10F8F7C9A,KIC,"SDAT, Sports Complex No. 116 A, Periyar Evr High Road, Chennai-600084","SDAT, Sports Complex No. 116 A, Periyar Evr High Road, Chennai-600084",Tamil Nadu,Chennai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__1DAD3C0E93,KIC,"SMSS Boys Govt. Higher Secondary School, Shencottai","SMSS Boys Govt. Higher Secondary School, Shencottai",Tamil Nadu,Tenkasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TAMIL__63E82080FB,KIC,"Vaduvur Higher Secondary School, District Triuvarur","Vaduvur Higher Secondary School, District Triuvarur",Tamil Nadu,Thiruvarur,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_951334CFD8,KIC,"Archery Centre, Rajaram Stadium, Nizamabad","Archery Centre, Rajaram Stadium, Nizamabad",Telangana,Nizamabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_757C6BD27C,KIC,"Asilal Cycling Academi, Mulugu, Mulugu District","Asilal Cycling Academi, Mulugu, Mulugu District",Telangana,Mulugu,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_5549CCFD29,KIC,"Besides Police Station, Bhainsa Town, Nirmal","Besides Police Station, Bhainsa Town, Nirmal",Telangana,Nirmal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_A3B2308078,KIC,"Boys Junior College, Mahabubnagar","Boys Junior College, Mahabubnagar",Telangana,Mahabubnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_98D6C94173,KIC,"DYSO Ground, Gadwal District","DYSO Ground, Gadwal District",Telangana,Jogulamba Gadwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_26E02A8AE1,KIC,"DYSO Ground, ZPHS Boys High School Back Side Mancherial","DYSO Ground, ZPHS Boys High School Back Side Mancherial",Telangana,Mancherial,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_BCD6DABA2E,KIC,"DYSO, Mini Stadium Narayanpet","DYSO, Mini Stadium Narayanpet",Telangana,Narayanpet,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_DAED8FF345,KIC,"Dr. Ambedkar Stadium, Bhupalpally","Dr. Ambedkar Stadium, Bhupalpally",Telangana,Jayashankar Bhupalpally,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_CE0AC7DFAE,KIC,"Football Centre, PJP Grounds, Pebbair","Football Centre, PJP Grounds, Pebbair",Telangana,Wanaparthy,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_DACBDD527E,KIC,"Government Degree College & PG (Arts &Commerece) College, Siripuram Road, Nagarkurnool","Government Degree College & PG (Arts &Commerece) College, Siripuram Road, Nagarkurnool",Telangana,Nagarkurnool,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_537A499E3F,KIC,"Government High School, Ground, Near Ashok theatre, Hanumakonda","Government High School, Ground, Near Ashok theatre, Hanumakonda",Telangana,Hanumakonda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_EF21DFA814,KIC,Government Regional Sports School,Government Regional Sports School,Telangana,Karimnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_32EE69C78E,KIC,"Govt. High School, Ramayampet","Govt. High School, Ramayampet",Telangana,Medak,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_4467968A60,KIC,"Gymkhana Grounds, O/o DYSO, Hyderabad","Gymkhana Grounds, O/o DYSO, Hyderabad",Telangana,Hyderabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_6B258CCE76,KIC,Indira Priyadarshini Stadium,Indira Priyadarshini Stadium,Telangana,Adilabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_4D3A8085B5,KIC,Jagtiyal DSA Stadium,Jagtiyal DSA Stadium,Telangana,Jagtial,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_7D178292F8,KIC,"KRR Govt. Arts & Science College, Kodad","KRR Govt. Arts & Science College, Kodad",Telangana,Suryapet,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_26863EF716,KIC,"Kamareddy Badminton Academy, Beside Forest Office, Kamareddy","Kamareddy Badminton Academy, Beside Forest Office, Kamareddy",Telangana,Kamareddy,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_C3356EBDCB,KIC,"Kumarabheem Stadium, opp Collector Office, janakpur, Asifabad","Kumarabheem Stadium, opp Collector Office, janakpur, Asifabad",Telangana,Kumuram Bheem Asifabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_B0A356E061,KIC,"Mahatma Sports Club, Chennuru Palakurthy","Mahatma Sports Club, Chennuru Palakurthy",Telangana,Jangaon,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_D2ED47BBD5,KIC,Ms.Chakali Swathi Stadium Ground Parigi,Ms.Chakali Swathi Stadium Ground Parigi,Telangana,Vikarabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_39034F1667,KIC,Nagarjuna Government Degree College,Nagarjuna Government Degree College,Telangana,Nalgonda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_73EC0671DE,KIC,"O-City Stadium, Laxmipuram","O-City Stadium, Laxmipuram",Telangana,Warangal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_A418BF1AAA,KIC,Out Door Stadium Alair,Out Door Stadium Alair,Telangana,Yadadri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_586E9304E7,KIC,"Rajivnagar Mini Stadium, Siricilla","Rajivnagar Mini Stadium, Siricilla",Telangana,Rajanna Sircilla,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_527CADC0DC,KIC,"Ranganayak Sagar, Chandulpur, Lingareddypally","Ranganayak Sagar, Chandulpur, Lingareddypally",Telangana,Siddipet,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_7BD1D94847,KIC,"Samatha Nagar, Neredmet, Malkajgiri","Samatha Nagar, Neredmet, Malkajgiri",Telangana,Medchal-Malkajgiri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_742B07808C,KIC,"Sardar Patel Stadium, Khammam","Sardar Patel Stadium, Khammam",Telangana,Khammam,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_5568F6213C,KIC,"Speed Badminton Academy owned and run by Sh. Gurram, Narender.Kotha pet Ranga Reddy","Speed Badminton Academy owned and run by Sh. Gurram, Narender.Kotha pet Ranga Reddy",Telangana,Ranga Reddy,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_881196A735,KIC,"Sri Rama Archery Academy, Chunchupalli (V&M)","Sri Rama Archery Academy, Chunchupalli (V&M)",Telangana,Bhadradri Kothagudem,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_695F3C988C,KIC,"Telangana Urgan Municipal Krida Prnganam, Markendaya Colony, Sulthanabad, Distt Peddapalli","Telangana Urgan Municipal Krida Prnganam, Markendaya Colony, Sulthanabad, Distt Peddapalli",Telangana,Peddapalli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_68E8F3D525,KIC,ZPHS Banupur,ZPHS Banupur,Telangana,Sangareddy,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TELANG_8A4F95842B,KIC,ZPPHS School Grounds Kesamudram,ZPPHS School Grounds Kesamudram,Telangana,Mahabubabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_798EF8E918,KIC,"Amarpur Judo Coaching Centre, Amarpur, Gomati","Amarpur Judo Coaching Centre, Amarpur, Gomati",Tripura,Gomati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_75DE7079AF,KIC,"Ambassa District Sports Hall, Chandraichhara, Ambassa","Ambassa District Sports Hall, Chandraichhara, Ambassa",Tripura,Dhalai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_AB7FE0A45E,KIC,"Belkumbari HS School, Kailashahar, Unakoti","Belkumbari HS School, Kailashahar, Unakoti",Tripura,Unakoti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_6F0CF7B625,KIC,"Bimal Singha Smriti Swimming Pool, Gomati, Udaipur","Bimal Singha Smriti Swimming Pool, Gomati, Udaipur",Tripura,Gomati,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_8C9E399A98,KIC,"Birchandra Manu SS VM HS School, BC Nagar, Santibazar, South Tripura","Birchandra Manu SS VM HS School, BC Nagar, Santibazar, South Tripura",Tripura,South Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_DD2A919D4C,KIC,Chelikhola Judo Play Centre,Chelikhola Judo Play Centre,Tripura,Sepahijala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_3637393573,KIC,"Dharmanagar YAS Sports Hall, Jubarajnagar, Dharmanagar","Dharmanagar YAS Sports Hall, Jubarajnagar, Dharmanagar",Tripura,North Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_AEC38293C7,KIC,"Fatikroy H/S School School Ground, Fatikroykumarghat, Unakoti Tripura","Fatikroy H/S School School Ground, Fatikroykumarghat, Unakoti Tripura",Tripura,Unakoti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_CFF993D8C3,KIC,Hrishyamukh Play Centre,Hrishyamukh Play Centre,Tripura,South Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_5E3FC98B45,KIC,"Jampuijala HS School, JamPuijala, Sepahijala","Jampuijala HS School, JamPuijala, Sepahijala",Tripura,Sepahijala,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_1D4BB31E49,KIC,"Kamalpur KC Girls HS School Swimming Pool, Fulchari, Kamalpur","Kamalpur KC Girls HS School Swimming Pool, Fulchari, Kamalpur",Tripura,Dhalai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_37CC0CF551,KIC,"Kanchanpur Sports Hall, Laljhuri, Kanchanpur","Kanchanpur Sports Hall, Laljhuri, Kanchanpur",Tripura,North Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_EF062D2D69,KIC,"Khayerpur Play Centre, Old Agartala Sadar, West Tripura","Khayerpur Play Centre, Old Agartala Sadar, West Tripura",Tripura,West Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_DDC11375EE,KIC,"NSRCC Judo Hall, NSRCC, AgaralaSadar, West Tripura","NSRCC Judo Hall, NSRCC, AgaralaSadar, West Tripura",Tripura,West Tripura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_7C7AE66D13,KIC,"Sahid Bhagat Singh Gymnasium Hall, Khowai District, Tripura","Sahid Bhagat Singh Gymnasium Hall, Khowai District, Tripura",Tripura,Khowai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_7F15496298,KIC,"Singhichhara Judo Hall, Khowai, Tripura","Singhichhara Judo Hall, Khowai, Tripura",Tripura,Khowai,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_81AAF8DE14,KIC,"Tripura Tribal Areas Autonomous District Council, Khumulwng","Tripura Tribal Areas Autonomous District Council, Khumulwng",Tripura,West Tripura,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_TRIPUR_79DE7D11E7,KIC,"Umakanta Academy, Agartala","Umakanta Academy, Agartala",Tripura,West Tripura,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__D2D3BFA0F4,KIC,"Amar Shaheed Satyawan Singh , Regional Sports Stadium Basti,","Amar Shaheed Satyawan Singh , Regional Sports Stadium Basti,",Uttar Pradesh,Basti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__13BE521268,KIC,"Baba Shamal, Stadium Kottana Road Baraut , Bagpat","Baba Shamal, Stadium Kottana Road Baraut , Bagpat",Uttar Pradesh,Baghpat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__4AEE0D5FE7,KIC,"Babu Banarasi Das Badminton Academy, Vipinkhand","Babu Banarasi Das Badminton Academy, Vipinkhand",Uttar Pradesh,Lucknow,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__1819F1AAB6,KIC,Chaudhary Charan Singh Sports Stadium,Chaudhary Charan Singh Sports Stadium,Uttar Pradesh,Muzaffarnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__885F9543D2,KIC,Chhatrapati Shahu Ji Maharaj Sports Stadium Dhanewadhanai,Chhatrapati Shahu Ji Maharaj Sports Stadium Dhanewadhanai,Uttar Pradesh,Maharajganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__59FEE23FF4,KIC,Chhetria Khel Stadium Bareilly,Chhetria Khel Stadium Bareilly,Uttar Pradesh,Bareilly,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__E5EA0831C8,KIC,"D R International School, Garhmukteshwar, Hapur","D R International School, Garhmukteshwar, Hapur",Uttar Pradesh,Hapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__8A8163D574,KIC,"Daudayal Sports Stadium, Firozabad","Daudayal Sports Stadium, Firozabad",Uttar Pradesh,Firozabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__BDDF03EB1C,KIC,Dr. Ambedkar Sports Stadium Near Gandhi Park,Dr. Ambedkar Sports Stadium Near Gandhi Park,Uttar Pradesh,Saharanpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__4879E3A840,KIC,Dr. BhimRao Ambedkar International Sports Complex Dhabhasemar,Dr. BhimRao Ambedkar International Sports Complex Dhabhasemar,Uttar Pradesh,Ayodhya,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__62E802E06E,KIC,Dr. Bhimrao Ambedkar International Sports Stadium Amethi,Dr. Bhimrao Ambedkar International Sports Stadium Amethi,Uttar Pradesh,Amethi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__80E6D0C576,KIC,Dr. Bhimrao Ambedkar Sports Stadium. Mau,Dr. Bhimrao Ambedkar Sports Stadium. Mau,Uttar Pradesh,Mau,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__AFE573B3B4,KIC,Dr. Sampurna Nand Sports Stadium Sigra,Dr. Sampurna Nand Sports Stadium Sigra,Uttar Pradesh,Varanasi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__7330222A21,KIC,"Eklavya Sports Stadium, Agra","Eklavya Sports Stadium, Agra",Uttar Pradesh,Agra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__755724E6AD,KIC,"Eklavya Sports Stadium, Ambekdar Nagar","Eklavya Sports Stadium, Ambekdar Nagar",Uttar Pradesh,Ambedkar Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__C5818F1FBB,KIC,Gandhi Stadium Pilibhit,Gandhi Stadium Pilibhit,Uttar Pradesh,Pilibhit,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__B8937A838F,KIC,Godwin Public School,Godwin Public School,Uttar Pradesh,Meerut,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__498B89CE95,KIC,"Gramin Stadium, Panjokhara, Shamli","Gramin Stadium, Panjokhara, Shamli",Uttar Pradesh,Shamli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__F4677D3767,KIC,Green Park Sports Stadium Civil Lines Kanpur Nagar,Green Park Sports Stadium Civil Lines Kanpur Nagar,Uttar Pradesh,Kanpur Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__04BC664B52,KIC,"Harper Club, Banda","Harper Club, Banda",Uttar Pradesh,Banda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__7FB3FB2EF4,KIC,Indira Gandhi Sports Stadium Bahriach,Indira Gandhi Sports Stadium Bahriach,Uttar Pradesh,Bahraich,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__F1B8FFAB0F,KIC,Indira Gandhi Sports Stadium Siddiqpur Jaunpur,Indira Gandhi Sports Stadium Siddiqpur Jaunpur,Uttar Pradesh,Jaunpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__D42E6E62B1,KIC,Indira Stadium Urai Jalaun,Indira Stadium Urai Jalaun,Uttar Pradesh,Jalaun,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__2A0B4B31EC,KIC,K D Singh Babu Stadium Bara Banki,K D Singh Babu Stadium Bara Banki,Uttar Pradesh,Bara Banki,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__CF12DE4112,KIC,K D Singh Babu Stadium Lucknow,K D Singh Babu Stadium Lucknow,Uttar Pradesh,Lucknow,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__C4C09D88CD,KIC,"Kailash Prakash Sports Stadium, Meerut","Kailash Prakash Sports Stadium, Meerut",Uttar Pradesh,Meerut,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__74FB889B59,KIC,"Late Mohan Pahalwan Sports Stadium Ganeshra, Mathura","Late Mohan Pahalwan Sports Stadium Ganeshra, Mathura",Uttar Pradesh,Mathura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__DA12F73F70,KIC,Lt. Sh. Brahmadutt dwivedi Sports Stadium Fatehgarh,Lt. Sh. Brahmadutt dwivedi Sports Stadium Fatehgarh,Uttar Pradesh,Farrukhabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__686D6CF16F,KIC,"Madan Mohan Malviya Stadium, Prayagraj","Madan Mohan Malviya Stadium, Prayagraj",Uttar Pradesh,Prayagraj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__2A36DCE6EA,KIC,"Mahamaya Sports Stadium , Ghaziabad","Mahamaya Sports Stadium , Ghaziabad",Uttar Pradesh,Ghaziabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__7F0567625E,KIC,"Maharani Ahilyabai Holker Sports Stadium, Aligarh","Maharani Ahilyabai Holker Sports Stadium, Aligarh",Uttar Pradesh,Aligarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__8BB61A0661,KIC,Mahatma Jyotiba Phule Sports Stadium. Etawah,Mahatma Jyotiba Phule Sports Stadium. Etawah,Uttar Pradesh,Etawah,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__26782196DE,KIC,"Major Dhyan Sports Stadium, Sitapur","Major Dhyan Sports Stadium, Sitapur",Uttar Pradesh,Sitapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__289840C29E,KIC,"Manyawar Shri Kashiram Ji, District Sports Stadium, Sant Kabir Nagar","Manyawar Shri Kashiram Ji, District Sports Stadium, Sant Kabir Nagar",Uttar Pradesh,Sant Kabir Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__03A2962E43,KIC,"Moti lal Nehru Sports Stadium, Rae Bareli","Moti lal Nehru Sports Stadium, Rae Bareli",Uttar Pradesh,Rae Bareli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__C91B0CD83C,KIC,Nandini Nagar Mahavidyalaya,Nandini Nagar Mahavidyalaya,Uttar Pradesh,Gonda,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__9D1682A935,KIC,Naveen Sports Stadium,Naveen Sports Stadium,Uttar Pradesh,Ghazipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__BCFBF4B88E,KIC,"Nehru Sports Stadium, Bijnor","Nehru Sports Stadium, Bijnor",Uttar Pradesh,Bijnor,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__89E71AC22B,KIC,Netaji Subhash Chander Bose Sports Stadium,Netaji Subhash Chander Bose Sports Stadium,Uttar Pradesh,Moradabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__2E8AF40A51,KIC,Noida Stadium Sector-21 A Noida,Noida Stadium Sector-21 A Noida,Uttar Pradesh,Gautam Buddha Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__5F23B03590,KIC,"Panth Sports Stadium, Lal Digi, Sultanpur","Panth Sports Stadium, Lal Digi, Sultanpur",Uttar Pradesh,Sultanpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__49DC837094,KIC,Pt. Deendayal Upadhyaya Sports Stadium Unnao,Pt. Deendayal Upadhyaya Sports Stadium Unnao,Uttar Pradesh,Unnao,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__29CB22C35A,KIC,Pt. Govind Ballabh Pant Sports Stadium,Pt. Govind Ballabh Pant Sports Stadium,Uttar Pradesh,Etah,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__CC528F53E2,KIC,"Pt. Jawahar Lal Nehru Sports Stadium, Mainpuri","Pt. Jawahar Lal Nehru Sports Stadium, Mainpuri",Uttar Pradesh,Mainpuri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__7CCB7ADAEF,KIC,"Rajkiya Inter College, Jhansi","Rajkiya Inter College, Jhansi",Uttar Pradesh,Jhansi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__1BCD61F31B,KIC,Ravindra Kishore Shahi Sports Stadium,Ravindra Kishore Shahi Sports Stadium,Uttar Pradesh,Deoria,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__3107737D79,KIC,"Regional Stadium, Gorakhpur","Regional Stadium, Gorakhpur",Uttar Pradesh,Gorakhpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__5609946D6B,KIC,"Rifle Association, Johri, Baraut","Rifle Association, Johri, Baraut",Uttar Pradesh,Baghpat,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__6CD3547B84,KIC,"S.M Degree Collage Chandausi, Sambhal","S.M Degree Collage Chandausi, Sambhal",Uttar Pradesh,Sambhal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__D9C957EEB7,KIC,"Shaheed-E- Azam Sports Stadium,, Rampur","Shaheed-E- Azam Sports Stadium,, Rampur",Uttar Pradesh,Rampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__F24A0AE524,KIC,"Shri Krishan Gymnasium Seve Trust, Karwat Dandi, Chandauli","Shri Krishan Gymnasium Seve Trust, Karwat Dandi, Chandauli",Uttar Pradesh,Chandauli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__0FBB9A4BA6,KIC,Sports Stadium Bhadohi,Sports Stadium Bhadohi,Uttar Pradesh,Bhadohi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__9A7F3789AE,KIC,Sports Stadium Chitrakoot,Sports Stadium Chitrakoot,Uttar Pradesh,Chitrakoot,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__4328ECE472,KIC,Sports Stadium Gonda,Sports Stadium Gonda,Uttar Pradesh,Gonda,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__79588AB2C1,KIC,Sports Stadium Hamirpur,Sports Stadium Hamirpur,Uttar Pradesh,Hamirpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__7CAB71F13B,KIC,Sports Stadium Meera Sarai Joya Block,Sports Stadium Meera Sarai Joya Block,Uttar Pradesh,Amroha,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__AC0C16497D,KIC,Sports Stadium Mirzapur,Sports Stadium Mirzapur,Uttar Pradesh,Mirzapur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__8C64654E97,KIC,"Sports Stadium Saurikh, Kannauj","Sports Stadium Saurikh, Kannauj",Uttar Pradesh,Kannauj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__4CBDB28311,KIC,Sports Stadium Tiara Robertsganj,Sports Stadium Tiara Robertsganj,Uttar Pradesh,Sonbhadra,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__F599E03CCC,KIC,"Sports Stadium, Badhin, Oria","Sports Stadium, Badhin, Oria",Uttar Pradesh,Auraiya,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__373575BA80,KIC,"Sports Stadium, Balrampur","Sports Stadium, Balrampur",Uttar Pradesh,Balrampur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__B51A793DBD,KIC,"Sports Stadium, Budaun","Sports Stadium, Budaun",Uttar Pradesh,Budaun,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__928FBB1D9B,KIC,"Sports Stadium, Hardoi","Sports Stadium, Hardoi",Uttar Pradesh,Hardoi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__31AC094527,KIC,"Sports Stadium, Hathras","Sports Stadium, Hathras",Uttar Pradesh,Hathras,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__DB02337C24,KIC,"Sports Stadium, Kanpur Dehat","Sports Stadium, Kanpur Dehat",Uttar Pradesh,Kanpur Dehat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__9C9813A7FA,KIC,"Sports Stadium, Kasganj","Sports Stadium, Kasganj",Uttar Pradesh,Kasganj,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__305E9840B8,KIC,"Sports Stadium, Kaushambi","Sports Stadium, Kaushambi",Uttar Pradesh,Kaushambi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__11CFF85627,KIC,"Sports Stadium, Kushinagar","Sports Stadium, Kushinagar",Uttar Pradesh,Kushinagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__3659D6D862,KIC,"Sports Stadium, Lakhimpur Kheri","Sports Stadium, Lakhimpur Kheri",Uttar Pradesh,Kheri,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__25A78A3E24,KIC,"Sports Stadium, Lalitpur","Sports Stadium, Lalitpur",Uttar Pradesh,Lalitpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__1FBDB68948,KIC,"Sports Stadium, Mahoba","Sports Stadium, Mahoba",Uttar Pradesh,Mahoba,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__D92C58A2A1,KIC,"Sports Stadium, Pratapgarh","Sports Stadium, Pratapgarh",Uttar Pradesh,Pratapgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__1C143A04F5,KIC,"Sports Stadium, Shajahapur","Sports Stadium, Shajahapur",Uttar Pradesh,Shahjahanpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__61956EFD79,KIC,"Sports Stadium, Siddharthnagar","Sports Stadium, Siddharthnagar",Uttar Pradesh,Siddharthnagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__6894576F27,KIC,"Sports Stadium, Sravasti","Sports Stadium, Sravasti",Uttar Pradesh,Shrawasti,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__8695E3AD08,KIC,"Sports Stadium, Tanda, Bulandshahr","Sports Stadium, Tanda, Bulandshahr",Uttar Pradesh,Bulandshahr,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__95B0A2A874,KIC,"Sports Stadium,, Fatehpur","Sports Stadium,, Fatehpur",Uttar Pradesh,Fatehpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__87C750C683,KIC,"Sukhdev Pehalwan Sports Stadium, Azamgarh","Sukhdev Pehalwan Sports Stadium, Azamgarh",Uttar Pradesh,Azamgarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__DB9D54964E,KIC,U.P. Inter College,U.P. Inter College,Uttar Pradesh,Varanasi,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTAR__F867A065EA,KIC,"Veer Lorik Sports Stadium, Ballia","Veer Lorik Sports Stadium, Ballia",Uttar Pradesh,Ballia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_7A488EBAFF,KIC,"Dev Singh Ground, Pithoragarh","Dev Singh Ground, Pithoragarh",Uttarakhand,Pithoragarh,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_6308B1806B,KIC,"District Sports Office, Bageshwar","District Sports Office, Bageshwar",Uttarakhand,Bageshwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_213E3D076D,KIC,"District Sports Stadium, Almora","District Sports Stadium, Almora",Uttarakhand,Almora,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_63D2A865A1,KIC,"Hemwati Nandan Bahuguna Sports Stadium, Almora","Hemwati Nandan Bahuguna Sports Stadium, Almora",Uttarakhand,Almora,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_27D560A1A3,KIC,"Indira Gandhi International Sports Complex, Haldwani","Indira Gandhi International Sports Complex, Haldwani",Uttarakhand,Nainital,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_4B57121130,KIC,"Parwati Prema Jagati Saraswati Vihar, Sr.Sec.School, Durgapur, Nainital","Parwati Prema Jagati Saraswati Vihar, Sr.Sec.School, Durgapur, Nainital",Uttarakhand,Nainital,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_0D37ECDFF8,KIC,"Puranand Sports Stadium, Tehri Garhwal","Puranand Sports Stadium, Tehri Garhwal",Uttarakhand,Tehri Garhwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_16DC806DC0,KIC,"Purnanad Sports Stadium, Tehri Garhwal","Purnanad Sports Stadium, Tehri Garhwal",Uttarakhand,Tehri Garhwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_FE75C8A662,KIC,"Shashidhar Bhatt Sports Stadium, Kotdwara","Shashidhar Bhatt Sports Stadium, Kotdwara",Uttarakhand,Pauri Garhwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_1CADA0A1DE,KIC,Shri Surendra Singh Waldia Sports Stadium,Shri Surendra Singh Waldia Sports Stadium,Uttarakhand,Pithoragarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_4AE467F7AD,KIC,"Sports College, Summer Valley, Dehradun","Sports College, Summer Valley, Dehradun",Uttarakhand,Dehradun,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_0556186643,KIC,"Sports Office Roshnabad, Haridwar","Sports Office Roshnabad, Haridwar",Uttarakhand,Haridwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_A7AF5C8774,KIC,Sports Stadium Dehradun,Sports Stadium Dehradun,Uttarakhand,Dehradun,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_33C92CDFE8,KIC,Sports Stadium Haldwani,Sports Stadium Haldwani,Uttarakhand,Nainital,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_E608106CD8,KIC,Sports Stadium Lohaghat,Sports Stadium Lohaghat,Uttarakhand,Champawat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_1A47882161,KIC,"Sports Stadium Roshnabad, Haridwar","Sports Stadium Roshnabad, Haridwar",Uttarakhand,Haridwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_D22016FCEC,KIC,Sports Stadium Rudrapur,Sports Stadium Rudrapur,Uttarakhand,Udham Singh Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_7DFE63570E,KIC,"Sports Stadium, Agustmuni","Sports Stadium, Agustmuni",Uttarakhand,Rudraprayag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_2C650C3558,KIC,"Sports Stadium, Agustmuni, Rudraprayag","Sports Stadium, Agustmuni, Rudraprayag",Uttarakhand,Rudraprayag,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_DA7F5D4977,KIC,"Sports Stadium, Almora","Sports Stadium, Almora",Uttarakhand,Almora,,Converted Centre,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_64ED4F3483,KIC,"Sports Stadium, Bageshwar","Sports Stadium, Bageshwar",Uttarakhand,Bageshwar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_85DB96A937,KIC,"Sports Stadium, Gopeshwar","Sports Stadium, Gopeshwar",Uttarakhand,Chamoli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_19EAAA47EB,KIC,"Sports Stadium, Gopeshwar, Chamoli","Sports Stadium, Gopeshwar, Chamoli",Uttarakhand,Chamoli,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_F8CF49D7A2,KIC,"Sports Stadium, Kotdwara","Sports Stadium, Kotdwara",Uttarakhand,Pauri Garhwal,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_E85DDA9AAD,KIC,"Sports Stadium, Manera, Uttarkashi","Sports Stadium, Manera, Uttarkashi",Uttarakhand,Uttarkashi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_5F1AC019ED,KIC,"Sports Stadium, Parade Ground Dehradun","Sports Stadium, Parade Ground Dehradun",Uttarakhand,Dehradun,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_B9E2E10767,KIC,"Sports Stadium, Tanakpur","Sports Stadium, Tanakpur",Uttarakhand,Champawat,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_7A4AAAA0DF,KIC,"Sports Stadium, Uttarkashi","Sports Stadium, Uttarkashi",Uttarakhand,Uttarkashi,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_F62903B02B,KIC,"Sri Manoj Sarkar Sports Stadium, Rudrapur","Sri Manoj Sarkar Sports Stadium, Rudrapur",Uttarakhand,Udham Singh Nagar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_UTTARA_12E94F570E,KIC,"Sri Surendra Singh Waldia Sports Stadium, Pithoragarh","Sri Surendra Singh Waldia Sports Stadium, Pithoragarh",Uttarakhand,Pithoragarh,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_4AEB42BB11,KIC,"Jawahar Navodaya Vidyalay, District Alipurduar","Jawahar Navodaya Vidyalay, District Alipurduar",West Bengal,Alipurduar,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_AA35CECFC3,KIC,"Jawahar Navodaya Vidyalaya, Balurghat, District Dakshin Dinajpur","Jawahar Navodaya Vidyalaya, Balurghat, District Dakshin Dinajpur",West Bengal,Dakshin Dinajpur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_F558F0A601,KIC,"Jawahar Navodaya Vidyalaya, Bidhan Nagar, Sector 2A, SSB Sarani Durgapur, District Paschim Bardhman","Jawahar Navodaya Vidyalaya, Bidhan Nagar, Sector 2A, SSB Sarani Durgapur, District Paschim Bardhman",West Bengal,Paschim Burdwan,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_48CCA633FB,KIC,"Jawahar Navodaya Vidyalaya, Dihibagnan, Arambagh, Hooghly","Jawahar Navodaya Vidyalaya, Dihibagnan, Arambagh, Hooghly",West Bengal,Hooghly,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_B4EBAD2560,KIC,"Jawahar Navodaya Vidyalaya, District Birhum","Jawahar Navodaya Vidyalaya, District Birhum",West Bengal,Birbhum,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_B95F18FD55,KIC,"Jawahar Navodaya Vidyalaya, District Purulia","Jawahar Navodaya Vidyalaya, District Purulia",West Bengal,Purulia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_8E9D6A3BB0,KIC,"Jawahar Navodaya Vidyalaya, Jibantala, District South 24 Parganas","Jawahar Navodaya Vidyalaya, Jibantala, District South 24 Parganas",West Bengal,South 24 Parganas,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_36F6251496,KIC,"Jawahar Navodaya Vidyalaya, Kalyani, Industrial Growth Centre, Phase-III, Behind JIS Engineering College, District Nadia","Jawahar Navodaya Vidyalaya, Kalyani, Industrial Growth Centre, Phase-III, Behind JIS Engineering College, District Nadia",West Bengal,Nadia,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_0E77FB6FA3,KIC,"Jawahar Navodaya Vidyalaya, P.S. Mahisadal, District East Medinapur, City haldia","Jawahar Navodaya Vidyalaya, P.S. Mahisadal, District East Medinapur, City haldia",West Bengal,East Medinipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_117A8A9D80,KIC,"Jawahar Navodaya Vidyalaya, Station Road, Swarnamoyee, P.O. Berhampore, District Murshidabad","Jawahar Navodaya Vidyalaya, Station Road, Swarnamoyee, P.O. Berhampore, District Murshidabad",West Bengal,Murshidabad,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_01C729B742,KIC,"Jawahar Navodaya Vidyalaya, Village Kalpathar, PS Bankura, District Bankura","Jawahar Navodaya Vidyalaya, Village Kalpathar, PS Bankura, District Bankura",West Bengal,Bankura,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_7B07C557F9,KIC,"Jawahar Navodaya Vidyalaya, Village Muradanaga, P.O. Vidyasagar University, City Medinipur, District Pashchim Medinipur","Jawahar Navodaya Vidyalaya, Village Muradanaga, P.O. Vidyasagar University, City Medinipur, District Pashchim Medinipur",West Bengal,Paschim Medinipur,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KIC_WEST_B_A5D1B26283,KIC,"Jawhar Navodaya Vidyalaya, P.O. Banipur, P.S. Habra, Near Banipur Post Office","Jawhar Navodaya Vidyalaya, P.O. Banipur, P.S. Habra, Near Banipur Post Office",West Bengal,North 24 Parganas,,New,,KIC_DETAILS_STATEWISE,True
+CENTRE_KISCE_ANDAMA_052AAE940F,KISCE,"Netaji Sports Complex, Sri Vijaya Puram","Netaji Sports Complex, Sri Vijaya Puram",Andaman & Nicobar,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_ANDHRA_557F6F6159,KISCE,"Dr. YSR Sports School, YSR District, Kadapa","Dr. YSR Sports School, YSR District, Kadapa",Andhra Pradesh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_ARUNAC_72E5DD95BB,KISCE,"Sangey Lhaden Sports Academy, ChimpuItanagar","Sangey Lhaden Sports Academy, ChimpuItanagar",Arunachal Pradesh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_ASSAM_9380DD7A88,KISCE,"States Sports Academy, Sarusajai","States Sports Academy, Sarusajai",Assam,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_BIHAR_1A0D61AD4B,KISCE,"Bihar Sports Academy, Rajgir","Bihar Sports Academy, Rajgir",Bihar,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_CHANDI_7685BD0DBC,KISCE,"Hockey Stadium, Sector 42","Hockey Stadium, Sector 42",Chandigarh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_CHHATT_11CAD414FB,KISCE,"Rajya Khel Prashikshan Kendra, Bilaspur","Rajya Khel Prashikshan Kendra, Bilaspur",Chhattisgarh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_DNH_AN_A705E302D6,KISCE,New Sports Complex Silvassa,New Sports Complex Silvassa,DNH & DD,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_DELHI_904DBBC7CE,KISCE,Chhatrasal Stadium,Chhatrasal Stadium,Delhi,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_GOA_0880A592DA,KISCE,"SAG Sports Complex, Campal, Panaji","SAG Sports Complex, Campal, Panaji",Goa,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_GUJARA_C409F9DC30,KISCE,"High-performance Centre, Nadiad","High-performance Centre, Nadiad",Gujarat,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_HARYAN_84C1AF7666,KISCE,Tau Devi Lal Sports Complex,Tau Devi Lal Sports Complex,Haryana,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_HIMACH_BCD759C151,KISCE,"Indoor stadium Luhnu Sports Complex, Bilaspur","Indoor stadium Luhnu Sports Complex, Bilaspur",Himachal Pradesh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_JAMMU__138E8C79ED,KISCE,"1. J & K Sports Council Water Sports Academy, Srinagar 2. M.A. Stadium, Fencing Academy, Jammu","1. J & K Sports Council Water Sports Academy, Srinagar 2. M.A. Stadium, Fencing Academy, Jammu",Jammu & Kashmir,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_JHARKH_F2DF58C4EE,KISCE,"Mega Sports Complex, Hotwar, Ranchi","Mega Sports Complex, Hotwar, Ranchi",Jharkhand,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_KARNAT_43036B7D78,KISCE,Sh. Jaiprakash Narayan National Youth Centre Bangalore,Sh. Jaiprakash Narayan National Youth Centre Bangalore,Karnataka,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_KERALA_2DF6CE78FB,KISCE,GV Raja Sr. Sec.Sports School Tpuram,GV Raja Sr. Sec.Sports School Tpuram,Kerala,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_LADAKH_C72450F96D,KISCE,Open Stadium Spituk/Lamdon Archery Field/Boxing Hall,Open Stadium Spituk/Lamdon Archery Field/Boxing Hall,Ladakh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_LAKSHA_AC73C9E040,KISCE,KISCE Lakshadweep (Centre name missing),,Lakshadweep,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_MADHYA_40F7A8E0F7,KISCE,MP State Academy,MP State Academy,Madhya Pradesh,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_MAHARA_89BF853D7B,KISCE,"Shivchhatrapati Sports Complex, Balewadi, Pune","Shivchhatrapati Sports Complex, Balewadi, Pune",Maharashtra,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_MANIPU_BD6DBAF84F,KISCE,"Khuman Lampak Sports Complex, Imphal","Khuman Lampak Sports Complex, Imphal",Manipur,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_MEGHAL_5571C75BB1,KISCE,"J N S Complex, Shillong, Meghalaya","J N S Complex, Shillong, Meghalaya",Meghalaya,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_MIZORA_83C4C64CAD,KISCE,"Rajiv Gandhi Stadium, Aizawal","Rajiv Gandhi Stadium, Aizawal",Mizoram,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_NAGALA_521E241677,KISCE,"State Sports Academy, IG Stadium Kohima","State Sports Academy, IG Stadium Kohima",Nagaland,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_ODISHA_D57DE38ACF,KISCE,"Kalinga Stadium, Bhubaneshwar","Kalinga Stadium, Bhubaneshwar",Odisha,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_PUDUCH_195A437B64,KISCE,"Rajiv Gandhi School of Sports, Uppallam","Rajiv Gandhi School of Sports, Uppallam",Puducherry,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_PUNJAB_2B8F5FBBA3,KISCE,Govt. Arts and Sports College,Govt. Arts and Sports College,Punjab,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_RAJAST_E13FFC8D56,KISCE,SMS Stadium Jaipur,SMS Stadium Jaipur,Rajasthan,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_SIKKIM_480E35381B,KISCE,"Paljor Stadium, Gangtok","Paljor Stadium, Gangtok",Sikkim,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_TAMIL__BB965BF528,KISCE,"Jawaharlal Nehru Stadium, Chennai","Jawaharlal Nehru Stadium, Chennai",Tamil Nadu,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_TELANG_B52C21538E,KISCE,Regional Sports School Hakimpet,Regional Sports School Hakimpet,Telangana,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_TRIPUR_9AC7A38D44,KISCE,"Dasarath Dev State Sports Complex, Badharght, Agartala","Dasarath Dev State Sports Complex, Badharght, Agartala",Tripura,,,,Operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_UTTAR__3BCD7CCCC6,KISCE,"Guru Gobind Singh Sports College, Lucknow","Guru Gobind Singh Sports College, Lucknow",Uttar Pradesh,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_UTTARA_AC94E48306,KISCE,"Maharana Pratap Sports College, Dehradun","Maharana Pratap Sports College, Dehradun",Uttarakhand,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_KISCE_WEST_B_BB7381B16A,KISCE,KISCE West Bengal (Centre name missing),,West Bengal,,,,Non-operational,KISCE_DETAILS_STATEWISE,True
+CENTRE_STC_AN_EA6F4087C1,STC,Nicobar,Nicobar,A & N,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_AN_BE8F0F2E2E,STC,Port Blair,Port Blair,A & N,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_AND_0008122FC2,STC,Eluru,Eluru,Andhra Pradesh,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_AND_BA4F3837D7,STC,Kurnool,Kurnool,Andhra Pradesh,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_AND_62932F2C50,STC,Vishakhapatnam,Vishakhapatnam,Andhra Pradesh,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ARU_89B7D4F7EA,STC,Naharlagun,Naharlagun,Arunachal Pradesh,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ASS_BF3AC1B9BA,STC,Golaghat,Golaghat,Assam,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ASS_6ACFC82AFD,STC,Kokrajhar,Kokrajhar,Assam,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ASS_AECB35943C,STC,Solalgaon,Solalgaon,Assam,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ASS_012B4BC69A,STC,Tinsukia,Tinsukia,Assam,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_BIH_AD23CE55BB,STC,Patna,Patna,Bihar,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_CHH_1B36CB12B5,STC,Raipur,Raipur,Chhattisgarh,,Bhopal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_CHH_6D002867D0,STC,Rajnandgaon,Rajnandgaon,Chhattisgarh,,Bhopal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_DEL_4520E702FC,STC,Bawana,Bawana,Delhi,,Sonepat,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_GOA_C91EE8B245,STC,Peddem,Peddem,Goa,,Mumbai,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_GOA_CC890A7B85,STC,Ponda,Ponda,Goa,,Mumbai,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_HAR_8E705505FE,STC,Bhiwani,Bhiwani,Haryana,,Sonepat,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_HAR_14943ADF3A,STC,Hisar,Hisar,Haryana,,Sonepat,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_HAR_9EEA667DF5,STC,Kurukshetra,Kurukshetra,Haryana,,Sonepat,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_HIM_1CD1297CD6,STC,Bilaspur,Bilaspur,Himachal Pradesh,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_JAM_4FB0488829,STC,Jammu,Jammu,Jammu & Kashmir,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_JHA_1FDF4069AB,STC,Hazaribagh,Hazaribagh,Jharkhand,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_JHA_0329397385,STC,Ranchi,Ranchi,Jharkhand,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KAR_C588158B6A,STC,Bangalore,Bangalore,Karnataka,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KAR_8811B67907,STC,Dharwad,Dharwad,Karnataka,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KAR_C3D74C49C4,STC,Madikeri,Madikeri,Karnataka,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KER_49346E82F0,STC,Calicut,Calicut,Kerala,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KER_7CF9DD85D7,STC,Kollam,Kollam,Kerala,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KER_E5D5BE53D5,STC,Thalaserry,Thalaserry,Kerala,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_KER_8431CCAC68,STC,Thrissur,Thrissur,Kerala,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_LAD_F0CBCC2633,STC,Kargil,Kargil,Ladakh,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_LAK_5147C2130D,STC,Androth,Androth,Lakshadweep,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MP_50857E6311,STC,Dhar,Dhar,MP,,Bhopal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MP_4573E1C35A,STC,Jabalpur,Jabalpur,MP,,Bhopal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MP_AB5E7D46DE,STC,Tikamgarh,Tikamgarh,MP,,Bhopal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MAN_09ABF2BD6F,STC,Imphal,Imphal,Manipur,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MAN_FD18CBA0F1,STC,Utlou,Utlou,Manipur,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MEG_EBA7856B10,STC,Shillong,Shillong,Meghalaya,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MIZ_7E2BBE389F,STC,Aizawl,Aizawl,Mizoram,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MIZ_3D7472F1D3,STC,Aizawl (Lunglei),Aizawl (Lunglei),Mizoram,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_MIZ_F5AD96D6E6,STC,Aizawl (Thenzawl),Aizawl (Thenzawl),Mizoram,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_NAG_D69DA1512C,STC,Dimapur,Dimapur,Nagaland,,Imphal,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ODI_0360775268,STC,Cuttack,Cuttack,Odisha,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_ODI_D5735CF448,STC,Sundargarh,Sundargarh,Odisha,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_PUD_5842C370BE,STC,Puducherry,Puducherry,Puducherry,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_PUD_9037F231B0,STC,Yanam,Yanam,Puducherry,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_PUN_2F4C341FB7,STC,Badal,Badal,Punjab,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_PUN_1288DFF9B2,STC,Ludhiana,Ludhiana,Punjab,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_PUN_C070C96D74,STC,Mastunasahib,Mastunasahib,Punjab,,Zirakpur,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_RAJ_72D116F5D9,STC,Alwar,Alwar,Rajasthan,,Gandhinagar,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_RAJ_068F2C26F2,STC,Jaipur,Jaipur,Rajasthan,,Gandhinagar,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_RAJ_DE2B25407D,STC,Jodhpur,Jodhpur,Rajasthan,,Gandhinagar,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_SIK_924913F71D,STC,Namchi,Namchi,Sikkim,,Guwahati,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_TAM_0DFD80C99D,STC,Chennai,Chennai,Tamil Nadu,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_TAM_4B5F9662B2,STC,Mayiladuthurai,Mayiladuthurai,Tamil Nadu,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_TAM_8D7581112D,STC,Salem,Salem,Tamil Nadu,,LNCPE,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_TEL_267D3A4A80,STC,Hyderabad,Hyderabad,Telangana,,Bangalore,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_TRI_AB080946CC,STC,Agartala,Agartala,Tripura,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_UTT_82A09DE852,STC,Bareily,Bareily,Uttar Pradesh,,Lucknow,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_UTT_20AB7786FF,STC,Raibareily,Raibareily,Uttar Pradesh,,Lucknow,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_UTT_6606BD73F6,STC,Saifai,Saifai,Uttar Pradesh,,Lucknow,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_UTT_011B6DF060,STC,Varanasi,Varanasi,Uttar Pradesh,,Lucknow,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_UTT_1D5BB6C656,STC,Kashipur,Kashipur,Uttrakhand,,Lucknow,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_WES_95EB4E9FA2,STC,Bolpur,Bolpur,West Bengal,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_WES_8A37DB07D6,STC,Jalpaiguri,Jalpaiguri,West Bengal,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_STC_WES_B355205263,STC,Lebong,Lebong,West Bengal,,Kolkata,,,SAI_STC_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_ARU_5173B2B287,NCOE,Itanagar,Itanagar,Arunachal Pradesh,,Guwahati,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_ASS_CB6546AA89,NCOE,Guwahati,Guwahati,Assam,,Guwahati,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_DEL_CF1083744F,NCOE,Dr. KSSR,Dr. KSSR,Delhi,,Head Office,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_DEL_830BEE3159,NCOE,Dr. SPMSPC,Dr. SPMSPC,Delhi,,Head Office,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_DEL_7E07358D63,NCOE,I.G. Stadium,I.G. Stadium,Delhi,,Head Office,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_DEL_E77640C099,NCOE,MDCNS,MDCNS,Delhi,,Head Office,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_GUJ_B785F40009,NCOE,Gandhinagar,Gandhinagar,Gujarat,,Gandhinagar,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_GUJ_84CB1F5B89,NCOE,Naranpura,Naranpura,Gujarat,,Gandhinagar,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_HAR_16FB0F58A2,NCOE,Rohtak,Rohtak,Haryana,,Sonepat,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_HAR_8E99586BD4,NCOE,Sonepat,Sonepat,Haryana,,Sonepat,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_HIM_0DABEEDD5C,NCOE,Dharamshala,Dharamshala,Himachal Pradesh,,Zirakpur,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_HIM_BAD2DB3E1F,NCOE,Hamirpur,Hamirpur,Himachal Pradesh,,Zirakpur,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_KAR_F27E91EC8E,NCOE,Bangalore,Bangalore,Karnataka,,Bangalore,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_KER_4661D0B161,NCOE,Alleppey,Alleppey,Kerala,,LNCPE,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_KER_8BA090ED8C,NCOE,Trivandrum,Trivandrum,Kerala,,LNCPE,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_MAD_F4D3F8CFCA,NCOE,Bhopal,Bhopal,Madhya Pradesh,,Bhopal,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_MAH_99B9A5F16C,NCOE,Chatrapati Sambhajinagar,Chatrapati Sambhajinagar,Maharashtra,,Mumbai,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_MAH_B8ACC3E7FD,NCOE,Kandivali,Kandivali,Maharashtra,,Mumbai,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_MAN_15F87D44CB,NCOE,Imphal,Imphal,Manipur,,Imphal,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_ODI_E6282C9C97,NCOE,Jagatpur,Jagatpur,Odisha,,Kolkata,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_PUN_6C57591EDB,NCOE,Patiala,Patiala,Punjab,,NSNIS,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_PUN_26D9C7A402,NCOE,Zirakpur,Zirakpur,Punjab,,Zirakpur,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_UTT_6F2E287259,NCOE,Lucknow,Lucknow,Uttar Pradesh,,Lucknow,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_UTT_36A452D3DD,NCOE,Sigra,Sigra,Uttar Pradesh,,Lucknow,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
+CENTRE_NCOE_WES_2FFEF63EEA,NCOE,Kolkata,Kolkata,West Bengal,,Kolkata,,,SAI_NCOE_STRENGTH_2025_26_28NOV2025,True
