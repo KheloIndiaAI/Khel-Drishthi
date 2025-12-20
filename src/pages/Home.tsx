@@ -100,12 +100,11 @@ const Home = () => {
       <section className="mb-8">
         <div className="text-center mb-8">
           <h1 className="font-display text-4xl md:text-6xl tracking-wider mb-2">
-            <span className="text-saffron">India</span>{" "}
-            <span className="text-foreground">Sports</span>{" "}
-            <span className="text-india-green">Ecosystem</span>
+            <span className="text-saffron">Khel</span>{" "}
+            <span className="text-india-green">Drishti</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Comprehensive dashboard for India's sports infrastructure and performance
+            Indian Sports Ecosystem Intelligence
           </p>
         </div>
 
