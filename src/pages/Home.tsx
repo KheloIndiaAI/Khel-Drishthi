@@ -4,6 +4,8 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import CountdownCard from "@/components/home/CountdownCard";
 import StatsCard from "@/components/home/StatsCard";
 import SportsGrid from "@/components/home/SportsGrid";
+import ParticleBackground from "@/components/home/ParticleBackground";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Target, 
@@ -98,25 +100,7 @@ const Home = () => {
     <DashboardLayout>
       {/* Hero Section */}
       <section className="mb-8 relative overflow-hidden min-h-[400px]">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          {/* Large gradient orbs */}
-          <div className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-saffron/20 to-saffron/5 blur-3xl animate-[pulse_4s_ease-in-out_infinite]" />
-          <div className="absolute -bottom-20 -left-20 h-96 w-96 rounded-full bg-gradient-to-tr from-india-green/20 to-india-green/5 blur-3xl animate-[pulse_4s_ease-in-out_infinite]" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-india-navy/10 blur-3xl animate-[pulse_5s_ease-in-out_infinite]" style={{ animationDelay: '1s' }} />
-          
-          {/* Floating geometric shapes */}
-          <div className="absolute top-20 left-[10%] h-16 w-16 rotate-45 border-2 border-saffron/20 animate-[float_6s_ease-in-out_infinite]" />
-          <div className="absolute top-40 right-[15%] h-12 w-12 rounded-full border-2 border-india-green/20 animate-[float_8s_ease-in-out_infinite]" style={{ animationDelay: '1s' }} />
-          <div className="absolute bottom-32 left-[20%] h-8 w-8 rotate-12 bg-saffron/10 animate-[float_7s_ease-in-out_infinite]" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-32 right-[25%] h-6 w-6 rounded-full bg-india-green/10 animate-[float_5s_ease-in-out_infinite]" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute bottom-20 right-[10%] h-10 w-10 rotate-45 border border-india-navy/15 animate-[float_9s_ease-in-out_infinite]" style={{ animationDelay: '3s' }} />
-          <div className="absolute top-1/2 left-[5%] h-4 w-4 rounded-full bg-saffron/15 animate-[float_4s_ease-in-out_infinite]" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute bottom-40 right-[30%] h-14 w-14 rotate-45 border border-saffron/10 animate-[float_10s_ease-in-out_infinite]" style={{ animationDelay: '4s' }} />
-          
-          {/* Subtle grid pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
-        </div>
+        <ParticleBackground />
 
         <div className="text-center mb-8 pt-4">
           <div className="animate-fade-in">
@@ -162,62 +146,66 @@ const Home = () => {
       </section>
 
       {/* Stats Cards - Clickable */}
-      <section className="mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <StatsCard
-            title="Sports"
-            value={sports?.length || 0}
-            icon={Target}
-            variant="saffron"
-            href="/#sports"
-          />
-          <StatsCard
-            title="Centres"
-            value={centresCount || 0}
-            icon={Building2}
-            variant="green"
-            href="/infrastructure"
-          />
-          <StatsCard
-            title="Athletes"
-            value={totalAthletes.toLocaleString()}
-            icon={Users}
-            variant="navy"
-            href="/capacity"
-          />
-          <StatsCard
-            title="Events"
-            value={eventsCount || 0}
-            icon={Trophy}
-            variant="saffron"
-          />
-          <StatsCard
-            title="Olympic Medals"
-            value={totalMedals || 0}
-            icon={Medal}
-            variant="green"
-            href="/medals"
-          />
-        </div>
-      </section>
+      <ScrollReveal animation="fade-up">
+        <section className="mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <StatsCard
+              title="Sports"
+              value={sports?.length || 0}
+              icon={Target}
+              variant="saffron"
+              href="/#sports"
+            />
+            <StatsCard
+              title="Centres"
+              value={centresCount || 0}
+              icon={Building2}
+              variant="green"
+              href="/infrastructure"
+            />
+            <StatsCard
+              title="Athletes"
+              value={totalAthletes.toLocaleString()}
+              icon={Users}
+              variant="navy"
+              href="/capacity"
+            />
+            <StatsCard
+              title="Events"
+              value={eventsCount || 0}
+              icon={Trophy}
+              variant="saffron"
+            />
+            <StatsCard
+              title="Olympic Medals"
+              value={totalMedals || 0}
+              icon={Medal}
+              variant="green"
+              href="/medals"
+            />
+          </div>
+        </section>
+      </ScrollReveal>
 
       {/* Sports Grid */}
-      <section id="sports">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-2xl md:text-3xl">All Sports</h2>
-          <p className="text-muted-foreground text-sm">{sports?.length || 0} sports</p>
-        </div>
-        
-        {sportsLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <Skeleton key={i} className="h-28 rounded-lg" />
-            ))}
+      <ScrollReveal animation="fade-up" delay={100}>
+        <section id="sports">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-2xl md:text-3xl">All Sports</h2>
+            <p className="text-muted-foreground text-sm">{sports?.length || 0} sports</p>
           </div>
-        ) : (
-          <SportsGrid sports={sports || []} />
-        )}
-      </section>
+          
+          {sportsLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <Skeleton key={i} className="h-28 rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <SportsGrid sports={sports || []} />
+          )}
+        </section>
+      </ScrollReveal>
     </DashboardLayout>
   );
 };
