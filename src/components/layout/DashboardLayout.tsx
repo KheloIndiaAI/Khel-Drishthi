@@ -5,7 +5,7 @@ import {
   Trophy, 
   Building2, 
   BarChart3, 
-  History, 
+  Medal, 
   Settings,
   Menu,
   X
@@ -22,7 +22,7 @@ const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/infrastructure", label: "Infrastructure", icon: Building2 },
   { path: "/capacity", label: "Capacity", icon: BarChart3 },
-  { path: "/history", label: "History", icon: History },
+  { path: "/medals", label: "Medals", icon: Medal },
   { path: "/admin", label: "Admin", icon: Settings },
 ];
 
@@ -49,7 +49,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
+              const isActive = location.pathname === item.path || 
+                (item.path === "/medals" && location.pathname === "/history");
               return (
                 <Link key={item.path} to={item.path}>
                   <Button
@@ -84,7 +85,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
             <nav className="container py-4 flex flex-col gap-2">
               {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive = location.pathname === item.path ||
+                  (item.path === "/medals" && location.pathname === "/history");
                 return (
                   <Link
                     key={item.path}

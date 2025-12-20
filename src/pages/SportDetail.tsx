@@ -12,10 +12,12 @@ import {
   Target, 
   Trophy, 
   Building2, 
-  History, 
-  FileText,
   Medal,
-  MapPin
+  FileText,
+  MapPin,
+  Users,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 
 const SportDetail = () => {
@@ -154,21 +156,39 @@ const SportDetail = () => {
   const ag2026Events = events?.filter((e) => e.present_ag2026 === 1) || [];
   const ncoeCentreCount = ncoeCapacity?.length || 0;
   const stcCentreCount = stcCapacity?.length || 0;
-  const totalAthletes = (ncoeCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0) + 
-                        (stcCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0);
+  const ncoeAthletes = ncoeCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0;
+  const stcAthletes = stcCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0;
+  const totalAthletes = ncoeAthletes + stcAthletes;
+
+  const StatusIndicator = ({ status, label }: { status: string | null; label: string }) => {
+    const isActive = status && status.toLowerCase() !== 'no' && status.toLowerCase() !== 'n/a';
+    return (
+      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+        <span className="text-sm">{label}</span>
+        <div className="flex items-center gap-2">
+          {isActive ? (
+            <CheckCircle className="h-4 w-4 text-india-green" />
+          ) : (
+            <XCircle className="h-4 w-4 text-muted-foreground" />
+          )}
+          <span className="text-sm font-medium">{status || 'N/A'}</span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <DashboardLayout>
       {/* Header */}
       <div className="mb-6">
-        <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-primary mb-4">
+        <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-primary mb-4 text-sm">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to All Sports
         </Link>
         
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
-            <h1 className="font-display text-4xl md:text-5xl mb-2">{sport.sport_name}</h1>
+            <h1 className="font-display text-3xl md:text-4xl mb-2">{sport.sport_name}</h1>
             <div className="flex flex-wrap gap-2">
               {sport.present_la28 && (
                 <Badge className="bg-saffron text-white">LA 2028</Badge>
@@ -182,142 +202,192 @@ const SportDetail = () => {
               {sport.is_tagg && (
                 <Badge variant="outline">TAGG</Badge>
               )}
+              {sport.sport_category && (
+                <Badge variant="secondary">{sport.sport_category}</Badge>
+              )}
+            </div>
+          </div>
+          
+          {/* Quick Stats */}
+          <div className="flex gap-4 text-sm">
+            <div className="text-center">
+              <p className="text-2xl font-display">{medals?.length || 0}</p>
+              <p className="text-muted-foreground">Medals</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-display">{totalAthletes}</p>
+              <p className="text-muted-foreground">Athletes</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-display">{ncoeCentreCount + stcCentreCount}</p>
+              <p className="text-muted-foreground">Centres</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="overview" className="gap-2">
-            <Target className="h-4 w-4 hidden sm:inline" />
-            Overview
+            <Target className="h-4 w-4" />
+            <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
           <TabsTrigger value="events" className="gap-2">
-            <Trophy className="h-4 w-4 hidden sm:inline" />
-            Events
+            <Trophy className="h-4 w-4" />
+            <span className="hidden sm:inline">Events</span>
+            <Badge variant="secondary" className="ml-1 h-5 px-1.5">{events?.length || 0}</Badge>
           </TabsTrigger>
           <TabsTrigger value="infrastructure" className="gap-2">
-            <Building2 className="h-4 w-4 hidden sm:inline" />
-            Infrastructure
+            <Building2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Infrastructure</span>
           </TabsTrigger>
-          <TabsTrigger value="history" className="gap-2">
-            <History className="h-4 w-4 hidden sm:inline" />
-            History
+          <TabsTrigger value="medals" className="gap-2">
+            <Medal className="h-4 w-4" />
+            <span className="hidden sm:inline">Medals</span>
+            <Badge variant="secondary" className="ml-1 h-5 px-1.5">{medals?.length || 0}</Badge>
           </TabsTrigger>
           <TabsTrigger value="notes" className="gap-2">
-            <FileText className="h-4 w-4 hidden sm:inline" />
-            Notes
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Notes</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">LA28 Events</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-display">{la28Events.length}</p>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Card className="border-l-4 border-l-saffron">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-muted-foreground mb-1">LA28 Events</p>
+                <p className="text-2xl font-display">{la28Events.length}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">AG2026 Events</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-display">{ag2026Events.length}</p>
+            <Card className="border-l-4 border-l-india-green">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-muted-foreground mb-1">AG2026 Events</p>
+                <p className="text-2xl font-display">{ag2026Events.length}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">NCOE Centres</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-display">{ncoeCentreCount}</p>
+            <Card className="border-l-4 border-l-india-navy">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-muted-foreground mb-1">NCOE Centres</p>
+                <p className="text-2xl font-display">{ncoeCentreCount}</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">STC Centres</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-display">{stcCentreCount}</p>
+            <Card className="border-l-4 border-l-primary">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-muted-foreground mb-1">STC Centres</p>
+                <p className="text-2xl font-display">{stcCentreCount}</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Sport Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Category</p>
-                  <p className="font-medium">{sport.sport_category || "N/A"}</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Programme Status</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <StatusIndicator status={sport.asmita_league_status} label="Asmita League" />
+                <StatusIndicator status={sport.nis_diploma_status} label="NIS Diploma" />
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <span className="text-sm">TOPS Programme</span>
+                  <div className="flex items-center gap-2">
+                    {sport.is_tops ? (
+                      <CheckCircle className="h-4 w-4 text-india-green" />
+                    ) : (
+                      <XCircle className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="text-sm font-medium">{sport.is_tops ? 'Yes' : 'No'}</span>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Asmita League</p>
-                  <p className="font-medium">{sport.asmita_league_status || "N/A"}</p>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <span className="text-sm">TAGG Programme</span>
+                  <div className="flex items-center gap-2">
+                    {sport.is_tagg ? (
+                      <CheckCircle className="h-4 w-4 text-india-green" />
+                    ) : (
+                      <XCircle className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="text-sm font-medium">{sport.is_tagg ? 'Yes' : 'No'}</span>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">NIS Diploma</p>
-                  <p className="font-medium">{sport.nis_diploma_status || "N/A"}</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Athlete Capacity
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">NCOE Athletes</span>
+                  <span className="font-medium">{ncoeAthletes.toLocaleString()}</span>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Athletes</p>
-                  <p className="font-medium">{totalAthletes.toLocaleString()}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">STC Athletes</span>
+                  <span className="font-medium">{stcAthletes.toLocaleString()}</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="border-t pt-3 flex items-center justify-between">
+                  <span className="text-sm font-medium">Total Athletes</span>
+                  <span className="text-lg font-display">{totalAthletes.toLocaleString()}</span>
+                </div>
+                {sport.sanctioned_capacity && sport.sanctioned_capacity > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Sanctioned Capacity</span>
+                    <span>{sport.sanctioned_capacity.toLocaleString()}</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Events Tab */}
-        <TabsContent value="events" className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
+        <TabsContent value="events" className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-saffron" />
                   LA 2028 Events ({la28Events.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                <div className="space-y-1.5 max-h-80 overflow-y-auto">
                   {la28Events.map((event) => (
-                    <div key={event.event_id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                      <span className="text-sm">{event.event_std}</span>
-                      <Badge variant="outline">{event.gender_std}</Badge>
+                    <div key={event.event_id} className="flex items-center justify-between p-2 rounded bg-muted/50 text-sm">
+                      <span className="truncate flex-1">{event.event_std}</span>
+                      <Badge variant="outline" className="ml-2 text-xs">{event.gender_std}</Badge>
                     </div>
                   ))}
                   {la28Events.length === 0 && (
-                    <p className="text-muted-foreground text-sm">No LA 2028 events</p>
+                    <p className="text-muted-foreground text-sm py-4 text-center">No LA 2028 events</p>
                   )}
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-india-green" />
                   Asian Games 2026 Events ({ag2026Events.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                <div className="space-y-1.5 max-h-80 overflow-y-auto">
                   {ag2026Events.map((event) => (
-                    <div key={event.event_id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                      <span className="text-sm">{event.event_std}</span>
-                      <Badge variant="outline">{event.gender_std}</Badge>
+                    <div key={event.event_id} className="flex items-center justify-between p-2 rounded bg-muted/50 text-sm">
+                      <span className="truncate flex-1">{event.event_std}</span>
+                      <Badge variant="outline" className="ml-2 text-xs">{event.gender_std}</Badge>
                     </div>
                   ))}
                   {ag2026Events.length === 0 && (
-                    <p className="text-muted-foreground text-sm">No AG 2026 events</p>
+                    <p className="text-muted-foreground text-sm py-4 text-center">No AG 2026 events</p>
                   )}
                 </div>
               </CardContent>
@@ -326,31 +396,31 @@ const SportDetail = () => {
         </TabsContent>
 
         {/* Infrastructure Tab */}
-        <TabsContent value="infrastructure" className="space-y-6">
+        <TabsContent value="infrastructure" className="space-y-4">
           {/* NCOE Centres */}
           {ncoeCapacity && ncoeCapacity.length > 0 && (
             <div>
-              <h3 className="font-display text-xl mb-4 flex items-center gap-2">
+              <h3 className="font-medium text-lg mb-3 flex items-center gap-2">
                 <Badge className="bg-saffron text-white">NCOE</Badge>
                 {ncoeCapacity.length} Centres
               </h3>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {ncoeCapacity.map((centre) => (
-                  <Card key={centre.id}>
-                    <CardContent className="pt-6">
+                  <Card key={centre.id} className="border-l-4 border-l-saffron">
+                    <CardContent className="pt-4 pb-3">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-saffron/10">
-                          <Building2 className="h-5 w-5 text-saffron" />
+                        <div className="p-2 rounded-lg bg-saffron/10 flex-shrink-0">
+                          <Building2 className="h-4 w-4 text-saffron" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{centre.centre_name}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{centre.centre_name}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                             <MapPin className="h-3 w-3" />
                             {centre.state}
                           </p>
-                          <div className="mt-2 text-xs text-muted-foreground">
+                          <p className="text-xs text-muted-foreground mt-1">
                             Athletes: {centre.ex_grand_total || 0} / {centre.san_grand_total || 0}
-                          </div>
+                          </p>
                         </div>
                       </div>
                     </CardContent>
@@ -363,27 +433,27 @@ const SportDetail = () => {
           {/* STC Centres */}
           {stcCapacity && stcCapacity.length > 0 && (
             <div>
-              <h3 className="font-display text-xl mb-4 flex items-center gap-2">
+              <h3 className="font-medium text-lg mb-3 flex items-center gap-2">
                 <Badge className="bg-india-green text-white">STC</Badge>
                 {stcCapacity.length} Centres
               </h3>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {stcCapacity.map((centre) => (
-                  <Card key={centre.id}>
-                    <CardContent className="pt-6">
+                  <Card key={centre.id} className="border-l-4 border-l-india-green">
+                    <CardContent className="pt-4 pb-3">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-india-green/10">
-                          <Building2 className="h-5 w-5 text-india-green" />
+                        <div className="p-2 rounded-lg bg-india-green/10 flex-shrink-0">
+                          <Building2 className="h-4 w-4 text-india-green" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{centre.centre_name}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{centre.centre_name}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                             <MapPin className="h-3 w-3" />
                             {centre.state}
                           </p>
-                          <div className="mt-2 text-xs text-muted-foreground">
+                          <p className="text-xs text-muted-foreground mt-1">
                             Athletes: {centre.ex_grand_total || 0} / {centre.san_grand_total || 0}
-                          </div>
+                          </p>
                         </div>
                       </div>
                     </CardContent>
@@ -393,25 +463,25 @@ const SportDetail = () => {
             </div>
           )}
 
-          {/* Legacy centre_sport_links */}
+          {/* Other Centres */}
           {centres && centres.length > 0 && (
             <div>
-              <h3 className="font-display text-xl mb-4">Other Training Centres</h3>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <h3 className="font-medium text-lg mb-3">Other Training Centres ({centres.length})</h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {centres.map((link) => (
                   <Card key={link.id}>
-                    <CardContent className="pt-6">
+                    <CardContent className="pt-4 pb-3">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <Building2 className="h-5 w-5 text-primary" />
+                        <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
+                          <Building2 className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{link.centres?.centre_name || link.centre_id}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{link.centres?.centre_name || link.centre_id}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                             <MapPin className="h-3 w-3" />
                             {link.centres?.state || link.state}
                           </p>
-                          <Badge variant="outline" className="mt-2 text-xs">
+                          <Badge variant="outline" className="mt-1 text-xs">
                             {link.centre_type || link.centres?.centre_type}
                           </Badge>
                         </div>
@@ -426,28 +496,32 @@ const SportDetail = () => {
           {(!ncoeCapacity || ncoeCapacity.length === 0) && 
            (!stcCapacity || stcCapacity.length === 0) && 
            (!centres || centres.length === 0) && (
-            <p className="text-muted-foreground">No training centres found for this sport</p>
+            <Card>
+              <CardContent className="py-8 text-center text-muted-foreground">
+                No training centres found for this sport
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
 
-        {/* History Tab */}
-        <TabsContent value="history" className="space-y-6">
+        {/* Medals Tab */}
+        <TabsContent value="medals" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Medal className="h-5 w-5" />
-                Olympic Medals
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Medal className="h-4 w-4" />
+                Olympic Medals ({medals?.length || 0})
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {medals?.map((medal) => (
                   <div key={medal.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium">{medal.athlete_or_team}</p>
-                      <p className="text-sm text-muted-foreground">{medal.event_raw}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm">{medal.athlete_or_team}</p>
+                      <p className="text-xs text-muted-foreground truncate">{medal.event_raw}</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 ml-4 flex-shrink-0">
                       <Badge className={
                         medal.medal === "Gold" ? "medal-gold" :
                         medal.medal === "Silver" ? "medal-silver" :
@@ -460,7 +534,7 @@ const SportDetail = () => {
                   </div>
                 ))}
                 {(!medals || medals.length === 0) && (
-                  <p className="text-muted-foreground">No Olympic medals recorded</p>
+                  <p className="text-muted-foreground text-center py-8">No Olympic medals recorded for this sport</p>
                 )}
               </div>
             </CardContent>
@@ -468,21 +542,21 @@ const SportDetail = () => {
         </TabsContent>
 
         {/* Notes Tab */}
-        <TabsContent value="notes" className="space-y-6">
+        <TabsContent value="notes" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <FileText className="h-4 w-4" />
                 Knowledge Base
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {notes?.map((note) => (
-                  <div key={note.id} className="p-4 rounded-lg border bg-card">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-medium">{note.title}</h4>
-                      <Badge variant="outline">{note.note_type}</Badge>
+                  <div key={note.id} className="p-4 rounded-lg border">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h4 className="font-medium text-sm">{note.title}</h4>
+                      <Badge variant="outline" className="text-xs">{note.note_type}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{note.content}</p>
                     <p className="text-xs text-muted-foreground">
@@ -491,7 +565,9 @@ const SportDetail = () => {
                   </div>
                 ))}
                 {(!notes || notes.length === 0) && (
-                  <p className="text-muted-foreground">No notes available. Add notes to build a knowledge base for this sport.</p>
+                  <p className="text-muted-foreground text-center py-8">
+                    No notes available. Add notes to build a knowledge base for this sport.
+                  </p>
                 )}
               </div>
             </CardContent>
