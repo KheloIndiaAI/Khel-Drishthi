@@ -41,8 +41,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </div>
             <div className="hidden sm:block">
               <h1 className="font-display text-xl tracking-wider text-foreground">
-                India Sports Dashboard
+                Khel Drishti
               </h1>
+              <p className="text-xs text-muted-foreground -mt-1">
+                Indian Sports Ecosystem Intelligence
+              </p>
             </div>
           </Link>
 
@@ -121,7 +124,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="container py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2024 India Sports Ecosystem Dashboard
+              © 2024 Khel Drishti - Indian Sports Ecosystem Intelligence
             </p>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
