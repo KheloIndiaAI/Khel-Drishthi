@@ -17,7 +17,7 @@ import {
 // Target dates for events
 const LA28_DATE = new Date("2028-07-14");
 const AG2026_DATE = new Date("2026-09-19");
-const CWG2026_DATE = new Date("2026-03-17");
+const CWG2026_DATE = new Date("2026-07-23"); // Glasgow 2026
 
 const Home = () => {
   // Fetch sports
