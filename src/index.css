@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* India Sports Theme - Saffron, White, Green inspired */
+    /* India Sports Theme - Saffron #FF9933, Green #138808, Navy #000080 */
     --background: 220 20% 97%;
     --foreground: 220 25% 10%;
 
@@ -16,8 +16,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 10%;
 
-    /* Saffron/Orange Primary */
-    --primary: 25 95% 53%;
+    /* Saffron Primary #FF9933 */
+    --primary: 30 100% 60%;
     --primary-foreground: 0 0% 100%;
 
     /* Subtle secondary */
@@ -27,16 +27,19 @@
     --muted: 220 15% 94%;
     --muted-foreground: 220 10% 45%;
 
-    /* Teal/Green Accent - India flag inspired */
-    --accent: 160 65% 40%;
+    /* India Green #138808 */
+    --accent: 114 89% 28%;
     --accent-foreground: 0 0% 100%;
+
+    /* Navy Blue #000080 */
+    --navy: 240 100% 25%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 15% 88%;
     --input: 220 15% 88%;
-    --ring: 25 95% 53%;
+    --ring: 30 100% 60%;
 
     --radius: 0.75rem;
 
@@ -44,14 +47,20 @@
     --gold: 45 93% 47%;
     --silver: 0 0% 75%;
     --bronze: 30 55% 45%;
-    --success: 142 71% 45%;
-    --warning: 38 92% 50%;
-    --info: 199 89% 48%;
+    --success: 114 89% 28%;
+    --warning: 30 100% 60%;
+    --info: 240 100% 25%;
+
+    /* India Flag Colors */
+    --saffron: 30 100% 60%;
+    --india-green: 114 89% 28%;
+    --india-navy: 240 100% 25%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(25, 95%, 53%) 0%, hsl(35, 95%, 55%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(160, 65%, 40%) 0%, hsl(175, 70%, 45%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220, 25%, 10%) 0%, hsl(220, 30%, 20%) 50%, hsl(25, 95%, 53%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(30, 100%, 60%) 0%, hsl(35, 100%, 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(114, 89%, 28%) 0%, hsl(120, 70%, 35%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(240, 100%, 25%) 0%, hsl(240, 80%, 35%) 50%, hsl(30, 100%, 60%) 100%);
+    --gradient-india: linear-gradient(135deg, hsl(30, 100%, 60%) 0%, hsl(0, 0%, 100%) 50%, hsl(114, 89%, 28%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 20%, 98%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
 
@@ -59,7 +68,7 @@
     --shadow-sm: 0 1px 2px 0 hsl(220 25% 10% / 0.05);
     --shadow-md: 0 4px 6px -1px hsl(220 25% 10% / 0.1), 0 2px 4px -2px hsl(220 25% 10% / 0.1);
     --shadow-lg: 0 10px 15px -3px hsl(220 25% 10% / 0.1), 0 4px 6px -4px hsl(220 25% 10% / 0.1);
-    --shadow-glow: 0 0 30px hsl(25 95% 53% / 0.3);
+    --shadow-glow: 0 0 30px hsl(30 100% 60% / 0.3);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -81,7 +90,7 @@
     --popover: 220 25% 12%;
     --popover-foreground: 220 15% 95%;
 
-    --primary: 25 95% 55%;
+    --primary: 30 100% 60%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 20% 18%;
@@ -90,24 +99,26 @@
     --muted: 220 20% 15%;
     --muted-foreground: 220 10% 55%;
 
-    --accent: 160 65% 45%;
+    --accent: 114 89% 35%;
     --accent-foreground: 0 0% 100%;
+
+    --navy: 240 100% 35%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 20% 18%;
     --input: 220 20% 18%;
-    --ring: 25 95% 55%;
+    --ring: 30 100% 60%;
 
     --sidebar-background: 220 25% 10%;
     --sidebar-foreground: 220 15% 90%;
-    --sidebar-primary: 25 95% 55%;
+    --sidebar-primary: 30 100% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 20% 15%;
     --sidebar-accent-foreground: 220 15% 90%;
     --sidebar-border: 220 20% 15%;
-    --sidebar-ring: 25 95% 55%;
+    --sidebar-ring: 30 100% 60%;
   }
 }
 
@@ -159,6 +170,26 @@
     @apply bg-gradient-to-br from-orange-400 to-orange-700 text-orange-950;
   }
 
+  .india-gradient {
+    background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+  }
+
+  .saffron-gradient {
+    background: linear-gradient(135deg, #FF9933 0%, #FFB366 100%);
+  }
+
+  .green-gradient {
+    background: linear-gradient(135deg, #138808 0%, #1DB30F 100%);
+  }
+
+  .navy-gradient {
+    background: linear-gradient(135deg, #000080 0%, #0000CC 100%);
+  }
+
+  .countdown-card {
+    @apply relative overflow-hidden rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105;
+  }
+
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
   }
@@ -185,6 +216,30 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-saffron {
+    color: #FF9933;
+  }
+
+  .text-india-green {
+    color: #138808;
+  }
+
+  .text-india-navy {
+    color: #000080;
+  }
+
+  .bg-saffron {
+    background-color: #FF9933;
+  }
+
+  .bg-india-green {
+    background-color: #138808;
+  }
+
+  .bg-india-navy {
+    background-color: #000080;
   }
 
   .bg-gradient-primary {
@@ -229,10 +284,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px hsl(25 95% 53% / 0.3);
+    box-shadow: 0 0 20px hsl(30 100% 60% / 0.3);
   }
   50% {
-    box-shadow: 0 0 40px hsl(25 95% 53% / 0.5);
+    box-shadow: 0 0 40px hsl(30 100% 60% / 0.5);
   }
 }
 
