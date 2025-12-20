@@ -32,11 +32,14 @@ const CountdownCard = ({ title, date, variant }: CountdownCardProps) => {
   const formattedDate = format(date, "MMMM d, yyyy");
 
   return (
-    <div className={`countdown-card ${variantStyles[variant]} text-white shadow-lg`}>
-      <h3 className="font-display text-xl md:text-2xl mb-1 tracking-wider">{title}</h3>
-      <p className="text-sm opacity-80 mb-3">{formattedDate}</p>
-      <div className="flex items-baseline justify-center gap-2">
-        <span className="font-display text-5xl md:text-6xl">{daysLeft}</span>
+    <div className={`countdown-card ${variantStyles[variant]} text-white shadow-lg group hover:scale-[1.02] transition-all duration-300 hover:shadow-xl relative overflow-hidden`}>
+      {/* Shimmer effect */}
+      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      
+      <h3 className="font-display text-xl md:text-2xl mb-1 tracking-wider relative z-10">{title}</h3>
+      <p className="text-sm opacity-80 mb-3 relative z-10">{formattedDate}</p>
+      <div className="flex items-baseline justify-center gap-2 relative z-10">
+        <span className="font-display text-5xl md:text-6xl tabular-nums">{daysLeft}</span>
         <span className="text-lg opacity-80">days to go</span>
       </div>
     </div>
