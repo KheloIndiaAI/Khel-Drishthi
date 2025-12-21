@@ -17,17 +17,14 @@ import {
   FileText,
   MapPin,
   Users,
-  CheckCircle2,
   Target,
   TrendingUp,
-  Award,
   CheckCircle,
   XCircle,
   Clock,
   HelpCircle,
   AlertTriangle,
-  Info,
-  Layers
+  Info
 } from "lucide-react";
 
 const SportDetail = () => {
@@ -92,19 +89,60 @@ const SportDetail = () => {
     enabled: !!sportId,
   });
 
-  // Fetch medals for this sport
+  // Fetch medals for this sport (match by sport_id OR sport_std)
   const { data: medals } = useQuery({
-    queryKey: ["sport-medals", sportId],
+    queryKey: ["sport-medals", sportId, sport?.sport_name],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First try by sport_id
+      let { data, error } = await supabase
         .from("olympic_medals")
         .select("*")
-        .eq("sport_id", sportId)
+        .eq("sport_id", sportId!)
         .order("year", { ascending: false });
+      
+      // If no results, try matching by sport_std (sport name)
+      if ((!data || data.length === 0) && sport?.sport_name) {
+        const result = await supabase
+          .from("olympic_medals")
+          .select("*")
+          .ilike("sport_std", sport.sport_name)
+          .order("year", { ascending: false });
+        data = result.data;
+        error = result.error;
+      }
+      
       if (error) throw error;
       return data;
     },
-    enabled: !!sportId,
+    enabled: !!sportId && !!sport,
+  });
+
+  // Fetch participation data for this sport
+  const { data: participation } = useQuery({
+    queryKey: ["sport-participation", sportId, sport?.sport_name],
+    queryFn: async () => {
+      // First try by sport_id
+      let { data, error } = await supabase
+        .from("olympic_participation")
+        .select("*")
+        .eq("sport_id", sportId!)
+        .order("year", { ascending: false });
+      
+      // If no results, try matching by sport_std (sport name)
+      if ((!data || data.length === 0) && sport?.sport_name) {
+        const result = await supabase
+          .from("olympic_participation")
+          .select("*")
+          .ilike("sport_std", sport.sport_name)
+          .order("year", { ascending: false });
+        data = result.data;
+        error = result.error;
+      }
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!sportId && !!sport,
   });
 
   // Fetch notes for this sport
@@ -227,127 +265,68 @@ const SportDetail = () => {
         </div>
       </div>
 
-      {/* Classifications & Programs Section */}
-      <Card className="mb-6">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Layers className="h-4 w-4" />
-            Classifications & Programs
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Priority Scheme Badges */}
-          <div>
-            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Priority Scheme</p>
-            <div className="flex flex-wrap gap-2">
-              {sport.is_tops && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className="bg-saffron hover:bg-saffron/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                      <Trophy className="h-4 w-4" />
-                      TOPS
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="font-semibold">TOPS — Target Olympic Podium Scheme</p>
-                    <p className="text-xs mt-1">Highest priority for Olympic podium outcomes.</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-              {sport.is_tagg && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className="bg-blue-600 hover:bg-blue-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                      <Target className="h-4 w-4" />
-                      TAGG
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="font-semibold">TAGG — Target Asian Games Group</p>
-                    <p className="text-xs mt-1">Priority focus for Asian Games outcomes.</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-              {sport.is_teams && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className="bg-purple-600 hover:bg-purple-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                      <Users className="h-4 w-4" />
-                      TEAMS
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="font-semibold">TEAMS — Training of Elite Athlete Management Support</p>
-                    <p className="text-xs mt-1">Enhanced elite athlete management support.</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-              {!sport.is_tops && !sport.is_tagg && !sport.is_teams && (
-                <Badge variant="outline" className="text-muted-foreground gap-1.5 py-1.5 px-3">
-                  Standard
+      {/* Program Status Row */}
+      <div className="flex flex-wrap items-center gap-4 mb-6">
+        {/* Priority Scheme Badges */}
+        <div className="flex flex-wrap gap-2">
+          {sport.is_tops && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge className="bg-saffron hover:bg-saffron/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
+                  <Trophy className="h-4 w-4" />
+                  TOPS
                 </Badge>
-              )}
-            </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p className="font-semibold">TOPS — Target Olympic Podium Scheme</p>
+                <p className="text-xs mt-1">Highest priority for Olympic podium outcomes.</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {sport.is_tagg && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge className="bg-blue-600 hover:bg-blue-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
+                  <Target className="h-4 w-4" />
+                  TAGG
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p className="font-semibold">TAGG — Target Asian Games Group</p>
+                <p className="text-xs mt-1">Priority focus for Asian Games outcomes.</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {sport.is_teams && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge className="bg-purple-600 hover:bg-purple-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
+                  <Users className="h-4 w-4" />
+                  TEAMS
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p className="font-semibold">TEAMS — Training of Elite Athlete Management Support</p>
+                <p className="text-xs mt-1">Enhanced elite athlete management support.</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+        
+        {/* NIS & Asmita Status */}
+        <div className="flex flex-wrap gap-3 text-sm">
+          <div className="flex items-center gap-1.5">
+            <nisStatus.icon className={`h-4 w-4 ${nisStatus.color}`} />
+            <span className="text-muted-foreground">NIS Diploma:</span>
+            <span className={`font-medium ${nisStatus.color}`}>{nisStatus.label}</span>
           </div>
-
-          {/* Program Status Cards */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className={`rounded-lg p-3 ${nisStatus.bg}`}>
-              <div className="flex items-center gap-2 mb-1">
-                <nisStatus.icon className={`h-4 w-4 ${nisStatus.color}`} />
-                <span className="text-xs font-medium text-muted-foreground">NIS Diploma Status</span>
-              </div>
-              <p className={`font-semibold ${nisStatus.color}`}>{nisStatus.label}</p>
-            </div>
-            <div className={`rounded-lg p-3 ${asmitaStatus.bg}`}>
-              <div className="flex items-center gap-2 mb-1">
-                <asmitaStatus.icon className={`h-4 w-4 ${asmitaStatus.color}`} />
-                <span className="text-xs font-medium text-muted-foreground">Asmita League Status</span>
-              </div>
-              <p className={`font-semibold ${asmitaStatus.color}`}>{asmitaStatus.label}</p>
-            </div>
+          <div className="flex items-center gap-1.5">
+            <asmitaStatus.icon className={`h-4 w-4 ${asmitaStatus.color}`} />
+            <span className="text-muted-foreground">Asmita League:</span>
+            <span className={`font-medium ${asmitaStatus.color}`}>{asmitaStatus.label}</span>
           </div>
-
-          {/* Supply-Demand Category */}
-          <div className={`rounded-lg p-3 border ${categoryStatus.bg}`}>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">{categoryStatus.emoji}</span>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Supply-Demand Category</p>
-                <p className={`font-semibold ${categoryStatus.color}`}>{categoryStatus.label}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Presence Tags */}
-          <div className="flex flex-wrap gap-3 pt-2 border-t">
-            <div className="flex items-center gap-1.5 text-sm">
-              <span className="text-muted-foreground">Listed in TOPS/TAGG/TEAMS:</span>
-              {sport.present_in_tops_tagg_teams_list ? (
-                <span className="flex items-center gap-1 text-india-green font-medium">
-                  <CheckCircle className="h-4 w-4" /> Yes
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-destructive font-medium">
-                  <XCircle className="h-4 w-4" /> No
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-1.5 text-sm">
-              <span className="text-muted-foreground">Listed in Asmita/NIS Sheet:</span>
-              {sport.present_in_asmita_nis_sheet ? (
-                <span className="flex items-center gap-1 text-india-green font-medium">
-                  <CheckCircle className="h-4 w-4" /> Yes
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-destructive font-medium">
-                  <XCircle className="h-4 w-4" /> No
-                </span>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Overview Dashboard - All key info at a glance */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -428,7 +407,212 @@ const SportDetail = () => {
         </Card>
       </div>
 
-      {/* Main Content - Two Columns */}
+      {/* Events Analysis Section - Priority */}
+      <Card className="mb-6">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Trophy className="h-4 w-4" />
+            Events Analysis
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Left: Gender & Games Overlap */}
+            <div className="space-y-4">
+              {/* Gender Breakdown */}
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">By Gender</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-blue-500/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-blue-600">{menEvents.length}</p>
+                    <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                      <span className="text-blue-500">♂</span> Men
+                    </p>
+                  </div>
+                  <div className="bg-pink-500/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-pink-600">{womenEvents.length}</p>
+                    <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                      <span className="text-pink-500">♀</span> Women
+                    </p>
+                  </div>
+                  <div className="bg-purple-500/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-purple-600">{mixedEvents.length}</p>
+                    <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                      <span className="text-purple-500">⚥</span> Mixed
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Common vs Game-Specific */}
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Games Overlap</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-india-green/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-india-green">{bothGamesEvents.length}</p>
+                    <p className="text-xs text-muted-foreground">Both Games</p>
+                  </div>
+                  <div className="bg-saffron/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-saffron">{la28OnlyEvents.length}</p>
+                    <p className="text-xs text-muted-foreground">LA28 Only</p>
+                  </div>
+                  <div className="bg-blue-500/10 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-blue-600">{ag26OnlyEvents.length}</p>
+                    <p className="text-xs text-muted-foreground">AG26 Only</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Events List Tabs */}
+            <div>
+              <Tabs defaultValue="all" className="w-full">
+                <TabsList className="w-full grid grid-cols-4 h-8">
+                  <TabsTrigger value="all" className="text-xs">All ({events?.length || 0})</TabsTrigger>
+                  <TabsTrigger value="both" className="text-xs">Both ({bothGamesEvents.length})</TabsTrigger>
+                  <TabsTrigger value="la28" className="text-xs">LA28 ({la28OnlyEvents.length})</TabsTrigger>
+                  <TabsTrigger value="ag26" className="text-xs">AG26 ({ag26OnlyEvents.length})</TabsTrigger>
+                </TabsList>
+                <TabsContent value="all" className="mt-2">
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {events?.slice(0, 15).map((event) => (
+                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
+                        <span className="truncate flex-1">{event.event_std}</span>
+                        <div className="flex gap-1 ml-2">
+                          <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                            {event.gender_std}
+                          </Badge>
+                          {event.present_la28 === 1 && <div className="h-2 w-2 rounded-full bg-saffron" title="LA28" />}
+                          {event.present_ag2026 === 1 && <div className="h-2 w-2 rounded-full bg-india-green" title="AG26" />}
+                        </div>
+                      </div>
+                    ))}
+                    {(events?.length || 0) > 15 && (
+                      <p className="text-xs text-muted-foreground text-center pt-1">+{(events?.length || 0) - 15} more</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="both" className="mt-2">
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {bothGamesEvents.slice(0, 15).map((event) => (
+                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
+                        <span className="truncate flex-1">{event.event_std}</span>
+                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                          {event.gender_std}
+                        </Badge>
+                      </div>
+                    ))}
+                    {bothGamesEvents.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-2">No common events</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="la28" className="mt-2">
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {la28OnlyEvents.slice(0, 15).map((event) => (
+                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
+                        <span className="truncate flex-1">{event.event_std}</span>
+                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                          {event.gender_std}
+                        </Badge>
+                      </div>
+                    ))}
+                    {la28OnlyEvents.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-2">No LA28-only events</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="ag26" className="mt-2">
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {ag26OnlyEvents.slice(0, 15).map((event) => (
+                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
+                        <span className="truncate flex-1">{event.event_std}</span>
+                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                          {event.gender_std}
+                        </Badge>
+                      </div>
+                    ))}
+                    {ag26OnlyEvents.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-2">No AG26-only events</p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Olympic History Section */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        {/* Medals */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Medal className="h-4 w-4" />
+              Olympic Medals ({medals?.length || 0})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {medals && medals.length > 0 ? (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {medals.map((medal) => (
+                  <div key={medal.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{medal.athlete_or_team}</p>
+                      <p className="text-xs text-muted-foreground truncate">{medal.event_raw}</p>
+                    </div>
+                    <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                      <Badge className={
+                        medal.medal === "Gold" ? "medal-gold" :
+                        medal.medal === "Silver" ? "medal-silver" :
+                        "medal-bronze"
+                      }>
+                        {medal.medal}
+                      </Badge>
+                      <span className="text-xs font-medium">{medal.year}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">No Olympic medals yet</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Participation History */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Olympic Participation
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {participation && participation.length > 0 ? (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {participation.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm">{p.games_name || p.year}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="font-medium">{p.athletes}</span>
+                      <span className="text-xs text-muted-foreground">athletes</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">No participation data available</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content - Infrastructure */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Infrastructure Details */}
         <div className="lg:col-span-2 space-y-4">
@@ -538,164 +722,8 @@ const SportDetail = () => {
           )}
         </div>
 
-        {/* Right Column - Events, Medals, Notes */}
+        {/* Right Column - Notes */}
         <div className="space-y-4">
-          {/* Events Summary - Enhanced */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Trophy className="h-4 w-4" />
-                Events Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Gender Breakdown */}
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">By Gender</p>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="gap-1">
-                    <span className="text-blue-500">♂</span> Men: {menEvents.length}
-                  </Badge>
-                  <Badge variant="outline" className="gap-1">
-                    <span className="text-pink-500">♀</span> Women: {womenEvents.length}
-                  </Badge>
-                  <Badge variant="outline" className="gap-1">
-                    <span className="text-purple-500">⚥</span> Mixed: {mixedEvents.length}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Common vs Game-Specific */}
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Games Overlap</p>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-india-green/10 rounded-lg p-2">
-                    <p className="text-lg font-bold text-india-green">{bothGamesEvents.length}</p>
-                    <p className="text-[10px] text-muted-foreground">Both Games</p>
-                  </div>
-                  <div className="bg-saffron/10 rounded-lg p-2">
-                    <p className="text-lg font-bold text-saffron">{la28OnlyEvents.length}</p>
-                    <p className="text-[10px] text-muted-foreground">LA28 Only</p>
-                  </div>
-                  <div className="bg-blue-500/10 rounded-lg p-2">
-                    <p className="text-lg font-bold text-blue-600">{ag26OnlyEvents.length}</p>
-                    <p className="text-[10px] text-muted-foreground">AG26 Only</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Events List Tabs */}
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList className="w-full grid grid-cols-4 h-8">
-                  <TabsTrigger value="all" className="text-xs">All ({events?.length || 0})</TabsTrigger>
-                  <TabsTrigger value="both" className="text-xs">Both ({bothGamesEvents.length})</TabsTrigger>
-                  <TabsTrigger value="la28" className="text-xs">LA28 ({la28OnlyEvents.length})</TabsTrigger>
-                  <TabsTrigger value="ag26" className="text-xs">AG26 ({ag26OnlyEvents.length})</TabsTrigger>
-                </TabsList>
-                <TabsContent value="all" className="mt-2">
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {events?.slice(0, 15).map((event) => (
-                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
-                        <span className="truncate flex-1">{event.event_std}</span>
-                        <div className="flex gap-1 ml-2">
-                          <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
-                            {event.gender_std}
-                          </Badge>
-                          {event.present_la28 === 1 && <div className="h-2 w-2 rounded-full bg-saffron" title="LA28" />}
-                          {event.present_ag2026 === 1 && <div className="h-2 w-2 rounded-full bg-india-green" title="AG26" />}
-                        </div>
-                      </div>
-                    ))}
-                    {(events?.length || 0) > 15 && (
-                      <p className="text-xs text-muted-foreground text-center pt-1">+{(events?.length || 0) - 15} more</p>
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="both" className="mt-2">
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {bothGamesEvents.slice(0, 15).map((event) => (
-                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
-                        <span className="truncate flex-1">{event.event_std}</span>
-                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
-                          {event.gender_std}
-                        </Badge>
-                      </div>
-                    ))}
-                    {bothGamesEvents.length === 0 && (
-                      <p className="text-sm text-muted-foreground text-center py-2">No common events</p>
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="la28" className="mt-2">
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {la28OnlyEvents.slice(0, 15).map((event) => (
-                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
-                        <span className="truncate flex-1">{event.event_std}</span>
-                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
-                          {event.gender_std}
-                        </Badge>
-                      </div>
-                    ))}
-                    {la28OnlyEvents.length === 0 && (
-                      <p className="text-sm text-muted-foreground text-center py-2">No LA28-only events</p>
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="ag26" className="mt-2">
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {ag26OnlyEvents.slice(0, 15).map((event) => (
-                      <div key={event.event_id} className="flex items-center justify-between text-sm py-1">
-                        <span className="truncate flex-1">{event.event_std}</span>
-                        <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
-                          {event.gender_std}
-                        </Badge>
-                      </div>
-                    ))}
-                    {ag26OnlyEvents.length === 0 && (
-                      <p className="text-sm text-muted-foreground text-center py-2">No AG26-only events</p>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Medals */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Medal className="h-4 w-4" />
-                Olympic Medals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {medals && medals.length > 0 ? (
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {medals.map((medal) => (
-                    <div key={medal.id} className="flex items-center justify-between py-1">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate">{medal.athlete_or_team}</p>
-                        <p className="text-xs text-muted-foreground truncate">{medal.event_raw}</p>
-                      </div>
-                      <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                        <Badge className={
-                          medal.medal === "Gold" ? "medal-gold" :
-                          medal.medal === "Silver" ? "medal-silver" :
-                          "medal-bronze"
-                        }>
-                          {medal.medal}
-                        </Badge>
-                        <span className="text-xs">{medal.year}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">No Olympic medals</p>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Notes */}
           <Card>
             <CardHeader className="pb-2">
