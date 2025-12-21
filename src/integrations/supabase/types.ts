@@ -181,6 +181,81 @@ export type Database = {
           },
         ]
       }
+      eco_categories: {
+        Row: {
+          ag2026_events: number | null
+          created_at: string | null
+          eco_category_id: string
+          eco_category_name: string
+          has_supply_any: boolean | null
+          is_ecosystem_category: boolean | null
+          kic_centres: number | null
+          kisce_centres: number | null
+          la28_events: number | null
+          ncoe_centres: number | null
+          notes: string | null
+          present_ag2026: boolean | null
+          present_both_games: boolean | null
+          present_in_asmita_nis_sheet: boolean | null
+          present_in_tops_tagg_teams_list: boolean | null
+          present_kic: boolean | null
+          present_kisce: boolean | null
+          present_la28: boolean | null
+          present_ncoe: boolean | null
+          present_stc: boolean | null
+          source: string | null
+          stc_centres: number | null
+        }
+        Insert: {
+          ag2026_events?: number | null
+          created_at?: string | null
+          eco_category_id: string
+          eco_category_name: string
+          has_supply_any?: boolean | null
+          is_ecosystem_category?: boolean | null
+          kic_centres?: number | null
+          kisce_centres?: number | null
+          la28_events?: number | null
+          ncoe_centres?: number | null
+          notes?: string | null
+          present_ag2026?: boolean | null
+          present_both_games?: boolean | null
+          present_in_asmita_nis_sheet?: boolean | null
+          present_in_tops_tagg_teams_list?: boolean | null
+          present_kic?: boolean | null
+          present_kisce?: boolean | null
+          present_la28?: boolean | null
+          present_ncoe?: boolean | null
+          present_stc?: boolean | null
+          source?: string | null
+          stc_centres?: number | null
+        }
+        Update: {
+          ag2026_events?: number | null
+          created_at?: string | null
+          eco_category_id?: string
+          eco_category_name?: string
+          has_supply_any?: boolean | null
+          is_ecosystem_category?: boolean | null
+          kic_centres?: number | null
+          kisce_centres?: number | null
+          la28_events?: number | null
+          ncoe_centres?: number | null
+          notes?: string | null
+          present_ag2026?: boolean | null
+          present_both_games?: boolean | null
+          present_in_asmita_nis_sheet?: boolean | null
+          present_in_tops_tagg_teams_list?: boolean | null
+          present_kic?: boolean | null
+          present_kisce?: boolean | null
+          present_la28?: boolean | null
+          present_ncoe?: boolean | null
+          present_stc?: boolean | null
+          source?: string | null
+          stc_centres?: number | null
+        }
+        Relationships: []
+      }
       event_overlap: {
         Row: {
           ag_events: number | null
@@ -642,7 +717,9 @@ export type Database = {
         Row: {
           ag2026_events: number | null
           asmita_league_status: string | null
+          category_list: string | null
           created_at: string | null
+          discipline_labels_from_image: string | null
           existing_athletes: number | null
           is_tagg: boolean | null
           is_teams: boolean | null
@@ -653,6 +730,8 @@ export type Database = {
           ncoe_centres: number | null
           nis_diploma_status: string | null
           present_ag2026: boolean | null
+          present_in_asmita_nis_sheet: boolean | null
+          present_in_tops_tagg_teams_list: boolean | null
           present_la28: boolean | null
           sanctioned_capacity: number | null
           sport_category: string | null
@@ -664,7 +743,9 @@ export type Database = {
         Insert: {
           ag2026_events?: number | null
           asmita_league_status?: string | null
+          category_list?: string | null
           created_at?: string | null
+          discipline_labels_from_image?: string | null
           existing_athletes?: number | null
           is_tagg?: boolean | null
           is_teams?: boolean | null
@@ -675,6 +756,8 @@ export type Database = {
           ncoe_centres?: number | null
           nis_diploma_status?: string | null
           present_ag2026?: boolean | null
+          present_in_asmita_nis_sheet?: boolean | null
+          present_in_tops_tagg_teams_list?: boolean | null
           present_la28?: boolean | null
           sanctioned_capacity?: number | null
           sport_category?: string | null
@@ -686,7 +769,9 @@ export type Database = {
         Update: {
           ag2026_events?: number | null
           asmita_league_status?: string | null
+          category_list?: string | null
           created_at?: string | null
+          discipline_labels_from_image?: string | null
           existing_athletes?: number | null
           is_tagg?: boolean | null
           is_teams?: boolean | null
@@ -697,6 +782,8 @@ export type Database = {
           ncoe_centres?: number | null
           nis_diploma_status?: string | null
           present_ag2026?: boolean | null
+          present_in_asmita_nis_sheet?: boolean | null
+          present_in_tops_tagg_teams_list?: boolean | null
           present_la28?: boolean | null
           sanctioned_capacity?: number | null
           sport_category?: string | null
