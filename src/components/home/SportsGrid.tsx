@@ -70,22 +70,30 @@ interface SportCardProps {
 }
 
 const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
-  const totalCentres = (sport.ncoe_centres || 0) + (sport.stc_centres || 0) + (sport.kic_centres || 0) + (sport.kisce_centres || 0);
+  const ncoe = sport.ncoe_centres || 0;
+  const stc = sport.stc_centres || 0;
+  const kic = sport.kic_centres || 0;
+  const kisce = sport.kisce_centres || 0;
+  const totalCentres = ncoe + stc + kic + kisce;
+  
   const athletes = sport.existing_athletes || 0;
   const capacity = sport.sanctioned_capacity || 0;
+  // Readiness = (existing athletes / sanctioned capacity) × 100
   const readiness = capacity > 0 ? Math.round((athletes / capacity) * 100) : 0;
 
   const sizeClasses = {
-    large: "min-w-[280px] md:min-w-[300px] p-4",
-    medium: "min-w-[240px] md:min-w-[260px] p-3",
+    large: "min-w-[280px] md:min-w-[300px] p-5",
+    medium: "min-w-[240px] md:min-w-[260px] p-4",
     small: "min-w-[180px] md:min-w-[200px] p-3",
   };
 
-  const iconSizes = {
-    large: "h-10 w-10",
-    medium: "h-8 w-8",
-    small: "h-6 w-6",
-  };
+  // Build centre breakdown string
+  const centreBreakdown = [
+    ncoe > 0 && `${ncoe} NCOE`,
+    stc > 0 && `${stc} STC`,
+    kic > 0 && `${kic} KIC`,
+    kisce > 0 && `${kisce} KISCE`,
+  ].filter(Boolean).join(" • ");
 
   return (
     <Link
@@ -117,61 +125,80 @@ const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
         )}
       </div>
 
-      {/* Icon + Name */}
-      <div className="mt-4 mb-3">
+      {/* Icon */}
+      <div className="mt-5 mb-3">
         <div className={cn(
-          "mb-2 flex items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-accent/10",
-          iconSizes[size],
-          size === "large" && "h-12 w-12",
+          "mb-3 flex items-center justify-center rounded-xl",
+          "bg-gradient-to-br from-saffron/10 to-saffron/5 border border-saffron/20",
+          size === "large" ? "h-12 w-12" : size === "medium" ? "h-10 w-10" : "h-8 w-8",
         )}>
-          <Target className={cn("text-primary", size === "large" ? "h-6 w-6" : size === "medium" ? "h-5 w-5" : "h-4 w-4")} />
+          <Target className={cn(
+            "text-saffron", 
+            size === "large" ? "h-6 w-6" : size === "medium" ? "h-5 w-5" : "h-4 w-4"
+          )} />
         </div>
+        
+        {/* Sport Name - uppercase, bold */}
         <h4 className={cn(
-          "font-semibold line-clamp-2 group-hover:text-primary transition-colors leading-tight",
-          size === "large" ? "text-base" : size === "medium" ? "text-sm" : "text-xs"
+          "font-bold uppercase tracking-wide line-clamp-2 group-hover:text-saffron transition-colors leading-tight text-foreground",
+          size === "large" ? "text-sm" : size === "medium" ? "text-xs" : "text-[11px]"
         )}>
           {sport.sport_name}
         </h4>
       </div>
 
-      {/* Events */}
-      <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
-        <Trophy className="h-3 w-3" />
-        <span>LA28: {sport.la28_events || 0}</span>
-        <span className="text-border">|</span>
-        <span>AG26: {sport.ag2026_events || 0}</span>
+      {/* Events row */}
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+        <Trophy className="h-3 w-3 flex-shrink-0" />
+        <span className="font-medium">LA28: {sport.la28_events || 0}</span>
+        <span className="text-border/60">|</span>
+        <span className="font-medium">AG26: {sport.ag2026_events || 0}</span>
       </div>
 
-      {/* Centres */}
-      <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
-        <MapPin className="h-3 w-3" />
-        <span>{totalCentres} centres</span>
+      {/* Centres row with breakdown */}
+      <div className="flex items-start gap-1.5 text-xs text-muted-foreground mb-2">
+        <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" />
+        <div>
+          <span className="font-medium">{totalCentres} centres</span>
+          {(size === "large" || size === "medium") && centreBreakdown && (
+            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+              {centreBreakdown}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Athletes / Capacity */}
       {(size === "large" || size === "medium") && (
-        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
-          <Users className="h-3 w-3" />
-          <span>{athletes.toLocaleString()} / {capacity.toLocaleString()} capacity</span>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+          <Users className="h-3 w-3 flex-shrink-0" />
+          <span className="font-medium">
+            {athletes.toLocaleString()} / {capacity.toLocaleString()} capacity
+          </span>
         </div>
       )}
 
-      {/* Readiness Progress */}
-      {size === "large" && capacity > 0 && (
-        <div className="mt-auto">
-          <div className="flex justify-between text-xs mb-1">
-            <span className="text-muted-foreground">Readiness</span>
+      {/* Readiness Progress - show on large and medium */}
+      {(size === "large" || size === "medium") && capacity > 0 && (
+        <div className="mt-auto pt-2 border-t border-border/30">
+          <div className="flex justify-between items-center text-xs mb-1.5">
+            <span className="text-muted-foreground font-medium">Readiness</span>
             <span className={cn(
-              "font-semibold",
+              "font-bold tabular-nums",
               readiness >= 80 ? "text-india-green" : readiness >= 50 ? "text-saffron" : "text-destructive"
             )}>
               {readiness}%
             </span>
           </div>
-          <Progress 
-            value={readiness} 
-            className="h-1.5"
-          />
+          <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+            <div 
+              className={cn(
+                "h-full rounded-full transition-all duration-500",
+                readiness >= 80 ? "bg-india-green" : readiness >= 50 ? "bg-saffron" : "bg-destructive"
+              )}
+              style={{ width: `${Math.min(readiness, 100)}%` }}
+            />
+          </div>
         </div>
       )}
     </Link>
