@@ -254,74 +254,60 @@ const SportDetail = () => {
           All Sports
         </Link>
         
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div>
-            <h1 className="font-display text-3xl md:text-4xl">{sport.sport_name}</h1>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {sport.present_la28 && <Badge className="bg-saffron text-white">LA 2028</Badge>}
-              {sport.present_ag2026 && <Badge className="bg-india-green text-white">AG 2026</Badge>}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Program Status Row */}
-      <div className="flex flex-wrap items-center gap-4 mb-6">
-        {/* Priority Scheme Badges */}
-        <div className="flex flex-wrap gap-2">
+        <h1 className="font-display text-3xl md:text-4xl mb-3">{sport.sport_name}</h1>
+        
+        {/* Unified Status Row */}
+        <div className="flex flex-wrap items-center gap-2">
+          {sport.present_la28 && <Badge className="bg-saffron text-white">LA 2028</Badge>}
+          {sport.present_ag2026 && <Badge className="bg-india-green text-white">AG 2026</Badge>}
+          
           {sport.is_tops && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-saffron hover:bg-saffron/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                  <Trophy className="h-4 w-4" />
+                <Badge className="bg-saffron hover:bg-saffron/90 text-white gap-1 cursor-help">
+                  <Trophy className="h-3 w-3" />
                   TOPS
                 </Badge>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p className="font-semibold">TOPS — Target Olympic Podium Scheme</p>
-                <p className="text-xs mt-1">Highest priority for Olympic podium outcomes.</p>
+                <p className="font-semibold">Target Olympic Podium Scheme</p>
               </TooltipContent>
             </Tooltip>
           )}
           {sport.is_tagg && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-blue-600 hover:bg-blue-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                  <Target className="h-4 w-4" />
+                <Badge className="bg-blue-600 hover:bg-blue-600/90 text-white gap-1 cursor-help">
+                  <Target className="h-3 w-3" />
                   TAGG
                 </Badge>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p className="font-semibold">TAGG — Target Asian Games Group</p>
-                <p className="text-xs mt-1">Priority focus for Asian Games outcomes.</p>
+                <p className="font-semibold">Target Asian Games Group</p>
               </TooltipContent>
             </Tooltip>
           )}
           {sport.is_teams && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-purple-600 hover:bg-purple-600/90 text-white gap-1.5 py-1.5 px-3 text-sm cursor-help">
-                  <Users className="h-4 w-4" />
+                <Badge className="bg-purple-600 hover:bg-purple-600/90 text-white gap-1 cursor-help">
+                  <Users className="h-3 w-3" />
                   TEAMS
                 </Badge>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p className="font-semibold">TEAMS — Training of Elite Athlete Management Support</p>
-                <p className="text-xs mt-1">Enhanced elite athlete management support.</p>
+                <p className="font-semibold">Training of Elite Athlete Management Support</p>
               </TooltipContent>
             </Tooltip>
           )}
-        </div>
-        
-        {/* NIS & Asmita Status */}
-        <div className="flex flex-wrap gap-3 text-sm">
-          <div className="flex items-center gap-1.5">
-            <nisStatus.icon className={`h-4 w-4 ${nisStatus.color}`} />
+          
+          <div className="flex items-center gap-1 text-sm">
+            <nisStatus.icon className={`h-3.5 w-3.5 ${nisStatus.color}`} />
             <span className="text-muted-foreground">NIS Diploma:</span>
             <span className={`font-medium ${nisStatus.color}`}>{nisStatus.label}</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <asmitaStatus.icon className={`h-4 w-4 ${asmitaStatus.color}`} />
+          <div className="flex items-center gap-1 text-sm">
+            <asmitaStatus.icon className={`h-3.5 w-3.5 ${asmitaStatus.color}`} />
             <span className="text-muted-foreground">Asmita League:</span>
             <span className={`font-medium ${asmitaStatus.color}`}>{asmitaStatus.label}</span>
           </div>
@@ -377,14 +363,22 @@ const SportDetail = () => {
               <Building2 className="h-4 w-4" />
               <span className="text-xs font-medium uppercase">Centres</span>
             </div>
-            <div className="flex items-baseline gap-4">
+            <div className="flex flex-wrap items-baseline gap-3">
               <div>
-                <span className="text-2xl font-display">{ncoeCapacity?.length || 0}</span>
+                <span className="text-xl font-display">{ncoeCapacity?.length || 0}</span>
                 <span className="text-xs text-muted-foreground ml-1">NCOE</span>
               </div>
               <div>
-                <span className="text-2xl font-display">{stcCapacity?.length || 0}</span>
+                <span className="text-xl font-display">{stcCapacity?.length || 0}</span>
                 <span className="text-xs text-muted-foreground ml-1">STC</span>
+              </div>
+              <div>
+                <span className="text-xl font-display">{sport.kic_centres || 0}</span>
+                <span className="text-xs text-muted-foreground ml-1">KIC</span>
+              </div>
+              <div>
+                <span className="text-xl font-display">{sport.kisce_centres || 0}</span>
+                <span className="text-xs text-muted-foreground ml-1">KISCE</span>
               </div>
             </div>
           </CardContent>
@@ -595,7 +589,8 @@ const SportDetail = () => {
                 {participation.map((p) => (
                   <div key={p.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm">{p.games_name || p.year}</span>
+                      <span className="font-medium text-sm">{p.games_name || 'Olympics'}</span>
+                      <span className="text-xs text-muted-foreground">({p.year})</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="h-3.5 w-3.5 text-muted-foreground" />
@@ -612,107 +607,110 @@ const SportDetail = () => {
         </Card>
       </div>
 
-      {/* Main Content - Infrastructure */}
+      {/* Infrastructure & Notes Section */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Column - Infrastructure Details */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* NCOE Centres with Strength Breakup */}
-          {ncoeCapacity && ncoeCapacity.length > 0 && (
+        {/* Left Column - Training Centres */}
+        <div className="lg:col-span-2">
+          {(ncoeCapacity && ncoeCapacity.length > 0) || (stcCapacity && stcCapacity.length > 0) ? (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-saffron text-white">NCOE</Badge>
-                    <span>{ncoeCapacity.length} Centres</span>
-                  </div>
-                  <span className="text-sm font-normal text-muted-foreground">
-                    {ncoeAthletes} / {ncoeSanctioned} athletes
-                  </span>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  Training Centres
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {ncoeCapacity.map((centre) => {
-                    const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
-                    return (
-                      <div key={centre.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-sm truncate">{centre.centre_name}</span>
-                            {centre.is_para && <Badge variant="outline" className="text-xs h-5">Para</Badge>}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            <span>{centre.state}</span>
-                          </div>
+                <Tabs defaultValue={ncoeCapacity && ncoeCapacity.length > 0 ? "ncoe" : "stc"} className="w-full">
+                  <TabsList className="w-full grid grid-cols-2 h-9 mb-4">
+                    <TabsTrigger value="ncoe" className="gap-2" disabled={!ncoeCapacity || ncoeCapacity.length === 0}>
+                      <Badge className="bg-saffron text-white text-[10px] px-1.5">NCOE</Badge>
+                      {ncoeCapacity?.length || 0} Centres
+                    </TabsTrigger>
+                    <TabsTrigger value="stc" className="gap-2" disabled={!stcCapacity || stcCapacity.length === 0}>
+                      <Badge className="bg-india-green text-white text-[10px] px-1.5">STC</Badge>
+                      {stcCapacity?.length || 0} Centres
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="ncoe" className="mt-0">
+                    {ncoeCapacity && ncoeCapacity.length > 0 && (
+                      <>
+                        <div className="flex items-center justify-between mb-3 text-sm text-muted-foreground">
+                          <span>Total: {ncoeCapacity.length} centres</span>
+                          <span className="font-medium">{ncoeAthletes} / {ncoeSanctioned} athletes</span>
                         </div>
-                        <div className="text-right flex-shrink-0 w-32">
-                          <div className="flex items-center justify-end gap-1">
-                            <span className="font-medium">{centre.ex_grand_total || 0}</span>
-                            <span className="text-muted-foreground text-xs">/ {centre.san_grand_total || 0}</span>
-                          </div>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <Progress value={pct} className="h-1 w-16" />
-                            <span className="text-xs text-muted-foreground w-8">{pct}%</span>
-                          </div>
+                        <div className="space-y-1 max-h-80 overflow-y-auto">
+                          {ncoeCapacity.map((centre) => {
+                            const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
+                            return (
+                              <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
+                                <div className="flex-1 min-w-0">
+                                  <span className="font-medium text-sm">{centre.centre_name}</span>
+                                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                    <MapPin className="h-3 w-3" />
+                                    <span>{centre.state}</span>
+                                    {centre.is_para && <Badge variant="outline" className="text-[10px] h-4 ml-1">Para</Badge>}
+                                  </div>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                  <div className="flex items-center justify-end gap-1">
+                                    <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
+                                    <span className="text-muted-foreground text-sm">/ {centre.san_grand_total || 0}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 mt-0.5">
+                                    <Progress value={pct} className="h-1.5 w-20" />
+                                    <span className="text-xs text-muted-foreground w-9">{pct}%</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      </>
+                    )}
+                  </TabsContent>
+                  
+                  <TabsContent value="stc" className="mt-0">
+                    {stcCapacity && stcCapacity.length > 0 && (
+                      <>
+                        <div className="flex items-center justify-between mb-3 text-sm text-muted-foreground">
+                          <span>Total: {stcCapacity.length} centres</span>
+                          <span className="font-medium">{stcAthletes} / {stcSanctioned} athletes</span>
+                        </div>
+                        <div className="space-y-1 max-h-80 overflow-y-auto">
+                          {stcCapacity.map((centre) => {
+                            const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
+                            return (
+                              <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
+                                <div className="flex-1 min-w-0">
+                                  <span className="font-medium text-sm">{centre.centre_name}</span>
+                                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                    <MapPin className="h-3 w-3" />
+                                    <span>{centre.state}</span>
+                                    {centre.is_para && <Badge variant="outline" className="text-[10px] h-4 ml-1">Para</Badge>}
+                                  </div>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                  <div className="flex items-center justify-end gap-1">
+                                    <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
+                                    <span className="text-muted-foreground text-sm">/ {centre.san_grand_total || 0}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 mt-0.5">
+                                    <Progress value={pct} className="h-1.5 w-20" />
+                                    <span className="text-xs text-muted-foreground w-9">{pct}%</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
-          )}
-
-          {/* STC Centres with Strength Breakup */}
-          {stcCapacity && stcCapacity.length > 0 && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-india-green text-white">STC</Badge>
-                    <span>{stcCapacity.length} Centres</span>
-                  </div>
-                  <span className="text-sm font-normal text-muted-foreground">
-                    {stcAthletes} / {stcSanctioned} athletes
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {stcCapacity.map((centre) => {
-                    const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
-                    return (
-                      <div key={centre.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-sm truncate">{centre.centre_name}</span>
-                            {centre.is_para && <Badge variant="outline" className="text-xs h-5">Para</Badge>}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            <span>{centre.state}</span>
-                          </div>
-                        </div>
-                        <div className="text-right flex-shrink-0 w-32">
-                          <div className="flex items-center justify-end gap-1">
-                            <span className="font-medium">{centre.ex_grand_total || 0}</span>
-                            <span className="text-muted-foreground text-xs">/ {centre.san_grand_total || 0}</span>
-                          </div>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <Progress value={pct} className="h-1 w-16" />
-                            <span className="text-xs text-muted-foreground w-8">{pct}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {(!ncoeCapacity || ncoeCapacity.length === 0) && (!stcCapacity || stcCapacity.length === 0) && (
+          ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
