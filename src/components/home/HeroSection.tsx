@@ -120,30 +120,95 @@ const CountdownCard = ({ title, hostCity, days, sports, events, delay }: Countdo
   );
 };
 
-interface StatCardProps {
-  value: number;
-  label: string;
-  sublabel?: string;
-  icon: React.ReactNode;
+interface CentreBreakdown {
+  ncoe: number;
+  stc: number;
+  kic: number;
+  kisce: number;
+  total: number;
+}
+
+interface CentreCardProps {
+  centres: CentreBreakdown;
   delay: number;
 }
 
-const StatCard = ({ value, label, sublabel, icon, delay }: StatCardProps) => {
+const CentreCard = ({ centres, delay }: CentreCardProps) => {
   return (
     <div 
       className="hero-kpi-card animate-fade-in-up"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-center justify-center gap-3 mb-2">
-        <span className="text-saffron">{icon}</span>
-        <span className="text-4xl font-bold text-gray-900">
-          <CountUpNumber end={value} />
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <Building2 className="h-6 w-6 text-saffron" />
+        <span className="text-3xl font-bold text-gray-900">
+          <CountUpNumber end={centres.total} />
         </span>
       </div>
-      <p className="text-sm text-gray-600 font-medium">{label}</p>
-      {sublabel && (
-        <p className="text-xs text-gray-500">{sublabel}</p>
-      )}
+      <p className="text-sm text-gray-700 font-semibold mb-2">Training Centres</p>
+      
+      {/* Breakdown grid */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+        <div className="flex justify-between">
+          <span className="text-gray-500">NCOE</span>
+          <span className="font-semibold text-gray-700">{centres.ncoe}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">STC</span>
+          <span className="font-semibold text-gray-700">{centres.stc}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">KIC</span>
+          <span className="font-semibold text-gray-700">{centres.kic}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">KISCE</span>
+          <span className="font-semibold text-gray-700">{centres.kisce}</span>
+        </div>
+      </div>
+      <p className="text-xs text-gray-400 mt-2">across 36 States/UTs</p>
+    </div>
+  );
+};
+
+interface AthleteCardProps {
+  athletes: number;
+  sanctioned: number;
+  delay: number;
+}
+
+const AthleteCard = ({ athletes, sanctioned, delay }: AthleteCardProps) => {
+  const percentage = Math.round((athletes / sanctioned) * 100);
+  
+  return (
+    <div 
+      className="hero-kpi-card animate-fade-in-up"
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <Target className="h-6 w-6 text-saffron" />
+        <span className="text-3xl font-bold text-gray-900">
+          <CountUpNumber end={athletes} />
+        </span>
+      </div>
+      <p className="text-sm text-gray-700 font-semibold mb-2">Elite Athletes</p>
+      
+      {/* Progress bar */}
+      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+        <div 
+          className="bg-saffron h-2 rounded-full transition-all duration-1000"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      
+      <div className="flex justify-between text-xs">
+        <span className="text-gray-500">Sanctioned</span>
+        <span className="font-semibold text-gray-700">{sanctioned.toLocaleString()}</span>
+      </div>
+      <div className="flex justify-between text-xs">
+        <span className="text-gray-500">Utilization</span>
+        <span className="font-semibold text-india-green">{percentage}%</span>
+      </div>
     </div>
   );
 };
@@ -218,18 +283,19 @@ const HeroSection = () => {
             events={GAMES.CWG2026.events}
             delay={300}
           />
-          <StatCard
-            value={1147}
-            label="Training Centres"
-            sublabel="across 36 States/UTs"
-            icon={<Building2 className="h-7 w-7" />}
+          <CentreCard
+            centres={{
+              ncoe: 25,
+              stc: 66,
+              kic: 1020,
+              kisce: 36,
+              total: 1147
+            }}
             delay={400}
           />
-          <StatCard
-            value={8053}
-            label="Athletes"
-            sublabel="in elite training"
-            icon={<Target className="h-7 w-7" />}
+          <AthleteCard
+            athletes={8068}
+            sanctioned={9157}
             delay={500}
           />
         </div>

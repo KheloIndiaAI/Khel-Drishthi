@@ -28,9 +28,9 @@ const Home = () => {
       {/* Sports Grid */}
       <ScrollReveal animation="fade-up" delay={100}>
         <section id="sports">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-2xl md:text-3xl">All Sports</h2>
-            <p className="text-muted-foreground text-sm">{sports?.length || 0} sports</p>
+          <div className="mb-4">
+            <h2 className="font-display text-2xl md:text-3xl">Sports Ecosystem</h2>
+            <p className="text-muted-foreground text-sm mt-1">Browse {sports?.length || 0} sports across priority schemes</p>
           </div>
           
           {sportsLoading ? (
