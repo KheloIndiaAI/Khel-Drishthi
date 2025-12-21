@@ -1,9 +1,14 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Target, Trophy, MapPin, Users, Search, Medal, TrendingUp } from "lucide-react";
+import { 
+  Target, Trophy, MapPin, Users, Search,
+  Waves, Bike, Dumbbell, Swords, Crosshair,
+  Footprints, CircleDot, Medal, Sailboat, Mountain,
+  Volleyball, Timer, Wind, Snowflake, Flag,
+  Zap, Flame, Crown, Shield, type LucideIcon
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 
 interface Sport {
   sport_id: string;
@@ -44,6 +49,55 @@ const SECTION_HEADERS: Record<string, { title: string; subtitle: string; emoji: 
   teams: { title: "TEAMS", subtitle: "Training of Elite Athlete Management Support", emoji: "👥" },
   gaps: { title: "Infrastructure Gaps", subtitle: "Sports with demand but limited supply", emoji: "⚠️" },
   other: { title: "Other Sports", subtitle: "", emoji: "" },
+};
+
+// Sport to icon mapping
+const getSportIcon = (sportName: string): LucideIcon => {
+  const name = sportName.toLowerCase();
+  
+  // Water sports
+  if (name.includes("aquatic") || name.includes("swim") || name.includes("diving") || name.includes("water polo")) return Waves;
+  if (name.includes("rowing") || name.includes("canoe") || name.includes("kayak")) return Waves;
+  if (name.includes("sailing") || name.includes("yacht")) return Sailboat;
+  
+  // Target sports
+  if (name.includes("archery")) return Target;
+  if (name.includes("shooting")) return Crosshair;
+  
+  // Combat sports
+  if (name.includes("fencing")) return Swords;
+  if (name.includes("boxing") || name.includes("wrestling") || name.includes("judo") || name.includes("taekwondo") || name.includes("karate")) return Shield;
+  if (name.includes("wushu") || name.includes("martial")) return Zap;
+  
+  // Athletics & running
+  if (name.includes("athletic") || name.includes("marathon") || name.includes("triathlon")) return Footprints;
+  
+  // Cycling
+  if (name.includes("cycling") || name.includes("cycle")) return Bike;
+  
+  // Strength sports
+  if (name.includes("weightlifting") || name.includes("powerlifting")) return Dumbbell;
+  
+  // Ball sports
+  if (name.includes("badminton") || name.includes("tennis") || name.includes("squash")) return CircleDot;
+  if (name.includes("volleyball") || name.includes("handball")) return Volleyball;
+  if (name.includes("football") || name.includes("soccer") || name.includes("hockey") || name.includes("cricket") || name.includes("kabaddi") || name.includes("kho")) return CircleDot;
+  if (name.includes("basketball") || name.includes("netball")) return CircleDot;
+  if (name.includes("golf")) return Flag;
+  if (name.includes("baseball") || name.includes("softball")) return CircleDot;
+  
+  // Winter sports
+  if (name.includes("ski") || name.includes("ice") || name.includes("curling") || name.includes("snow")) return Snowflake;
+  
+  // Other
+  if (name.includes("climbing") || name.includes("mountain")) return Mountain;
+  if (name.includes("equestrian") || name.includes("horse")) return Crown;
+  if (name.includes("gymnastics") || name.includes("trampoline")) return Flame;
+  if (name.includes("modern pentathlon")) return Medal;
+  if (name.includes("chess") || name.includes("bridge")) return Crown;
+  
+  // Default
+  return Medal;
 };
 
 // Priority badge component
@@ -127,16 +181,21 @@ const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
 
       {/* Icon */}
       <div className="mt-5 mb-3">
-        <div className={cn(
-          "mb-3 flex items-center justify-center rounded-xl",
-          "bg-gradient-to-br from-saffron/10 to-saffron/5 border border-saffron/20",
-          size === "large" ? "h-12 w-12" : size === "medium" ? "h-10 w-10" : "h-8 w-8",
-        )}>
-          <Target className={cn(
-            "text-saffron", 
-            size === "large" ? "h-6 w-6" : size === "medium" ? "h-5 w-5" : "h-4 w-4"
-          )} />
-        </div>
+        {(() => {
+          const SportIcon = getSportIcon(sport.sport_name);
+          return (
+            <div className={cn(
+              "mb-3 flex items-center justify-center rounded-xl",
+              "bg-gradient-to-br from-saffron/10 to-saffron/5 border border-saffron/20",
+              size === "large" ? "h-12 w-12" : size === "medium" ? "h-10 w-10" : "h-8 w-8",
+            )}>
+              <SportIcon className={cn(
+                "text-saffron", 
+                size === "large" ? "h-6 w-6" : size === "medium" ? "h-5 w-5" : "h-4 w-4"
+              )} />
+            </div>
+          );
+        })()}
         
         {/* Sport Name - uppercase, bold */}
         <h4 className={cn(
