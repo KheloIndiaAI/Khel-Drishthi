@@ -66,17 +66,17 @@ const ParticleBackground = () => {
       delay: Math.random() * 5,
     }));
 
-    // Create floating sports icons
+    // Create floating sports icons - larger sizes for visibility
     const newSportIcons: SportIcon[] = Array.from({ length: 12 }, (_, i) => ({
       id: i,
-      x: Math.random() * 90 + 5,
-      y: Math.random() * 80 + 10,
-      size: Math.random() * 20 + 24,
-      icon: sportsIcons[Math.floor(Math.random() * sportsIcons.length)],
-      color: colors[Math.floor(Math.random() * colors.length)],
-      duration: Math.random() * 10 + 15,
-      delay: Math.random() * 8,
-      rotation: Math.random() * 360,
+      x: Math.random() * 85 + 5,
+      y: Math.random() * 70 + 10,
+      size: Math.random() * 24 + 32, // Larger: 32-56px
+      icon: sportsIcons[i % sportsIcons.length], // Ensure variety
+      color: colors[i % colors.length],
+      duration: Math.random() * 8 + 12,
+      delay: Math.random() * 5,
+      rotation: 0,
     }));
 
     setParticles(newParticles);
@@ -84,9 +84,9 @@ const ParticleBackground = () => {
   }, []);
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
       {/* Gradient background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-slate-50/60 to-emerald-50/80 dark:from-slate-900/80 dark:via-slate-800/60 dark:to-slate-900/80" />
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-slate-50/60 to-emerald-50/80 dark:from-slate-900/80 dark:via-slate-800/60 dark:to-slate-900/80" style={{ zIndex: 1 }} />
       
       {/* Large animated gradient orbs */}
       <div 
@@ -132,27 +132,28 @@ const ParticleBackground = () => {
         style={{ border: '1px solid rgba(255, 153, 51, 0.25)', animationDelay: '4s' }}
       />
 
-      {/* Floating sports icons */}
-      {sportIcons.map((icon) => (
-        <svg
-          key={`sport-${icon.id}`}
-          className="absolute opacity-60 dark:opacity-40"
-          style={{
-            left: `${icon.x}%`,
-            top: `${icon.y}%`,
-            width: `${icon.size}px`,
-            height: `${icon.size}px`,
-            fill: icon.color,
-            animation: `float ${icon.duration}s ease-in-out infinite`,
-            animationDelay: `${icon.delay}s`,
-            transform: `rotate(${icon.rotation}deg)`,
-            filter: `drop-shadow(0 0 8px ${icon.color})`,
-          }}
-          viewBox="0 0 24 24"
-        >
-          <path d={icon.icon} />
-        </svg>
-      ))}
+      {/* Floating sports icons - larger and more visible */}
+      <div className="absolute inset-0" style={{ zIndex: 10 }}>
+        {sportIcons.map((icon) => (
+          <svg
+            key={`sport-${icon.id}`}
+            className="absolute animate-float-icon"
+            style={{
+              left: `${icon.x}%`,
+              top: `${icon.y}%`,
+              width: `${icon.size}px`,
+              height: `${icon.size}px`,
+              fill: icon.color.replace('0.6', '0.9').replace('0.5', '0.85').replace('0.4', '0.8'),
+              animationDelay: `${icon.delay}s`,
+              animationDuration: `${icon.duration}s`,
+              filter: `drop-shadow(0 0 15px ${icon.color})`,
+            }}
+            viewBox="0 0 24 24"
+          >
+            <path d={icon.icon} />
+          </svg>
+        ))}
+      </div>
 
       {/* Animated particles/dots - using inline styles for colors */}
       {particles.map((particle) => (

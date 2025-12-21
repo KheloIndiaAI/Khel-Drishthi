@@ -106,6 +106,12 @@ export default {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
           "50%": { transform: "translateY(-20px) rotate(5deg)" },
         },
+        "float-icon": {
+          "0%, 100%": { transform: "translateY(0) translateX(0)" },
+          "25%": { transform: "translateY(-15px) translateX(5px)" },
+          "50%": { transform: "translateY(-8px) translateX(-3px)" },
+          "75%": { transform: "translateY(-20px) translateX(8px)" },
+        },
         "spin-slow": {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
@@ -119,6 +125,7 @@ export default {
         "slide-in-right": "slide-in-right 0.5s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "float": "float 6s ease-in-out infinite",
+        "float-icon": "float-icon 8s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
       },
     },
