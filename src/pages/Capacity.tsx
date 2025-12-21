@@ -55,6 +55,10 @@ const Capacity = () => {
   const filteredNcoe = stateFilter === "all" ? ncoeData : ncoeData?.filter(r => r.state === stateFilter);
   const filteredStc = stateFilter === "all" ? stcData : stcData?.filter(r => r.state === stateFilter);
 
+  // Count unique centres (not rows - each centre can have multiple sports)
+  const ncoeUniqueCentres = new Set(filteredNcoe?.map(r => r.centre_id).filter(Boolean) || []).size;
+  const stcUniqueCentres = new Set(filteredStc?.map(r => r.centre_id).filter(Boolean) || []).size;
+
   // Summary calculations
   const ncoeSanctioned = filteredNcoe?.reduce((sum, r) => sum + (r.san_grand_total || 0), 0) || 0;
   const ncoeExisting = filteredNcoe?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0;
@@ -162,7 +166,7 @@ const Capacity = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-display">{ncoeUtilization.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">{filteredNcoe?.length || 0} centres</p>
+            <p className="text-xs text-muted-foreground">{ncoeUniqueCentres} centres</p>
           </CardContent>
         </Card>
         <Card>
@@ -174,7 +178,7 @@ const Capacity = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-display">{stcUtilization.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">{filteredStc?.length || 0} centres</p>
+            <p className="text-xs text-muted-foreground">{stcUniqueCentres} centres</p>
           </CardContent>
         </Card>
       </div>
@@ -284,7 +288,7 @@ const Capacity = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Badge className="bg-saffron text-white">NCOE</Badge>
-                  Centres ({filteredNcoe?.length || 0})
+                  {ncoeUniqueCentres} Centres ({filteredNcoe?.length || 0} sport entries)
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -315,7 +319,7 @@ const Capacity = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Badge className="bg-india-green text-white">STC</Badge>
-                  Centres ({filteredStc?.length || 0})
+                  {stcUniqueCentres} Centres ({filteredStc?.length || 0} sport entries)
                 </CardTitle>
               </CardHeader>
               <CardContent>
