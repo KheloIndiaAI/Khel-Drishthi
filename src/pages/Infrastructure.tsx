@@ -29,14 +29,15 @@ const Infrastructure = () => {
   const [sportFilter, setSportFilter] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("all");
 
-  // Fetch centres
+  // Fetch centres - use range to get all (default limit is 1000)
   const { data: centres, isLoading } = useQuery({
     queryKey: ["centres"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("centres")
         .select("*")
-        .order("centre_name");
+        .order("centre_name")
+        .range(0, 2000); // Fetch up to 2000 centres
       if (error) throw error;
       return data;
     },
