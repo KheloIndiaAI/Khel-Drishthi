@@ -102,7 +102,7 @@ const Home = () => {
       <section className="mb-8 relative overflow-hidden min-h-[400px]">
         <ParticleBackground />
 
-        <div className="text-center mb-8 pt-4">
+        <div className="text-center mb-8 pt-4 relative z-20">
           <div className="animate-fade-in">
             <h1 className="font-display text-5xl md:text-7xl tracking-wider mb-3">
               <span className="text-saffron drop-shadow-sm inline-block hover:scale-105 transition-transform duration-300">Khel</span>{" "}
@@ -120,7 +120,7 @@ const Home = () => {
         </div>
 
         {/* Countdown Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 relative z-20">
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <CountdownCard
               title="LA 2028 Olympics"
