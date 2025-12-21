@@ -1,17 +1,73 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Upload, AlertCircle, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Upload, AlertCircle, ArrowLeft, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 
 const ImportData = () => {
   const [importing, setImporting] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [results, setResults] = useState<Record<string, { success: boolean; message: string }>>({});
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        if (!session) {
+          setIsAdmin(false);
+          setLoading(false);
+        } else {
+          // Check admin role after setting session
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        checkAdminRole(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('has_role', {
+        _user_id: userId,
+        _role: 'admin'
+      });
+      
+      if (error) {
+        console.error("Error checking admin role:", error);
+        setIsAdmin(false);
+      } else {
+        setIsAdmin(data === true);
+      }
+    } catch (error) {
+      console.error("Error checking admin role:", error);
+      setIsAdmin(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const parseCSV = (text: string) => {
     const lines = text.trim().split('\n');
@@ -46,6 +102,16 @@ const ImportData = () => {
   };
 
   const importTable = async (tableName: string, fileName: string) => {
+    if (!session?.access_token) {
+      toast({ title: "Not Authenticated", description: "Please log in to import data.", variant: "destructive" });
+      return;
+    }
+
+    if (!isAdmin) {
+      toast({ title: "Access Denied", description: "Admin role required to import data.", variant: "destructive" });
+      return;
+    }
+
     setImporting(tableName);
     setProgress(10);
 
@@ -92,6 +158,67 @@ const ImportData = () => {
     { name: "stc_capacity", file: "stc_capacity.csv", desc: "198 STC capacity records" },
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-8 flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background p-8">
+        <div className="container mx-auto max-w-2xl">
+          <Link to="/" className="text-primary hover:underline mb-6 inline-flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Link>
+          
+          <Card className="glass-panel">
+            <CardHeader>
+              <CardTitle className="font-display text-3xl flex items-center gap-2">
+                <Lock className="h-6 w-6" /> Authentication Required
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                You must be logged in as an admin to import data.
+              </p>
+              <Button onClick={() => navigate('/auth')}>
+                Go to Login
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background p-8">
+        <div className="container mx-auto max-w-2xl">
+          <Link to="/" className="text-primary hover:underline mb-6 inline-flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Link>
+          
+          <Card className="glass-panel">
+            <CardHeader>
+              <CardTitle className="font-display text-3xl flex items-center gap-2 text-destructive">
+                <Lock className="h-6 w-6" /> Access Denied
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Admin role is required to access this page. Contact an administrator if you need access.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="container mx-auto max-w-2xl">
@@ -105,7 +232,7 @@ const ImportData = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <p className="text-muted-foreground">
-              Import data from CSV files into the database.
+              Import data from CSV files into the database. (Admin only)
             </p>
 
             {importing && (
