@@ -85,10 +85,9 @@ const ImportData = () => {
   };
 
   const tables = [
-    { name: "centres", file: "centres.csv", desc: "1,147 training centres" },
-    { name: "centre_sport_links", file: "centre_sport_links.csv", desc: "1,459 centre-sport mappings" },
+    { name: "disciplines", file: "disciplines.csv", desc: "85 sport disciplines" },
     { name: "events", file: "events.csv", desc: "648 medal events" },
-    { name: "event_overlap", file: "event_overlap.csv", desc: "44 sport event overlap records" },
+    { name: "centre_sport_links", file: "centre_sport_links.csv", desc: "1,459 centre-sport mappings" },
     { name: "ncoe_capacity", file: "ncoe_capacity.csv", desc: "109 NCOE capacity records" },
     { name: "stc_capacity", file: "stc_capacity.csv", desc: "198 STC capacity records" },
   ];
