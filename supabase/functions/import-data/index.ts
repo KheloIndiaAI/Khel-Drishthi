@@ -6,6 +6,37 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Allowed table names - prevents table name injection
+const ALLOWED_TABLES = ["centre_sport_links", "events", "event_overlap", "ncoe_capacity", "stc_capacity", "disciplines"] as const;
+type AllowedTable = typeof ALLOWED_TABLES[number];
+
+// Maximum payload size limits
+const MAX_RECORDS = 10000;
+const MAX_STRING_LENGTH = 500;
+
+// Helper to sanitize and validate string
+function sanitizeString(value: unknown, maxLength: number = MAX_STRING_LENGTH): string | null {
+  if (value === null || value === undefined || value === '') return null;
+  const str = String(value).trim();
+  if (str.length > maxLength) {
+    return str.substring(0, maxLength);
+  }
+  return str;
+}
+
+// Helper to safely parse integer
+function safeParseInt(value: unknown, defaultValue: number = 0): number {
+  if (value === null || value === undefined || value === '') return defaultValue;
+  const parsed = parseInt(String(value), 10);
+  return Number.isNaN(parsed) ? defaultValue : parsed;
+}
+
+// Helper to safely parse boolean
+function safeParseBoolean(value: unknown): boolean {
+  if (value === true || value === 'True' || value === 'true' || value === '1') return true;
+  return false;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -16,12 +47,78 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { table, data } = await req.json();
-    console.log(`Importing ${data?.length || 0} records into table: ${table}`);
-
-    if (!data || !Array.isArray(data) || !table) {
-      throw new Error("Invalid data or table name");
+    // ==================== AUTHENTICATION CHECK ====================
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.log("No authorization header provided");
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized: No authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.log("Invalid token or user not found:", authError?.message);
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized: Invalid token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // ==================== AUTHORIZATION CHECK ====================
+    const { data: isAdmin, error: roleError } = await supabase.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError || !isAdmin) {
+      console.log(`User ${user.id} is not an admin. Access denied.`);
+      return new Response(
+        JSON.stringify({ success: false, error: "Forbidden: Admin role required" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Admin user ${user.id} authorized for data import`);
+
+    // ==================== INPUT VALIDATION ====================
+    const { table, data } = await req.json();
+
+    // Validate table name against allowlist
+    if (!table || !ALLOWED_TABLES.includes(table as AllowedTable)) {
+      console.log(`Invalid table name: ${table}`);
+      return new Response(
+        JSON.stringify({ success: false, error: `Invalid table name. Allowed: ${ALLOWED_TABLES.join(', ')}` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate data is an array with reasonable size
+    if (!data || !Array.isArray(data)) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid data: must be an array" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (data.length === 0) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid data: array is empty" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (data.length > MAX_RECORDS) {
+      return new Response(
+        JSON.stringify({ success: false, error: `Too many records. Maximum allowed: ${MAX_RECORDS}` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Importing ${data.length} records into table: ${table} by admin ${user.email}`);
 
     const batchSize = 100;
     let inserted = 0;
@@ -30,8 +127,8 @@ serve(async (req) => {
     if (table === "centre_sport_links") {
       // First, deduplicate bridge_ids across entire dataset
       const bridgeIdCount: Record<string, number> = {};
-      const deduplicatedData = data.map((row: any) => {
-        const originalBridgeId = row.bridge_id;
+      const deduplicatedData = data.map((row: Record<string, unknown>) => {
+        const originalBridgeId = sanitizeString(row.bridge_id) || '';
         if (bridgeIdCount[originalBridgeId] === undefined) {
           bridgeIdCount[originalBridgeId] = 0;
         }
@@ -44,17 +141,17 @@ serve(async (req) => {
         
         return {
           bridge_id: uniqueBridgeId,
-          centre_id: row.centre_id,
-          centre_type: row.centre_type || null,
-          state: row.state || null,
-          district: row.district || null,
-          sport_id: row.sport_id,
-          sport_name: row.sport_name || null,
-          discipline_id: row.discipline_id || null,
-          discipline_name: row.discipline_name || null,
-          source_dataset: row.source_dataset || null,
-          programme_subtype: row.programme_subtype || null,
-          operational_status: row.operational_status || null,
+          centre_id: sanitizeString(row.centre_id) || '',
+          centre_type: sanitizeString(row.centre_type),
+          state: sanitizeString(row.state),
+          district: sanitizeString(row.district),
+          sport_id: sanitizeString(row.sport_id) || '',
+          sport_name: sanitizeString(row.sport_name),
+          discipline_id: sanitizeString(row.discipline_id),
+          discipline_name: sanitizeString(row.discipline_name),
+          source_dataset: sanitizeString(row.source_dataset),
+          programme_subtype: sanitizeString(row.programme_subtype),
+          operational_status: sanitizeString(row.operational_status),
         };
       });
 
@@ -83,24 +180,24 @@ serve(async (req) => {
     } else if (table === "events") {
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          event_id: row.event_id,
-          sport_id: row.sport_id,
-          discipline_id: row.discipline_id || null,
-          event_std: row.event_std,
-          event_raw: row.event_std,
-          gender_std: row.gender_std || null,
-          event_type_std: row.event_type_std || null,
+        const mappedData = batch.map((row: Record<string, unknown>) => ({
+          event_id: sanitizeString(row.event_id) || '',
+          sport_id: sanitizeString(row.sport_id) || '',
+          discipline_id: sanitizeString(row.discipline_id),
+          event_std: sanitizeString(row.event_std) || '',
+          event_raw: sanitizeString(row.event_std),
+          gender_std: sanitizeString(row.gender_std),
+          event_type_std: sanitizeString(row.event_type_std),
           participant_type: null,
-          present_la28: parseInt(row.present_la28) || 0,
-          present_ag2026: parseInt(row.present_ag2026) || 0,
-          la28_men: parseInt(row.la28_male) || 0,
-          la28_women: parseInt(row.la28_female) || 0,
-          la28_total: parseInt(row.la28_total) || 0,
-          ag2026_men: parseInt(row.ag2026_male) || 0,
-          ag2026_women: parseInt(row.ag2026_female) || 0,
-          ag2026_total: parseInt(row.ag2026_total) || 0,
-          both_games: parseInt(row.both) || 0,
+          present_la28: safeParseInt(row.present_la28),
+          present_ag2026: safeParseInt(row.present_ag2026),
+          la28_men: safeParseInt(row.la28_male),
+          la28_women: safeParseInt(row.la28_female),
+          la28_total: safeParseInt(row.la28_total),
+          ag2026_men: safeParseInt(row.ag2026_male),
+          ag2026_women: safeParseInt(row.ag2026_female),
+          ag2026_total: safeParseInt(row.ag2026_total),
+          both_games: safeParseInt(row.both),
         }));
         
         // Use upsert to handle duplicates - update if event_id exists
@@ -122,14 +219,14 @@ serve(async (req) => {
       
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          sport_std: row.sport_std,
-          events_total: parseInt(row.events_total) || 0,
-          la28_events: parseInt(row.la28_events) || 0,
-          ag_events: parseInt(row.ag_events) || 0,
-          both_events: parseInt(row.both_events) || 0,
-          only_la28: parseInt(row.only_la28) || 0,
-          only_ag: parseInt(row.only_ag) || 0,
+        const mappedData = batch.map((row: Record<string, unknown>) => ({
+          sport_std: sanitizeString(row.sport_std),
+          events_total: safeParseInt(row.events_total),
+          la28_events: safeParseInt(row.la28_events),
+          ag_events: safeParseInt(row.ag_events),
+          both_events: safeParseInt(row.both_events),
+          only_la28: safeParseInt(row.only_la28),
+          only_ag: safeParseInt(row.only_ag),
         }));
         
         const { error } = await supabase.from("event_overlap").insert(mappedData);
@@ -147,28 +244,28 @@ serve(async (req) => {
       
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          centre_id: row.centre_id || null,
-          centre_name: row.centre || row.centre_name_std || null,
-          region: row.region || null,
-          state: row.state_std || row.state || null,
-          sport_id: row.sport_id || null,
-          discipline_raw: row.discipline_raw || null,
-          san_res_boys: parseInt(row.san_res_b) || 0,
-          san_res_girls: parseInt(row.san_res_g) || 0,
-          san_res_total: parseInt(row.san_res_t) || 0,
-          san_nonres_boys: parseInt(row.san_nonres_b) || 0,
-          san_nonres_girls: parseInt(row.san_nonres_g) || 0,
-          san_nonres_total: parseInt(row.san_nonres_t) || 0,
-          san_grand_total: parseInt(row.san_gt) || 0,
-          ex_res_boys: parseInt(row.ex_res_b) || 0,
-          ex_res_girls: parseInt(row.ex_res_g) || 0,
-          ex_res_total: parseInt(row.ex_res_t) || 0,
-          ex_nonres_boys: parseInt(row.ex_nonres_b) || 0,
-          ex_nonres_girls: parseInt(row.ex_nonres_g) || 0,
-          ex_nonres_total: parseInt(row.ex_nonres_t) || 0,
-          ex_grand_total: parseInt(row.ex_gt) || 0,
-          is_para: row.is_para === 'True' || row.is_para === true,
+        const mappedData = batch.map((row: Record<string, unknown>) => ({
+          centre_id: sanitizeString(row.centre_id),
+          centre_name: sanitizeString(row.centre) || sanitizeString(row.centre_name_std),
+          region: sanitizeString(row.region),
+          state: sanitizeString(row.state_std) || sanitizeString(row.state),
+          sport_id: sanitizeString(row.sport_id),
+          discipline_raw: sanitizeString(row.discipline_raw),
+          san_res_boys: safeParseInt(row.san_res_b),
+          san_res_girls: safeParseInt(row.san_res_g),
+          san_res_total: safeParseInt(row.san_res_t),
+          san_nonres_boys: safeParseInt(row.san_nonres_b),
+          san_nonres_girls: safeParseInt(row.san_nonres_g),
+          san_nonres_total: safeParseInt(row.san_nonres_t),
+          san_grand_total: safeParseInt(row.san_gt),
+          ex_res_boys: safeParseInt(row.ex_res_b),
+          ex_res_girls: safeParseInt(row.ex_res_g),
+          ex_res_total: safeParseInt(row.ex_res_t),
+          ex_nonres_boys: safeParseInt(row.ex_nonres_b),
+          ex_nonres_girls: safeParseInt(row.ex_nonres_g),
+          ex_nonres_total: safeParseInt(row.ex_nonres_t),
+          ex_grand_total: safeParseInt(row.ex_gt),
+          is_para: safeParseBoolean(row.is_para),
         }));
         
         const { error } = await supabase.from("ncoe_capacity").insert(mappedData);
@@ -186,28 +283,28 @@ serve(async (req) => {
       
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          centre_id: row.centre_id || null,
-          centre_name: row.centre || row.centre_name_std || null,
-          region: row.region || null,
-          state: row.state_std || row.state || null,
-          sport_id: row.sport_id || null,
-          discipline_raw: row.discipline_raw || null,
-          san_res_boys: parseInt(row.san_res_b) || 0,
-          san_res_girls: parseInt(row.san_res_g) || 0,
-          san_res_total: parseInt(row.san_res_t) || 0,
-          san_nonres_boys: parseInt(row.san_nonres_b) || 0,
-          san_nonres_girls: parseInt(row.san_nonres_g) || 0,
-          san_nonres_total: parseInt(row.san_nonres_t) || 0,
-          san_grand_total: parseInt(row.san_gt) || 0,
-          ex_res_boys: parseInt(row.ex_res_b) || 0,
-          ex_res_girls: parseInt(row.ex_res_g) || 0,
-          ex_res_total: parseInt(row.ex_res_t) || 0,
-          ex_nonres_boys: parseInt(row.ex_nonres_b) || 0,
-          ex_nonres_girls: parseInt(row.ex_nonres_g) || 0,
-          ex_nonres_total: parseInt(row.ex_nonres_t) || 0,
-          ex_grand_total: parseInt(row.ex_gt) || 0,
-          is_para: row.is_para === 'True' || row.is_para === true,
+        const mappedData = batch.map((row: Record<string, unknown>) => ({
+          centre_id: sanitizeString(row.centre_id),
+          centre_name: sanitizeString(row.centre) || sanitizeString(row.centre_name_std),
+          region: sanitizeString(row.region),
+          state: sanitizeString(row.state_std) || sanitizeString(row.state),
+          sport_id: sanitizeString(row.sport_id),
+          discipline_raw: sanitizeString(row.discipline_raw),
+          san_res_boys: safeParseInt(row.san_res_b),
+          san_res_girls: safeParseInt(row.san_res_g),
+          san_res_total: safeParseInt(row.san_res_t),
+          san_nonres_boys: safeParseInt(row.san_nonres_b),
+          san_nonres_girls: safeParseInt(row.san_nonres_g),
+          san_nonres_total: safeParseInt(row.san_nonres_t),
+          san_grand_total: safeParseInt(row.san_gt),
+          ex_res_boys: safeParseInt(row.ex_res_b),
+          ex_res_girls: safeParseInt(row.ex_res_g),
+          ex_res_total: safeParseInt(row.ex_res_t),
+          ex_nonres_boys: safeParseInt(row.ex_nonres_b),
+          ex_nonres_girls: safeParseInt(row.ex_nonres_g),
+          ex_nonres_total: safeParseInt(row.ex_nonres_t),
+          ex_grand_total: safeParseInt(row.ex_gt),
+          is_para: safeParseBoolean(row.is_para),
         }));
         
         const { error } = await supabase.from("stc_capacity").insert(mappedData);
@@ -215,7 +312,7 @@ serve(async (req) => {
           console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
           errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
         } else {
-        inserted += batch.length;
+          inserted += batch.length;
           console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
         }
       }
@@ -225,16 +322,16 @@ serve(async (req) => {
       
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
-        const mappedData = batch.map((row: any) => ({
-          discipline_id: row.discipline_id,
-          sport_id: row.sport_id,
-          discipline_std: row.discipline_std,
-          discipline_raw: row.discipline_std,
-          la28_event_count: parseInt(row.la28_event_count) || 0,
-          ag2026_event_count: parseInt(row.ag2026_event_count) || 0,
-          present_la28: parseInt(row.present_la28) || 0,
-          present_ag2026: parseInt(row.present_ag2026) || 0,
-          is_active: row.is_active === 'True' || row.is_active === true,
+        const mappedData = batch.map((row: Record<string, unknown>) => ({
+          discipline_id: sanitizeString(row.discipline_id) || '',
+          sport_id: sanitizeString(row.sport_id) || '',
+          discipline_std: sanitizeString(row.discipline_std) || '',
+          discipline_raw: sanitizeString(row.discipline_std),
+          la28_event_count: safeParseInt(row.la28_event_count),
+          ag2026_event_count: safeParseInt(row.ag2026_event_count),
+          present_la28: safeParseInt(row.present_la28),
+          present_ag2026: safeParseInt(row.present_ag2026),
+          is_active: safeParseBoolean(row.is_active),
         }));
         
         const { error } = await supabase.from("disciplines").insert(mappedData);
@@ -248,7 +345,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Import complete: ${inserted}/${data.length} records, ${errors.length} errors`);
+    console.log(`Import complete by admin ${user.email}: ${inserted}/${data.length} records, ${errors.length} errors`);
     return new Response(
       JSON.stringify({ success: true, inserted, total: data.length, errors: errors.length > 0 ? errors : undefined }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
