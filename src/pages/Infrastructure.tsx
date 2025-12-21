@@ -29,17 +29,29 @@ const Infrastructure = () => {
   const [sportFilter, setSportFilter] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("all");
 
-  // Fetch centres - use range to get all (default limit is 1000)
+  // Fetch centres (backend returns max 1000 rows per request, so page through)
   const { data: centres, isLoading } = useQuery({
     queryKey: ["centres"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("centres")
-        .select("*")
-        .order("centre_name")
-        .range(0, 2000); // Fetch up to 2000 centres
-      if (error) throw error;
-      return data;
+      const pageSize = 1000;
+      let from = 0;
+      let all: any[] = [];
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("centres")
+          .select("*")
+          .order("centre_name")
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+        all = all.concat(data || []);
+
+        if (!data || data.length < pageSize) break;
+        from += pageSize;
+      }
+
+      return all;
     },
   });
 
@@ -56,16 +68,28 @@ const Infrastructure = () => {
     },
   });
 
-  // Fetch centre-sport links for sport filter
+  // Fetch centre-sport links for sport filter (page through for full coverage)
   const { data: centreSportLinks } = useQuery({
     queryKey: ["centre-sport-links"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("centre_sport_links")
-        .select("centre_id, sport_id, sport_name")
-        .range(0, 5000); // Fetch all links
-      if (error) throw error;
-      return data;
+      const pageSize = 1000;
+      let from = 0;
+      let all: any[] = [];
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("centre_sport_links")
+          .select("centre_id, sport_id, sport_name")
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+        all = all.concat(data || []);
+
+        if (!data || data.length < pageSize) break;
+        from += pageSize;
+      }
+
+      return all;
     },
   });
 
@@ -450,13 +474,13 @@ const Infrastructure = () => {
           </div>
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredCentres.slice(0, 100).map((centre) => (
+            {filteredCentres.map((centre) => (
               <CentreCard key={centre.centre_id} centre={centre} />
             ))}
           </div>
         ) : (
           <div className="space-y-2">
-            {filteredCentres.slice(0, 100).map((centre) => {
+            {filteredCentres.map((centre) => {
               const capacity = capacityMap.get(centre.centre_id);
               const sports = centreSportsMap.get(centre.centre_id) || [];
               
@@ -505,11 +529,6 @@ const Infrastructure = () => {
           </div>
         )}
 
-        {filteredCentres.length > 100 && (
-          <p className="text-center text-sm text-muted-foreground mt-6 py-4 border-t">
-            Showing first 100 of {filteredCentres.length} centres. Use filters to narrow down.
-          </p>
-        )}
 
         {filteredCentres.length === 0 && !isLoading && (
           <div className="text-center py-12">
