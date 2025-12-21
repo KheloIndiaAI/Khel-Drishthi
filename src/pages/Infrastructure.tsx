@@ -62,7 +62,8 @@ const Infrastructure = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("centre_sport_links")
-        .select("centre_id, sport_id, sport_name");
+        .select("centre_id, sport_id, sport_name")
+        .range(0, 5000); // Fetch all links
       if (error) throw error;
       return data;
     },
