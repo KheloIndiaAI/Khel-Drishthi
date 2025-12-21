@@ -215,6 +215,33 @@ serve(async (req) => {
           console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
           errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
         } else {
+        inserted += batch.length;
+          console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
+        }
+      }
+    } else if (table === "disciplines") {
+      // Clear existing data first
+      await supabase.from("disciplines").delete().neq('discipline_id', 'PLACEHOLDER');
+      
+      for (let i = 0; i < data.length; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
+        const mappedData = batch.map((row: any) => ({
+          discipline_id: row.discipline_id,
+          sport_id: row.sport_id,
+          discipline_std: row.discipline_std,
+          discipline_raw: row.discipline_std,
+          la28_event_count: parseInt(row.la28_event_count) || 0,
+          ag2026_event_count: parseInt(row.ag2026_event_count) || 0,
+          present_la28: parseInt(row.present_la28) || 0,
+          present_ag2026: parseInt(row.present_ag2026) || 0,
+          is_active: row.is_active === 'True' || row.is_active === true,
+        }));
+        
+        const { error } = await supabase.from("disciplines").insert(mappedData);
+        if (error) {
+          console.error(`Batch ${Math.floor(i / batchSize) + 1} error:`, error.message);
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+        } else {
           inserted += batch.length;
           console.log(`Batch ${Math.floor(i / batchSize) + 1} inserted ${batch.length} records`);
         }
