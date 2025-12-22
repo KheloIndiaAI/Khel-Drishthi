@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { 
   Building2, 
@@ -21,6 +21,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CentreDetailDialog } from "@/components/infrastructure/CentreDetailDialog";
 
 const Infrastructure = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -28,6 +29,8 @@ const Infrastructure = () => {
   const [stateFilter, setStateFilter] = useState<string>("all");
   const [sportFilter, setSportFilter] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [selectedCentre, setSelectedCentre] = useState<any>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Fetch centres (backend returns max 1000 rows per request, so page through)
   const { data: centres, isLoading } = useQuery({
@@ -93,27 +96,53 @@ const Infrastructure = () => {
     },
   });
 
-  // Fetch NCOE capacity
+  // Fetch NCOE capacity with full details
   const { data: ncoeCapacity } = useQuery({
-    queryKey: ["ncoe-capacity-all"],
+    queryKey: ["ncoe-capacity-all-detailed"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ncoe_capacity")
-        .select("centre_id, ex_grand_total, san_grand_total");
-      if (error) throw error;
-      return data;
+      const pageSize = 1000;
+      let from = 0;
+      let all: any[] = [];
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("ncoe_capacity")
+          .select("*")
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+        all = all.concat(data || []);
+
+        if (!data || data.length < pageSize) break;
+        from += pageSize;
+      }
+
+      return all;
     },
   });
 
-  // Fetch STC capacity
+  // Fetch STC capacity with full details
   const { data: stcCapacity } = useQuery({
-    queryKey: ["stc-capacity-all"],
+    queryKey: ["stc-capacity-all-detailed"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("stc_capacity")
-        .select("centre_id, ex_grand_total, san_grand_total");
-      if (error) throw error;
-      return data;
+      const pageSize = 1000;
+      let from = 0;
+      let all: any[] = [];
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("stc_capacity")
+          .select("*")
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+        all = all.concat(data || []);
+
+        if (!data || data.length < pageSize) break;
+        from += pageSize;
+      }
+
+      return all;
     },
   });
 
@@ -138,6 +167,29 @@ const Infrastructure = () => {
           existing: current.existing + (cap.ex_grand_total || 0),
           sanctioned: current.sanctioned + (cap.san_grand_total || 0)
         });
+      }
+    });
+    
+    return map;
+  }, [ncoeCapacity, stcCapacity]);
+
+  // Create full capacity data lookup by centre
+  const centreCapacityDataMap = useMemo(() => {
+    const map = new Map<string, any[]>();
+    
+    ncoeCapacity?.forEach(cap => {
+      if (cap.centre_id) {
+        const current = map.get(cap.centre_id) || [];
+        current.push(cap);
+        map.set(cap.centre_id, current);
+      }
+    });
+    
+    stcCapacity?.forEach(cap => {
+      if (cap.centre_id) {
+        const current = map.get(cap.centre_id) || [];
+        current.push(cap);
+        map.set(cap.centre_id, current);
       }
     });
     
@@ -184,9 +236,6 @@ const Infrastructure = () => {
       .slice(0, 10);
   }, [centres]);
 
-  // Get unique states
-  const states = [...new Set(centres?.map((c) => c.state) || [])].sort();
-
   // Get centre IDs for selected sport
   const sportCentreIds = sportFilter !== "all" && centreSportLinks
     ? new Set(centreSportLinks.filter(l => l.sport_id === sportFilter).map(l => l.centre_id))
@@ -220,13 +269,28 @@ const Infrastructure = () => {
 
   const hasActiveFilters = searchTerm || stateFilter !== "all" || sportFilter !== "all";
 
+  const handleCentreClick = (centre: any) => {
+    // Only show dialog for NCOE and STC centres (which have capacity data)
+    if (centre.centre_type === "NCOE" || centre.centre_type === "STC") {
+      setSelectedCentre(centre);
+      setDialogOpen(true);
+    }
+  };
+
   const CentreCard = ({ centre }: { centre: typeof centres[0] }) => {
     const capacity = capacityMap.get(centre.centre_id);
-    const sports = centreSportsMap.get(centre.centre_id) || [];
+    const centresSports = centreSportsMap.get(centre.centre_id) || [];
     const utilizationPct = capacity?.sanctioned ? Math.round((capacity.existing / capacity.sanctioned) * 100) : 0;
+    const isClickable = centre.centre_type === "NCOE" || centre.centre_type === "STC";
     
     return (
-      <Card className="hover:shadow-lg transition-shadow h-full">
+      <Card 
+        className={cn(
+          "hover:shadow-lg transition-shadow h-full",
+          isClickable && "cursor-pointer"
+        )}
+        onClick={() => handleCentreClick(centre)}
+      >
         <CardContent className="pt-5 pb-4 h-full flex flex-col">
           <div className="flex items-start gap-3 flex-1">
             <div className="p-2 rounded-lg bg-primary/10 shrink-0">
@@ -240,17 +304,17 @@ const Infrastructure = () => {
               </p>
               
               {/* Sports offered */}
-              {sports.length > 0 && (
+              {centresSports.length > 0 && (
                 <div className="mb-2">
                   <div className="flex flex-wrap gap-1">
-                    {sports.slice(0, 3).map(sport => (
+                    {centresSports.slice(0, 3).map(sport => (
                       <Badge key={sport} variant="secondary" className="text-[10px] px-1.5 py-0">
                         {sport}
                       </Badge>
                     ))}
-                    {sports.length > 3 && (
+                    {centresSports.length > 3 && (
                       <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                        +{sports.length - 3}
+                        +{centresSports.length - 3}
                       </Badge>
                     )}
                   </div>
@@ -280,6 +344,11 @@ const Infrastructure = () => {
             {centre.operational_status && (
               <Badge variant="outline" className="text-[10px]">
                 {centre.operational_status}
+              </Badge>
+            )}
+            {isClickable && (
+              <Badge variant="outline" className="text-[10px] ml-auto">
+                Click for details
               </Badge>
             )}
           </div>
@@ -354,7 +423,7 @@ const Infrastructure = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {stateDistribution.map(([state, count], idx) => (
+            {stateDistribution.map(([state, count]) => (
               <Button
                 key={state}
                 variant={stateFilter === state ? "default" : "outline"}
@@ -482,10 +551,18 @@ const Infrastructure = () => {
           <div className="space-y-2">
             {filteredCentres.map((centre) => {
               const capacity = capacityMap.get(centre.centre_id);
-              const sports = centreSportsMap.get(centre.centre_id) || [];
+              const centresSports = centreSportsMap.get(centre.centre_id) || [];
+              const isClickable = centre.centre_type === "NCOE" || centre.centre_type === "STC";
               
               return (
-                <Card key={centre.centre_id} className="hover:shadow-md transition-shadow">
+                <Card 
+                  key={centre.centre_id} 
+                  className={cn(
+                    "hover:shadow-md transition-shadow",
+                    isClickable && "cursor-pointer"
+                  )}
+                  onClick={() => handleCentreClick(centre)}
+                >
                   <CardContent className="py-3">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -499,13 +576,13 @@ const Infrastructure = () => {
                       </div>
                       
                       <div className="flex items-center gap-3 shrink-0">
-                        {sports.length > 0 && (
+                        {centresSports.length > 0 && (
                           <div className="hidden md:flex gap-1">
-                            {sports.slice(0, 2).map(sport => (
+                            {centresSports.slice(0, 2).map(sport => (
                               <Badge key={sport} variant="secondary" className="text-[10px]">{sport}</Badge>
                             ))}
-                            {sports.length > 2 && (
-                              <Badge variant="outline" className="text-[10px]">+{sports.length - 2}</Badge>
+                            {centresSports.length > 2 && (
+                              <Badge variant="outline" className="text-[10px]">+{centresSports.length - 2}</Badge>
                             )}
                           </div>
                         )}
@@ -529,7 +606,6 @@ const Infrastructure = () => {
           </div>
         )}
 
-
         {filteredCentres.length === 0 && !isLoading && (
           <div className="text-center py-12">
             <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -538,6 +614,15 @@ const Infrastructure = () => {
           </div>
         )}
       </Tabs>
+
+      {/* Centre Detail Dialog */}
+      <CentreDetailDialog
+        centre={selectedCentre}
+        capacityData={selectedCentre ? centreCapacityDataMap.get(selectedCentre.centre_id) || [] : []}
+        sports={selectedCentre ? centreSportsMap.get(selectedCentre.centre_id) || [] : []}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </DashboardLayout>
   );
 };

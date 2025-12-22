@@ -229,35 +229,11 @@ const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
 
       {/* Athletes / Capacity */}
       {(size === "large" || size === "medium") && (
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Users className="h-3 w-3 flex-shrink-0" />
           <span className="font-medium">
             {athletes.toLocaleString()} / {capacity.toLocaleString()} capacity
           </span>
-        </div>
-      )}
-
-      {/* Readiness Progress - show on large and medium */}
-      {(size === "large" || size === "medium") && capacity > 0 && (
-        <div className="mt-auto pt-2 border-t border-border/30">
-          <div className="flex justify-between items-center text-xs mb-1.5">
-            <span className="text-muted-foreground font-medium">Readiness</span>
-            <span className={cn(
-              "font-bold tabular-nums",
-              readiness >= 80 ? "text-india-green" : readiness >= 50 ? "text-saffron" : "text-destructive"
-            )}>
-              {readiness}%
-            </span>
-          </div>
-          <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
-            <div 
-              className={cn(
-                "h-full rounded-full transition-all duration-500",
-                readiness >= 80 ? "bg-india-green" : readiness >= 50 ? "bg-saffron" : "bg-destructive"
-              )}
-              style={{ width: `${Math.min(readiness, 100)}%` }}
-            />
-          </div>
         </div>
       )}
     </Link>
