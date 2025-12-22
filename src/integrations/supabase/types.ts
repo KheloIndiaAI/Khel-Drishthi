@@ -381,6 +381,71 @@ export type Database = {
           },
         ]
       }
+      form_definitions: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          fields: Json
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          fields?: Json
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          fields?: Json
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      form_submissions: {
+        Row: {
+          data: Json
+          form_id: string
+          id: string
+          submitted_at: string | null
+          submitted_by: string | null
+        }
+        Insert: {
+          data?: Json
+          form_id: string
+          id?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+        }
+        Update: {
+          data?: Json
+          form_id?: string
+          id?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_submissions_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "form_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ncoe_capacity: {
         Row: {
           centre_id: string | null

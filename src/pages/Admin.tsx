@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Users, Shield, Lock } from "lucide-react";
+import { Upload, Users, Shield, Lock, Database, FileText } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 
 const Admin = () => {
@@ -117,12 +117,26 @@ const Admin = () => {
     <DashboardLayout>
       <h1 className="font-display text-4xl md:text-5xl mb-6">Admin Panel</h1>
       
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><Upload className="h-5 w-5" />Data Import</CardTitle></CardHeader>
           <CardContent>
             <p className="text-muted-foreground mb-4">Import CSV data into the database</p>
             <Link to="/import"><Button className="w-full">Go to Import</Button></Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><Database className="h-5 w-5" />Data Manager</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">View, search, edit, and export all database tables</p>
+            <Link to="/admin/data"><Button className="w-full">Manage Data</Button></Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" />Form Builder</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">Create custom forms for data collection</p>
+            <Link to="/admin/forms"><Button className="w-full">Manage Forms</Button></Link>
           </CardContent>
         </Card>
         <Card>

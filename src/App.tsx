@@ -10,6 +10,9 @@ import Infrastructure from "./pages/Infrastructure";
 import Capacity from "./pages/Capacity";
 import Medals from "./pages/Medals";
 import Admin from "./pages/Admin";
+import AdminDataManager from "./pages/AdminDataManager";
+import FormBuilder from "./pages/FormBuilder";
+import PublicForm from "./pages/PublicForm";
 import ImportData from "./pages/ImportData";
 import NotFound from "./pages/NotFound";
 
@@ -30,6 +33,9 @@ const App = () => (
             <Route path="/medals" element={<Medals />} />
             <Route path="/history" element={<Medals />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/data" element={<AdminDataManager />} />
+            <Route path="/admin/forms" element={<FormBuilder />} />
+            <Route path="/form/:formId" element={<PublicForm />} />
             <Route path="/import" element={<ImportData />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

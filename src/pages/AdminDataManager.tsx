@@ -1,0 +1,308 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Lock, Search, Download, Save, X, Edit2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import type { Session } from "@supabase/supabase-js";
+
+type TableName = 'sports' | 'centres' | 'events' | 'disciplines' | 'ncoe_capacity' | 'stc_capacity' | 'olympic_medals' | 'olympic_participation';
+
+const TABLES: { name: TableName; label: string; editable: string[] }[] = [
+  { name: 'sports', label: 'Sports', editable: ['sport_name', 'sport_category', 'is_tops', 'is_tagg', 'is_teams'] },
+  { name: 'centres', label: 'Centres', editable: ['centre_name', 'centre_type', 'state', 'district', 'is_active'] },
+  { name: 'events', label: 'Events', editable: ['event_std', 'gender_std', 'event_type_std'] },
+  { name: 'disciplines', label: 'Disciplines', editable: ['discipline_std', 'is_active'] },
+  { name: 'ncoe_capacity', label: 'NCOE Capacity', editable: ['san_grand_total', 'ex_grand_total'] },
+  { name: 'stc_capacity', label: 'STC Capacity', editable: ['san_grand_total', 'ex_grand_total'] },
+  { name: 'olympic_medals', label: 'Olympic Medals', editable: ['athlete_or_team', 'medal', 'year'] },
+  { name: 'olympic_participation', label: 'Olympic Participation', editable: ['athletes', 'year'] },
+];
+
+const AdminDataManager = () => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const [activeTable, setActiveTable] = useState<TableName>('sports');
+  const [data, setData] = useState<Record<string, unknown>[]>([]);
+  const [tableLoading, setTableLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingRow, setEditingRow] = useState<string | null>(null);
+  const [editedData, setEditedData] = useState<Record<string, unknown>>({});
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      if (!session) {
+        setIsAdmin(false);
+        setLoading(false);
+      } else {
+        setTimeout(() => checkAdminRole(session.user.id), 0);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        checkAdminRole(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchTableData(activeTable);
+    }
+  }, [activeTable, isAdmin]);
+
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
+      if (error) setIsAdmin(false);
+      else setIsAdmin(data === true);
+    } catch {
+      setIsAdmin(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTableData = async (tableName: TableName) => {
+    setTableLoading(true);
+    try {
+      const { data, error } = await supabase.from(tableName).select('*').limit(500);
+      if (error) throw error;
+      setData(data || []);
+    } catch (error) {
+      toast({ title: "Error", description: `Failed to fetch ${tableName} data`, variant: "destructive" });
+    } finally {
+      setTableLoading(false);
+    }
+  };
+
+  const handleEdit = (row: Record<string, unknown>) => {
+    const id = (row.id || row.sport_id || row.centre_id || row.event_id || row.discipline_id) as string;
+    setEditingRow(id);
+    setEditedData({ ...row });
+  };
+
+  const handleSave = async () => {
+    if (!editingRow) return;
+    
+    const tableConfig = TABLES.find(t => t.name === activeTable);
+    if (!tableConfig) return;
+
+    const updateData: Record<string, unknown> = {};
+    tableConfig.editable.forEach(field => {
+      if (editedData[field] !== undefined) {
+        updateData[field] = editedData[field];
+      }
+    });
+
+    try {
+      const idField = activeTable === 'sports' ? 'sport_id' : 
+                      activeTable === 'centres' ? 'centre_id' :
+                      activeTable === 'events' ? 'event_id' :
+                      activeTable === 'disciplines' ? 'discipline_id' : 'id';
+      
+      const { error } = await supabase
+        .from(activeTable)
+        .update(updateData as never)
+        .eq(idField as never, editingRow);
+
+      if (error) throw error;
+
+      toast({ title: "Saved", description: "Record updated successfully" });
+      setEditingRow(null);
+      setEditedData({});
+      fetchTableData(activeTable);
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to save changes", variant: "destructive" });
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingRow(null);
+    setEditedData({});
+  };
+
+  const exportToCSV = () => {
+    if (data.length === 0) return;
+
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => 
+        headers.map(header => {
+          const value = row[header];
+          if (value === null || value === undefined) return '';
+          const stringValue = String(value);
+          return stringValue.includes(',') || stringValue.includes('"') 
+            ? `"${stringValue.replace(/"/g, '""')}"` 
+            : stringValue;
+        }).join(',')
+      )
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${activeTable}_export_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
+  const filteredData = data.filter(row =>
+    Object.values(row).some(value =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const getRowId = (row: Record<string, unknown>) => {
+    return (row.id || row.sport_id || row.centre_id || row.event_id || row.discipline_id) as string;
+  };
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!session || !isAdmin) {
+    return (
+      <DashboardLayout>
+        <Card className="max-w-md mx-auto mt-12">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <Lock className="h-5 w-5" /> Access Denied
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              Admin access required to view this page.
+            </p>
+            <Button onClick={() => navigate('/auth')}>Go to Login</Button>
+          </CardContent>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  const tableConfig = TABLES.find(t => t.name === activeTable);
+  const columns = data.length > 0 ? Object.keys(data[0]).slice(0, 8) : [];
+
+  return (
+    <DashboardLayout>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display text-3xl md:text-4xl">Data Manager</h1>
+        <Button onClick={exportToCSV} variant="outline" className="gap-2">
+          <Download className="h-4 w-4" /> Export CSV
+        </Button>
+      </div>
+
+      <Tabs value={activeTable} onValueChange={(v) => setActiveTable(v as TableName)}>
+        <TabsList className="flex-wrap h-auto mb-4">
+          {TABLES.map(table => (
+            <TabsTrigger key={table.name} value={table.name}>{table.label}</TabsTrigger>
+          ))}
+        </TabsList>
+
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        {TABLES.map(table => (
+          <TabsContent key={table.name} value={table.name}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{table.label} ({filteredData.length} records)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {tableLoading ? (
+                  <p className="text-muted-foreground">Loading...</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          {columns.map(col => (
+                            <TableHead key={col} className="whitespace-nowrap">
+                              {col.replace(/_/g, ' ')}
+                              {tableConfig?.editable.includes(col) && <Edit2 className="inline ml-1 h-3 w-3 text-primary" />}
+                            </TableHead>
+                          ))}
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredData.slice(0, 100).map((row) => {
+                          const rowId = getRowId(row);
+                          const isEditing = editingRow === rowId;
+                          
+                          return (
+                            <TableRow key={rowId}>
+                              {columns.map(col => (
+                                <TableCell key={col} className="max-w-[200px] truncate">
+                                  {isEditing && tableConfig?.editable.includes(col) ? (
+                                    <Input
+                                      value={String(editedData[col] ?? '')}
+                                      onChange={(e) => setEditedData({ ...editedData, [col]: e.target.value })}
+                                      className="h-8 w-full"
+                                    />
+                                  ) : (
+                                    String(row[col] ?? '-')
+                                  )}
+                                </TableCell>
+                              ))}
+                              <TableCell>
+                                {isEditing ? (
+                                  <div className="flex gap-1">
+                                    <Button size="sm" variant="ghost" onClick={handleSave}><Save className="h-4 w-4" /></Button>
+                                    <Button size="sm" variant="ghost" onClick={handleCancel}><X className="h-4 w-4" /></Button>
+                                  </div>
+                                ) : (
+                                  <Button size="sm" variant="ghost" onClick={() => handleEdit(row)}>
+                                    <Edit2 className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                    {filteredData.length > 100 && (
+                      <p className="text-sm text-muted-foreground mt-2">Showing first 100 of {filteredData.length} records</p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </DashboardLayout>
+  );
+};
+
+export default AdminDataManager;
