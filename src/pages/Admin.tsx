@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Users, Shield, Lock, Database, FileText } from "lucide-react";
+import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 
 const Admin = () => {
@@ -113,11 +113,28 @@ const Admin = () => {
     );
   }
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
+  };
+
   return (
     <DashboardLayout>
-      <h1 className="font-display text-4xl md:text-5xl mb-6">Admin Panel</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display text-4xl md:text-5xl">Admin Panel</h1>
+        <Button variant="outline" onClick={handleLogout} className="gap-2">
+          <LogOut className="h-4 w-4" /> Logout
+        </Button>
+      </div>
       
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><BarChart3 className="h-5 w-5" />Analytics Dashboard</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">View key metrics and charts</p>
+            <Link to="/admin/dashboard"><Button className="w-full">View Dashboard</Button></Link>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><Upload className="h-5 w-5" />Data Import</CardTitle></CardHeader>
           <CardContent>
@@ -142,8 +159,8 @@ const Admin = () => {
         <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><Users className="h-5 w-5" />User Management</CardTitle></CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">Manage users and roles</p>
-            <Button variant="outline" className="w-full" disabled>Coming Soon</Button>
+            <p className="text-muted-foreground mb-4">Manage users and assign roles</p>
+            <Link to="/admin/users"><Button className="w-full">Manage Users</Button></Link>
           </CardContent>
         </Card>
         <Card>
