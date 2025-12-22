@@ -11,8 +11,11 @@ import Capacity from "./pages/Capacity";
 import Medals from "./pages/Medals";
 import Admin from "./pages/Admin";
 import AdminDataManager from "./pages/AdminDataManager";
+import AdminDashboard from "./pages/AdminDashboard";
 import FormBuilder from "./pages/FormBuilder";
 import PublicForm from "./pages/PublicForm";
+import UserManagement from "./pages/UserManagement";
+import Auth from "./pages/Auth";
 import ImportData from "./pages/ImportData";
 import NotFound from "./pages/NotFound";
 
@@ -33,9 +36,12 @@ const App = () => (
             <Route path="/medals" element={<Medals />} />
             <Route path="/history" element={<Medals />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/data" element={<AdminDataManager />} />
             <Route path="/admin/forms" element={<FormBuilder />} />
+            <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/form/:formId" element={<PublicForm />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/import" element={<ImportData />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
