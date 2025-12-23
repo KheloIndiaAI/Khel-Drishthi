@@ -1,13 +1,18 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import MedalChart from "@/components/home/MedalChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Medal, Clock, TrendingUp } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Medal, Clock, TrendingUp, Trophy, Filter } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 
 const Medals = () => {
+  const [sportFilter, setSportFilter] = useState<string>("all");
+  const [decadeFilter, setDecadeFilter] = useState<string>("all");
+
   const { data: medals } = useQuery({
     queryKey: ["all-medals"],
     queryFn: async () => {
@@ -32,15 +37,27 @@ const Medals = () => {
     },
   });
 
-  // Process medal data for chart
+  // Get unique sports and decades
+  const sports = [...new Set(medals?.map(m => m.sport_std).filter(Boolean))].sort();
+  const decades = [...new Set(medals?.map(m => Math.floor(m.year / 10) * 10))].sort((a, b) => b - a);
+
+  // Filter medals
+  const filteredMedals = medals?.filter(m => {
+    const matchesSport = sportFilter === "all" || m.sport_std === sportFilter;
+    const matchesDecade = decadeFilter === "all" || Math.floor(m.year / 10) * 10 === parseInt(decadeFilter);
+    return matchesSport && matchesDecade;
+  });
+
+  // Process medal data for area chart
   const medalChartData = medals
     ? Object.entries(
-        medals.reduce((acc: Record<number, { gold: number; silver: number; bronze: number }>, medal) => {
+        medals.reduce((acc: Record<number, { gold: number; silver: number; bronze: number; total: number }>, medal) => {
           const year = medal.year;
-          if (!acc[year]) acc[year] = { gold: 0, silver: 0, bronze: 0 };
+          if (!acc[year]) acc[year] = { gold: 0, silver: 0, bronze: 0, total: 0 };
           if (medal.medal === "Gold") acc[year].gold++;
           else if (medal.medal === "Silver") acc[year].silver++;
           else if (medal.medal === "Bronze") acc[year].bronze++;
+          acc[year].total++;
           return acc;
         }, {})
       ).map(([year, counts]) => ({
@@ -50,9 +67,25 @@ const Medals = () => {
     : [];
 
   // Medal counts by type
-  const goldCount = medals?.filter(m => m.medal === "Gold").length || 0;
-  const silverCount = medals?.filter(m => m.medal === "Silver").length || 0;
-  const bronzeCount = medals?.filter(m => m.medal === "Bronze").length || 0;
+  const goldCount = filteredMedals?.filter(m => m.medal === "Gold").length || 0;
+  const silverCount = filteredMedals?.filter(m => m.medal === "Silver").length || 0;
+  const bronzeCount = filteredMedals?.filter(m => m.medal === "Bronze").length || 0;
+
+  // Sport-wise medal distribution
+  const sportMedals = medals?.reduce((acc: Record<string, number>, m) => {
+    const sport = m.sport_std || "Unknown";
+    acc[sport] = (acc[sport] || 0) + 1;
+    return acc;
+  }, {});
+  
+  const pieData = sportMedals 
+    ? Object.entries(sportMedals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([name, value]) => ({ name, value }))
+    : [];
+
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--saffron))', 'hsl(var(--india-green))', '#8884d8', '#82ca9d', '#ffc658'];
 
   return (
     <DashboardLayout>
@@ -61,41 +94,194 @@ const Medals = () => {
         <p className="text-muted-foreground">India's Olympic medal history and milestones</p>
       </div>
 
-      {/* Medal Summary Cards */}
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-8">
-        <Card className="border-l-4 border-l-yellow-500">
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Gold</p>
-            <p className="text-3xl font-display text-yellow-500">{goldCount}</p>
+      {/* Interactive Medal Summary */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-yellow-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent" />
+          <CardContent className="pt-5 relative">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-yellow-500/20">
+                <Trophy className="h-5 w-5 text-yellow-500" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Gold</p>
+                <p className="text-3xl font-display text-yellow-500">{goldCount}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-l-gray-400">
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Silver</p>
-            <p className="text-3xl font-display text-gray-400">{silverCount}</p>
+        
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-gray-400">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-400/10 to-transparent" />
+          <CardContent className="pt-5 relative">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-gray-400/20">
+                <Medal className="h-5 w-5 text-gray-400" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Silver</p>
+                <p className="text-3xl font-display text-gray-400">{silverCount}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-l-amber-700">
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Bronze</p>
-            <p className="text-3xl font-display text-amber-700">{bronzeCount}</p>
+        
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-amber-700">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-700/10 to-transparent" />
+          <CardContent className="pt-5 relative">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-amber-700/20">
+                <Medal className="h-5 w-5 text-amber-700" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Bronze</p>
+                <p className="text-3xl font-display text-amber-700">{bronzeCount}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-l-primary hidden md:block">
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Total</p>
-            <p className="text-3xl font-display">{medals?.length || 0}</p>
+        
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-primary">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
+          <CardContent className="pt-5 relative">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-primary/20">
+                <TrendingUp className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Total</p>
+                <p className="text-3xl font-display">{filteredMedals?.length || 0}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Medal History Chart */}
-      <section className="mb-8">
-        <MedalChart data={medalChartData} />
-      </section>
+      {/* Charts Row */}
+      <div className="grid lg:grid-cols-3 gap-6 mb-6">
+        {/* Medal Trend Chart */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Medal Trend Over Time
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={medalChartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#FFD700" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#FFD700" stopOpacity={0.1}/>
+                    </linearGradient>
+                    <linearGradient id="silverGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#C0C0C0" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#C0C0C0" stopOpacity={0.1}/>
+                    </linearGradient>
+                    <linearGradient id="bronzeGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#CD7F32" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#CD7F32" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="year" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: "hsl(var(--card))", 
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "8px"
+                    }}
+                  />
+                  <Area type="monotone" dataKey="gold" stackId="1" stroke="#FFD700" fill="url(#goldGrad)" />
+                  <Area type="monotone" dataKey="silver" stackId="1" stroke="#C0C0C0" fill="url(#silverGrad)" />
+                  <Area type="monotone" dataKey="bronze" stackId="1" stroke="#CD7F32" fill="url(#bronzeGrad)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sport Distribution Pie */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Trophy className="h-4 w-4" />
+              By Sport
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[200px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={70}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {pieData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: "hsl(var(--card))", 
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "8px"
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2 mt-2">
+              {pieData.map((entry, index) => (
+                <div key={entry.name} className="flex items-center gap-1.5 text-xs">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <span className="text-muted-foreground">{entry.name}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 mb-4">
+        <Select value={sportFilter} onValueChange={setSportFilter}>
+          <SelectTrigger className="w-48">
+            <Filter className="h-4 w-4 mr-2" />
+            <SelectValue placeholder="Filter by Sport" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sports</SelectItem>
+            {sports.map(sport => (
+              <SelectItem key={sport} value={sport!}>{sport}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        <Select value={decadeFilter} onValueChange={setDecadeFilter}>
+          <SelectTrigger className="w-40">
+            <Clock className="h-4 w-4 mr-2" />
+            <SelectValue placeholder="Filter by Decade" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Decades</SelectItem>
+            {decades.map(decade => (
+              <SelectItem key={decade} value={String(decade)}>{decade}s</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="winners" className="space-y-6">
+      <Tabs defaultValue="winners" className="space-y-4">
         <TabsList>
           <TabsTrigger value="winners" className="gap-2">
             <Medal className="h-4 w-4" />
@@ -109,34 +295,53 @@ const Medals = () => {
 
         <TabsContent value="winners">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <Medal className="h-5 w-5" />
-                All Medal Winners ({medals?.length || 0})
+                Medal Winners ({filteredMedals?.length || 0})
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-[600px] overflow-y-auto">
-              <div className="space-y-2">
-                {medals?.map((m) => (
-                  <div key={m.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                    <div className="min-w-0 flex-1">
-                      <p className="font-medium truncate">{m.athlete_or_team}</p>
-                      <p className="text-sm text-muted-foreground truncate">
-                        {m.sport_std} {m.event_raw && `- ${m.event_raw}`}
-                      </p>
+            <CardContent>
+              <div className="grid gap-2 max-h-[500px] overflow-y-auto">
+                {filteredMedals?.map((m) => (
+                  <div 
+                    key={m.id} 
+                    className="group flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/60 transition-all hover:shadow-sm border border-transparent hover:border-border"
+                  >
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className={`p-2 rounded-full transition-transform group-hover:scale-110 ${
+                        m.medal === "Gold" ? "bg-yellow-500/20" : 
+                        m.medal === "Silver" ? "bg-gray-400/20" : 
+                        "bg-amber-700/20"
+                      }`}>
+                        <Trophy className={`h-4 w-4 ${
+                          m.medal === "Gold" ? "text-yellow-500" : 
+                          m.medal === "Silver" ? "text-gray-400" : 
+                          "text-amber-700"
+                        }`} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{m.athlete_or_team}</p>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {m.sport_std} {m.event_raw && `• ${m.event_raw}`}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0 ml-4">
                       <Badge className={
-                        m.medal === "Gold" ? "medal-gold" : 
-                        m.medal === "Silver" ? "medal-silver" : 
-                        "medal-bronze"
+                        m.medal === "Gold" ? "bg-yellow-500 hover:bg-yellow-500/90 text-black" : 
+                        m.medal === "Silver" ? "bg-gray-400 hover:bg-gray-400/90 text-black" : 
+                        "bg-amber-700 hover:bg-amber-700/90 text-white"
                       }>
                         {m.medal}
                       </Badge>
-                      <span className="text-sm font-medium w-12 text-right">{m.year}</span>
+                      <span className="text-sm font-medium tabular-nums">{m.year}</span>
                     </div>
                   </div>
                 ))}
+                {(!filteredMedals || filteredMedals.length === 0) && (
+                  <p className="text-muted-foreground text-center py-8">No medals found</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -144,32 +349,47 @@ const Medals = () => {
 
         <TabsContent value="milestones">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <TrendingUp className="h-5 w-5" />
                 Historical Milestones
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-[600px] overflow-y-auto">
-              <div className="space-y-4">
-                {timeline?.map((t) => (
-                  <div key={t.id} className="p-4 rounded-lg border hover:border-primary/50 transition-colors">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <p className="font-medium">{t.milestone_title}</p>
-                        {t.milestone_description && (
-                          <p className="text-sm text-muted-foreground mt-1">{t.milestone_description}</p>
-                        )}
+            <CardContent>
+              <div className="relative max-h-[500px] overflow-y-auto">
+                {/* Timeline line */}
+                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-border" />
+                
+                <div className="space-y-4 pl-10">
+                  {timeline?.map((t) => (
+                    <div key={t.id} className="relative group">
+                      {/* Timeline dot */}
+                      <div className="absolute -left-[26px] top-2 w-3 h-3 rounded-full bg-primary border-2 border-background group-hover:scale-125 transition-transform" />
+                      
+                      <div className="p-4 rounded-lg border bg-card hover:shadow-md transition-all">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <p className="font-medium">{t.milestone_title}</p>
+                            {t.milestone_description && (
+                              <p className="text-sm text-muted-foreground mt-1">{t.milestone_description}</p>
+                            )}
+                            {t.sport_std && (
+                              <Badge variant="outline" className="mt-2 text-xs">{t.sport_std}</Badge>
+                            )}
+                          </div>
+                          {t.year_start && (
+                            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 flex-shrink-0">
+                              {t.year_start}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      {t.year_start && (
-                        <Badge variant="outline" className="flex-shrink-0">{t.year_start}</Badge>
-                      )}
                     </div>
-                  </div>
-                ))}
-                {(!timeline || timeline.length === 0) && (
-                  <p className="text-muted-foreground text-center py-8">No milestones recorded</p>
-                )}
+                  ))}
+                  {(!timeline || timeline.length === 0) && (
+                    <p className="text-muted-foreground text-center py-8">No milestones recorded</p>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
