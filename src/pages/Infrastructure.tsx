@@ -28,6 +28,7 @@ const Infrastructure = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [stateFilter, setStateFilter] = useState<string>("all");
   const [sportFilter, setSportFilter] = useState<string>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("all");
   const [selectedCentre, setSelectedCentre] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -236,6 +237,13 @@ const Infrastructure = () => {
       .slice(0, 10);
   }, [centres]);
 
+  // Get unique regions
+  const regions = useMemo(() => {
+    if (!centres) return [];
+    const regionSet = new Set(centres.map(c => c.region_unit).filter(Boolean));
+    return Array.from(regionSet).sort();
+  }, [centres]);
+
   // Get centre IDs for selected sport
   const sportCentreIds = sportFilter !== "all" && centreSportLinks
     ? new Set(centreSportLinks.filter(l => l.sport_id === sportFilter).map(l => l.centre_id))
@@ -250,9 +258,10 @@ const Infrastructure = () => {
       const matchesType = activeTab === "all" || centre.centre_type === activeTab;
       const matchesState = stateFilter === "all" || centre.state === stateFilter;
       const matchesSport = !sportCentreIds || sportCentreIds.has(centre.centre_id);
-      return matchesSearch && matchesType && matchesState && matchesSport;
+      const matchesRegion = regionFilter === "all" || centre.region_unit === regionFilter;
+      return matchesSearch && matchesType && matchesState && matchesSport && matchesRegion;
     }) || [];
-  }, [centres, searchTerm, activeTab, stateFilter, sportCentreIds]);
+  }, [centres, searchTerm, activeTab, stateFilter, sportCentreIds, regionFilter]);
 
   const centreTypeColors: Record<string, string> = {
     NCOE: "bg-saffron text-white",
@@ -265,9 +274,10 @@ const Infrastructure = () => {
     setSearchTerm("");
     setStateFilter("all");
     setSportFilter("all");
+    setRegionFilter("all");
   };
 
-  const hasActiveFilters = searchTerm || stateFilter !== "all" || sportFilter !== "all";
+  const hasActiveFilters = searchTerm || stateFilter !== "all" || sportFilter !== "all" || regionFilter !== "all";
 
   const handleCentreClick = (centre: any) => {
     // Only show dialog for NCOE and STC centres (which have capacity data)
@@ -452,7 +462,7 @@ const Infrastructure = () => {
           </div>
           
           <Select value={sportFilter} onValueChange={setSportFilter}>
-            <SelectTrigger className="w-full md:w-56">
+            <SelectTrigger className="w-full md:w-48">
               <Target className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Filter by Sport" />
             </SelectTrigger>
@@ -460,6 +470,19 @@ const Infrastructure = () => {
               <SelectItem value="all">All Sports</SelectItem>
               {sports?.map((sport) => (
                 <SelectItem key={sport.sport_id} value={sport.sport_id}>{sport.sport_name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select value={regionFilter} onValueChange={setRegionFilter}>
+            <SelectTrigger className="w-full md:w-48">
+              <Building2 className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Filter by Region" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Regions</SelectItem>
+              {regions.map((region) => (
+                <SelectItem key={region} value={region}>{region}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -495,6 +518,12 @@ const Infrastructure = () => {
               <Badge variant="secondary" className="gap-1">
                 Sport: {sports?.find(s => s.sport_id === sportFilter)?.sport_name}
                 <button onClick={() => setSportFilter("all")} className="ml-1 hover:text-destructive">&times;</button>
+              </Badge>
+            )}
+            {regionFilter !== "all" && (
+              <Badge variant="secondary" className="gap-1">
+                Region: {regionFilter}
+                <button onClick={() => setRegionFilter("all")} className="ml-1 hover:text-destructive">&times;</button>
               </Badge>
             )}
             {searchTerm && (

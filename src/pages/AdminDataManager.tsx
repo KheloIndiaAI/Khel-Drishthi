@@ -203,7 +203,7 @@ const AdminDataManager = () => {
   }
 
   const tableConfig = TABLES.find(t => t.name === activeTable);
-  const columns = data.length > 0 ? Object.keys(data[0]).slice(0, 8) : [];
+  const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
   return (
     <DashboardLayout>
@@ -241,12 +241,12 @@ const AdminDataManager = () => {
                 {tableLoading ? (
                   <p className="text-muted-foreground">Loading...</p>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
+                  <div className="overflow-x-auto max-w-full">
+                    <Table className="min-w-max">
                       <TableHeader>
                         <TableRow>
                           {columns.map(col => (
-                            <TableHead key={col} className="whitespace-nowrap">
+                            <TableHead key={col} className="whitespace-nowrap min-w-[120px] max-w-[200px]">
                               {col.replace(/_/g, ' ')}
                               {tableConfig?.editable.includes(col) && <Edit2 className="inline ml-1 h-3 w-3 text-primary" />}
                             </TableHead>
@@ -262,7 +262,7 @@ const AdminDataManager = () => {
                           return (
                             <TableRow key={rowId}>
                               {columns.map(col => (
-                                <TableCell key={col} className="max-w-[200px] truncate">
+                                <TableCell key={col} className="min-w-[120px] max-w-[250px]">
                                   {isEditing && tableConfig?.editable.includes(col) ? (
                                     <Input
                                       value={String(editedData[col] ?? '')}
@@ -270,7 +270,9 @@ const AdminDataManager = () => {
                                       className="h-8 w-full"
                                     />
                                   ) : (
-                                    String(row[col] ?? '-')
+                                    <span className="block truncate" title={String(row[col] ?? '-')}>
+                                      {String(row[col] ?? '-')}
+                                    </span>
                                   )}
                                 </TableCell>
                               ))}

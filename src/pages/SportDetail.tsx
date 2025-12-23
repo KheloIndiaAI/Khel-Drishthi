@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 import { 
   ArrowLeft, 
   Trophy, 
@@ -24,11 +30,19 @@ import {
   Clock,
   HelpCircle,
   AlertTriangle,
-  Info
+  Info,
+  Edit2,
+  Pin,
+  PinOff
 } from "lucide-react";
 
 const SportDetail = () => {
   const { sportId } = useParams<{ sportId: string }>();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [editingNote, setEditingNote] = useState<any>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editForm, setEditForm] = useState({ title: "", content: "", note_type: "" });
 
   // Fetch sport details
   const { data: sport, isLoading: sportLoading } = useQuery({
@@ -153,6 +167,7 @@ const SportDetail = () => {
         .from("sport_notes")
         .select("*")
         .eq("sport_id", sportId!)
+        .order("is_pinned", { ascending: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -243,6 +258,55 @@ const SportDetail = () => {
   const nisStatus = getNisDiplomaStatus();
   const asmitaStatus = getAsmitaStatus();
   const categoryStatus = getCategoryStatus();
+
+  const handleEditNote = (note: any) => {
+    setEditingNote(note);
+    setEditForm({
+      title: note.title,
+      content: note.content,
+      note_type: note.note_type
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveNote = async () => {
+    if (!editingNote) return;
+    
+    try {
+      const { error } = await supabase
+        .from("sport_notes")
+        .update({
+          title: editForm.title,
+          content: editForm.content,
+          note_type: editForm.note_type,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", editingNote.id);
+
+      if (error) throw error;
+
+      toast({ title: "Note updated successfully" });
+      setEditDialogOpen(false);
+      setEditingNote(null);
+      queryClient.invalidateQueries({ queryKey: ["sport-notes", sportId] });
+    } catch (error) {
+      toast({ title: "Failed to update note", variant: "destructive" });
+    }
+  };
+
+  const handleTogglePin = async (note: any) => {
+    try {
+      const { error } = await supabase
+        .from("sport_notes")
+        .update({ is_pinned: !note.is_pinned })
+        .eq("id", note.id);
+
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["sport-notes", sportId] });
+    } catch (error) {
+      toast({ title: "Failed to update pin status", variant: "destructive" });
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -826,14 +890,49 @@ const SportDetail = () => {
             </CardHeader>
             <CardContent>
               {notes && notes.length > 0 ? (
-                <div className="space-y-2 max-h-48 overflow-y-auto">
+                <div className="space-y-2 max-h-64 overflow-y-auto">
                   {notes.map((note) => (
-                    <div key={note.id} className="p-2 rounded border text-sm">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="font-medium truncate">{note.title}</span>
-                        <Badge variant="outline" className="text-xs">{note.note_type}</Badge>
+                    <div 
+                      key={note.id} 
+                      className={`p-3 rounded-lg border text-sm group hover:shadow-sm transition-all ${
+                        note.is_pinned ? 'bg-primary/5 border-primary/30' : 'hover:bg-muted/50'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          {note.is_pinned && <Pin className="h-3 w-3 text-primary flex-shrink-0" />}
+                          <span className="font-medium truncate">{note.title}</span>
+                        </div>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => handleTogglePin(note)}
+                          >
+                            {note.is_pinned ? (
+                              <PinOff className="h-3 w-3" />
+                            ) : (
+                              <Pin className="h-3 w-3" />
+                            )}
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => handleEditNote(note)}
+                          >
+                            <Edit2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2">{note.content}</p>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <Badge variant="outline" className="text-[10px]">{note.note_type}</Badge>
+                        {note.created_by_name && (
+                          <span className="text-[10px] text-muted-foreground">by {note.created_by_name}</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-3">{note.content}</p>
                     </div>
                   ))}
                 </div>
@@ -844,6 +943,49 @@ const SportDetail = () => {
           </Card>
         </div>
       </div>
+      {/* Edit Note Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Note</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Title</label>
+              <Input 
+                value={editForm.title}
+                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Type</label>
+              <Select value={editForm.note_type} onValueChange={(v) => setEditForm({ ...editForm, note_type: v })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="General">General</SelectItem>
+                  <SelectItem value="Strategy">Strategy</SelectItem>
+                  <SelectItem value="Update">Update</SelectItem>
+                  <SelectItem value="Issue">Issue</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Content</label>
+              <Textarea 
+                value={editForm.content}
+                onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
+                rows={4}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleSaveNote}>Save Changes</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
     </TooltipProvider>
   );

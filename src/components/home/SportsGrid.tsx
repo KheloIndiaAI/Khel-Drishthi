@@ -136,12 +136,12 @@ const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
   const readiness = capacity > 0 ? Math.round((athletes / capacity) * 100) : 0;
 
   const sizeClasses = {
-    large: "min-w-[280px] md:min-w-[300px] p-5",
-    medium: "min-w-[240px] md:min-w-[260px] p-4",
-    small: "min-w-[180px] md:min-w-[200px] p-3",
+    large: "min-w-[260px] md:min-w-[280px] p-4",
+    medium: "min-w-[220px] md:min-w-[240px] p-3",
+    small: "min-w-[160px] md:min-w-[180px] p-2.5",
   };
 
-  // Build centre breakdown string
+  // Build centre breakdown for tooltip
   const centreBreakdown = [
     ncoe > 0 && `${ncoe} NCOE`,
     stc > 0 && `${stc} STC`,
@@ -149,91 +149,125 @@ const SportCard = ({ sport, size, index, isGap }: SportCardProps) => {
     kisce > 0 && `${kisce} KISCE`,
   ].filter(Boolean).join(" • ");
 
+  const getReadinessColor = (pct: number) => {
+    if (pct >= 80) return "text-india-green";
+    if (pct >= 50) return "text-saffron";
+    return "text-muted-foreground";
+  };
+
   return (
     <Link
       to={`/sport/${sport.sport_id}`}
       className={cn(
         "group relative overflow-hidden rounded-xl bg-card shadow-sm border border-border/50",
         "transition-all duration-300 ease-out",
-        "hover:shadow-lg hover:-translate-y-1",
+        "hover:shadow-lg hover:-translate-y-1 hover:border-primary/30",
         isGap && "border-l-4 border-l-amber-500 bg-amber-50/50 dark:bg-amber-950/20",
         sizeClasses[size],
         "animate-fade-in flex-shrink-0"
       )}
       style={{ animationDelay: `${Math.min(index, 20) * 40}ms` }}
     >
-      {/* Priority Badges */}
-      <div className="absolute top-2 right-2 flex gap-1">
-        {sport.is_tops && <PriorityBadge type="tops" />}
-        {sport.is_tagg && <PriorityBadge type="tagg" />}
-        {sport.is_teams && <PriorityBadge type="teams" />}
+      {/* Top row: Games dots + Priority Badges */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex gap-1">
+          {sport.present_la28 && (
+            <div className="h-2 w-2 rounded-full bg-saffron" title="LA 2028" />
+          )}
+          {sport.present_ag2026 && (
+            <div className="h-2 w-2 rounded-full bg-india-green" title="AG 2026" />
+          )}
+        </div>
+        <div className="flex gap-1">
+          {sport.is_tops && <PriorityBadge type="tops" />}
+          {sport.is_tagg && <PriorityBadge type="tagg" />}
+          {sport.is_teams && <PriorityBadge type="teams" />}
+        </div>
       </div>
 
-      {/* Games indicators */}
-      <div className="absolute top-2 left-2 flex gap-1">
-        {sport.present_la28 && (
-          <div className="h-2.5 w-2.5 rounded-full bg-saffron" title="LA 2028" />
-        )}
-        {sport.present_ag2026 && (
-          <div className="h-2.5 w-2.5 rounded-full bg-india-green" title="AG 2026" />
-        )}
-      </div>
-
-      {/* Icon */}
-      <div className="mt-5 mb-3">
+      {/* Icon + Name row */}
+      <div className="flex items-start gap-2.5 mb-3">
         {(() => {
           const SportIcon = getSportIcon(sport.sport_name);
           return (
             <div className={cn(
-              "mb-3 flex items-center justify-center rounded-xl",
+              "flex items-center justify-center rounded-lg flex-shrink-0",
               "bg-gradient-to-br from-saffron/10 to-saffron/5 border border-saffron/20",
-              size === "large" ? "h-12 w-12" : size === "medium" ? "h-10 w-10" : "h-8 w-8",
+              size === "large" ? "h-10 w-10" : size === "medium" ? "h-9 w-9" : "h-7 w-7",
             )}>
               <SportIcon className={cn(
                 "text-saffron", 
-                size === "large" ? "h-6 w-6" : size === "medium" ? "h-5 w-5" : "h-4 w-4"
+                size === "large" ? "h-5 w-5" : size === "medium" ? "h-4 w-4" : "h-3.5 w-3.5"
               )} />
             </div>
           );
         })()}
         
-        {/* Sport Name - uppercase, bold */}
-        <h4 className={cn(
-          "font-bold uppercase tracking-wide line-clamp-2 group-hover:text-saffron transition-colors leading-tight text-foreground",
-          size === "large" ? "text-sm" : size === "medium" ? "text-xs" : "text-[11px]"
-        )}>
-          {sport.sport_name}
-        </h4>
-      </div>
-
-      {/* Events row */}
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
-        <Trophy className="h-3 w-3 flex-shrink-0" />
-        <span className="font-medium">LA28: {sport.la28_events || 0}</span>
-        <span className="text-border/60">|</span>
-        <span className="font-medium">AG26: {sport.ag2026_events || 0}</span>
-      </div>
-
-      {/* Centres row with breakdown */}
-      <div className="flex items-start gap-1.5 text-xs text-muted-foreground mb-2">
-        <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" />
-        <div>
-          <span className="font-medium">{totalCentres} centres</span>
-          {(size === "large" || size === "medium") && centreBreakdown && (
-            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
-              {centreBreakdown}
-            </p>
-          )}
+        <div className="min-w-0 flex-1">
+          <h4 className={cn(
+            "font-bold uppercase tracking-wide line-clamp-2 group-hover:text-saffron transition-colors leading-tight text-foreground",
+            size === "large" ? "text-sm" : size === "medium" ? "text-xs" : "text-[11px]"
+          )}>
+            {sport.sport_name}
+          </h4>
         </div>
       </div>
 
-      {/* Athletes / Capacity */}
-      {(size === "large" || size === "medium") && (
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Users className="h-3 w-3 flex-shrink-0" />
-          <span className="font-medium">
-            {athletes.toLocaleString()} / {capacity.toLocaleString()} capacity
+      {/* Stats Grid - compact 2-column layout */}
+      <div className={cn(
+        "grid gap-x-3 gap-y-1.5",
+        size === "small" ? "grid-cols-1" : "grid-cols-2"
+      )}>
+        {/* Events */}
+        <div className="flex items-center gap-1.5">
+          <Trophy className="h-3 w-3 text-saffron flex-shrink-0" />
+          <span className="text-[10px] text-muted-foreground">
+            <span className="font-semibold text-foreground">{sport.la28_events || 0}</span> LA28
           </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Trophy className="h-3 w-3 text-india-green flex-shrink-0" />
+          <span className="text-[10px] text-muted-foreground">
+            <span className="font-semibold text-foreground">{sport.ag2026_events || 0}</span> AG26
+          </span>
+        </div>
+
+        {/* Centres */}
+        <div className="flex items-center gap-1.5" title={centreBreakdown || undefined}>
+          <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+          <span className="text-[10px] text-muted-foreground">
+            <span className="font-semibold text-foreground">{totalCentres}</span> centres
+          </span>
+        </div>
+
+        {/* Readiness (capacity utilization) */}
+        {size !== "small" && capacity > 0 && (
+          <div className="flex items-center gap-1.5">
+            <Users className="h-3 w-3 flex-shrink-0 text-muted-foreground" />
+            <span className={cn("text-[10px] font-semibold", getReadinessColor(readiness))}>
+              {readiness}%
+            </span>
+            <span className="text-[10px] text-muted-foreground">filled</span>
+          </div>
+        )}
+      </div>
+
+      {/* Capacity bar for large cards */}
+      {size === "large" && capacity > 0 && (
+        <div className="mt-3 pt-2 border-t border-border/50">
+          <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-1">
+            <span>Athletes: {athletes.toLocaleString()}</span>
+            <span>/ {capacity.toLocaleString()}</span>
+          </div>
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+            <div 
+              className={cn(
+                "h-full rounded-full transition-all",
+                readiness >= 80 ? "bg-india-green" : readiness >= 50 ? "bg-saffron" : "bg-primary"
+              )}
+              style={{ width: `${Math.min(readiness, 100)}%` }}
+            />
+          </div>
         </div>
       )}
     </Link>
