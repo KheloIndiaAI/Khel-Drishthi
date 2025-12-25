@@ -18,6 +18,7 @@ import UserManagement from "./pages/UserManagement";
 import FirstAdminSetup from "./pages/FirstAdminSetup";
 import Auth from "./pages/Auth";
 import ImportData from "./pages/ImportData";
+import SchemaDocumentation from "./pages/SchemaDocumentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/setup" element={<FirstAdminSetup />} />
             <Route path="/import" element={<ImportData />} />
+            <Route path="/schema" element={<SchemaDocumentation />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
