@@ -12,6 +12,7 @@ import {
   PieChart, Pie, Cell, Legend 
 } from "recharts";
 import { Users, Building2, MapPin, TrendingUp } from "lucide-react";
+import PageSEO, { capacityPageSchema } from "@/components/seo/PageSEO";
 
 const COLORS = ["#FF9933", "#138808", "#000080", "#9333ea"];
 
@@ -110,6 +111,14 @@ const Capacity = () => {
 
   return (
     <DashboardLayout>
+      <PageSEO
+        title="Capacity Analytics - Training Center Utilization"
+        description="Analysis of athlete training capacity across NCOE and STC centers in India. View sanctioned vs existing capacity, gender distribution, and state-wise breakdown."
+        canonicalPath="/capacity"
+        keywords={["Athlete Capacity", "NCOE Utilization", "STC Centers", "Sports Training India", "Residential Training"]}
+        jsonLd={capacityPageSchema}
+      />
+      
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <h1 className="font-display text-4xl md:text-5xl">Capacity Analytics</h1>
