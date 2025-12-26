@@ -5,7 +5,7 @@ import HeroSection from "@/components/home/HeroSection";
 import SportsGrid from "@/components/home/SportsGrid";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 import { Skeleton } from "@/components/ui/skeleton";
-import PageSEO, { homePageSchema } from "@/components/seo/PageSEO";
+import PageSEO, { homePageSchema, homeBreadcrumbs } from "@/components/seo/PageSEO";
 
 const Home = () => {
   // Fetch sports
@@ -29,6 +29,7 @@ const Home = () => {
         canonicalPath="/"
         keywords={["LA 2028", "Asian Games 2026", "Indian Athletes", "Olympic Medal Tracker", "Sports Dashboard"]}
         jsonLd={homePageSchema}
+        breadcrumbs={homeBreadcrumbs}
       />
       
       {/* Hero Section with Mission, Countdown, KPIs and CTAs */}

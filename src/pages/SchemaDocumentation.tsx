@@ -2,6 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Download, Database, Link2, Users, Trophy, Building2, FileText } from "lucide-react";
+import PageSEO, { schemaBreadcrumbs } from "@/components/seo/PageSEO";
+
+const schemaPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Khel Drishti Database Schema Documentation",
+  "description": "Technical documentation of the Khel Drishti database schema including tables for sports, training centers, medals, capacity, and user management.",
+  "url": "https://kheldrishti.com/schema",
+  "author": {
+    "@type": "Organization",
+    "name": "Khel Drishti"
+  },
+  "about": {
+    "@type": "SoftwareSourceCode",
+    "name": "Khel Drishti Database",
+    "programmingLanguage": "SQL",
+    "runtimePlatform": "PostgreSQL"
+  }
+};
 
 const SchemaDocumentation = () => {
   const handleExportPDF = () => {
@@ -75,6 +94,15 @@ const SchemaDocumentation = () => {
 
   return (
     <div className="min-h-screen bg-background p-8 print:p-4 print:bg-white">
+      <PageSEO
+        title="Schema Documentation - Database Structure"
+        description="Technical documentation of the Khel Drishti database schema including tables for sports, training centers, medals, capacity, and user management."
+        canonicalPath="/schema"
+        keywords={["Database Schema", "API Documentation", "Data Structure", "Sports Database"]}
+        jsonLd={schemaPageJsonLd}
+        breadcrumbs={schemaBreadcrumbs}
+      />
+      
       {/* Print Styles */}
       <style>{`
         @media print {

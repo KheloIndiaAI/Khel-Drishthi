@@ -12,7 +12,7 @@ import {
   PieChart, Pie, Cell, Legend 
 } from "recharts";
 import { Users, Building2, MapPin, TrendingUp } from "lucide-react";
-import PageSEO, { capacityPageSchema } from "@/components/seo/PageSEO";
+import PageSEO, { capacityPageSchema, capacityBreadcrumbs } from "@/components/seo/PageSEO";
 
 const COLORS = ["#FF9933", "#138808", "#000080", "#9333ea"];
 
@@ -117,6 +117,7 @@ const Capacity = () => {
         canonicalPath="/capacity"
         keywords={["Athlete Capacity", "NCOE Utilization", "STC Centers", "Sports Training India", "Residential Training"]}
         jsonLd={capacityPageSchema}
+        breadcrumbs={capacityBreadcrumbs}
       />
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
