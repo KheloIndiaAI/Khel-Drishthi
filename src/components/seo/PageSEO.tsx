@@ -1,21 +1,41 @@
 import { Helmet } from "react-helmet-async";
 
+const BASE_URL = "https://kheldrishti.com";
+
+// Breadcrumb item type
+export interface BreadcrumbItem {
+  name: string;
+  path: string;
+}
+
 interface PageSEOProps {
   title: string;
   description: string;
   canonicalPath?: string;
   jsonLd?: object;
   keywords?: string[];
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const BASE_URL = "https://kheldrishti.com";
+// Generate BreadcrumbList JSON-LD schema
+export const generateBreadcrumbSchema = (breadcrumbs: BreadcrumbItem[]) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.name,
+    "item": `${BASE_URL}${item.path}`
+  }))
+});
 
 export const PageSEO = ({ 
   title, 
   description, 
   canonicalPath = "/", 
   jsonLd,
-  keywords = []
+  keywords = [],
+  breadcrumbs
 }: PageSEOProps) => {
   const fullTitle = title.includes("Khel Drishti") ? title : `${title} | Khel Drishti`;
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
@@ -28,6 +48,12 @@ export const PageSEO = ({
   ];
   
   const allKeywords = [...new Set([...keywords, ...defaultKeywords])].join(", ");
+
+  // Generate breadcrumb schema if breadcrumbs provided
+  const breadcrumbSchema = breadcrumbs ? generateBreadcrumbSchema(breadcrumbs) : null;
+
+  // Combine all schemas into an array for multiple JSON-LD blocks
+  const schemas = [jsonLd, breadcrumbSchema].filter(Boolean);
 
   return (
     <Helmet>
@@ -50,15 +76,46 @@ export const PageSEO = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={`${BASE_URL}/favicon.png`} />
       
-      {/* JSON-LD Structured Data */}
-      {jsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
+      {/* JSON-LD Structured Data - inject each schema separately */}
+      {schemas.map((schema, index) => (
+        <script key={index} type="application/ld+json">
+          {JSON.stringify(schema)}
         </script>
-      )}
+      ))}
     </Helmet>
   );
 };
+
+// Pre-defined breadcrumb configurations
+export const homeBreadcrumbs: BreadcrumbItem[] = [
+  { name: "Home", path: "/" }
+];
+
+export const infrastructureBreadcrumbs: BreadcrumbItem[] = [
+  { name: "Home", path: "/" },
+  { name: "Infrastructure", path: "/infrastructure" }
+];
+
+export const medalsBreadcrumbs: BreadcrumbItem[] = [
+  { name: "Home", path: "/" },
+  { name: "Olympic Medals", path: "/medals" }
+];
+
+export const capacityBreadcrumbs: BreadcrumbItem[] = [
+  { name: "Home", path: "/" },
+  { name: "Capacity Analytics", path: "/capacity" }
+];
+
+export const schemaBreadcrumbs: BreadcrumbItem[] = [
+  { name: "Home", path: "/" },
+  { name: "Schema Documentation", path: "/schema" }
+];
+
+export const sportDetailBreadcrumbs = (sportName: string, sportId: string): BreadcrumbItem[] => [
+  { name: "Home", path: "/" },
+  { name: "Sports", path: "/#sports" },
+  { name: sportName, path: `/sport/${sportId}` }
+];
 
 // Pre-defined JSON-LD schemas for each page
 export const homePageSchema = {

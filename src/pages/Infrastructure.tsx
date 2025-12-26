@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CentreDetailDialog } from "@/components/infrastructure/CentreDetailDialog";
-import PageSEO, { infrastructurePageSchema } from "@/components/seo/PageSEO";
+import PageSEO, { infrastructurePageSchema, infrastructureBreadcrumbs } from "@/components/seo/PageSEO";
 
 const Infrastructure = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -376,6 +376,7 @@ const Infrastructure = () => {
         canonicalPath="/infrastructure"
         keywords={["NCOE Centers", "STC Training", "KIC Centers", "KISCE", "Sports Authority of India", "Training Facilities"]}
         jsonLd={infrastructurePageSchema}
+        breadcrumbs={infrastructureBreadcrumbs}
       />
       
       {/* Header */}

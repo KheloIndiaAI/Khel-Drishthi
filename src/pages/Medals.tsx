@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Medal, Clock, TrendingUp, Trophy, Filter } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
-import PageSEO, { medalsPageSchema } from "@/components/seo/PageSEO";
+import PageSEO, { medalsPageSchema, medalsBreadcrumbs } from "@/components/seo/PageSEO";
 
 const Medals = () => {
   const [sportFilter, setSportFilter] = useState<string>("all");
@@ -96,6 +96,7 @@ const Medals = () => {
         canonicalPath="/medals"
         keywords={["Olympic Gold India", "Indian Medal Winners", "Neeraj Chopra", "PV Sindhu", "Hockey Gold", "Asian Games Medals"]}
         jsonLd={medalsPageSchema}
+        breadcrumbs={medalsBreadcrumbs}
       />
       
       <div className="mb-6">
