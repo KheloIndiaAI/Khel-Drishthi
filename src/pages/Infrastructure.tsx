@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CentreDetailDialog } from "@/components/infrastructure/CentreDetailDialog";
+import PageSEO, { infrastructurePageSchema } from "@/components/seo/PageSEO";
 
 const Infrastructure = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -369,6 +370,14 @@ const Infrastructure = () => {
 
   return (
     <DashboardLayout>
+      <PageSEO
+        title="Infrastructure - Sports Training Centers"
+        description="Explore 400+ sports training centers across India including NCOE, STC, KIC, and KISCE facilities. Filter by state, sport, and center type."
+        canonicalPath="/infrastructure"
+        keywords={["NCOE Centers", "STC Training", "KIC Centers", "KISCE", "Sports Authority of India", "Training Facilities"]}
+        jsonLd={infrastructurePageSchema}
+      />
+      
       {/* Header */}
       <div className="mb-6">
         <h1 className="font-display text-4xl md:text-5xl mb-2">Infrastructure</h1>

@@ -5,6 +5,7 @@ import HeroSection from "@/components/home/HeroSection";
 import SportsGrid from "@/components/home/SportsGrid";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 import { Skeleton } from "@/components/ui/skeleton";
+import PageSEO, { homePageSchema } from "@/components/seo/PageSEO";
 
 const Home = () => {
   // Fetch sports
@@ -22,6 +23,14 @@ const Home = () => {
 
   return (
     <DashboardLayout>
+      <PageSEO
+        title="Khel Drishti - India Sports Analytics Dashboard"
+        description="India's comprehensive sports analytics platform tracking 50+ sports, 400+ training centers, Olympic medals, and athlete development for LA 2028 and Asian Games 2026."
+        canonicalPath="/"
+        keywords={["LA 2028", "Asian Games 2026", "Indian Athletes", "Olympic Medal Tracker", "Sports Dashboard"]}
+        jsonLd={homePageSchema}
+      />
+      
       {/* Hero Section with Mission, Countdown, KPIs and CTAs */}
       <HeroSection />
 
