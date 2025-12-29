@@ -8,7 +8,8 @@ import {
   Medal, 
   Settings,
   Menu,
-  X
+  X,
+  MapPin
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ interface DashboardLayoutProps {
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/infrastructure", label: "Infrastructure", icon: Building2 },
+  { path: "/geographic", label: "Geographic", icon: MapPin },
   { path: "/capacity", label: "Capacity", icon: BarChart3 },
   { path: "/medals", label: "Medals", icon: Medal },
   { path: "/admin", label: "Admin", icon: Settings },
