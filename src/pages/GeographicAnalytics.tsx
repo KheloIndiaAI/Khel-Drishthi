@@ -24,7 +24,8 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
-  Activity
+  Activity,
+  Globe
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -47,6 +48,7 @@ import {
   Treemap
 } from "recharts";
 import PageSEO from "@/components/seo/PageSEO";
+import IndiaMap from "@/components/geographic/IndiaMap";
 
 const COLORS = {
   NCOE: "#FF9933",
@@ -65,7 +67,7 @@ const GeographicAnalytics = () => {
   const [selectedCentreType, setSelectedCentreType] = useState<string>("all");
   const [selectedSport, setSelectedSport] = useState<string>("all");
   const [showAllStates, setShowAllStates] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("map");
 
   // Fetch centres
   const { data: centres, isLoading: centresLoading } = useQuery({
@@ -477,7 +479,11 @@ const GeographicAnalytics = () => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+          <TabsTrigger value="map" className="gap-2">
+            <Globe className="h-4 w-4" />
+            Map
+          </TabsTrigger>
           <TabsTrigger value="overview" className="gap-2">
             <BarChart3 className="h-4 w-4" />
             Overview
@@ -495,6 +501,49 @@ const GeographicAnalytics = () => {
             Events
           </TabsTrigger>
         </TabsList>
+
+        {/* Map Tab */}
+        <TabsContent value="map" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Interactive Infrastructure Map
+              </CardTitle>
+              <CardDescription>
+                Training centre locations across India. Click on markers for details.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <IndiaMap
+                centres={centres || []}
+                centreSportLinks={centreSportLinks || []}
+                selectedState={selectedState}
+                selectedCentreType={selectedCentreType}
+                selectedSport={selectedSport === "all" ? undefined : sports?.find(s => s.sport_id === selectedSport)?.sport_name}
+              />
+            </CardContent>
+          </Card>
+          
+          {/* Quick stats below map */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stateAnalytics.slice(0, 4).map((state) => (
+              <Card key={state.state} className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => setSelectedState(state.state)}>
+                <CardContent className="pt-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-sm">{state.state}</span>
+                    <Badge variant="secondary">{state.total}</Badge>
+                  </div>
+                  <div className="flex gap-1">
+                    {state.NCOE > 0 && <Badge className="text-[10px] px-1" style={{ backgroundColor: COLORS.NCOE }}>NCOE: {state.NCOE}</Badge>}
+                    {state.STC > 0 && <Badge className="text-[10px] px-1" style={{ backgroundColor: COLORS.STC }}>STC: {state.STC}</Badge>}
+                    {state.KIC > 0 && <Badge className="text-[10px] px-1" style={{ backgroundColor: COLORS.KIC }}>KIC: {state.KIC}</Badge>}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
