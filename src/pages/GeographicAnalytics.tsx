@@ -617,13 +617,14 @@ const GeographicAnalytics = () => {
                 Training centre locations across India. Click on markers for details.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <IndiaMap
                 centres={centres || []}
                 centreSportLinks={centreSportLinks || []}
                 selectedState={selectedState}
                 selectedCentreType={selectedCentreType}
                 selectedSport={selectedSport === "all" ? undefined : sports?.find(s => s.sport_id === selectedSport)?.sport_name}
+                onStateSelect={setSelectedState}
               />
             </CardContent>
           </Card>
