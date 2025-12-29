@@ -25,7 +25,9 @@ import {
   ChevronDown,
   ChevronUp,
   Activity,
-  Globe
+  Globe,
+  Map,
+  Search
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -68,6 +70,7 @@ const GeographicAnalytics = () => {
   const [selectedSport, setSelectedSport] = useState<string>("all");
   const [showAllStates, setShowAllStates] = useState(false);
   const [activeTab, setActiveTab] = useState("map");
+  const [districtSearch, setDistrictSearch] = useState("");
 
   // Fetch centres
   const { data: centres, isLoading: centresLoading } = useQuery({
@@ -305,6 +308,91 @@ const GeographicAnalytics = () => {
     }));
   }, [events]);
 
+  // District-wise analytics
+  const districtAnalytics = useMemo(() => {
+    if (!centres || !centreSportLinks) return [];
+
+    const districtData: Record<string, {
+      district: string;
+      state: string;
+      total: number;
+      NCOE: number;
+      STC: number;
+      KIC: number;
+      KISCE: number;
+      sports: Set<string>;
+      centresList: string[];
+    }> = {};
+
+    centres.forEach(centre => {
+      const districtKey = `${centre.state}|${centre.district || 'Unknown'}`;
+      if (!districtData[districtKey]) {
+        districtData[districtKey] = {
+          district: centre.district || 'Unknown',
+          state: centre.state,
+          total: 0,
+          NCOE: 0,
+          STC: 0,
+          KIC: 0,
+          KISCE: 0,
+          sports: new Set(),
+          centresList: []
+        };
+      }
+      districtData[districtKey].total++;
+      const type = centre.centre_type as 'NCOE' | 'STC' | 'KIC' | 'KISCE';
+      if (districtData[districtKey][type] !== undefined) {
+        districtData[districtKey][type]++;
+      }
+      districtData[districtKey].centresList.push(centre.centre_name);
+    });
+
+    centreSportLinks.forEach(link => {
+      const centre = centres.find(c => c.centre_id === link.centre_id);
+      if (centre && link.sport_name) {
+        const districtKey = `${centre.state}|${centre.district || 'Unknown'}`;
+        districtData[districtKey]?.sports.add(link.sport_name);
+      }
+    });
+
+    return Object.values(districtData)
+      .map(d => ({
+        ...d,
+        sportsCount: d.sports.size,
+        sportsList: Array.from(d.sports)
+      }))
+      .sort((a, b) => b.total - a.total);
+  }, [centres, centreSportLinks]);
+
+  // Filtered district data based on selected state
+  const filteredDistrictData = useMemo(() => {
+    let data = districtAnalytics;
+    
+    if (selectedState !== "all") {
+      data = data.filter(d => d.state === selectedState);
+    }
+    
+    if (selectedCentreType !== "all") {
+      data = data.filter(d => d[selectedCentreType as 'NCOE' | 'STC' | 'KIC' | 'KISCE'] > 0);
+    }
+    
+    return data;
+  }, [districtAnalytics, selectedState, selectedCentreType]);
+
+  // Top districts for chart
+  const topDistrictsForChart = useMemo(() => {
+    return filteredDistrictData.slice(0, 20).map(d => ({
+      name: d.district.length > 15 ? d.district.substring(0, 15) + '...' : d.district,
+      fullName: d.district,
+      state: d.state,
+      NCOE: d.NCOE,
+      STC: d.STC,
+      KIC: d.KIC,
+      KISCE: d.KISCE,
+      total: d.total
+    }));
+  }, [filteredDistrictData]);
+
   // Filtered data
   const filteredStateData = useMemo(() => {
     let data = stateAnalytics;
@@ -322,10 +410,12 @@ const GeographicAnalytics = () => {
     
     const uniqueSportsWithCentres = new Set(centreSportLinks.map(l => l.sport_id)).size;
     const totalEvents = events?.length || 0;
+    const uniqueDistricts = new Set(centres.map(c => `${c.state}|${c.district}`)).size;
     
     return {
       totalCentres: centres.length,
       totalStates: states.length,
+      totalDistricts: uniqueDistricts,
       totalSports: sports.length,
       sportsWithCentres: uniqueSportsWithCentres,
       totalEvents
@@ -374,7 +464,7 @@ const GeographicAnalytics = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
@@ -391,6 +481,15 @@ const GeographicAnalytics = () => {
               <span className="text-xs font-medium">States/UTs</span>
             </div>
             <p className="text-3xl font-display">{summaryStats?.totalStates}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Map className="h-4 w-4" />
+              <span className="text-xs font-medium">Districts</span>
+            </div>
+            <p className="text-3xl font-display">{summaryStats?.totalDistricts}</p>
           </CardContent>
         </Card>
         <Card>
@@ -479,10 +578,14 @@ const GeographicAnalytics = () => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
           <TabsTrigger value="map" className="gap-2">
             <Globe className="h-4 w-4" />
             Map
+          </TabsTrigger>
+          <TabsTrigger value="districts" className="gap-2">
+            <Map className="h-4 w-4" />
+            Districts
           </TabsTrigger>
           <TabsTrigger value="overview" className="gap-2">
             <BarChart3 className="h-4 w-4" />
@@ -543,6 +646,238 @@ const GeographicAnalytics = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Districts Tab */}
+        <TabsContent value="districts" className="space-y-6">
+          {/* District Summary Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Map className="h-4 w-4" />
+                  <span className="text-xs font-medium">Total Districts</span>
+                </div>
+                <p className="text-3xl font-display">{districtAnalytics.length}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Building2 className="h-4 w-4" />
+                  <span className="text-xs font-medium">Avg Centres/District</span>
+                </div>
+                <p className="text-3xl font-display">
+                  {districtAnalytics.length > 0 
+                    ? (centres?.length || 0 / districtAnalytics.length).toFixed(1) 
+                    : 0}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <TrendingUp className="h-4 w-4" />
+                  <span className="text-xs font-medium">Top District</span>
+                </div>
+                <p className="text-lg font-display truncate">{districtAnalytics[0]?.district || '-'}</p>
+                <p className="text-xs text-muted-foreground">{districtAnalytics[0]?.total || 0} centres</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Target className="h-4 w-4" />
+                  <span className="text-xs font-medium">Filtered Districts</span>
+                </div>
+                <p className="text-3xl font-display">{filteredDistrictData.length}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* District-wise Bar Chart */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Top 20 Districts by Centre Count
+                </CardTitle>
+                <CardDescription>
+                  {selectedState !== "all" ? `Districts in ${selectedState}` : "Districts across all states"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={topDistrictsForChart} layout="vertical" margin={{ left: 100 }}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                      <XAxis type="number" />
+                      <YAxis dataKey="name" type="category" width={95} tick={{ fontSize: 10 }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
+                        formatter={(value: number, name: string) => [value, name]}
+                        labelFormatter={(label, payload) => {
+                          const item = payload?.[0]?.payload;
+                          return item ? `${item.fullName}, ${item.state}` : label;
+                        }}
+                      />
+                      <Legend />
+                      <Bar dataKey="NCOE" stackId="a" fill={COLORS.NCOE} name="NCOE" />
+                      <Bar dataKey="STC" stackId="a" fill={COLORS.STC} name="STC" />
+                      <Bar dataKey="KIC" stackId="a" fill={COLORS.KIC} name="KIC" />
+                      <Bar dataKey="KISCE" stackId="a" fill={COLORS.KISCE} name="KISCE" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detailed District Table */}
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Map className="h-5 w-5" />
+                    District-wise Detailed Analysis
+                  </CardTitle>
+                  <CardDescription>Complete breakdown of centres by district</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search district..."
+                      value={districtSearch}
+                      onChange={(e) => setDistrictSearch(e.target.value)}
+                      className="pl-8 h-9 w-[200px] rounded-md border border-input bg-background px-3 py-1 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[500px]">
+                <table className="w-full">
+                  <thead className="sticky top-0 bg-background border-b">
+                    <tr className="text-left text-sm">
+                      <th className="p-2 font-medium">#</th>
+                      <th className="p-2 font-medium">District</th>
+                      <th className="p-2 font-medium">State</th>
+                      <th className="p-2 font-medium text-center">Total</th>
+                      <th className="p-2 font-medium text-center">NCOE</th>
+                      <th className="p-2 font-medium text-center">STC</th>
+                      <th className="p-2 font-medium text-center">KIC</th>
+                      <th className="p-2 font-medium text-center">KISCE</th>
+                      <th className="p-2 font-medium text-center">Sports</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredDistrictData
+                      .filter(d => 
+                        districtSearch === "" || 
+                        d.district.toLowerCase().includes(districtSearch.toLowerCase()) ||
+                        d.state.toLowerCase().includes(districtSearch.toLowerCase())
+                      )
+                      .map((district, idx) => (
+                        <tr key={`${district.state}-${district.district}`} className="border-b hover:bg-muted/50">
+                          <td className="p-2 text-sm text-muted-foreground">{idx + 1}</td>
+                          <td className="p-2">
+                            <div className="font-medium text-sm">{district.district}</div>
+                          </td>
+                          <td className="p-2 text-sm text-muted-foreground">{district.state}</td>
+                          <td className="p-2 text-center">
+                            <Badge variant="secondary" className="font-bold">{district.total}</Badge>
+                          </td>
+                          <td className="p-2 text-center">
+                            {district.NCOE > 0 ? (
+                              <Badge className="text-[10px]" style={{ backgroundColor: COLORS.NCOE }}>{district.NCOE}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">-</span>
+                            )}
+                          </td>
+                          <td className="p-2 text-center">
+                            {district.STC > 0 ? (
+                              <Badge className="text-[10px]" style={{ backgroundColor: COLORS.STC }}>{district.STC}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">-</span>
+                            )}
+                          </td>
+                          <td className="p-2 text-center">
+                            {district.KIC > 0 ? (
+                              <Badge className="text-[10px]" style={{ backgroundColor: COLORS.KIC }}>{district.KIC}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">-</span>
+                            )}
+                          </td>
+                          <td className="p-2 text-center">
+                            {district.KISCE > 0 ? (
+                              <Badge className="text-[10px]" style={{ backgroundColor: COLORS.KISCE }}>{district.KISCE}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">-</span>
+                            )}
+                          </td>
+                          <td className="p-2 text-center">
+                            <span className="text-sm">{district.sportsCount}</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+
+          {/* Sports Coverage by District */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Sports Coverage by District
+              </CardTitle>
+              <CardDescription>Districts with most sports coverage</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDistrictData
+                  .filter(d => d.sportsCount > 0)
+                  .sort((a, b) => b.sportsCount - a.sportsCount)
+                  .slice(0, 9)
+                  .map((district) => (
+                    <Card key={`${district.state}-${district.district}`} className="bg-muted/30">
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <div className="font-medium text-sm">{district.district}</div>
+                            <div className="text-xs text-muted-foreground">{district.state}</div>
+                          </div>
+                          <Badge variant="outline">{district.sportsCount} sports</Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {district.sportsList.slice(0, 5).map(sport => (
+                            <Badge key={sport} variant="secondary" className="text-[10px]">
+                              {sport}
+                            </Badge>
+                          ))}
+                          {district.sportsList.length > 5 && (
+                            <Badge variant="outline" className="text-[10px]">
+                              +{district.sportsList.length - 5} more
+                            </Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Overview Tab */}
