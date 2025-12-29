@@ -19,6 +19,7 @@ import FirstAdminSetup from "./pages/FirstAdminSetup";
 import Auth from "./pages/Auth";
 import ImportData from "./pages/ImportData";
 import SchemaDocumentation from "./pages/SchemaDocumentation";
+import GeographicAnalytics from "./pages/GeographicAnalytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/sport/:sportId" element={<SportDetail />} />
             <Route path="/infrastructure" element={<Infrastructure />} />
             <Route path="/capacity" element={<Capacity />} />
+            <Route path="/geographic" element={<GeographicAnalytics />} />
             <Route path="/medals" element={<Medals />} />
             <Route path="/history" element={<Medals />} />
             <Route path="/admin" element={<Admin />} />
