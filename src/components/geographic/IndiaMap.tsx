@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Filter, Layers, AlertCircle, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Layers, AlertCircle, Loader2, RotateCcw, ZoomIn, ZoomOut, Compass, Eye, EyeOff, Search, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { cn } from '@/lib/utils';
 
 // Indian state coordinates (approximate centers)
 const STATE_COORDINATES: Record<string, [number, number]> = {
@@ -70,6 +69,7 @@ interface IndiaMapProps {
   selectedState?: string;
   selectedCentreType?: string;
   selectedSport?: string;
+  onStateSelect?: (state: string) => void;
 }
 
 const CENTRE_TYPE_COLORS: Record<string, string> = {
@@ -79,12 +79,20 @@ const CENTRE_TYPE_COLORS: Record<string, string> = {
   "KISCE": "#f59e0b",
 };
 
+const CENTRE_TYPE_LABELS: Record<string, string> = {
+  "NCOE": "National Centre of Excellence",
+  "STC": "State Training Centre",
+  "KIC": "Khelo India Centre",
+  "KISCE": "Khelo India State Centre of Excellence",
+};
+
 const IndiaMap: React.FC<IndiaMapProps> = ({
   centres,
   centreSportLinks = [],
   selectedState,
   selectedCentreType,
   selectedSport,
+  onStateSelect,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -95,6 +103,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const [mapboxToken, setMapboxToken] = useState<string | null>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
   const [isLoadingToken, setIsLoadingToken] = useState(true);
+  
+  // Local filter states for the map
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set(['NCOE', 'STC', 'KIC', 'KISCE']));
+  const [showLabels, setShowLabels] = useState(true);
+  const [mapStyle, setMapStyle] = useState<'dark' | 'light' | 'satellite'>('dark');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
 
   // Fetch Mapbox token from edge function
   useEffect(() => {
@@ -117,7 +132,85 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     fetchToken();
   }, []);
 
-  // Filter centres based on selections
+  // Toggle centre type filter
+  const toggleFilter = useCallback((type: string) => {
+    setActiveFilters(prev => {
+      const newFilters = new Set(prev);
+      if (newFilters.has(type)) {
+        newFilters.delete(type);
+      } else {
+        newFilters.add(type);
+      }
+      return newFilters;
+    });
+  }, []);
+
+  // Reset map view
+  const resetMapView = useCallback(() => {
+    if (map.current) {
+      map.current.flyTo({
+        center: [78.9629, 22.5937],
+        zoom: 4,
+        pitch: 30,
+        bearing: 0,
+      });
+    }
+  }, []);
+
+  // Zoom controls
+  const handleZoomIn = useCallback(() => {
+    if (map.current) {
+      map.current.zoomIn();
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (map.current) {
+      map.current.zoomOut();
+    }
+  }, []);
+
+  // Change map style
+  const cycleMapStyle = useCallback(() => {
+    const styles = ['dark', 'light', 'satellite'] as const;
+    const currentIndex = styles.indexOf(mapStyle);
+    const nextStyle = styles[(currentIndex + 1) % styles.length];
+    setMapStyle(nextStyle);
+    
+    if (map.current) {
+      const styleUrls = {
+        dark: 'mapbox://styles/mapbox/dark-v11',
+        light: 'mapbox://styles/mapbox/light-v11',
+        satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
+      };
+      map.current.setStyle(styleUrls[nextStyle]);
+    }
+  }, [mapStyle]);
+
+  // Search states
+  const matchingStates = useMemo(() => {
+    if (!searchQuery) return [];
+    return Object.keys(STATE_COORDINATES).filter(state => 
+      state.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  // Fly to searched state
+  const flyToState = useCallback((state: string) => {
+    const coords = STATE_COORDINATES[state];
+    if (coords && map.current) {
+      map.current.flyTo({
+        center: coords,
+        zoom: 6,
+        pitch: 45,
+      });
+      setSearchQuery('');
+      setShowSearch(false);
+      onStateSelect?.(state);
+    }
+  }, [onStateSelect]);
+
+  // Filter centres based on selections AND local map filters
   const filteredCentres = useMemo(() => {
     let filtered = centres;
     
@@ -127,6 +220,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     
     if (selectedCentreType && selectedCentreType !== "all") {
       filtered = filtered.filter(c => c.centre_type === selectedCentreType);
+    } else {
+      // Apply local map filters only when no external centre type filter is set
+      filtered = filtered.filter(c => activeFilters.has(c.centre_type));
     }
     
     if (selectedSport && selectedSport !== "all") {
@@ -139,7 +235,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     }
     
     return filtered;
-  }, [centres, selectedState, selectedCentreType, selectedSport, centreSportLinks]);
+  }, [centres, selectedState, selectedCentreType, selectedSport, centreSportLinks, activeFilters]);
 
   // Aggregate centres by state
   const stateAggregates = useMemo(() => {
@@ -160,6 +256,17 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     });
     
     return aggregates;
+  }, [filteredCentres]);
+
+  // Type-wise totals for display
+  const typeTotals = useMemo(() => {
+    const totals: Record<string, number> = { NCOE: 0, STC: 0, KIC: 0, KISCE: 0 };
+    filteredCentres.forEach(c => {
+      if (totals[c.centre_type] !== undefined) {
+        totals[c.centre_type]++;
+      }
+    });
+    return totals;
   }, [filteredCentres]);
 
   // Get sports for a centre
@@ -382,44 +489,205 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }
 
   return (
-    <div className="relative w-full h-[500px] rounded-lg overflow-hidden">
+    <div className="relative w-full h-[600px] rounded-lg overflow-hidden">
       <div ref={mapContainer} className="absolute inset-0" />
       
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
-        <h4 className="text-sm font-semibold mb-2 flex items-center gap-1">
-          <Layers className="h-4 w-4" />
-          Centre Types
-        </h4>
-        <div className="space-y-1">
-          {Object.entries(CENTRE_TYPE_COLORS).map(([type, color]) => (
-            <div key={type} className="flex items-center gap-2 text-xs">
-              <span 
-                className="w-3 h-3 rounded-full" 
-                style={{ backgroundColor: color }}
-              />
-              <span>{type}</span>
+      {/* Top Control Bar */}
+      <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-4 pointer-events-none">
+        {/* Stats overlay */}
+        <div className="bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border pointer-events-auto">
+          <div className="text-xs text-muted-foreground">Showing</div>
+          <div className="text-2xl font-bold">{filteredCentres.length}</div>
+          <div className="text-xs text-muted-foreground">centres across {Object.keys(stateAggregates).length} states</div>
+        </div>
+
+        {/* Search Box */}
+        <div className="flex-1 max-w-xs pointer-events-auto">
+          {showSearch ? (
+            <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden">
+              <div className="flex items-center gap-2 p-2">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search state..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 bg-transparent text-sm outline-none"
+                  autoFocus
+                />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={() => { setShowSearch(false); setSearchQuery(''); }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              {matchingStates.length > 0 && (
+                <div className="border-t max-h-40 overflow-y-auto">
+                  {matchingStates.map(state => (
+                    <button
+                      key={state}
+                      onClick={() => flyToState(state)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-muted/50 transition-colors"
+                    >
+                      {state}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
+          ) : (
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="bg-background/90 backdrop-blur-sm shadow-lg"
+              onClick={() => setShowSearch(true)}
+            >
+              <Search className="h-4 w-4 mr-2" />
+              Search State
+            </Button>
+          )}
         </div>
-      </div>
 
-      {/* Stats overlay */}
-      <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
-        <div className="text-xs text-muted-foreground">Showing</div>
-        <div className="text-2xl font-bold">{filteredCentres.length}</div>
-        <div className="text-xs text-muted-foreground">centres across {Object.keys(stateAggregates).length} states</div>
-      </div>
-
-      {/* Hovered state info */}
-      {hoveredState && stateAggregates[hoveredState] && (
-        <div className="absolute top-4 right-16 bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
-          <div className="font-semibold">{hoveredState}</div>
-          <div className="text-sm text-muted-foreground">
-            {stateAggregates[hoveredState].total} centres
+        {/* Hovered state info */}
+        {hoveredState && stateAggregates[hoveredState] && (
+          <div className="bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border pointer-events-auto">
+            <div className="font-semibold">{hoveredState}</div>
+            <div className="text-sm text-muted-foreground">
+              {stateAggregates[hoveredState].total} centres
+            </div>
+            <div className="flex gap-1 mt-1">
+              {Object.entries(stateAggregates[hoveredState].byType).map(([type, count]) => (
+                <Badge 
+                  key={type} 
+                  className="text-[10px] px-1"
+                  style={{ backgroundColor: CENTRE_TYPE_COLORS[type] }}
+                >
+                  {type}: {count}
+                </Badge>
+              ))}
+            </div>
           </div>
+        )}
+      </div>
+
+      {/* Centre Type Filter Buttons */}
+      <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
+        <h4 className="text-xs font-semibold mb-2 flex items-center gap-1 text-muted-foreground">
+          <Layers className="h-3 w-3" />
+          FILTER BY TYPE
+        </h4>
+        <div className="space-y-1.5">
+          {Object.entries(CENTRE_TYPE_COLORS).map(([type, color]) => {
+            const isActive = activeFilters.has(type);
+            const count = typeTotals[type] || 0;
+            return (
+              <button
+                key={type}
+                onClick={() => toggleFilter(type)}
+                className={cn(
+                  "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-xs transition-all",
+                  isActive 
+                    ? "bg-muted hover:bg-muted/80" 
+                    : "opacity-40 hover:opacity-60"
+                )}
+              >
+                <span 
+                  className={cn(
+                    "w-3 h-3 rounded-full transition-all",
+                    !isActive && "ring-1 ring-inset ring-muted-foreground"
+                  )}
+                  style={{ backgroundColor: isActive ? color : 'transparent' }}
+                />
+                <span className="flex-1 text-left font-medium">{type}</span>
+                <Badge variant="secondary" className="text-[10px] h-4 px-1">
+                  {count}
+                </Badge>
+                {isActive ? (
+                  <Eye className="h-3 w-3 text-muted-foreground" />
+                ) : (
+                  <EyeOff className="h-3 w-3 text-muted-foreground" />
+                )}
+              </button>
+            );
+          })}
         </div>
-      )}
+        <div className="mt-2 pt-2 border-t">
+          <button
+            onClick={() => setActiveFilters(new Set(['NCOE', 'STC', 'KIC', 'KISCE']))}
+            className="text-[10px] text-primary hover:underline"
+          >
+            Show All
+          </button>
+        </div>
+      </div>
+
+      {/* Map Controls */}
+      <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+        {/* Zoom Controls */}
+        <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-none"
+            onClick={handleZoomIn}
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          <div className="border-t" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-none"
+            onClick={handleZoomOut}
+          >
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Reset View */}
+        <Button
+          variant="secondary"
+          size="icon"
+          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg"
+          onClick={resetMapView}
+          title="Reset view"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </Button>
+
+        {/* Toggle Map Style */}
+        <Button
+          variant="secondary"
+          size="icon"
+          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg"
+          onClick={cycleMapStyle}
+          title={`Current: ${mapStyle}`}
+        >
+          <Compass className="h-4 w-4" />
+        </Button>
+
+        {/* Toggle Labels */}
+        <Button
+          variant="secondary"
+          size="icon"
+          className={cn(
+            "h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg",
+            !showLabels && "opacity-50"
+          )}
+          onClick={() => setShowLabels(!showLabels)}
+          title={showLabels ? "Hide labels" : "Show labels"}
+        >
+          {showLabels ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+        </Button>
+      </div>
+
+      {/* Style Indicator */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs capitalize">
+        {mapStyle} view
+      </div>
 
       {/* Custom CSS for popups */}
       <style>{`
@@ -437,6 +705,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         .mapboxgl-popup.detailed .mapboxgl-popup-content {
           max-height: 350px;
           overflow-y: auto;
+        }
+        .mapboxgl-ctrl-group {
+          display: none !important;
         }
       `}</style>
     </div>
