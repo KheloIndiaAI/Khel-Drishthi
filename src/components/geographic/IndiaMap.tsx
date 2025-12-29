@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Layers, AlertCircle, Loader2, RotateCcw, ZoomIn, ZoomOut, Compass, Eye, EyeOff, Search, X } from 'lucide-react';
+import { Layers, AlertCircle, Loader2, RotateCcw, ZoomIn, ZoomOut, Compass, Eye, EyeOff, Search, X, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +47,22 @@ const STATE_COORDINATES: Record<string, [number, number]> = {
   "West Bengal": [87.855, 22.9868],
 };
 
+// Generate approximate district coordinates based on state with offset
+const getDistrictCoordinates = (state: string, district: string, index: number): [number, number] => {
+  const stateCoords = STATE_COORDINATES[state];
+  if (!stateCoords) return [78.9629, 22.5937]; // India center
+  
+  // Create a deterministic offset based on district name hash
+  const hash = district.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const angle = (hash % 360) * (Math.PI / 180);
+  const radius = 0.3 + (hash % 100) / 200; // 0.3 to 0.8 degrees offset
+  
+  return [
+    stateCoords[0] + Math.cos(angle) * radius,
+    stateCoords[1] + Math.sin(angle) * radius * 0.7, // Reduce latitude offset
+  ];
+};
+
 interface Centre {
   centre_id: string;
   centre_name: string;
@@ -79,13 +95,6 @@ const CENTRE_TYPE_COLORS: Record<string, string> = {
   "KISCE": "#f59e0b",
 };
 
-const CENTRE_TYPE_LABELS: Record<string, string> = {
-  "NCOE": "National Centre of Excellence",
-  "STC": "State Training Centre",
-  "KIC": "Khelo India Centre",
-  "KISCE": "Khelo India State Centre of Excellence",
-};
-
 const IndiaMap: React.FC<IndiaMapProps> = ({
   centres,
   centreSportLinks = [],
@@ -97,19 +106,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const popupRef = useRef<mapboxgl.Popup | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [hoveredState, setHoveredState] = useState<string | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string | null>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
   const [isLoadingToken, setIsLoadingToken] = useState(true);
+  const [currentZoom, setCurrentZoom] = useState(4);
   
   // Local filter states for the map
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set(['NCOE', 'STC', 'KIC', 'KISCE']));
-  const [showLabels, setShowLabels] = useState(true);
   const [mapStyle, setMapStyle] = useState<'dark' | 'light' | 'satellite'>('dark');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedCentre, setSelectedCentre] = useState<Centre | null>(null);
 
   // Fetch Mapbox token from edge function
   useEffect(() => {
@@ -151,24 +159,16 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       map.current.flyTo({
         center: [78.9629, 22.5937],
         zoom: 4,
-        pitch: 30,
+        pitch: 0,
         bearing: 0,
       });
     }
-  }, []);
+    onStateSelect?.("all");
+  }, [onStateSelect]);
 
   // Zoom controls
-  const handleZoomIn = useCallback(() => {
-    if (map.current) {
-      map.current.zoomIn();
-    }
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    if (map.current) {
-      map.current.zoomOut();
-    }
-  }, []);
+  const handleZoomIn = useCallback(() => map.current?.zoomIn(), []);
+  const handleZoomOut = useCallback(() => map.current?.zoomOut(), []);
 
   // Change map style
   const cycleMapStyle = useCallback(() => {
@@ -201,8 +201,8 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     if (coords && map.current) {
       map.current.flyTo({
         center: coords,
-        zoom: 6,
-        pitch: 45,
+        zoom: 7,
+        pitch: 0,
       });
       setSearchQuery('');
       setShowSearch(false);
@@ -210,7 +210,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     }
   }, [onStateSelect]);
 
-  // Filter centres based on selections AND local map filters
+  // Filter centres
   const filteredCentres = useMemo(() => {
     let filtered = centres;
     
@@ -221,7 +221,6 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     if (selectedCentreType && selectedCentreType !== "all") {
       filtered = filtered.filter(c => c.centre_type === selectedCentreType);
     } else {
-      // Apply local map filters only when no external centre type filter is set
       filtered = filtered.filter(c => activeFilters.has(c.centre_type));
     }
     
@@ -237,7 +236,39 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     return filtered;
   }, [centres, selectedState, selectedCentreType, selectedSport, centreSportLinks, activeFilters]);
 
-  // Aggregate centres by state
+  // Aggregate by district for district-level view
+  const districtAggregates = useMemo(() => {
+    const aggregates: Record<string, {
+      state: string;
+      district: string;
+      total: number;
+      byType: Record<string, number>;
+      centres: Centre[];
+      coords: [number, number];
+    }> = {};
+    
+    filteredCentres.forEach((centre, idx) => {
+      const districtKey = `${centre.state}|${centre.district || 'Unknown'}`;
+      if (!aggregates[districtKey]) {
+        aggregates[districtKey] = {
+          state: centre.state,
+          district: centre.district || 'Unknown',
+          total: 0,
+          byType: {},
+          centres: [],
+          coords: getDistrictCoordinates(centre.state, centre.district || 'Unknown', idx),
+        };
+      }
+      aggregates[districtKey].total++;
+      aggregates[districtKey].byType[centre.centre_type] = 
+        (aggregates[districtKey].byType[centre.centre_type] || 0) + 1;
+      aggregates[districtKey].centres.push(centre);
+    });
+    
+    return aggregates;
+  }, [filteredCentres]);
+
+  // Aggregate by state for state-level view
   const stateAggregates = useMemo(() => {
     const aggregates: Record<string, {
       total: number;
@@ -258,7 +289,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     return aggregates;
   }, [filteredCentres]);
 
-  // Type-wise totals for display
+  // Type-wise totals
   const typeTotals = useMemo(() => {
     const totals: Record<string, number> = { NCOE: 0, STC: 0, KIC: 0, KISCE: 0 };
     filteredCentres.forEach(c => {
@@ -270,14 +301,14 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }, [filteredCentres]);
 
   // Get sports for a centre
-  const getSportsForCentre = (centreId: string) => {
+  const getSportsForCentre = useCallback((centreId: string) => {
     return centreSportLinks
       .filter(link => link.centre_id === centreId)
       .map(link => link.sport_name)
-      .filter((sport, idx, arr) => sport && arr.indexOf(sport) === idx);
-  };
+      .filter((sport, idx, arr): sport is string => !!sport && arr.indexOf(sport) === idx);
+  }, [centreSportLinks]);
 
-  // Initialize map when token is available
+  // Initialize map
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
 
@@ -286,21 +317,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
-      center: [78.9629, 22.5937], // Center of India
+      center: [78.9629, 22.5937],
       zoom: 4,
-      pitch: 30,
+      pitch: 0,
       bearing: 0,
     });
 
-    map.current.addControl(
-      new mapboxgl.NavigationControl({
-        visualizePitch: true,
-      }),
-      'top-right'
-    );
-
     map.current.on('load', () => {
       setMapLoaded(true);
+    });
+
+    map.current.on('zoom', () => {
+      setCurrentZoom(map.current?.getZoom() || 4);
     });
 
     return () => {
@@ -309,7 +337,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     };
   }, [mapboxToken]);
 
-  // Update markers when data changes
+  // Update markers based on zoom level
   useEffect(() => {
     if (!map.current || !mapLoaded) return;
 
@@ -317,142 +345,205 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     markersRef.current.forEach(marker => marker.remove());
     markersRef.current = [];
 
-    // Create markers for each state
-    Object.entries(stateAggregates).forEach(([state, data]) => {
-      const coords = STATE_COORDINATES[state];
-      if (!coords) return;
+    const showDistrictLevel = currentZoom >= 6;
 
-      // Create custom marker element
-      const el = document.createElement('div');
-      el.className = 'custom-marker';
-      
-      // Size based on total centres
-      const size = Math.min(60, Math.max(30, 20 + data.total * 0.5));
-      el.style.width = `${size}px`;
-      el.style.height = `${size}px`;
-      el.style.borderRadius = '50%';
-      el.style.display = 'flex';
-      el.style.alignItems = 'center';
-      el.style.justifyContent = 'center';
-      el.style.fontWeight = 'bold';
-      el.style.fontSize = '12px';
-      el.style.color = 'white';
-      el.style.cursor = 'pointer';
-      el.style.transition = 'transform 0.2s';
-      el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-      
-      // Determine dominant type for color
-      const dominantType = Object.entries(data.byType)
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || 'KIC';
-      
-      // Create gradient background
-      const typeColors = Object.entries(data.byType).map(([type]) => CENTRE_TYPE_COLORS[type] || '#888');
-      if (typeColors.length === 1) {
-        el.style.background = typeColors[0];
-      } else {
-        el.style.background = `linear-gradient(135deg, ${typeColors.join(', ')})`;
-      }
-      
-      el.textContent = data.total.toString();
-      
-      el.addEventListener('mouseenter', () => {
-        el.style.transform = 'scale(1.2)';
-        setHoveredState(state);
-      });
-      
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = 'scale(1)';
-        setHoveredState(null);
-      });
-
-      // Create popup content
-      const popupContent = `
-        <div class="p-3 max-w-xs">
-          <h3 class="font-bold text-lg mb-2">${state}</h3>
-          <p class="text-sm mb-2">Total Centres: <strong>${data.total}</strong></p>
-          <div class="space-y-1">
-            ${Object.entries(data.byType)
-              .sort((a, b) => b[1] - a[1])
-              .map(([type, count]) => `
-                <div class="flex justify-between items-center text-sm">
-                  <span class="flex items-center gap-1">
-                    <span class="w-3 h-3 rounded-full" style="background: ${CENTRE_TYPE_COLORS[type] || '#888'}"></span>
-                    ${type}
-                  </span>
-                  <span class="font-medium">${count}</span>
-                </div>
-              `).join('')}
-          </div>
-          <div class="mt-3 pt-2 border-t border-gray-600">
-            <p class="text-xs text-gray-400">Click for detailed list</p>
-          </div>
-        </div>
-      `;
-
-      const popup = new mapboxgl.Popup({
-        offset: 25,
-        closeButton: false,
-        className: 'custom-popup',
-      }).setHTML(popupContent);
-
-      el.addEventListener('click', () => {
-        if (popupRef.current) {
-          popupRef.current.remove();
-        }
+    if (showDistrictLevel) {
+      // District-level markers
+      Object.entries(districtAggregates).forEach(([key, data]) => {
+        const el = document.createElement('div');
+        el.className = 'district-marker';
         
-        // Create detailed popup
-        const detailContent = `
-          <div class="p-3 max-w-md max-h-80 overflow-y-auto">
-            <h3 class="font-bold text-lg mb-2">${state}</h3>
-            <p class="text-sm mb-3">Total Centres: <strong>${data.total}</strong></p>
+        const size = Math.min(50, Math.max(20, 15 + data.total * 3));
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+        el.style.borderRadius = '50%';
+        el.style.display = 'flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+        el.style.fontWeight = 'bold';
+        el.style.fontSize = '10px';
+        el.style.color = 'white';
+        el.style.cursor = 'pointer';
+        el.style.transition = 'transform 0.2s, box-shadow 0.2s';
+        el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        el.style.border = '2px solid white';
+        
+        const dominantType = Object.entries(data.byType)
+          .sort((a, b) => b[1] - a[1])[0]?.[0] || 'KIC';
+        el.style.background = CENTRE_TYPE_COLORS[dominantType] || '#888';
+        el.textContent = data.total.toString();
+        
+        el.addEventListener('mouseenter', () => {
+          el.style.transform = 'scale(1.2)';
+          el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.4)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'scale(1)';
+          el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        });
+
+        // Click to show centres in district
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          // Create popup with centre list
+          const popupContent = document.createElement('div');
+          popupContent.className = 'p-3 max-w-xs max-h-80 overflow-y-auto';
+          popupContent.innerHTML = `
+            <h3 class="font-bold text-base mb-1">${data.district}</h3>
+            <p class="text-xs text-gray-400 mb-2">${data.state}</p>
+            <div class="flex gap-1 mb-3 flex-wrap">
+              ${Object.entries(data.byType).map(([type, count]) => `
+                <span class="px-1.5 py-0.5 rounded text-[10px] text-white" style="background: ${CENTRE_TYPE_COLORS[type]}">${type}: ${count}</span>
+              `).join('')}
+            </div>
             <div class="space-y-2">
               ${data.centres.slice(0, 10).map(centre => `
-                <div class="p-2 bg-gray-800 rounded text-xs">
+                <div class="p-2 bg-gray-800/50 rounded text-xs cursor-pointer hover:bg-gray-700/50 centre-item" data-centre-id="${centre.centre_id}">
                   <div class="font-medium">${centre.centre_name}</div>
-                  <div class="flex gap-2 mt-1">
-                    <span class="px-1.5 py-0.5 rounded text-white text-[10px]" style="background: ${CENTRE_TYPE_COLORS[centre.centre_type] || '#888'}">${centre.centre_type}</span>
-                    ${centre.district ? `<span class="text-gray-400">${centre.district}</span>` : ''}
+                  <div class="flex items-center gap-1 mt-1">
+                    <span class="px-1 py-0.5 rounded text-[9px] text-white" style="background: ${CENTRE_TYPE_COLORS[centre.centre_type]}">${centre.centre_type}</span>
+                    ${centre.operational_status ? `<span class="text-gray-400 text-[9px]">${centre.operational_status}</span>` : ''}
                   </div>
-                  ${getSportsForCentre(centre.centre_id).length > 0 ? `
-                    <div class="mt-1 text-gray-400">
-                      Sports: ${getSportsForCentre(centre.centre_id).slice(0, 3).join(', ')}${getSportsForCentre(centre.centre_id).length > 3 ? '...' : ''}
-                    </div>
-                  ` : ''}
                 </div>
               `).join('')}
-              ${data.centres.length > 10 ? `<p class="text-center text-gray-400 text-xs">+ ${data.centres.length - 10} more centres</p>` : ''}
+              ${data.centres.length > 10 ? `<p class="text-center text-gray-400 text-[10px]">+ ${data.centres.length - 10} more</p>` : ''}
             </div>
-          </div>
-        `;
-        
-        popupRef.current = new mapboxgl.Popup({
-          offset: 25,
-          className: 'custom-popup detailed',
-        })
-          .setLngLat(coords)
-          .setHTML(detailContent)
+          `;
+
+          // Add click handlers to centre items
+          setTimeout(() => {
+            popupContent.querySelectorAll('.centre-item').forEach(item => {
+              item.addEventListener('click', () => {
+                const centreId = item.getAttribute('data-centre-id');
+                const centre = data.centres.find(c => c.centre_id === centreId);
+                if (centre) setSelectedCentre(centre);
+              });
+            });
+          }, 0);
+
+          new mapboxgl.Popup({ offset: 15, closeButton: true })
+            .setLngLat(data.coords)
+            .setDOMContent(popupContent)
+            .addTo(map.current!);
+        });
+
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat(data.coords)
           .addTo(map.current!);
+
+        markersRef.current.push(marker);
       });
+    } else {
+      // State-level markers
+      Object.entries(stateAggregates).forEach(([state, data]) => {
+        const coords = STATE_COORDINATES[state];
+        if (!coords) return;
 
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat(coords)
-        .setPopup(popup)
-        .addTo(map.current!);
+        const el = document.createElement('div');
+        el.className = 'state-marker';
+        
+        const size = Math.min(60, Math.max(30, 20 + data.total * 0.4));
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+        el.style.borderRadius = '50%';
+        el.style.display = 'flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+        el.style.fontWeight = 'bold';
+        el.style.fontSize = '11px';
+        el.style.color = 'white';
+        el.style.cursor = 'pointer';
+        el.style.transition = 'transform 0.2s, box-shadow 0.2s';
+        el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        el.style.border = '2px solid rgba(255,255,255,0.3)';
+        
+        // Create pie chart style background for multiple types
+        const typeEntries = Object.entries(data.byType).sort((a, b) => b[1] - a[1]);
+        if (typeEntries.length === 1) {
+          el.style.background = CENTRE_TYPE_COLORS[typeEntries[0][0]] || '#888';
+        } else {
+          const total = data.total;
+          let gradientParts: string[] = [];
+          let currentAngle = 0;
+          typeEntries.forEach(([type, count]) => {
+            const angle = (count / total) * 360;
+            gradientParts.push(`${CENTRE_TYPE_COLORS[type]} ${currentAngle}deg ${currentAngle + angle}deg`);
+            currentAngle += angle;
+          });
+          el.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+        }
+        
+        el.textContent = data.total.toString();
+        
+        el.addEventListener('mouseenter', () => {
+          el.style.transform = 'scale(1.15)';
+          el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.4)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'scale(1)';
+          el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        });
 
-      markersRef.current.push(marker);
-    });
-  }, [stateAggregates, mapLoaded, centreSportLinks]);
+        // Click to zoom into state
+        el.addEventListener('click', () => {
+          if (map.current) {
+            map.current.flyTo({
+              center: coords,
+              zoom: 7,
+            });
+            onStateSelect?.(state);
+          }
+        });
+
+        // Tooltip on hover
+        const popup = new mapboxgl.Popup({
+          offset: 20,
+          closeButton: false,
+          closeOnClick: false,
+        });
+
+        el.addEventListener('mouseenter', () => {
+          popup.setLngLat(coords)
+            .setHTML(`
+              <div class="p-2">
+                <div class="font-semibold">${state}</div>
+                <div class="text-xs text-gray-400">${data.total} centres</div>
+                <div class="flex gap-1 mt-1 flex-wrap">
+                  ${Object.entries(data.byType).map(([type, count]) => `
+                    <span class="px-1 py-0.5 rounded text-[9px] text-white" style="background: ${CENTRE_TYPE_COLORS[type]}">${type}: ${count}</span>
+                  `).join('')}
+                </div>
+              </div>
+            `)
+            .addTo(map.current!);
+        });
+
+        el.addEventListener('mouseleave', () => {
+          popup.remove();
+        });
+
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat(coords)
+          .addTo(map.current!);
+
+        markersRef.current.push(marker);
+      });
+    }
+  }, [stateAggregates, districtAggregates, mapLoaded, currentZoom, onStateSelect]);
 
   // Fly to selected state
   useEffect(() => {
-    if (!map.current || !mapLoaded || !selectedState || selectedState === "all") {
-      if (map.current && mapLoaded) {
-        map.current.flyTo({
-          center: [78.9629, 22.5937],
-          zoom: 4,
-          pitch: 30,
-        });
-      }
+    if (!map.current || !mapLoaded) return;
+    
+    if (!selectedState || selectedState === "all") {
+      map.current.flyTo({
+        center: [78.9629, 22.5937],
+        zoom: 4,
+        pitch: 0,
+      });
       return;
     }
 
@@ -460,15 +551,15 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     if (coords) {
       map.current.flyTo({
         center: coords,
-        zoom: 6,
-        pitch: 45,
+        zoom: 7,
+        pitch: 0,
       });
     }
   }, [selectedState, mapLoaded]);
 
   if (isLoadingToken) {
     return (
-      <div className="relative w-full h-[500px] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-primary" />
           <p className="text-muted-foreground">Loading map...</p>
@@ -479,7 +570,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   if (tokenError) {
     return (
-      <div className="relative w-full h-[500px] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-8 w-8 mx-auto mb-2 text-destructive" />
           <p className="text-muted-foreground">{tokenError}</p>
@@ -492,89 +583,70 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     <div className="relative w-full h-[600px] rounded-lg overflow-hidden">
       <div ref={mapContainer} className="absolute inset-0" />
       
-      {/* Top Control Bar */}
-      <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-4 pointer-events-none">
-        {/* Stats overlay */}
-        <div className="bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border pointer-events-auto">
-          <div className="text-xs text-muted-foreground">Showing</div>
-          <div className="text-2xl font-bold">{filteredCentres.length}</div>
-          <div className="text-xs text-muted-foreground">centres across {Object.keys(stateAggregates).length} states</div>
+      {/* Top Left - Stats */}
+      <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
+        <div className="text-xs text-muted-foreground">Showing</div>
+        <div className="text-2xl font-bold">{filteredCentres.length}</div>
+        <div className="text-xs text-muted-foreground">
+          centres • {Object.keys(currentZoom >= 6 ? districtAggregates : stateAggregates).length} {currentZoom >= 6 ? 'districts' : 'states'}
         </div>
+        <div className="text-[10px] text-primary mt-1">
+          {currentZoom >= 6 ? '📍 District view' : '🗺️ State view'}
+        </div>
+      </div>
 
-        {/* Search Box */}
-        <div className="flex-1 max-w-xs pointer-events-auto">
-          {showSearch ? (
-            <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden">
-              <div className="flex items-center gap-2 p-2">
-                <Search className="h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search state..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 bg-transparent text-sm outline-none"
-                  autoFocus
-                />
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={() => { setShowSearch(false); setSearchQuery(''); }}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+      {/* Top Center - Search */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+        {showSearch ? (
+          <div className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden min-w-[250px]">
+            <div className="flex items-center gap-2 p-2">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search state..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent text-sm outline-none"
+                autoFocus
+              />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6"
+                onClick={() => { setShowSearch(false); setSearchQuery(''); }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            {matchingStates.length > 0 && (
+              <div className="border-t max-h-40 overflow-y-auto">
+                {matchingStates.map(state => (
+                  <button
+                    key={state}
+                    onClick={() => flyToState(state)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-muted/50 transition-colors"
+                  >
+                    {state}
+                  </button>
+                ))}
               </div>
-              {matchingStates.length > 0 && (
-                <div className="border-t max-h-40 overflow-y-auto">
-                  {matchingStates.map(state => (
-                    <button
-                      key={state}
-                      onClick={() => flyToState(state)}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-muted/50 transition-colors"
-                    >
-                      {state}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="bg-background/90 backdrop-blur-sm shadow-lg"
-              onClick={() => setShowSearch(true)}
-            >
-              <Search className="h-4 w-4 mr-2" />
-              Search State
-            </Button>
-          )}
-        </div>
-
-        {/* Hovered state info */}
-        {hoveredState && stateAggregates[hoveredState] && (
-          <div className="bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border pointer-events-auto">
-            <div className="font-semibold">{hoveredState}</div>
-            <div className="text-sm text-muted-foreground">
-              {stateAggregates[hoveredState].total} centres
-            </div>
-            <div className="flex gap-1 mt-1">
-              {Object.entries(stateAggregates[hoveredState].byType).map(([type, count]) => (
-                <Badge 
-                  key={type} 
-                  className="text-[10px] px-1"
-                  style={{ backgroundColor: CENTRE_TYPE_COLORS[type] }}
-                >
-                  {type}: {count}
-                </Badge>
-              ))}
-            </div>
+            )}
           </div>
+        ) : (
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            className="bg-background/95 backdrop-blur-sm shadow-lg"
+            onClick={() => setShowSearch(true)}
+          >
+            <Search className="h-4 w-4 mr-2" />
+            Search State
+          </Button>
         )}
       </div>
 
-      {/* Centre Type Filter Buttons */}
-      <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
+      {/* Bottom Left - Filter Buttons */}
+      <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
         <h4 className="text-xs font-semibold mb-2 flex items-center gap-1 text-muted-foreground">
           <Layers className="h-3 w-3" />
           FILTER BY TYPE
@@ -614,82 +686,128 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
             );
           })}
         </div>
-        <div className="mt-2 pt-2 border-t">
+        <div className="mt-2 pt-2 border-t flex gap-2">
           <button
             onClick={() => setActiveFilters(new Set(['NCOE', 'STC', 'KIC', 'KISCE']))}
             className="text-[10px] text-primary hover:underline"
           >
             Show All
           </button>
+          <button
+            onClick={() => setActiveFilters(new Set())}
+            className="text-[10px] text-muted-foreground hover:underline"
+          >
+            Hide All
+          </button>
         </div>
       </div>
 
-      {/* Map Controls */}
-      <div className="absolute bottom-4 right-4 flex flex-col gap-2">
-        {/* Zoom Controls */}
-        <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-none"
-            onClick={handleZoomIn}
-          >
+      {/* Bottom Right - Map Controls */}
+      <div className="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+        <div className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden">
+          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-none" onClick={handleZoomIn}>
             <ZoomIn className="h-4 w-4" />
           </Button>
           <div className="border-t" />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-none"
-            onClick={handleZoomOut}
-          >
+          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-none" onClick={handleZoomOut}>
             <ZoomOut className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Reset View */}
         <Button
           variant="secondary"
           size="icon"
-          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg"
+          className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
           onClick={resetMapView}
           title="Reset view"
         >
           <RotateCcw className="h-4 w-4" />
         </Button>
 
-        {/* Toggle Map Style */}
         <Button
           variant="secondary"
           size="icon"
-          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg"
+          className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
           onClick={cycleMapStyle}
-          title={`Current: ${mapStyle}`}
+          title={`Style: ${mapStyle}`}
         >
           <Compass className="h-4 w-4" />
         </Button>
-
-        {/* Toggle Labels */}
-        <Button
-          variant="secondary"
-          size="icon"
-          className={cn(
-            "h-8 w-8 bg-background/90 backdrop-blur-sm shadow-lg",
-            !showLabels && "opacity-50"
-          )}
-          onClick={() => setShowLabels(!showLabels)}
-          title={showLabels ? "Hide labels" : "Show labels"}
-        >
-          {showLabels ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-        </Button>
       </div>
 
-      {/* Style Indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs capitalize">
-        {mapStyle} view
+      {/* Centre Detail Modal */}
+      {selectedCentre && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20" onClick={() => setSelectedCentre(null)}>
+          <div 
+            className="bg-background rounded-lg shadow-xl border max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="p-4 border-b flex items-start justify-between">
+              <div>
+                <h3 className="font-bold text-lg">{selectedCentre.centre_name}</h3>
+                <p className="text-sm text-muted-foreground">{selectedCentre.district}, {selectedCentre.state}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedCentre(null)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge style={{ backgroundColor: CENTRE_TYPE_COLORS[selectedCentre.centre_type] }}>
+                  {selectedCentre.centre_type}
+                </Badge>
+                {selectedCentre.operational_status && (
+                  <Badge variant="outline">{selectedCentre.operational_status}</Badge>
+                )}
+                {selectedCentre.programme_subtype && (
+                  <Badge variant="secondary">{selectedCentre.programme_subtype}</Badge>
+                )}
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-semibold mb-2 flex items-center gap-1">
+                  <Building2 className="h-4 w-4" />
+                  Centre Details
+                </h4>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="text-muted-foreground">Type</div>
+                  <div>{selectedCentre.centre_type}</div>
+                  <div className="text-muted-foreground">State</div>
+                  <div>{selectedCentre.state}</div>
+                  <div className="text-muted-foreground">District</div>
+                  <div>{selectedCentre.district || 'N/A'}</div>
+                  {selectedCentre.operational_status && (
+                    <>
+                      <div className="text-muted-foreground">Status</div>
+                      <div>{selectedCentre.operational_status}</div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {getSportsForCentre(selectedCentre.centre_id).length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Sports Available</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {getSportsForCentre(selectedCentre.centre_id).map(sport => (
+                      <Badge key={sport} variant="outline" className="text-xs">
+                        {sport}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zoom level indicator */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs z-10">
+        {mapStyle} • zoom {currentZoom.toFixed(1)}
       </div>
 
-      {/* Custom CSS for popups */}
+      {/* Custom CSS */}
       <style>{`
         .mapboxgl-popup-content {
           background: hsl(var(--background)) !important;
@@ -702,9 +820,10 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         .mapboxgl-popup-tip {
           border-top-color: hsl(var(--background)) !important;
         }
-        .mapboxgl-popup.detailed .mapboxgl-popup-content {
-          max-height: 350px;
-          overflow-y: auto;
+        .mapboxgl-popup-close-button {
+          color: hsl(var(--foreground)) !important;
+          font-size: 18px !important;
+          padding: 4px 8px !important;
         }
         .mapboxgl-ctrl-group {
           display: none !important;
