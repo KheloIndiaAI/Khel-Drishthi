@@ -28,7 +28,7 @@ import { RegionalCentreCard, RegionStats } from "@/components/infrastructure/Reg
 import { StateCard, StateStats } from "@/components/infrastructure/StateCard";
 import { RegionalCentreDetail } from "@/components/infrastructure/RegionalCentreDetail";
 import { StateDetail } from "@/components/infrastructure/StateDetail";
-import { getRegionForState, getAllRegions, REGION_TO_STATES } from "@/lib/regionMapping";
+import { getRegionForState, getRegionForRegionUnit, getAllRegions } from "@/lib/regionMapping";
 import PageSEO, { infrastructurePageSchema, infrastructureBreadcrumbs } from "@/components/seo/PageSEO";
 
 const Infrastructure = () => {
@@ -202,10 +202,13 @@ const Infrastructure = () => {
 
   // Derive region for each centre (including KIC/KISCE via state mapping)
   const centresWithRegion = useMemo(() => {
-    return centres?.map(centre => ({
-      ...centre,
-      derived_region: centre.region_unit || getRegionForState(centre.state)
-    })) || [];
+    return (
+      centres?.map((centre) => ({
+        ...centre,
+        derived_region:
+          getRegionForRegionUnit(centre.region_unit) || getRegionForState(centre.state),
+      })) || []
+    );
   }, [centres]);
 
   // Summary statistics
@@ -227,15 +230,15 @@ const Infrastructure = () => {
   // Compute region stats
   const regionStats = useMemo((): RegionStats[] => {
     if (!centresWithRegion.length) return [];
-    
+
     const allRegions = getAllRegions();
     const regionMap = new Map<string, RegionStats>();
-    
+
     // Initialize all regions
-    allRegions.forEach(region => {
+    allRegions.forEach((region) => {
       regionMap.set(region, {
         regionName: region,
-        states: REGION_TO_STATES[region] || [],
+        states: [],
         ncoe: 0,
         stc: 0,
         kic: 0,
@@ -243,47 +246,55 @@ const Infrastructure = () => {
         totalCentres: 0,
         sportsCount: 0,
         sanctionedCapacity: 0,
-        existingCapacity: 0
+        existingCapacity: 0,
       });
     });
-    
-    // Count centres by region
+
+    // Count centres, sports, states by region
     const sportsByRegion = new Map<string, Set<string>>();
-    
-    centresWithRegion.forEach(centre => {
+    const statesByRegion = new Map<string, Set<string>>();
+
+    centresWithRegion.forEach((centre) => {
       const region = centre.derived_region;
       if (!region || !regionMap.has(region)) return;
-      
+
       const stats = regionMap.get(region)!;
       stats.totalCentres++;
-      
+
       if (centre.centre_type === "NCOE") stats.ncoe++;
       else if (centre.centre_type === "STC") stats.stc++;
       else if (centre.centre_type === "KIC") stats.kic++;
       else if (centre.centre_type === "KISCE") stats.kisce++;
-      
+
+      // Track states (for accurate "states covered" count)
+      if (centre.state) {
+        if (!statesByRegion.has(region)) statesByRegion.set(region, new Set());
+        statesByRegion.get(region)!.add(centre.state);
+      }
+
       // Add capacity
       const capacity = capacityMap.get(centre.centre_id);
       if (capacity) {
         stats.sanctionedCapacity += capacity.sanctioned;
         stats.existingCapacity += capacity.existing;
       }
-      
+
       // Track sports
       const sports = centreSportsMap.get(centre.centre_id) || [];
       if (!sportsByRegion.has(region)) {
         sportsByRegion.set(region, new Set());
       }
-      sports.forEach(s => sportsByRegion.get(region)!.add(s));
+      sports.forEach((s) => sportsByRegion.get(region)!.add(s));
     });
-    
-    // Add sports counts
+
+    // Add derived counts
     regionMap.forEach((stats, region) => {
       stats.sportsCount = sportsByRegion.get(region)?.size || 0;
+      stats.states = Array.from(statesByRegion.get(region) || []).sort();
     });
-    
+
     return Array.from(regionMap.values())
-      .filter(r => r.totalCentres > 0)
+      .filter((r) => r.totalCentres > 0)
       .sort((a, b) => b.totalCentres - a.totalCentres);
   }, [centresWithRegion, capacityMap, centreSportsMap]);
 
