@@ -2,19 +2,20 @@
 // Based on SAI administrative structure for NCOE and STC centres
 // KIC and KISCE centres are mapped to regions via their state
 
+// Using exact state names as they appear in the database
 export const REGION_TO_STATES: Record<string, string[]> = {
   "RC Bangalore": ["Andhra Pradesh", "Karnataka", "Telangana"],
   "RC Bhopal": ["Chhattisgarh", "Madhya Pradesh"],
   "RC Chandigarh": ["Haryana", "Himachal Pradesh", "Punjab"],
-  "RC Gandhinagar": ["Dadra And Nagar Haveli", "Daman And Diu", "Goa", "Gujarat", "Rajasthan"],
-  "RC Guwahati": ["Arunachal Pradesh", "Assam", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"],
-  "RC Imphal": ["Manipur"],
+  "RC Gandhinagar": ["Goa", "Gujarat", "Rajasthan"],
+  "RC Guwahati": ["Arunachal Pradesh", "Assam", "Meghalaya", "Nagaland", "Sikkim"],
+  "RC Imphal": ["Manipur", "Mizoram", "Tripura"],
   "RC Kolkata": ["Bihar", "Jharkhand", "Odisha", "West Bengal"],
   "RC LNCPE": ["Kerala", "Lakshadweep", "Puducherry", "Tamil Nadu"],
-  "RC Lucknow": ["Uttarakhand", "Uttar Pradesh"],
-  "RC Mumbai": ["DNH & DD", "Dadra and Nagar Haveli and Daman and Diu", "Maharashtra"],
-  "RC NIS Patiala": ["Jammu And Kashmir", "Ladakh"],
-  "RC New Delhi": ["Andaman And Nicobar", "Delhi", "NCT of Delhi"],
+  "RC Lucknow": ["Uttar Pradesh", "Uttarakhand"],
+  "RC Mumbai": ["DNH & DD", "Maharashtra"],
+  "RC NIS Patiala": ["Jammu & Kashmir", "Ladakh"],
+  "RC New Delhi": ["Andaman & Nicobar", "Delhi"],
   "RC Zirakpur": ["Chandigarh"],
 };
 
@@ -25,31 +26,48 @@ export const STATE_TO_REGION: Record<string, string> = {};
 const normalizeStateName = (name: string): string => {
   return name
     .toLowerCase()
+    .replace(/&/g, 'and')
     .replace(/[^a-z\s]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 };
 
-// Build the reverse mapping with normalized keys
+// Build the reverse mapping with both original and normalized keys
 Object.entries(REGION_TO_STATES).forEach(([region, states]) => {
   states.forEach(state => {
+    // Add exact match
+    STATE_TO_REGION[state.toLowerCase()] = region;
+    // Add normalized match
     STATE_TO_REGION[normalizeStateName(state)] = region;
   });
 });
 
 // Additional state name variations for better matching
 const STATE_ALIASES: Record<string, string> = {
+  // Andaman & Nicobar variations
   "andaman and nicobar islands": "RC New Delhi",
   "andaman & nicobar islands": "RC New Delhi",
   "a&n islands": "RC New Delhi",
+  "andaman and nicobar": "RC New Delhi",
+  
+  // DNH & DD variations
   "dadra and nagar haveli and daman and diu": "RC Mumbai",
   "dadra & nagar haveli and daman & diu": "RC Mumbai",
-  "dnh & dd": "RC Mumbai",
+  "dnh and dd": "RC Mumbai",
   "d&n haveli": "RC Mumbai",
-  "jammu & kashmir": "RC NIS Patiala",
+  "dadra and nagar haveli": "RC Mumbai",
+  "daman and diu": "RC Mumbai",
+  
+  // J&K variations
+  "jammu and kashmir": "RC NIS Patiala",
   "j&k": "RC NIS Patiala",
+  
+  // Delhi variations
   "nct delhi": "RC New Delhi",
+  "nct of delhi": "RC New Delhi",
   "new delhi": "RC New Delhi",
+  
+  // Other common variations
   "pondicherry": "RC LNCPE",
   "orissa": "RC Kolkata",
   "uttaranchal": "RC Lucknow",
@@ -57,6 +75,7 @@ const STATE_ALIASES: Record<string, string> = {
 
 // Add aliases to the mapping
 Object.entries(STATE_ALIASES).forEach(([alias, region]) => {
+  STATE_TO_REGION[alias.toLowerCase()] = region;
   STATE_TO_REGION[normalizeStateName(alias)] = region;
 });
 
@@ -68,16 +87,22 @@ Object.entries(STATE_ALIASES).forEach(([alias, region]) => {
 export const getRegionForState = (stateName: string | null | undefined): string | null => {
   if (!stateName) return null;
   
-  const normalized = normalizeStateName(stateName);
+  const lowerName = stateName.toLowerCase().trim();
   
-  // Direct lookup
+  // Direct lowercase lookup
+  if (STATE_TO_REGION[lowerName]) {
+    return STATE_TO_REGION[lowerName];
+  }
+  
+  // Normalized lookup
+  const normalized = normalizeStateName(stateName);
   if (STATE_TO_REGION[normalized]) {
     return STATE_TO_REGION[normalized];
   }
   
   // Partial match for edge cases
   for (const [key, region] of Object.entries(STATE_TO_REGION)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
+    if (lowerName.includes(key) || key.includes(lowerName)) {
       return region;
     }
   }
