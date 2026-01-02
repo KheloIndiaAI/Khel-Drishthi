@@ -20,6 +20,8 @@ import Auth from "./pages/Auth";
 import ImportData from "./pages/ImportData";
 import SchemaDocumentation from "./pages/SchemaDocumentation";
 import GeographicAnalytics from "./pages/GeographicAnalytics";
+import DataEditor from "./pages/DataEditor";
+import AuditLogs from "./pages/AuditLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +46,8 @@ const App = () => (
             <Route path="/admin/data" element={<AdminDataManager />} />
             <Route path="/admin/forms" element={<FormBuilder />} />
             <Route path="/admin/users" element={<UserManagement />} />
+            <Route path="/admin/editor" element={<DataEditor />} />
+            <Route path="/admin/audit-logs" element={<AuditLogs />} />
             <Route path="/form/:formId" element={<PublicForm />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/setup" element={<FirstAdminSetup />} />
