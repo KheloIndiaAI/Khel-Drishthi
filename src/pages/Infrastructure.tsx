@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -627,11 +628,19 @@ const Infrastructure = () => {
       />
       
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="font-display text-4xl md:text-5xl mb-2">Infrastructure</h1>
-        <p className="text-muted-foreground">
-          Explore India's sports training ecosystem across {stats.regions} regional centres and {stats.states} states
-        </p>
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="font-display text-4xl md:text-5xl mb-2">Infrastructure</h1>
+          <p className="text-muted-foreground">
+            Explore India's sports training ecosystem across {stats.regions} regional centres and {stats.states} states
+          </p>
+        </div>
+        <Button asChild variant="outline" className="gap-2 shrink-0">
+          <Link to="/infrastructure/insights">
+            <TrendingUp className="h-4 w-4" />
+            View Insights
+          </Link>
+        </Button>
       </div>
 
       {/* Summary Dashboard */}

@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import Home from "./pages/Home";
 import SportDetail from "./pages/SportDetail";
 import Infrastructure from "./pages/Infrastructure";
+import InfrastructureInsights from "./pages/InfrastructureInsights";
 import Capacity from "./pages/Capacity";
 import Medals from "./pages/Medals";
 import Admin from "./pages/Admin";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/sport/:sportId" element={<SportDetail />} />
             <Route path="/infrastructure" element={<Infrastructure />} />
+            <Route path="/infrastructure/insights" element={<InfrastructureInsights />} />
             <Route path="/capacity" element={<Capacity />} />
             <Route path="/geographic" element={<GeographicAnalytics />} />
             <Route path="/medals" element={<Medals />} />
