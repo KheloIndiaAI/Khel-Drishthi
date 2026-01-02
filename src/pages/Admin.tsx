@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut } from "lucide-react";
+import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut, MapPin } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 
 const Admin = () => {
@@ -161,6 +161,13 @@ const Admin = () => {
           <CardContent>
             <p className="text-muted-foreground mb-4">Manage users and assign roles</p>
             <Link to="/admin/users"><Button className="w-full">Manage Users</Button></Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5" />Region Mapping</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">Map states/UTs to regional centres</p>
+            <Link to="/admin/region-mapping"><Button className="w-full">Manage Mapping</Button></Link>
           </CardContent>
         </Card>
         <Card>

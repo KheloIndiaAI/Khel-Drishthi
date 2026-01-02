@@ -23,6 +23,7 @@ import SchemaDocumentation from "./pages/SchemaDocumentation";
 import GeographicAnalytics from "./pages/GeographicAnalytics";
 import DataEditor from "./pages/DataEditor";
 import AuditLogs from "./pages/AuditLogs";
+import RegionMappingAdmin from "./pages/RegionMappingAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/editor" element={<DataEditor />} />
             <Route path="/admin/audit-logs" element={<AuditLogs />} />
+            <Route path="/admin/region-mapping" element={<RegionMappingAdmin />} />
             <Route path="/form/:formId" element={<PublicForm />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/setup" element={<FirstAdminSetup />} />
