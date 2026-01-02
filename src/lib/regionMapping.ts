@@ -6,7 +6,6 @@
 export const REGION_TO_STATES: Record<string, string[]> = {
   "RC Bangalore": ["Andhra Pradesh", "Karnataka", "Telangana"],
   "RC Bhopal": ["Chhattisgarh", "Madhya Pradesh"],
-  "RC Chandigarh": ["Haryana", "Himachal Pradesh", "Punjab"],
   "RC Gandhinagar": ["Goa", "Gujarat", "Rajasthan"],
   "RC Guwahati": ["Arunachal Pradesh", "Assam", "Meghalaya", "Nagaland", "Sikkim"],
   "RC Imphal": ["Manipur", "Mizoram", "Tripura"],
@@ -16,7 +15,8 @@ export const REGION_TO_STATES: Record<string, string[]> = {
   "RC Mumbai": ["DNH & DD", "Maharashtra"],
   "RC NIS Patiala": ["Jammu & Kashmir", "Ladakh"],
   "RC New Delhi": ["Andaman & Nicobar", "Delhi"],
-  "RC Zirakpur": ["Chandigarh"],
+  // User requirement: Chandigarh mapped to Zirakpur
+  "RC Zirakpur": ["Chandigarh", "Haryana", "Himachal Pradesh", "Punjab"],
 };
 
 // Create reverse mapping: state -> region
@@ -108,6 +108,35 @@ export const getRegionForState = (stateName: string | null | undefined): string 
   }
   
   return null;
+};
+
+const REGION_UNIT_ALIASES: Record<string, string> = {
+  "head office": "RC New Delhi",
+  "sonepat": "RC Zirakpur",
+  "nsnis": "RC NIS Patiala",
+};
+
+/**
+ * Get the regional centre name from a centre's region_unit field.
+ * The database stores region_unit like "Kolkata" (no RC prefix).
+ */
+export const getRegionForRegionUnit = (regionUnit: string | null | undefined): string | null => {
+  if (!regionUnit) return null;
+
+  const trimmed = regionUnit.trim();
+  const normalized = trimmed.toLowerCase();
+
+  if (REGION_UNIT_ALIASES[normalized]) return REGION_UNIT_ALIASES[normalized];
+
+  // Already in RC format
+  if (/^RC\s+/i.test(trimmed)) {
+    const rc = trimmed.replace(/^rc\s+/i, "RC ");
+    return REGION_TO_STATES[rc] ? rc : null;
+  }
+
+  // Convert "Kolkata" -> "RC Kolkata"
+  const rc = `RC ${trimmed}`;
+  return REGION_TO_STATES[rc] ? rc : null;
 };
 
 /**
