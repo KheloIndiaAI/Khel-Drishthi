@@ -28,7 +28,8 @@ import { RegionalCentreCard, RegionStats } from "@/components/infrastructure/Reg
 import { StateCard, StateStats } from "@/components/infrastructure/StateCard";
 import { RegionalCentreDetail } from "@/components/infrastructure/RegionalCentreDetail";
 import { StateDetail } from "@/components/infrastructure/StateDetail";
-import { getRegionForState, getRegionForRegionUnit, getAllRegions } from "@/lib/regionMapping";
+import { useRegionMappings } from "@/hooks/useRegionMappings";
+import { REGION_COLORS, getRegionDisplayName } from "@/lib/regionMapping";
 import PageSEO, { infrastructurePageSchema, infrastructureBreadcrumbs } from "@/components/seo/PageSEO";
 
 const Infrastructure = () => {
@@ -42,6 +43,14 @@ const Infrastructure = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<RegionStats | null>(null);
   const [selectedState, setSelectedState] = useState<StateStats | null>(null);
+
+  // Use DB-based region mappings (single source of truth)
+  const {
+    allRegions,
+    getRegionForState,
+    getRegionForRegionUnit,
+    isLoading: loadingMappings,
+  } = useRegionMappings();
 
   // Fetch centres
   const { data: centres, isLoading } = useQuery({
@@ -229,15 +238,14 @@ const Infrastructure = () => {
 
   // Compute region stats
   const regionStats = useMemo((): RegionStats[] => {
-    if (!centresWithRegion.length) return [];
+    if (!centresWithRegion.length || !allRegions.length) return [];
 
-    const allRegions = getAllRegions();
     const regionMap = new Map<string, RegionStats>();
 
-    // Initialize all regions
-    allRegions.forEach((region) => {
-      regionMap.set(region, {
-        regionName: region,
+    // Initialize all regions from DB
+    allRegions.forEach((rc) => {
+      regionMap.set(rc.name, {
+        regionName: rc.name,
         states: [],
         ncoe: 0,
         stc: 0,
@@ -296,7 +304,7 @@ const Infrastructure = () => {
     return Array.from(regionMap.values())
       .filter((r) => r.totalCentres > 0)
       .sort((a, b) => b.totalCentres - a.totalCentres);
-  }, [centresWithRegion, capacityMap, centreSportsMap]);
+  }, [centresWithRegion, capacityMap, centreSportsMap, allRegions]);
 
   // Compute state stats
   const stateStats = useMemo((): StateStats[] => {

@@ -767,6 +767,68 @@ export type Database = {
         }
         Relationships: []
       }
+      region_state_mappings: {
+        Row: {
+          created_at: string
+          id: string
+          region_id: string
+          state_name: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          region_id: string
+          state_name: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          region_id?: string
+          state_name?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "region_state_mappings_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regional_centres"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      regional_centres: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sport_notes: {
         Row: {
           attachments: string[] | null
