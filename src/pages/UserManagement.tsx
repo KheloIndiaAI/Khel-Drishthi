@@ -8,12 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Lock, Search, UserCog, Shield, Eye, Edit } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database as SupabaseDB } from "@/integrations/supabase/types";
 
-type AppRole = Database['public']['Enums']['app_role'];
+type AppRole = SupabaseDB['public']['Enums']['app_role'];
 
 interface UserWithRole {
   id: string;
@@ -24,6 +26,26 @@ interface UserWithRole {
   last_login: string | null;
 }
 
+interface TablePermission {
+  table_name: string;
+  label: string;
+}
+
+const EDITABLE_TABLES: TablePermission[] = [
+  { table_name: 'sports', label: 'Sports' },
+  { table_name: 'centres', label: 'Centres' },
+  { table_name: 'events', label: 'Events' },
+  { table_name: 'disciplines', label: 'Disciplines' },
+  { table_name: 'ncoe_capacity', label: 'NCOE Capacity' },
+  { table_name: 'stc_capacity', label: 'STC Capacity' },
+  { table_name: 'olympic_medals', label: 'Olympic Medals' },
+  { table_name: 'olympic_participation', label: 'Olympic Participation' },
+  { table_name: 'centre_sport_links', label: 'Centre-Sport Links' },
+  { table_name: 'eco_categories', label: 'Ecosystem Categories' },
+  { table_name: 'event_overlap', label: 'Event Overlap' },
+  { table_name: 'olympic_timeline', label: 'Olympic Timeline' },
+];
+
 const UserManagement = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -31,6 +53,10 @@ const UserManagement = () => {
   const [users, setUsers] = useState<UserWithRole[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [saving, setSaving] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserWithRole | null>(null);
+  const [userPermissions, setUserPermissions] = useState<string[]>([]);
+  const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
+  const [savingPermissions, setSavingPermissions] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -73,7 +99,6 @@ const UserManagement = () => {
   };
 
   const fetchUsers = async () => {
-    // Fetch profiles and roles
     const { data: profiles, error: profilesError } = await supabase
       .from('profiles')
       .select('id, email, name, created_at, last_login')
@@ -112,7 +137,6 @@ const UserManagement = () => {
 
     setSaving(userId);
 
-    // Check if role record exists
     const { data: existingRole } = await supabase
       .from('user_roles')
       .select('id')
@@ -141,6 +165,73 @@ const UserManagement = () => {
     }
 
     setSaving(null);
+  };
+
+  const openPermissionDialog = async (user: UserWithRole) => {
+    setSelectedUser(user);
+    setPermissionDialogOpen(true);
+    
+    // Fetch existing permissions for this user
+    const { data, error } = await supabase
+      .from('user_table_permissions')
+      .select('table_name')
+      .eq('user_id', user.id);
+    
+    if (error) {
+      toast({ title: "Error", description: "Failed to fetch permissions", variant: "destructive" });
+      setUserPermissions([]);
+    } else {
+      setUserPermissions(data?.map(p => p.table_name) || []);
+    }
+  };
+
+  const togglePermission = (tableName: string) => {
+    setUserPermissions(prev => 
+      prev.includes(tableName) 
+        ? prev.filter(t => t !== tableName)
+        : [...prev, tableName]
+    );
+  };
+
+  const savePermissions = async () => {
+    if (!selectedUser) return;
+    
+    setSavingPermissions(true);
+    
+    // Delete existing permissions
+    const { error: deleteError } = await supabase
+      .from('user_table_permissions')
+      .delete()
+      .eq('user_id', selectedUser.id);
+    
+    if (deleteError) {
+      toast({ title: "Error", description: "Failed to update permissions", variant: "destructive" });
+      setSavingPermissions(false);
+      return;
+    }
+    
+    // Insert new permissions
+    if (userPermissions.length > 0) {
+      const { error: insertError } = await supabase
+        .from('user_table_permissions')
+        .insert(
+          userPermissions.map(table_name => ({
+            user_id: selectedUser.id,
+            table_name,
+            created_by: session?.user.id
+          }))
+        );
+      
+      if (insertError) {
+        toast({ title: "Error", description: "Failed to save permissions", variant: "destructive" });
+        setSavingPermissions(false);
+        return;
+      }
+    }
+    
+    toast({ title: "Success", description: `Table permissions updated for ${selectedUser.name}` });
+    setSavingPermissions(false);
+    setPermissionDialogOpen(false);
   };
 
   const getRoleBadgeVariant = (role: AppRole): "default" | "secondary" | "outline" => {
@@ -222,6 +313,7 @@ const UserManagement = () => {
                 <TableHead>Email</TableHead>
                 <TableHead>Current Role</TableHead>
                 <TableHead>Change Role</TableHead>
+                <TableHead>Table Access</TableHead>
                 <TableHead>Joined</TableHead>
               </TableRow>
             </TableHeader>
@@ -258,6 +350,23 @@ const UserManagement = () => {
                       </SelectContent>
                     </Select>
                   </TableCell>
+                  <TableCell>
+                    {user.role === 'editor' ? (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => openPermissionDialog(user)}
+                        className="gap-1"
+                      >
+                        <Settings2 className="h-3 w-3" />
+                        Manage
+                      </Button>
+                    ) : user.role === 'admin' ? (
+                      <span className="text-muted-foreground text-sm">All tables</span>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">None</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
                     {new Date(user.created_at).toLocaleDateString()}
                   </TableCell>
@@ -280,14 +389,54 @@ const UserManagement = () => {
           </div>
           <div>
             <Badge variant="secondary" className="mb-2 gap-1"><Edit className="h-3 w-3" /> Editor</Badge>
-            <p className="text-muted-foreground">Can add notes and submit forms</p>
+            <p className="text-muted-foreground">Can edit assigned tables and submit forms</p>
           </div>
           <div>
             <Badge variant="default" className="mb-2 gap-1"><Shield className="h-3 w-3" /> Admin</Badge>
-            <p className="text-muted-foreground">Full access: manage data, users, and settings</p>
+            <p className="text-muted-foreground">Full access: manage all data, users, and settings</p>
           </div>
         </div>
       </div>
+
+      {/* Table Permissions Dialog */}
+      <Dialog open={permissionDialogOpen} onOpenChange={setPermissionDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Table Permissions for {selectedUser?.name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 max-h-[400px] overflow-y-auto py-4">
+            {EDITABLE_TABLES.map(table => (
+              <div 
+                key={table.table_name} 
+                className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50"
+              >
+                <Checkbox
+                  id={table.table_name}
+                  checked={userPermissions.includes(table.table_name)}
+                  onCheckedChange={() => togglePermission(table.table_name)}
+                />
+                <label 
+                  htmlFor={table.table_name}
+                  className="text-sm font-medium cursor-pointer flex-1"
+                >
+                  {table.label}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={() => setPermissionDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={savePermissions} disabled={savingPermissions}>
+              {savingPermissions ? "Saving..." : "Save Permissions"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
