@@ -973,11 +973,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_table_permissions: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          table_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          table_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          table_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_edit_table: {
+        Args: { _table_name: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
