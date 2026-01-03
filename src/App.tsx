@@ -26,6 +26,7 @@ import AuditLogs from "./pages/AuditLogs";
 import RegionMappingAdmin from "./pages/RegionMappingAdmin";
 import STCDataCollection from "./pages/STCDataCollection";
 import STCForm from "./pages/STCForm";
+import STCFormV4 from "./pages/STCFormV4";
 import STCReport from "./pages/STCReport";
 import NotFound from "./pages/NotFound";
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/infrastructure/insights" element={<InfrastructureInsights />} />
             <Route path="/infrastructure/stc" element={<STCDataCollection />} />
             <Route path="/infrastructure/stc/:centreId" element={<STCForm />} />
+            <Route path="/infrastructure/stc/:centreId/form" element={<STCFormV4 />} />
             <Route path="/infrastructure/stc/:centreId/report" element={<STCReport />} />
             <Route path="/capacity" element={<Capacity />} />
             <Route path="/geographic" element={<GeographicAnalytics />} />

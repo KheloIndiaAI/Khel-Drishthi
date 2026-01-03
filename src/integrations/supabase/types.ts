@@ -1056,8 +1056,43 @@ export type Database = {
           },
         ]
       }
+      stc_competition_summary: {
+        Row: {
+          assessment_id: string
+          centre_id: string
+          competition_level: string
+          created_at: string | null
+          id: string
+          medals_count: number | null
+          participations_count: number | null
+          top8_count: number | null
+        }
+        Insert: {
+          assessment_id: string
+          centre_id: string
+          competition_level: string
+          created_at?: string | null
+          id?: string
+          medals_count?: number | null
+          participations_count?: number | null
+          top8_count?: number | null
+        }
+        Update: {
+          assessment_id?: string
+          centre_id?: string
+          competition_level?: string
+          created_at?: string | null
+          id?: string
+          medals_count?: number | null
+          participations_count?: number | null
+          top8_count?: number | null
+        }
+        Relationships: []
+      }
       stc_detailed_data: {
         Row: {
+          assessment_id: string | null
+          assessment_year: number | null
           athlete_details: Json | null
           centre_id: string
           centre_identity: Json | null
@@ -1065,14 +1100,20 @@ export type Database = {
           challenges: Json | null
           created_at: string
           current_section: number | null
+          data_quality_flags: Json | null
+          derived_kpis: Json | null
           equipment_inventory: Json | null
           form_progress: number | null
+          form_version: number | null
           hostel_facilities: Json | null
           id: string
           infrastructure: Json | null
+          is_submitted: boolean | null
           last_section_completed: string | null
           medical_facilities: Json | null
           region: string | null
+          respondent: Json | null
+          scoring: Json | null
           staff_details: Json | null
           state: string | null
           submitted_at: string | null
@@ -1080,6 +1121,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          assessment_id?: string | null
+          assessment_year?: number | null
           athlete_details?: Json | null
           centre_id: string
           centre_identity?: Json | null
@@ -1087,14 +1130,20 @@ export type Database = {
           challenges?: Json | null
           created_at?: string
           current_section?: number | null
+          data_quality_flags?: Json | null
+          derived_kpis?: Json | null
           equipment_inventory?: Json | null
           form_progress?: number | null
+          form_version?: number | null
           hostel_facilities?: Json | null
           id?: string
           infrastructure?: Json | null
+          is_submitted?: boolean | null
           last_section_completed?: string | null
           medical_facilities?: Json | null
           region?: string | null
+          respondent?: Json | null
+          scoring?: Json | null
           staff_details?: Json | null
           state?: string | null
           submitted_at?: string | null
@@ -1102,6 +1151,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          assessment_id?: string | null
+          assessment_year?: number | null
           athlete_details?: Json | null
           centre_id?: string
           centre_identity?: Json | null
@@ -1109,19 +1160,205 @@ export type Database = {
           challenges?: Json | null
           created_at?: string
           current_section?: number | null
+          data_quality_flags?: Json | null
+          derived_kpis?: Json | null
           equipment_inventory?: Json | null
           form_progress?: number | null
+          form_version?: number | null
           hostel_facilities?: Json | null
           id?: string
           infrastructure?: Json | null
+          is_submitted?: boolean | null
           last_section_completed?: string | null
           medical_facilities?: Json | null
           region?: string | null
+          respondent?: Json | null
+          scoring?: Json | null
           staff_details?: Json | null
           state?: string | null
           submitted_at?: string | null
           submitted_by?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      stc_discipline_strength: {
+        Row: {
+          assessment_id: string
+          centre_id: string
+          created_at: string | null
+          discipline_code: string
+          discipline_name: string | null
+          equipment_adequacy_status: string | null
+          existing_nonres_boys: number | null
+          existing_nonres_girls: number | null
+          existing_res_boys: number | null
+          existing_res_girls: number | null
+          existing_total: number | null
+          facility_availability_status: string | null
+          facility_distance_km: number | null
+          facility_partner_name: string | null
+          fop_condition_rating: number | null
+          fop_count: number | null
+          fop_location: string | null
+          fop_maintenance_status: string | null
+          fop_primary_type: string | null
+          fop_surface_type: string | null
+          id: string
+          notes: string | null
+          sanctioned_nonres_boys: number | null
+          sanctioned_nonres_girls: number | null
+          sanctioned_res_boys: number | null
+          sanctioned_res_girls: number | null
+          sanctioned_total: number | null
+          surplus_total: number | null
+          updated_at: string | null
+          utilization_rate: number | null
+          vacancy_total: number | null
+        }
+        Insert: {
+          assessment_id: string
+          centre_id: string
+          created_at?: string | null
+          discipline_code: string
+          discipline_name?: string | null
+          equipment_adequacy_status?: string | null
+          existing_nonres_boys?: number | null
+          existing_nonres_girls?: number | null
+          existing_res_boys?: number | null
+          existing_res_girls?: number | null
+          existing_total?: number | null
+          facility_availability_status?: string | null
+          facility_distance_km?: number | null
+          facility_partner_name?: string | null
+          fop_condition_rating?: number | null
+          fop_count?: number | null
+          fop_location?: string | null
+          fop_maintenance_status?: string | null
+          fop_primary_type?: string | null
+          fop_surface_type?: string | null
+          id?: string
+          notes?: string | null
+          sanctioned_nonres_boys?: number | null
+          sanctioned_nonres_girls?: number | null
+          sanctioned_res_boys?: number | null
+          sanctioned_res_girls?: number | null
+          sanctioned_total?: number | null
+          surplus_total?: number | null
+          updated_at?: string | null
+          utilization_rate?: number | null
+          vacancy_total?: number | null
+        }
+        Update: {
+          assessment_id?: string
+          centre_id?: string
+          created_at?: string | null
+          discipline_code?: string
+          discipline_name?: string | null
+          equipment_adequacy_status?: string | null
+          existing_nonres_boys?: number | null
+          existing_nonres_girls?: number | null
+          existing_res_boys?: number | null
+          existing_res_girls?: number | null
+          existing_total?: number | null
+          facility_availability_status?: string | null
+          facility_distance_km?: number | null
+          facility_partner_name?: string | null
+          fop_condition_rating?: number | null
+          fop_count?: number | null
+          fop_location?: string | null
+          fop_maintenance_status?: string | null
+          fop_primary_type?: string | null
+          fop_surface_type?: string | null
+          id?: string
+          notes?: string | null
+          sanctioned_nonres_boys?: number | null
+          sanctioned_nonres_girls?: number | null
+          sanctioned_res_boys?: number | null
+          sanctioned_res_girls?: number | null
+          sanctioned_total?: number | null
+          surplus_total?: number | null
+          updated_at?: string | null
+          utilization_rate?: number | null
+          vacancy_total?: number | null
+        }
+        Relationships: []
+      }
+      stc_equipment_gaps: {
+        Row: {
+          assessment_id: string
+          centre_id: string
+          created_at: string | null
+          discipline_code: string | null
+          gap_item_name: string
+          gap_priority: string | null
+          gap_qty_required: number | null
+          id: string
+        }
+        Insert: {
+          assessment_id: string
+          centre_id: string
+          created_at?: string | null
+          discipline_code?: string | null
+          gap_item_name: string
+          gap_priority?: string | null
+          gap_qty_required?: number | null
+          id?: string
+        }
+        Update: {
+          assessment_id?: string
+          centre_id?: string
+          created_at?: string | null
+          discipline_code?: string | null
+          gap_item_name?: string
+          gap_priority?: string | null
+          gap_qty_required?: number | null
+          id?: string
+        }
+        Relationships: []
+      }
+      stc_staff_roster: {
+        Row: {
+          assessment_id: string
+          centre_id: string
+          created_at: string | null
+          dedicated_to_stc: boolean | null
+          discipline_code: string | null
+          division_responsibility: string[] | null
+          employment_nature: string | null
+          id: string
+          posted_since_date: string | null
+          staff_designation: string | null
+          staff_name: string | null
+          staff_type: string
+        }
+        Insert: {
+          assessment_id: string
+          centre_id: string
+          created_at?: string | null
+          dedicated_to_stc?: boolean | null
+          discipline_code?: string | null
+          division_responsibility?: string[] | null
+          employment_nature?: string | null
+          id?: string
+          posted_since_date?: string | null
+          staff_designation?: string | null
+          staff_name?: string | null
+          staff_type: string
+        }
+        Update: {
+          assessment_id?: string
+          centre_id?: string
+          created_at?: string | null
+          dedicated_to_stc?: boolean | null
+          discipline_code?: string | null
+          division_responsibility?: string[] | null
+          employment_nature?: string | null
+          id?: string
+          posted_since_date?: string | null
+          staff_designation?: string | null
+          staff_name?: string | null
+          staff_type?: string
         }
         Relationships: []
       }
