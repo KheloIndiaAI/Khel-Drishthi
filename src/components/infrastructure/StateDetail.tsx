@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { getRegionDisplayName } from "@/lib/regionMapping";
 import { StateStats } from "./StateCard";
+import { AdminMappingControls } from "./AdminMappingControls";
 
 interface Centre {
   centre_id: string;
@@ -79,7 +80,14 @@ export const StateDetail = ({
           <ChevronLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h2 className="text-2xl font-display">{state.stateName}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl font-display">{state.stateName}</h2>
+            <AdminMappingControls 
+              stateName={state.stateName} 
+              currentRegion={state.regionName} 
+              compact 
+            />
+          </div>
           {state.regionName && (
             <p className="text-muted-foreground text-sm">
               {getRegionDisplayName(state.regionName)}
