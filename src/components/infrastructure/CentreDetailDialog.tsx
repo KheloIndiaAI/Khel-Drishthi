@@ -1,12 +1,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2, MapPin, Users, Target } from "lucide-react";
+import { Building2, MapPin, Users, Target, ClipboardEdit, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 import { AdminMappingControls } from "./AdminMappingControls";
-
 interface CapacityData {
   id: string;
   centre_id: string | null;
@@ -63,6 +64,8 @@ export function CentreDetailDialog({
   open, 
   onOpenChange 
 }: CentreDetailDialogProps) {
+  const navigate = useNavigate();
+  
   if (!centre) return null;
 
   // Group capacity data by discipline
@@ -340,6 +343,33 @@ export function CentreDetailDialog({
           <div className="text-center py-6 text-muted-foreground">
             <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>No detailed capacity data available for this centre</p>
+          </div>
+        )}
+
+        {/* STC Data Collection Actions */}
+        {centre.centre_type === 'STC' && (
+          <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t mt-4">
+            <Button
+              className="flex-1 gap-2"
+              onClick={() => {
+                onOpenChange(false);
+                navigate(`/infrastructure/stc/${centre.centre_id}/form`);
+              }}
+            >
+              <ClipboardEdit className="h-4 w-4" />
+              Data Collection Form
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 gap-2"
+              onClick={() => {
+                onOpenChange(false);
+                navigate(`/infrastructure/stc/${centre.centre_id}/report`);
+              }}
+            >
+              <FileText className="h-4 w-4" />
+              View Report
+            </Button>
           </div>
         )}
       </DialogContent>
