@@ -1056,6 +1056,75 @@ export type Database = {
           },
         ]
       }
+      stc_detailed_data: {
+        Row: {
+          athlete_details: Json | null
+          centre_id: string
+          centre_identity: Json | null
+          centre_name: string | null
+          challenges: Json | null
+          created_at: string
+          current_section: number | null
+          equipment_inventory: Json | null
+          form_progress: number | null
+          hostel_facilities: Json | null
+          id: string
+          infrastructure: Json | null
+          last_section_completed: string | null
+          medical_facilities: Json | null
+          region: string | null
+          staff_details: Json | null
+          state: string | null
+          submitted_at: string | null
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          athlete_details?: Json | null
+          centre_id: string
+          centre_identity?: Json | null
+          centre_name?: string | null
+          challenges?: Json | null
+          created_at?: string
+          current_section?: number | null
+          equipment_inventory?: Json | null
+          form_progress?: number | null
+          hostel_facilities?: Json | null
+          id?: string
+          infrastructure?: Json | null
+          last_section_completed?: string | null
+          medical_facilities?: Json | null
+          region?: string | null
+          staff_details?: Json | null
+          state?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          athlete_details?: Json | null
+          centre_id?: string
+          centre_identity?: Json | null
+          centre_name?: string | null
+          challenges?: Json | null
+          created_at?: string
+          current_section?: number | null
+          equipment_inventory?: Json | null
+          form_progress?: number | null
+          hostel_facilities?: Json | null
+          id?: string
+          infrastructure?: Json | null
+          last_section_completed?: string | null
+          medical_facilities?: Json | null
+          region?: string | null
+          staff_details?: Json | null
+          state?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
