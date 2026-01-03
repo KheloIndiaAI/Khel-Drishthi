@@ -252,7 +252,7 @@ const STCDataCollection: React.FC = () => {
                 disciplines={stc.disciplines}
                 athleteCount={stc.athleteCount}
                 formProgress={stc.formProgress}
-                onClick={() => navigate(`/infrastructure/stc/${stc.centre_id}`)}
+                onClick={() => navigate(`/infrastructure/stc/${stc.centre_id}/form`)}
               />
             ))}
           </div>
