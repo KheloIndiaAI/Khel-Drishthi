@@ -24,6 +24,9 @@ import GeographicAnalytics from "./pages/GeographicAnalytics";
 import DataEditor from "./pages/DataEditor";
 import AuditLogs from "./pages/AuditLogs";
 import RegionMappingAdmin from "./pages/RegionMappingAdmin";
+import STCDataCollection from "./pages/STCDataCollection";
+import STCForm from "./pages/STCForm";
+import STCReport from "./pages/STCReport";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +43,9 @@ const App = () => (
             <Route path="/sport/:sportId" element={<SportDetail />} />
             <Route path="/infrastructure" element={<Infrastructure />} />
             <Route path="/infrastructure/insights" element={<InfrastructureInsights />} />
+            <Route path="/infrastructure/stc" element={<STCDataCollection />} />
+            <Route path="/infrastructure/stc/:centreId" element={<STCForm />} />
+            <Route path="/infrastructure/stc/:centreId/report" element={<STCReport />} />
             <Route path="/capacity" element={<Capacity />} />
             <Route path="/geographic" element={<GeographicAnalytics />} />
             <Route path="/medals" element={<Medals />} />
