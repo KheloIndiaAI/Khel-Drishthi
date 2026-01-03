@@ -36,14 +36,14 @@ export function FormHeader({
   lastSaved,
   onExit,
 }: FormHeaderProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false); // Start collapsed to save space
 
   const handleChange = (field: keyof RespondentData, value: string | number) => {
     setRespondent({ ...respondent, [field]: value });
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm flex-shrink-0">
       {/* Main Header Bar */}
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
