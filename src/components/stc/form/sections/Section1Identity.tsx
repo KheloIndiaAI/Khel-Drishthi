@@ -41,7 +41,7 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
   };
 
   const isPrefilled = (field: string) => {
-    return prefillData && (prefillData as Record<string, unknown>)[field];
+    return prefillData && (prefillData as unknown as Record<string, unknown>)[field];
   };
 
   return (

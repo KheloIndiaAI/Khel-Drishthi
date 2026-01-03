@@ -118,7 +118,7 @@ export function Section9Discipline({ formData, setFormData, disciplines }: Secti
             <Input
               type="number"
               min={0}
-              value={value || ''}
+              value={(value as string | number) || ''}
               onChange={(e) => updateDisciplineSpecific(discipline, question.id, parseInt(e.target.value) || undefined)}
               className="w-full md:w-48"
             />
