@@ -87,9 +87,9 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
         onExit={handleExit}
       />
 
-      {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
+      {/* Main Content Area - relative container for sidebar */}
+      <div className="flex flex-1 relative">
+        {/* Sidebar - positioned relative to content area, not header */}
         <SectionSidebar
           sections={FORM_SECTIONS}
           currentSection={currentSection}
