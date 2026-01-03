@@ -8,7 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Building2,
   MapPin,
@@ -17,6 +27,7 @@ import {
   CheckCircle2,
   Search,
   RefreshCw,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageSEO from "@/components/seo/PageSEO";
@@ -39,6 +50,11 @@ const RegionMappingAdmin = () => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [pendingChanges, setPendingChanges] = useState<Record<string, string>>({});
+  
+  // New regional centre form state
+  const [showNewCentreDialog, setShowNewCentreDialog] = useState(false);
+  const [newCentreName, setNewCentreName] = useState("");
+  const [newCentreDisplayName, setNewCentreDisplayName] = useState("");
 
   // Fetch regional centres
   const { data: regionalCentres, isLoading: loadingCentres } = useQuery({
@@ -110,6 +126,26 @@ const RegionMappingAdmin = () => {
     },
   });
 
+  // Mutation for creating new regional centre
+  const createCentreMutation = useMutation({
+    mutationFn: async ({ name, display_name, sort_order }: { name: string; display_name: string; sort_order: number }) => {
+      const { error } = await supabase
+        .from("regional_centres")
+        .insert({ name, display_name, sort_order });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["regional-centres"] });
+      setShowNewCentreDialog(false);
+      setNewCentreName("");
+      setNewCentreDisplayName("");
+      toast.success("Regional centre created successfully");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to create regional centre");
+    },
+  });
+
   const isLoading = loadingCentres || loadingMappings;
 
   // Compute unmapped states
@@ -178,6 +214,23 @@ const RegionMappingAdmin = () => {
     return pendingChanges[mappingId] && pendingChanges[mappingId] !== currentRegionId;
   };
 
+  const handleCreateCentre = () => {
+    if (!newCentreName.trim() || !newCentreDisplayName.trim()) {
+      toast.error("Please fill in both name and display name");
+      return;
+    }
+    
+    // Generate the RC name format
+    const rcName = newCentreName.startsWith("RC ") ? newCentreName : `RC ${newCentreName}`;
+    const nextSortOrder = (regionalCentres?.length || 0) + 1;
+    
+    createCentreMutation.mutate({
+      name: rcName,
+      display_name: newCentreDisplayName.trim(),
+      sort_order: nextSortOrder,
+    });
+  };
+
   return (
     <DashboardLayout>
       <PageSEO
@@ -215,6 +268,60 @@ const RegionMappingAdmin = () => {
                 </CardContent>
               </Card>
             ))}
+            
+            {/* Add New Regional Centre Card */}
+            <Dialog open={showNewCentreDialog} onOpenChange={setShowNewCentreDialog}>
+              <DialogTrigger asChild>
+                <Card className="hover:shadow-md transition-shadow cursor-pointer border-dashed border-2 hover:border-primary/50">
+                  <CardContent className="pt-4 pb-3 flex flex-col items-center justify-center h-full min-h-[80px]">
+                    <Plus className="h-6 w-6 text-muted-foreground mb-1" />
+                    <span className="text-sm text-muted-foreground">Add New</span>
+                  </CardContent>
+                </Card>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Regional Centre</DialogTitle>
+                  <DialogDescription>
+                    Add a new SAI regional centre to the system. The name will be prefixed with "RC" automatically if not provided.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="centre-name">Centre Name</Label>
+                    <Input
+                      id="centre-name"
+                      placeholder="e.g., Chennai or RC Chennai"
+                      value={newCentreName}
+                      onChange={(e) => setNewCentreName(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      This will be stored as: {newCentreName ? (newCentreName.startsWith("RC ") ? newCentreName : `RC ${newCentreName}`) : "RC [name]"}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="display-name">Display Name</Label>
+                    <Input
+                      id="display-name"
+                      placeholder="e.g., Chennai"
+                      value={newCentreDisplayName}
+                      onChange={(e) => setNewCentreDisplayName(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      This is shown in the UI cards and dropdowns.
+                    </p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setShowNewCentreDialog(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleCreateCentre} disabled={createCentreMutation.isPending}>
+                    {createCentreMutation.isPending ? "Creating..." : "Create Centre"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
 
