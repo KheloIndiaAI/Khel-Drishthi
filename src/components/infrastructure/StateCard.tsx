@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Target, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getRegionDisplayName } from "@/lib/regionMapping";
+import { AdminMappingControls } from "./AdminMappingControls";
 
 export interface StateStats {
   stateName: string;
@@ -43,6 +44,11 @@ export const StateCard = ({ state, onClick, isSelected, compact = false }: State
             <div className="flex items-center gap-2 min-w-0 flex-1">
               <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="font-medium truncate">{state.stateName}</span>
+              <AdminMappingControls 
+                stateName={state.stateName} 
+                currentRegion={state.regionName} 
+                compact 
+              />
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <Badge variant="outline" className="text-xs">
@@ -71,7 +77,14 @@ export const StateCard = ({ state, onClick, isSelected, compact = false }: State
             <MapPin className="h-4 w-4 text-primary" />
             <h3 className="font-semibold">{state.stateName}</h3>
           </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center gap-1">
+            <AdminMappingControls 
+              stateName={state.stateName} 
+              currentRegion={state.regionName} 
+              compact 
+            />
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </div>
         </div>
 
         {/* Region */}

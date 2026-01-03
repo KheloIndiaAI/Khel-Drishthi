@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building2, MapPin, Users, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AdminMappingControls } from "./AdminMappingControls";
 
 interface CapacityData {
   id: string;
@@ -115,10 +116,15 @@ export function CentreDetailDialog({
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-lg font-semibold truncate">{centre.centre_name}</h2>
-              <p className="text-sm text-muted-foreground flex items-center gap-1">
+              <div className="text-sm text-muted-foreground flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
-                {centre.district ? `${centre.district}, ` : ""}{centre.state}
-              </p>
+                <span>{centre.district ? `${centre.district}, ` : ""}{centre.state}</span>
+                <AdminMappingControls 
+                  stateName={centre.state} 
+                  currentRegion={null} 
+                  compact 
+                />
+              </div>
             </div>
             <Badge className={cn("shrink-0", centreTypeColors[centre.centre_type] || "bg-muted")}>
               {centre.centre_type}

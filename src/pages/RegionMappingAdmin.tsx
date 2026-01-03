@@ -28,6 +28,7 @@ import {
   Search,
   RefreshCw,
   Plus,
+  Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageSEO from "@/components/seo/PageSEO";
@@ -55,6 +56,12 @@ const RegionMappingAdmin = () => {
   const [showNewCentreDialog, setShowNewCentreDialog] = useState(false);
   const [newCentreName, setNewCentreName] = useState("");
   const [newCentreDisplayName, setNewCentreDisplayName] = useState("");
+  
+  // Edit regional centre state
+  const [showEditCentreDialog, setShowEditCentreDialog] = useState(false);
+  const [editingCentre, setEditingCentre] = useState<RegionalCentre | null>(null);
+  const [editCentreName, setEditCentreName] = useState("");
+  const [editCentreDisplayName, setEditCentreDisplayName] = useState("");
 
   // Fetch regional centres
   const { data: regionalCentres, isLoading: loadingCentres } = useQuery({
@@ -136,6 +143,7 @@ const RegionMappingAdmin = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["regional-centres"] });
+      queryClient.invalidateQueries({ queryKey: ["regional-centres-hook"] });
       setShowNewCentreDialog(false);
       setNewCentreName("");
       setNewCentreDisplayName("");
@@ -143,6 +151,29 @@ const RegionMappingAdmin = () => {
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to create regional centre");
+    },
+  });
+
+  // Mutation for updating regional centre
+  const updateCentreMutation = useMutation({
+    mutationFn: async ({ id, name, display_name }: { id: string; name: string; display_name: string }) => {
+      const { error } = await supabase
+        .from("regional_centres")
+        .update({ name, display_name })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["regional-centres"] });
+      queryClient.invalidateQueries({ queryKey: ["regional-centres-hook"] });
+      queryClient.invalidateQueries({ queryKey: ["region-state-mappings"] });
+      queryClient.invalidateQueries({ queryKey: ["region-state-mappings-hook"] });
+      setShowEditCentreDialog(false);
+      setEditingCentre(null);
+      toast.success("Regional centre updated successfully");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to update regional centre");
     },
   });
 
@@ -231,6 +262,26 @@ const RegionMappingAdmin = () => {
     });
   };
 
+  const handleEditCentre = (centre: RegionalCentre) => {
+    setEditingCentre(centre);
+    setEditCentreName(centre.name);
+    setEditCentreDisplayName(centre.display_name);
+    setShowEditCentreDialog(true);
+  };
+
+  const handleSaveEditCentre = () => {
+    if (!editingCentre || !editCentreName.trim() || !editCentreDisplayName.trim()) {
+      toast.error("Please fill in both name and display name");
+      return;
+    }
+    
+    updateCentreMutation.mutate({
+      id: editingCentre.id,
+      name: editCentreName.trim(),
+      display_name: editCentreDisplayName.trim(),
+    });
+  };
+
   return (
     <DashboardLayout>
       <PageSEO
@@ -257,11 +308,19 @@ const RegionMappingAdmin = () => {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {regionSummary.map((rc) => (
-              <Card key={rc.id} className="hover:shadow-md transition-shadow">
+              <Card key={rc.id} className="hover:shadow-md transition-shadow group relative">
                 <CardContent className="pt-4 pb-3">
                   <div className="flex items-center gap-2 mb-1">
                     <Building2 className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-sm truncate">{rc.display_name}</span>
+                    <span className="font-medium text-sm truncate flex-1">{rc.display_name}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => handleEditCentre(rc)}
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </Button>
                   </div>
                   <div className="text-2xl font-bold">{rc.stateCount}</div>
                   <div className="text-xs text-muted-foreground">states/UTs</div>
@@ -324,6 +383,46 @@ const RegionMappingAdmin = () => {
             </Dialog>
           </div>
         )}
+
+        {/* Edit Regional Centre Dialog */}
+        <Dialog open={showEditCentreDialog} onOpenChange={setShowEditCentreDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Regional Centre</DialogTitle>
+              <DialogDescription>
+                Update the name and display name for this regional centre.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-centre-name">Centre Name</Label>
+                <Input
+                  id="edit-centre-name"
+                  placeholder="e.g., RC Chennai"
+                  value={editCentreName}
+                  onChange={(e) => setEditCentreName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-display-name">Display Name</Label>
+                <Input
+                  id="edit-display-name"
+                  placeholder="e.g., Chennai"
+                  value={editCentreDisplayName}
+                  onChange={(e) => setEditCentreDisplayName(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowEditCentreDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEditCentre} disabled={updateCentreMutation.isPending}>
+                {updateCentreMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Unmapped States Warning */}
         {unmappedStates.length > 0 && (
