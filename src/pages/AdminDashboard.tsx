@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lock, Trophy, MapPin, Calendar, Users, FileText, TrendingUp } from "lucide-react";
+import { Lock, Trophy, MapPin, Calendar, Users, FileText, TrendingUp, UserCheck } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 import type { Session } from "@supabase/supabase-js";
 
@@ -17,6 +17,7 @@ interface Stats {
   totalMedals: number;
   formSubmissions: number;
   activeUsers: number;
+  pendingRequests: number;
 }
 
 interface CentresByType {
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<Stats>({
-    totalSports: 0, totalCentres: 0, totalEvents: 0, la28Events: 0, ag2026Events: 0, totalMedals: 0, formSubmissions: 0, activeUsers: 0
+    totalSports: 0, totalCentres: 0, totalEvents: 0, la28Events: 0, ag2026Events: 0, totalMedals: 0, formSubmissions: 0, activeUsers: 0, pendingRequests: 0
   });
   const [centresByType, setCentresByType] = useState<CentresByType[]>([]);
   const [topSports, setTopSports] = useState<SportsByEvents[]>([]);
@@ -84,13 +85,14 @@ const AdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     // Fetch counts in parallel
-    const [sportsRes, centresRes, eventsRes, medalsRes, submissionsRes, profilesRes] = await Promise.all([
+    const [sportsRes, centresRes, eventsRes, medalsRes, submissionsRes, profilesRes, accessRequestsRes] = await Promise.all([
       supabase.from('sports').select('sport_id, la28_events, ag2026_events, sport_name', { count: 'exact' }),
       supabase.from('centres').select('centre_type', { count: 'exact' }),
       supabase.from('events').select('present_la28, present_ag2026', { count: 'exact' }),
       supabase.from('olympic_medals').select('id', { count: 'exact' }),
       supabase.from('form_submissions').select('id, form_id', { count: 'exact' }),
       supabase.from('profiles').select('id', { count: 'exact' }),
+      supabase.from('access_requests').select('id', { count: 'exact' }).eq('status', 'pending'),
     ]);
 
     // Calculate stats
@@ -106,6 +108,7 @@ const AdminDashboard = () => {
       totalMedals: medalsRes.count || 0,
       formSubmissions: submissionsRes.count || 0,
       activeUsers: profilesRes.count || 0,
+      pendingRequests: accessRequestsRes.count || 0,
     });
 
     // Centres by type
@@ -225,6 +228,28 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Pending Access Requests Alert */}
+      {stats.pendingRequests > 0 && (
+        <Card className="mb-8 bg-amber-500/10 border-amber-500/30 cursor-pointer hover:bg-amber-500/20 transition-colors" onClick={() => navigate('/admin/users')}>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-amber-500/20">
+                  <UserCheck className="h-6 w-6 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Pending Access Requests</p>
+                  <p className="text-2xl font-bold text-amber-500">{stats.pendingRequests}</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" className="border-amber-500/50 text-amber-600 hover:bg-amber-500/20">
+                Review Now
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Secondary Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
