@@ -176,10 +176,18 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
   // Calculate section progress
   const sectionProgress = useMemo(() => {
     return FORM_SECTIONS.map((_, index) => {
-      // Simple progress calculation based on filled fields
+      // Progress calculation based on filled fields - requires meaningful interaction
       switch (index) {
-        case 0: // Identity
-          return formData.core.stc_name && formData.core.operational_status ? 100 : 50;
+        case 0: // Identity - require verifications AND CIC name for 100%
+          const hasBasicData = !!formData.core.stc_name && !!formData.core.state && !!formData.core.operational_status;
+          const hasVerifications = formData.core.verify_stc_name && formData.core.verify_state && formData.core.verify_rc_name;
+          const hasCICName = !!formData.core.cic_name;
+          
+          if (hasBasicData && hasVerifications && hasCICName) return 100;
+          if (hasBasicData && hasVerifications) return 80;
+          if (hasBasicData && hasCICName) return 70;
+          if (hasBasicData) return 50;
+          return 0;
         case 1: // Disciplines
           return formData.disciplines.length > 0 ? 100 : 0;
         case 2: // Infrastructure

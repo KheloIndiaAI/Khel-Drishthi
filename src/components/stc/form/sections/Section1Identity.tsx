@@ -280,7 +280,7 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
               id="cic_designation"
               value={formData.core.cic_designation || ''}
               onChange={(e) => updateCore('cic_designation', e.target.value)}
-              placeholder="e.g., Senior Coach, District Sports Officer"
+              placeholder="e.g., Coach / Senior Coach / Assistant Director / Deputy Director"
             />
           </div>
 
