@@ -30,6 +30,9 @@ export interface DisciplineStrength {
   boarding_capacity_constraint?: boolean;
   sanctioned_zero_note?: string;
   strength_surplus_note?: string;
+  // Notes and catchment area
+  discipline_note?: string;
+  catchment_area?: string;
   // Facility fields
   facility_availability_status?: string;
   facility_partner_name?: string;
@@ -49,6 +52,15 @@ export interface DisciplineStrength {
   warmup_area_available?: boolean;
   // Equipment
   equipment_adequacy_status?: string;
+}
+
+export interface PreviouslyOperationalDiscipline {
+  discipline_name: string;
+  years_operational_from?: number;
+  years_operational_to?: number;
+  was_residential: boolean;
+  was_nonresidential: boolean;
+  reason_discontinued?: string;
 }
 
 export interface StaffRoster {
@@ -222,6 +234,10 @@ export interface FormData {
   talent: TalentData;
   disciplineSpecific: Record<string, Record<string, unknown>>;
   attachments: AttachmentFile[];
+  // Section 2 additional fields
+  had_previous_disciplines?: boolean;
+  previous_disciplines?: PreviouslyOperationalDiscipline[];
+  new_discipline_suggestions?: string;
 }
 
 export interface PrefillData {

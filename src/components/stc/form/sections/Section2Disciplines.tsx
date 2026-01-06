@@ -3,15 +3,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Database, Users, AlertTriangle } from "lucide-react";
-import type { FormData, PrefillData, DisciplineStrength } from "../../utils/formConfig";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Database, Users, AlertTriangle, Plus, Trash2, MapPin, MessageSquare, Lightbulb } from "lucide-react";
+import type { FormData, PrefillData, DisciplineStrength, PreviouslyOperationalDiscipline } from "../../utils/formConfig";
 
 interface SectionProps {
   formData: FormData;
@@ -60,6 +56,40 @@ export function Section2Disciplines({ formData, setFormData, prefillData }: Sect
     },
     { sanctioned: 0, existing: 0, vacancy: 0, surplus: 0 }
   );
+
+  // Previously operational disciplines handlers
+  const addPreviousDiscipline = () => {
+    const current = formData.previous_disciplines || [];
+    setFormData({
+      ...formData,
+      previous_disciplines: [
+        ...current,
+        {
+          discipline_name: '',
+          was_residential: false,
+          was_nonresidential: false,
+        },
+      ],
+    });
+  };
+
+  const updatePreviousDiscipline = (index: number, field: keyof PreviouslyOperationalDiscipline, value: unknown) => {
+    const updated = [...(formData.previous_disciplines || [])];
+    updated[index] = { ...updated[index], [field]: value };
+    setFormData({
+      ...formData,
+      previous_disciplines: updated,
+    });
+  };
+
+  const removePreviousDiscipline = (index: number) => {
+    const updated = [...(formData.previous_disciplines || [])];
+    updated.splice(index, 1);
+    setFormData({
+      ...formData,
+      previous_disciplines: updated,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -284,32 +314,195 @@ export function Section2Disciplines({ formData, setFormData, prefillData }: Sect
                   </div>
                 )}
 
-                {/* Age Group */}
-                <div className="grid grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor={`age_group_${index}`}>Age Group</Label>
-                    <Select
-                      value={discipline.age_group || ''}
-                      onValueChange={(value) => updateDiscipline(index, 'age_group', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select age group" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="U14">U14</SelectItem>
-                        <SelectItem value="U16">U16</SelectItem>
-                        <SelectItem value="U18">U18</SelectItem>
-                        <SelectItem value="Senior">Senior</SelectItem>
-                        <SelectItem value="Mixed">Mixed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                {/* Notes Field */}
+                <div className="space-y-2 pt-2 border-t border-border">
+                  <Label htmlFor={`note_${index}`} className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    Notes
+                  </Label>
+                  <Textarea
+                    id={`note_${index}`}
+                    placeholder="Suggestions and comments with regards to increase or decrease in strength and other inputs regarding the above discipline can be given here"
+                    value={discipline.discipline_note || ''}
+                    onChange={(e) => updateDiscipline(index, 'discipline_note', e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                </div>
+
+                {/* Catchment Area Field */}
+                <div className="space-y-2">
+                  <Label htmlFor={`catchment_${index}`} className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    Catchment Area Details
+                  </Label>
+                  <Textarea
+                    id={`catchment_${index}`}
+                    placeholder="Details of the catchment area for this discipline/sport including nearby districts, talent pockets, and proximity to training centers"
+                    value={discipline.catchment_area || ''}
+                    onChange={(e) => updateDiscipline(index, 'catchment_area', e.target.value)}
+                    className="min-h-[80px]"
+                  />
                 </div>
               </CardContent>
             </Card>
           );
         })
       )}
+
+      {/* Previously Operational Disciplines Section */}
+      <Card className="border-dashed">
+        <CardHeader>
+          <CardTitle className="text-lg">Previously Operational Disciplines</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Are there any other disciplines which were operational earlier in the centre, but not operational currently?
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <RadioGroup
+            value={formData.had_previous_disciplines === true ? 'yes' : formData.had_previous_disciplines === false ? 'no' : ''}
+            onValueChange={(value) => {
+              setFormData({
+                ...formData,
+                had_previous_disciplines: value === 'yes',
+                previous_disciplines: value === 'yes' ? (formData.previous_disciplines || []) : [],
+              });
+            }}
+            className="flex gap-6"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="yes" id="prev_yes" />
+              <Label htmlFor="prev_yes">Yes</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="no" id="prev_no" />
+              <Label htmlFor="prev_no">No</Label>
+            </div>
+          </RadioGroup>
+
+          {formData.had_previous_disciplines && (
+            <div className="space-y-4 mt-4">
+              {(formData.previous_disciplines || []).map((prevDisc, index) => (
+                <div key={index} className="p-4 bg-secondary/30 rounded-lg space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">Discipline {index + 1}</h4>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removePreviousDiscipline(index)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`prev_name_${index}`}>Name of Discipline</Label>
+                      <Input
+                        id={`prev_name_${index}`}
+                        value={prevDisc.discipline_name}
+                        onChange={(e) => updatePreviousDiscipline(index, 'discipline_name', e.target.value)}
+                        placeholder="Enter discipline name"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label htmlFor={`prev_from_${index}`}>From Year</Label>
+                        <Input
+                          id={`prev_from_${index}`}
+                          type="number"
+                          min={1950}
+                          max={new Date().getFullYear()}
+                          value={prevDisc.years_operational_from || ''}
+                          onChange={(e) => updatePreviousDiscipline(index, 'years_operational_from', parseInt(e.target.value) || undefined)}
+                          placeholder="e.g., 2010"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`prev_to_${index}`}>To Year</Label>
+                        <Input
+                          id={`prev_to_${index}`}
+                          type="number"
+                          min={1950}
+                          max={new Date().getFullYear()}
+                          value={prevDisc.years_operational_to || ''}
+                          onChange={(e) => updatePreviousDiscipline(index, 'years_operational_to', parseInt(e.target.value) || undefined)}
+                          placeholder="e.g., 2020"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <div className="flex gap-6">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`prev_res_${index}`}
+                          checked={prevDisc.was_residential}
+                          onCheckedChange={(checked) => updatePreviousDiscipline(index, 'was_residential', !!checked)}
+                        />
+                        <Label htmlFor={`prev_res_${index}`} className="cursor-pointer">Residential</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`prev_nonres_${index}`}
+                          checked={prevDisc.was_nonresidential}
+                          onCheckedChange={(checked) => updatePreviousDiscipline(index, 'was_nonresidential', !!checked)}
+                        />
+                        <Label htmlFor={`prev_nonres_${index}`} className="cursor-pointer">Non-Residential</Label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor={`prev_reason_${index}`}>Reason for Discontinuation (Optional)</Label>
+                    <Input
+                      id={`prev_reason_${index}`}
+                      value={prevDisc.reason_discontinued || ''}
+                      onChange={(e) => updatePreviousDiscipline(index, 'reason_discontinued', e.target.value)}
+                      placeholder="Brief reason why the discipline was discontinued"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addPreviousDiscipline}
+                className="w-full"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Another Discipline
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Suggestions for New Disciplines Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Lightbulb className="h-5 w-5 text-primary" />
+            Suggestions for Inclusion of New Disciplines
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            placeholder="Please provide justification for proposing new discipline(s), including:
+• Reason and rationale for the new discipline
+• Proposed strength breakdown (Residential/Non-Residential, Boys/Girls)
+• Details of talent pockets and catchment area proximity
+• Available infrastructure and coaching capacity"
+            value={formData.new_discipline_suggestions || ''}
+            onChange={(e) => setFormData({ ...formData, new_discipline_suggestions: e.target.value })}
+            className="min-h-[150px]"
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }
