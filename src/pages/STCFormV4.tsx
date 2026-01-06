@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageSEO } from "@/components/seo/PageSEO";
 import { STCFormLayout } from "@/components/stc/form/STCFormLayout";
+import { AccessRequestButton } from "@/components/access/AccessRequestButton";
 import { Loader2 } from "lucide-react";
-
 export default function STCFormV4() {
   const { centreId } = useParams<{ centreId: string }>();
   const navigate = useNavigate();
@@ -92,10 +92,18 @@ export default function STCFormV4() {
 
   if (!canEdit) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Access Restricted</h1>
-          <p className="text-muted-foreground">You don't have permission to edit this form.</p>
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center max-w-md space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground mb-2">Access Restricted</h1>
+            <p className="text-muted-foreground">
+              You need editor access to fill STC data collection forms. 
+              Request access below and an administrator will review your request.
+            </p>
+          </div>
+          {session?.user?.id && (
+            <AccessRequestButton userId={session.user.id} />
+          )}
         </div>
       </div>
     );
