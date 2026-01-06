@@ -28,7 +28,8 @@ const Auth = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (session) {
-          navigate('/admin');
+          // Redirect to STC Data Collection page after login
+          navigate('/infrastructure/stc');
         }
         setCheckingSession(false);
       }
@@ -37,7 +38,7 @@ const Auth = () => {
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/admin');
+        navigate('/infrastructure/stc');
       }
       setCheckingSession(false);
     });
@@ -67,7 +68,7 @@ const Auth = () => {
     if (!validateInputs()) return;
 
     setLoading(true);
-    const redirectUrl = `${window.location.origin}/admin`;
+    const redirectUrl = `${window.location.origin}/infrastructure/stc`;
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -125,8 +126,8 @@ const Auth = () => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Khel Drishti Admin</CardTitle>
-            <CardDescription>Sign in to access the admin panel</CardDescription>
+            <CardTitle className="text-2xl">Khel Drishti</CardTitle>
+            <CardDescription>Sign in to access STC Data Collection</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
