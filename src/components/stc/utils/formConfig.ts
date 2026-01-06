@@ -123,7 +123,93 @@ export interface CoreData {
   geo_location?: string; // Kept for backward compatibility
 }
 
+// ============= NEW INFRASTRUCTURE INTERFACES =============
+
+export type LandOwnershipType = 'Owned by SAI' | 'Lease' | 'Shared';
+export type ConditionRating = 'Excellent' | 'Good' | 'Needs Minor Repair' | 'Needs Major Renovation';
+export type RenovationStatus = 'Not Required' | 'Planned' | 'Ongoing' | 'Recently Completed';
+export type FOPType = 'Indoor' | 'Outdoor';
+export type TravelMode = 'By Walk' | 'Hired Vehicle' | 'SAI Vehicle' | 'Public Transport' | 'Other';
+
+export interface LandOwnershipData {
+  land_area_acres?: number;
+  land_ownership?: LandOwnershipType;
+  // MOU fields (only if NOT owned by SAI)
+  mou_signed?: boolean;
+  mou_tenure_years?: number;
+  mou_renewal_year?: number;
+  mou_not_signed_reason?: string;
+}
+
+export interface DisciplineFOPDetails {
+  discipline_code: string;
+  discipline_name: string;
+  fop_exclusive_to_sai?: boolean;
+  
+  // If exclusive to SAI
+  fop_type?: FOPType;
+  fop_construction_year?: number;
+  fop_condition?: ConditionRating;
+  fop_renovation_status?: RenovationStatus;
+  
+  // If NOT exclusive
+  fop_owned_by?: string;
+  fop_distance_km?: number;
+  fop_travel_mode?: TravelMode;
+  
+  // Discipline-specific fields stored as dynamic object
+  discipline_specific?: Record<string, unknown>;
+}
+
+export interface NonSanctionedFOP {
+  id?: string;
+  sport_name: string;
+  fop_condition?: ConditionRating;
+  renovation_status?: RenovationStatus;
+  consider_for_sanction: boolean;
+  notes?: string;
+}
+
+export interface IndoorFacilityDetails {
+  has_indoor_facilities?: boolean;
+  description?: string;
+  area_sqft?: number;
+  construction_year?: number;
+  condition?: ConditionRating;
+  renovation_status?: RenovationStatus;
+}
+
 export interface InfrastructureData {
+  // NEW: Land & Ownership
+  land?: LandOwnershipData;
+  
+  // NEW: Discipline-wise FOP
+  discipline_fops?: DisciplineFOPDetails[];
+  
+  // NEW: Non-sanctioned FOPs
+  has_non_sanctioned_fop?: boolean;
+  non_sanctioned_fops?: NonSanctionedFOP[];
+  
+  // NEW: Warm-up Area
+  warmup_area_available?: boolean;
+  warmup_area_description?: string;
+  
+  // NEW: S&C / Gym
+  snc_gym_description?: string;
+  
+  // NEW: Indoor Facilities
+  indoor_facilities?: IndoorFacilityDetails;
+  
+  // NEW: Surplus Land
+  surplus_land_available?: boolean;
+  surplus_land_acres?: number;
+  surplus_land_potential_use?: string;
+  
+  // NEW: Weather Impact
+  weather_impacts_training?: boolean;
+  weather_impact_description?: string;
+
+  // Legacy fields for backward compatibility
   land_area_acres?: number;
   built_up_area_sqft?: number;
   indoor_facilities_available?: string[];
@@ -273,7 +359,7 @@ export const FORM_SECTIONS: FormSection[] = [
   {
     id: 'infrastructure',
     title: 'Infrastructure & FoP',
-    description: 'Facilities, field of play specifications, and maintenance status',
+    description: 'Land ownership, field of play specifications, and facility details',
   },
   {
     id: 'hostel',
@@ -324,7 +410,12 @@ export const getDefaultFormData = (): FormData => ({
     operational_status: 'Operational',
   },
   disciplines: [],
-  infrastructure: {},
+  infrastructure: {
+    land: {},
+    discipline_fops: [],
+    non_sanctioned_fops: [],
+    indoor_facilities: {},
+  },
   hostel: {
     hostel_type: '',
   },
