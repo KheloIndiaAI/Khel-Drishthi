@@ -11,7 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Database, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Database, CheckCircle2, CalendarIcon, MapPin } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import type { FormData, PrefillData } from "../../utils/formConfig";
 
 interface SectionProps {
@@ -22,13 +31,13 @@ interface SectionProps {
   errors: Record<string, string>;
 }
 
-const NON_OPERATIONAL_REASONS = [
-  "Infrastructure",
-  "Coaches",
-  "Hostel",
-  "Safety",
-  "Funding",
-  "Admin",
+const ABEYANCE_REASONS = [
+  "Infrastructure Issues",
+  "Coach Vacancy",
+  "Hostel Issues",
+  "Safety Concerns",
+  "Funding Constraints",
+  "Administrative Issues",
   "Other",
 ];
 
@@ -142,32 +151,18 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Year of Establishment */}
-        <div className="space-y-2">
-          <Label htmlFor="year_establishment">Year of Establishment</Label>
-          <Input
-            id="year_establishment"
-            type="number"
-            min={1900}
-            max={new Date().getFullYear()}
-            value={formData.core.year_establishment || ''}
-            onChange={(e) => updateCore('year_establishment', e.target.value ? parseInt(e.target.value) : undefined)}
-          />
-        </div>
-
-        {/* Year of Inclusion */}
-        <div className="space-y-2">
-          <Label htmlFor="year_inclusion">Year of Inclusion (as STC)</Label>
-          <Input
-            id="year_inclusion"
-            type="number"
-            min={1900}
-            max={new Date().getFullYear()}
-            value={formData.core.year_inclusion || ''}
-            onChange={(e) => updateCore('year_inclusion', e.target.value ? parseInt(e.target.value) : undefined)}
-          />
-        </div>
+      {/* Year of Inclusion */}
+      <div className="space-y-2">
+        <Label htmlFor="year_inclusion">Year of Inclusion in the Scheme</Label>
+        <Input
+          id="year_inclusion"
+          type="number"
+          min={1900}
+          max={new Date().getFullYear()}
+          value={formData.core.year_inclusion || ''}
+          onChange={(e) => updateCore('year_inclusion', e.target.value ? parseInt(e.target.value) : undefined)}
+          className="max-w-[200px]"
+        />
       </div>
 
       {/* Operational Status */}
@@ -177,14 +172,12 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
           value={formData.core.operational_status}
           onValueChange={(value) => updateCore('operational_status', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="max-w-[300px]">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Fully operational">Fully operational</SelectItem>
-            <SelectItem value="Partially operational">Partially operational</SelectItem>
-            <SelectItem value="Temporarily closed">Temporarily closed</SelectItem>
-            <SelectItem value="Non-operational">Non-operational</SelectItem>
+            <SelectItem value="Operational">Operational</SelectItem>
+            <SelectItem value="Kept in Abeyance">Kept in Abeyance</SelectItem>
           </SelectContent>
         </Select>
         {errors.operational_status && (
@@ -192,31 +185,53 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
         )}
       </div>
 
-      {/* Non-operational fields */}
-      {formData.core.operational_status !== 'Fully operational' && (
+      {/* Abeyance fields - shown only when "Kept in Abeyance" is selected */}
+      {formData.core.operational_status === 'Kept in Abeyance' && (
         <div className="space-y-4 p-4 bg-secondary/30 rounded-lg border border-border">
           <div className="space-y-2">
-            <Label htmlFor="non_operational_since_date">Non-operational Since</Label>
-            <Input
-              id="non_operational_since_date"
-              type="date"
-              value={formData.core.non_operational_since_date || ''}
-              onChange={(e) => updateCore('non_operational_since_date', e.target.value)}
-            />
+            <Label htmlFor="abeyance_since_date">Kept in Abeyance Since</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full max-w-[280px] justify-start text-left font-normal",
+                    !formData.core.abeyance_since_date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {formData.core.abeyance_since_date ? (
+                    format(new Date(formData.core.abeyance_since_date), "PPP")
+                  ) : (
+                    <span>Select date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={formData.core.abeyance_since_date ? new Date(formData.core.abeyance_since_date) : undefined}
+                  onSelect={(date) => updateCore('abeyance_since_date', date?.toISOString().split('T')[0])}
+                  disabled={(date) => date > new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
-            <Label>Reasons for Non-operation</Label>
+            <Label>Reasons for Abeyance</Label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {NON_OPERATIONAL_REASONS.map((reason) => (
+              {ABEYANCE_REASONS.map((reason) => (
                 <div key={reason} className="flex items-center gap-2">
                   <Checkbox
                     id={`reason_${reason}`}
-                    checked={formData.core.non_operational_reasons?.includes(reason) || false}
+                    checked={formData.core.abeyance_reasons?.includes(reason) || false}
                     onCheckedChange={(checked) => {
-                      const current = formData.core.non_operational_reasons || [];
+                      const current = formData.core.abeyance_reasons || [];
                       updateCore(
-                        'non_operational_reasons',
+                        'abeyance_reasons',
                         checked
                           ? [...current, reason]
                           : current.filter((r) => r !== reason)
@@ -232,17 +247,116 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="non_operational_notes">Additional Notes</Label>
+            <Label htmlFor="abeyance_notes">Additional Notes</Label>
             <Textarea
-              id="non_operational_notes"
-              value={formData.core.non_operational_notes || ''}
-              onChange={(e) => updateCore('non_operational_notes', e.target.value)}
+              id="abeyance_notes"
+              value={formData.core.abeyance_notes || ''}
+              onChange={(e) => updateCore('abeyance_notes', e.target.value)}
               placeholder="Briefly explain the situation..."
               rows={2}
             />
           </div>
         </div>
       )}
+
+      {/* Centre In Charge (CIC) Section */}
+      <div className="border-t border-border pt-6 mt-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Centre In Charge (CIC)</h3>
+        
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="cic_name">Name of the Centre In Charge (CIC)</Label>
+            <Input
+              id="cic_name"
+              value={formData.core.cic_name || ''}
+              onChange={(e) => updateCore('cic_name', e.target.value)}
+              placeholder="Full name of the CIC"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cic_designation">Designation of Centre In Charge</Label>
+            <Input
+              id="cic_designation"
+              value={formData.core.cic_designation || ''}
+              onChange={(e) => updateCore('cic_designation', e.target.value)}
+              placeholder="e.g., Senior Coach, District Sports Officer"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cic_posted_since">Posted as CIC Since</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full max-w-[280px] justify-start text-left font-normal",
+                    !formData.core.cic_posted_since && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {formData.core.cic_posted_since ? (
+                    format(new Date(formData.core.cic_posted_since), "PPP")
+                  ) : (
+                    <span>Select date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={formData.core.cic_posted_since ? new Date(formData.core.cic_posted_since) : undefined}
+                  onSelect={(date) => updateCore('cic_posted_since', date?.toISOString().split('T')[0])}
+                  disabled={(date) => date > new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </div>
+
+      {/* Geo Coordinates Section */}
+      <div className="border-t border-border pt-6 mt-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <MapPin className="h-5 w-5" />
+          Geo Coordinates
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="latitude">Latitude</Label>
+            <Input
+              id="latitude"
+              type="number"
+              step="0.000001"
+              min={-90}
+              max={90}
+              value={formData.core.latitude ?? ''}
+              onChange={(e) => updateCore('latitude', e.target.value ? parseFloat(e.target.value) : undefined)}
+              placeholder="e.g., 28.6139"
+            />
+            <p className="text-xs text-muted-foreground">Range: -90 to 90</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="longitude">Longitude</Label>
+            <Input
+              id="longitude"
+              type="number"
+              step="0.000001"
+              min={-180}
+              max={180}
+              value={formData.core.longitude ?? ''}
+              onChange={(e) => updateCore('longitude', e.target.value ? parseFloat(e.target.value) : undefined)}
+              placeholder="e.g., 77.2090"
+            />
+            <p className="text-xs text-muted-foreground">Range: -180 to 180</p>
+          </div>
+        </div>
+      </div>
 
       {/* Address Section */}
       <div className="border-t border-border pt-6 mt-6">
