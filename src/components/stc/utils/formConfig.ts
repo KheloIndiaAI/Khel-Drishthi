@@ -88,15 +88,27 @@ export interface CoreData {
   rc_name: string;
   verify_rc_name: boolean;
   year_inclusion?: number;
-  year_establishment?: number;
+  year_establishment?: number; // Kept for backward compatibility
   operational_status: string;
+  abeyance_since_date?: string;
+  abeyance_reasons?: string[];
+  abeyance_notes?: string;
+  // Kept for backward compatibility
   non_operational_since_date?: string;
   non_operational_reasons?: string[];
   non_operational_notes?: string;
+  // Centre In Charge (CIC) fields
+  cic_name?: string;
+  cic_designation?: string;
+  cic_posted_since?: string;
+  // Geo coordinates
+  latitude?: number;
+  longitude?: number;
+  // Address
   address_line?: string;
   district?: string;
   pincode?: string;
-  geo_location?: string;
+  geo_location?: string; // Kept for backward compatibility
 }
 
 export interface InfrastructureData {
@@ -293,7 +305,7 @@ export const getDefaultFormData = (): FormData => ({
     verify_state: false,
     rc_name: '',
     verify_rc_name: false,
-    operational_status: 'Fully operational',
+    operational_status: 'Operational',
   },
   disciplines: [],
   infrastructure: {},
