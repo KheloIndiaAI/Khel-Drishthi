@@ -8,6 +8,8 @@ import { Section7Equipment } from "./sections/Section7Equipment";
 import { Section8Talent } from "./sections/Section8Talent";
 import { Section9Discipline } from "./sections/Section9Discipline";
 import { Section10Attachments } from "./sections/Section10Attachments";
+import { SectionHeader } from "./SectionHeader";
+import { ValidationSummary } from "./ValidationMessage";
 import type { FormSection, FormData, PrefillData } from "../utils/formConfig";
 
 interface SectionContentProps {
@@ -18,6 +20,7 @@ interface SectionContentProps {
   prefillData: PrefillData;
   disciplines: string[];
   validationErrors: Record<string, string>;
+  sectionProgress?: number;
 }
 
 const SECTION_COMPONENTS = [
@@ -41,8 +44,11 @@ export function SectionContent({
   prefillData,
   disciplines,
   validationErrors,
+  sectionProgress = 0,
 }: SectionContentProps) {
   const SectionComponent = SECTION_COMPONENTS[sectionIndex];
+  const hasErrors = Object.keys(validationErrors).length > 0;
+  const isComplete = sectionProgress === 100 && !hasErrors;
 
   if (!SectionComponent) {
     return (
@@ -54,26 +60,28 @@ export function SectionContent({
 
   return (
     <div className="space-y-6">
-      {/* Section Header */}
-      <div className="border-b border-border pb-4">
-        <h2 className="text-2xl font-display font-bold text-foreground">
-          {section.title}
-        </h2>
-        {section.description && (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {section.description}
-          </p>
-        )}
-      </div>
+      {/* Section Header with progress */}
+      <SectionHeader
+        title={section.title}
+        description={section.description}
+        sectionIndex={sectionIndex}
+        progress={sectionProgress}
+        isComplete={isComplete}
+      />
 
       {/* Section Content */}
-      <SectionComponent
-        formData={formData}
-        setFormData={setFormData}
-        prefillData={prefillData}
-        disciplines={disciplines}
-        errors={validationErrors}
-      />
+      <div className="stc-form-section">
+        <SectionComponent
+          formData={formData}
+          setFormData={setFormData}
+          prefillData={prefillData}
+          disciplines={disciplines}
+          errors={validationErrors}
+        />
+      </div>
+
+      {/* Validation Summary */}
+      <ValidationSummary errors={validationErrors} />
     </div>
   );
 }
