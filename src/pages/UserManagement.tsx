@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PendingAccessRequests } from "@/components/access/PendingAccessRequests";
 import type { Session } from "@supabase/supabase-js";
 import type { Database as SupabaseDB } from "@/integrations/supabase/types";
 
@@ -300,6 +301,9 @@ const UserManagement = () => {
           className="pl-10 max-w-md"
         />
       </div>
+
+      {/* Pending Access Requests */}
+      <PendingAccessRequests sessionUserId={session.user.id} />
 
       <Card>
         <CardHeader>
