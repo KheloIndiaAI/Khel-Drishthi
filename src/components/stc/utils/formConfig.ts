@@ -609,11 +609,6 @@ export const FORM_SECTIONS: FormSection[] = [
     description: 'Coaching staff, groundsmen, administrative personnel, and support staff',
   },
   {
-    id: 'medical',
-    title: 'Medical & Support Services',
-    description: 'Healthcare facilities and support services available',
-  },
-  {
     id: 'equipment',
     title: 'Equipment & S&C',
     description: 'Training equipment inventory and strength & conditioning setup',
@@ -622,11 +617,6 @@ export const FORM_SECTIONS: FormSection[] = [
     id: 'talent',
     title: 'Talent ID & Competitions',
     description: 'Athlete selection process and competition participation',
-  },
-  {
-    id: 'discipline-specific',
-    title: 'Discipline-Specific Questions',
-    description: 'Additional questions specific to each discipline offered',
   },
   {
     id: 'attachments',

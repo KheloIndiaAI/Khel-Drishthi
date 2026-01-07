@@ -173,12 +173,11 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
     }
   }, [existingData, prefillData, centreId]);
 
-  // Calculate section progress
+  // Calculate section progress - 8 sections now
   const sectionProgress = useMemo(() => {
-    return FORM_SECTIONS.map((_, index) => {
-      // Progress calculation based on filled fields - requires meaningful interaction
-      switch (index) {
-        case 0: // Identity - require verifications AND CIC name for 100%
+    return FORM_SECTIONS.map((section, index) => {
+      switch (section.id) {
+        case 'identity': {
           const hasBasicData = !!formData.core.stc_name && !!formData.core.state && !!formData.core.operational_status;
           const hasVerifications = formData.core.verify_stc_name && formData.core.verify_state && formData.core.verify_rc_name;
           const hasCICName = !!formData.core.cic_name;
@@ -188,24 +187,47 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
           if (hasBasicData && hasCICName) return 70;
           if (hasBasicData) return 50;
           return 0;
-        case 1: // Disciplines
+        }
+        case 'disciplines':
           return formData.disciplines.length > 0 ? 100 : 0;
-        case 2: // Infrastructure
-          return Object.keys(formData.infrastructure).length > 0 ? 
-            Math.min(100, Object.keys(formData.infrastructure).length * 10) : 0;
-        case 3: // Hostel
+        case 'infrastructure': {
+          const infraFields = formData.infrastructure;
+          const hasLand = infraFields.land && Object.keys(infraFields.land).some(k => (infraFields.land as Record<string, unknown>)[k] !== undefined);
+          const hasFops = infraFields.discipline_fops && infraFields.discipline_fops.length > 0;
+          if (hasLand && hasFops) return 100;
+          if (hasLand || hasFops) return 50;
+          return 0;
+        }
+        case 'hostel':
           return formData.hostel.hostel_type ? 100 : 0;
-        case 4: // Staff
-          return formData.staff.coach_count_total >= 0 ? 50 : 0;
-        case 5: // Medical
-          return Object.keys(formData.medical).length > 0 ? 100 : 0;
-        case 6: // Equipment
-          return Object.keys(formData.equipment).length > 0 ? 100 : 0;
-        case 7: // Talent
-          return Object.keys(formData.talent).length > 0 ? 100 : 0;
-        case 8: // Discipline-specific
-          return Object.keys(formData.disciplineSpecific).length > 0 ? 100 : 0;
-        case 9: // Attachments
+        case 'staff': {
+          const staff = formData.staff;
+          const hasCoaches = staff.coach_count_total > 0;
+          const hasAdmin = staff.admin_staff_count_total > 0;
+          if (hasCoaches && hasAdmin) return 100;
+          if (hasCoaches || hasAdmin) return 50;
+          return 0;
+        }
+        case 'equipment': {
+          const equip = formData.equipment;
+          // Check for meaningful equipment data
+          const hasOverallRating = equip.overall_equipment_quality_rating !== undefined && equip.overall_equipment_quality_rating > 0;
+          const hasDisciplineEquip = equip.discipline_equipment && equip.discipline_equipment.some(d => d.equipment_description || d.equipment_adequacy);
+          const hasSncSetup = !!equip.snc_setup_level;
+          
+          if (hasOverallRating && (hasDisciplineEquip || hasSncSetup)) return 100;
+          if (hasOverallRating || hasDisciplineEquip || hasSncSetup) return 50;
+          return 0;
+        }
+        case 'talent': {
+          const talent = formData.talent;
+          const hasTalentId = !!talent.talent_id_process;
+          const hasCompetition = !!talent.competition_participation_level;
+          if (hasTalentId && hasCompetition) return 100;
+          if (hasTalentId || hasCompetition) return 50;
+          return 0;
+        }
+        case 'attachments':
           return formData.attachments.length > 0 ? 100 : 0;
         default:
           return 0;

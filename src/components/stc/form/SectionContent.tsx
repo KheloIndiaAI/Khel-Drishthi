@@ -3,10 +3,8 @@ import { Section2Disciplines } from "./sections/Section2Disciplines";
 import { Section3Infrastructure } from "./sections/Section3Infrastructure";
 import { Section4Hostel } from "./sections/Section4Hostel";
 import { Section5Staff } from "./sections/Section5Staff";
-import { Section6Medical } from "./sections/Section6Medical";
 import { Section7Equipment } from "./sections/Section7Equipment";
 import { Section8Talent } from "./sections/Section8Talent";
-import { Section9Discipline } from "./sections/Section9Discipline";
 import { Section10Attachments } from "./sections/Section10Attachments";
 import { SectionHeader } from "./SectionHeader";
 import { ValidationSummary } from "./ValidationMessage";
@@ -23,16 +21,15 @@ interface SectionContentProps {
   sectionProgress?: number;
 }
 
+// 8 sections now: Identity, Disciplines, Infrastructure, Hostel, HR, Equipment, Talent, Attachments
 const SECTION_COMPONENTS = [
   Section1Identity,
   Section2Disciplines,
   Section3Infrastructure,
   Section4Hostel,
   Section5Staff,
-  Section6Medical,
   Section7Equipment,
   Section8Talent,
-  Section9Discipline,
   Section10Attachments,
 ];
 
