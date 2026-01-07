@@ -273,7 +273,7 @@ export function CoachingStaffCard({ formData, updateStaff, disciplines }: Coachi
                 <div className="space-y-1 md:col-span-2">
                   <Label className="text-xs">Level/Course Completed</Label>
                   <Input
-                    placeholder="e.g., NIS Diploma, NSNIS Level 2, SAI Certification..."
+                    placeholder="e.g., Level 1, Level 2, Level 3"
                     value={coach.course_level_completed || ''}
                     onChange={(e) => updateCoach(index, 'course_level_completed', e.target.value)}
                   />
