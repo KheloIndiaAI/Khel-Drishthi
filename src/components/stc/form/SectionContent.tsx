@@ -50,7 +50,8 @@ export function SectionContent({
   const isComplete = sectionProgress === 100 && !hasErrors;
 
   // Get the STC name for dynamic title replacement
-  const stcName = formData.core?.stc_name || prefillData.stc_name || 'STC';
+  const rawStcName = formData.core?.stc_name || prefillData.stc_name || '';
+  const stcName = rawStcName ? `STC ${rawStcName}` : 'STC';
   
   // Replace {STC_NAME} placeholder in title with actual name
   const dynamicTitle = section.title.replace('{STC_NAME}', stcName);
