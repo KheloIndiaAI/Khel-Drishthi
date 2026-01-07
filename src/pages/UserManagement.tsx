@@ -27,6 +27,9 @@ interface UserWithRole {
   role: AppRole;
   created_at: string;
   last_login: string | null;
+  requested_centre_id: string | null;
+  requested_region_id: string | null;
+  assignment_type: string | null;
 }
 
 interface TablePermission {
@@ -73,15 +76,24 @@ const UserManagement = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Fetch all centres for assignment dropdown
+  // Fetch all centres for assignment dropdown - deduplicated
   const { data: allCentres } = useQuery({
-    queryKey: ['all-stc-centres'],
+    queryKey: ['all-stc-centres-unique'],
     queryFn: async () => {
       const { data } = await supabase
         .from('stc_capacity')
         .select('centre_id, centre_name, state, region')
         .order('centre_name');
-      return data || [];
+      
+      // Deduplicate by centre_id
+      const uniqueCentres = data?.reduce((acc, curr) => {
+        if (!acc.find(c => c.centre_id === curr.centre_id)) {
+          acc.push(curr);
+        }
+        return acc;
+      }, [] as typeof data) || [];
+      
+      return uniqueCentres;
     },
     enabled: isAdmin,
   });
@@ -140,7 +152,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     const { data: profiles, error: profilesError } = await supabase
       .from('profiles')
-      .select('id, email, name, created_at, last_login')
+      .select('id, email, name, created_at, last_login, requested_centre_id, requested_region_id, assignment_type')
       .order('created_at', { ascending: false });
 
     if (profilesError || !profiles) {
@@ -459,6 +471,7 @@ const UserManagement = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Requested</TableHead>
                 <TableHead>Current Role</TableHead>
                 <TableHead>Change Role</TableHead>
                 <TableHead>Table Access</TableHead>
@@ -471,6 +484,21 @@ const UserManagement = () => {
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.assignment_type === 'centre' && user.requested_centre_id ? (
+                      <div className="flex items-center gap-1">
+                        <Building2 className="h-3 w-3 text-blue-500" />
+                        <span className="text-xs">{allCentres?.find(c => c.centre_id === user.requested_centre_id)?.centre_name || user.requested_centre_id}</span>
+                      </div>
+                    ) : user.assignment_type === 'region' && user.requested_region_id ? (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-green-500" />
+                        <span className="text-xs">{allRegions?.find(r => r.id === user.requested_region_id)?.display_name || 'Region'}</span>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={getRoleBadgeVariant(user.role)} className="gap-1">
                       {getRoleIcon(user.role)}
