@@ -448,12 +448,59 @@ export interface EquipmentData {
   snc_utilization_understood?: boolean;
 }
 
+// NEW: Discipline-wise Athlete Origin
+export interface DisciplineAthleteOrigin {
+  discipline_code: string;
+  discipline_name: string;
+  local_athletes_count?: number;
+  other_state_athletes_count?: number;
+}
+
+// NEW: Discipline-wise Competition Data
+export interface DisciplineCompetitionData {
+  discipline_code: string;
+  discipline_name: string;
+  // 2025-26 (Current Year)
+  state_participants_current?: number;
+  state_medals_current?: number;
+  national_participants_current?: number;
+  national_medals_current?: number;
+  international_participants_current?: number;
+  international_medals_current?: number;
+  // 2020-2024 (5-Year Cumulative)
+  state_participants_5yr?: number;
+  state_medals_5yr?: number;
+  national_participants_5yr?: number;
+  national_medals_5yr?: number;
+  international_participants_5yr?: number;
+  international_medals_5yr?: number;
+}
+
 export interface TalentData {
+  // STC-Level Athlete Origin (existing - kept)
   local_athletes_count?: number;
   other_state_athletes_count?: number;
   origin_mismatch_note?: string;
-  athlete_selection_process?: string;
+  
+  // NEW: Discipline-wise Athlete Origin
+  discipline_origin?: DisciplineAthleteOrigin[];
+  
+  // NEW: Selection Trials Publicity
+  trials_sufficient_publicity?: boolean;
   trials_publicity_methods?: string[];
+  
+  // NEW: Selection Trials Turnout
+  trials_good_turnout?: boolean;
+  trials_poor_turnout_reasons?: string;
+  
+  // NEW: Discipline-wise Competitions
+  discipline_competitions?: DisciplineCompetitionData[];
+  
+  // NEW: Notable Achievements
+  notable_achievements?: string;
+  
+  // Legacy fields (backward compatibility)
+  athlete_selection_process?: string;
   trial_events_last_12m?: number;
   athletes_participated_count?: number;
   competition_levels?: string[];
