@@ -134,7 +134,7 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
           existing_nonres_girls: d.ex_nonres_girls,
         })),
         infrastructure: infrastructure as FormData['infrastructure'],
-        hostel: { hostel_type: '', ...hostel } as FormData['hostel'],
+        hostel: { hostel_available: false, ...hostel } as FormData['hostel'],
         staff: { coach_count_total: 0, admin_staff_count_total: 0, ...staff } as FormData['staff'],
         medical: medical as FormData['medical'],
         equipment: equipment as FormData['equipment'],

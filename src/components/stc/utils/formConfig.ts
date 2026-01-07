@@ -228,22 +228,97 @@ export interface InfrastructureData {
   mou_expected_date?: string;
 }
 
+// ============= HOSTEL INTERFACES =============
+
+export type HostelType = 'Rooms' | 'Dormitory' | 'Mixed' | 'Not Available';
+export type MessOperator = 'SAI' | 'Outsourced';
+export type WaterSupply = 'Municipal' | 'Borewell' | 'Tanker' | 'Mixed';
+export type OverallQuality = 'Excellent' | 'Good' | 'Needs Minor Repair' | 'Needs Major Renovation';
+
+export interface RoomTypeBreakup {
+  single_bed_count?: number;
+  two_bed_count?: number;
+  three_bed_count?: number;
+  four_bed_count?: number;
+  dormitory_count?: number;
+}
+
+export interface GenderCapacity {
+  male_beds?: number;
+  female_beds?: number;
+}
+
+export interface NewHostelRequirement {
+  new_hostel_needed: boolean;
+  land_available_for_new_hostel?: boolean;
+  land_area_for_new_hostel_acres?: number;
+  beds_needed?: number;
+  justification?: string;
+}
+
 export interface HostelData {
-  hostel_type: string;
+  // Basic Availability
+  hostel_available: boolean;
+  residential_arrangement_note?: string;
+  
+  // Building Details
+  hostel_building_year?: number;
+  number_of_floors?: number;
+  
+  // Capacity & Type
+  hostel_type?: HostelType;
   hostel_bed_capacity?: number;
   current_hostel_occupancy?: number;
-  room_types_available?: string[];
+  
+  // Gender-wise Capacity
+  gender_capacity?: GenderCapacity;
+  
+  // Room/Dormitory Details
+  number_of_rooms?: number;
+  number_of_dormitories?: number;
+  dormitory_total_beds?: number;
+  room_type_breakup?: RoomTypeBreakup;
+  
+  // Gender Segregation
   hostel_gender_segregation_present?: boolean;
   hostel_gender_segregation_type?: string;
   hostel_gender_segregation_note?: string;
+  
+  // Amenities
+  hostel_amenities?: string[];
+  hostel_amenities_other_note?: string;
+  water_supply?: WaterSupply;
+  water_supply_issue_note?: string;
+  power_backup_available?: boolean;
+  fire_safety_equipment?: boolean;
+  
+  // Toilet & Sanitation
   toilet_type?: string;
   functional_toilets_count?: number;
-  hostel_amenities?: string[];
+  toilets_sufficient?: boolean;
+  toilets_insufficiency_note?: string;
+  bathroom_ratio?: number;
+  
+  // Dining & Mess
+  mess_operator?: MessOperator;
+  mess_contractor_name?: string;
+  dining_seating_capacity?: number;
+  dining_area_quality?: OverallQuality;
+  
+  // Overall Quality
+  overall_hostel_quality?: OverallQuality;
+  hostel_improvement_needs?: string[];
+  improvement_other_note?: string;
+  
+  // New Hostel Construction Requirement
+  new_hostel_requirement?: NewHostelRequirement;
+  
+  // Legacy fields for backward compatibility
+  hostel_type_legacy?: string;
+  room_types_available?: string[];
   mess_quality_rating?: number;
   laundry_facility?: boolean;
   recreation_facilities?: boolean;
-  hostel_improvement_needs?: string[];
-  residential_arrangement_note?: string;
 }
 
 export interface StaffData {
@@ -417,7 +492,7 @@ export const getDefaultFormData = (): FormData => ({
     indoor_facilities: {},
   },
   hostel: {
-    hostel_type: '',
+    hostel_available: false,
   },
   staff: {
     coach_count_total: 0,
