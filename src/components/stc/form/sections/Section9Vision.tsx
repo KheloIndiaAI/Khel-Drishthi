@@ -83,8 +83,11 @@ export function Section9Vision({ formData, setFormData, prefillData }: SectionPr
       {/* Dynamic Header */}
       <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-xl p-6 border border-primary/20">
         <div className="flex items-center gap-3 mb-2">
-          <Sparkles className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-display font-bold text-foreground">
+          <div className="relative">
+            <Star className="h-6 w-6 text-amber-500 fill-amber-500" />
+            <Star className="h-3 w-3 text-amber-400 fill-amber-400 absolute -top-1 -right-1" />
+          </div>
+          <h2 className="text-xl font-display font-bold uppercase tracking-wide text-foreground">
             Charting the Future
           </h2>
         </div>
