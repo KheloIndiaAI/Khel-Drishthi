@@ -29,6 +29,7 @@ import STCForm from "./pages/STCForm";
 import STCFormV4 from "./pages/STCFormV4";
 import STCReport from "./pages/STCReport";
 import HostelDashboard from "./pages/HostelDashboard";
+import HRDashboard from "./pages/HRDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/infrastructure/stc/:centreId/form" element={<STCFormV4 />} />
             <Route path="/infrastructure/stc/:centreId/report" element={<STCReport />} />
             <Route path="/infrastructure/hostel-dashboard" element={<HostelDashboard />} />
+            <Route path="/infrastructure/hr-dashboard" element={<HRDashboard />} />
             <Route path="/capacity" element={<Capacity />} />
             <Route path="/geographic" element={<GeographicAnalytics />} />
             <Route path="/medals" element={<Medals />} />
