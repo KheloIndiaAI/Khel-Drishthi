@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Render placeholder until mounted to avoid SSR/hydration issues
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -18,6 +18,12 @@ export function ThemeToggle() {
       </Button>
     );
   }
+
+  return <ThemeToggleInner />;
+}
+
+function ThemeToggleInner() {
+  const { theme, setTheme } = useTheme();
 
   return (
     <Button
