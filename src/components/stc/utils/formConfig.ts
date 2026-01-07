@@ -63,6 +63,7 @@ export interface PreviouslyOperationalDiscipline {
   reason_discontinued?: string;
 }
 
+// Legacy interface - kept for backward compatibility
 export interface StaffRoster {
   staff_name: string;
   staff_designation: string;
@@ -75,6 +76,34 @@ export interface StaffRoster {
   last_training_course_year?: number;
   course_level?: string;
 }
+
+// ============= NEW HR INTERFACES =============
+
+export interface CoachRoster {
+  staff_name: string;
+  designation: string;  // High Performance Coach, Senior Coach, Coach, Assistant Coach
+  sport_discipline: string;
+  employment_nature: string;  // Permanent, Contractual, Deputation
+  posted_since_date?: string;
+  last_training_course_year?: number;
+  course_level_completed?: string;
+}
+
+export interface GroundsmanRoster {
+  staff_name: string;
+  employment_nature: string;  // Permanent, Contractual, Outsourced, Casual
+  assigned_fop?: string;  // Which FoP they maintain
+}
+
+export interface AdminRoster {
+  staff_name: string;
+  designation: string;  // LDC, UDC, Assistant, Superintendent
+  employment_nature: string;  // Permanent, Contractual, Outsourced, Casual
+  posted_since_date?: string;
+}
+
+export type AwarenessLevel = 'Fully Aware' | 'Partially Aware' | 'Not Aware' | 'Training Needed';
+export type KnowledgeLevel = 'Expert' | 'Proficient' | 'Basic' | 'Needs Training';
 
 export interface EquipmentGap {
   discipline_code?: string;
@@ -322,18 +351,36 @@ export interface HostelData {
 }
 
 export interface StaffData {
+  // ===== COACHING STAFF =====
   coach_count_total: number;
+  coach_roster?: CoachRoster[];
+  
+  // ===== GROUNDSMEN =====
+  groundsmen_count_total?: number;
+  groundsmen_roster?: GroundsmanRoster[];
+  
+  // ===== ADMINISTRATIVE STAFF =====
+  admin_staff_count_total: number;
+  admin_roster?: AdminRoster[];
+  
+  // ===== AWARENESS & KNOWLEDGE =====
+  ams_nsrs_awareness?: AwarenessLevel;
+  pocso_posh_awareness?: AwarenessLevel;
+  procurement_accounting_knowledge?: KnowledgeLevel;
+  
+  // ===== SUPPORT STAFF =====
+  security_staff_count?: number;
+  
+  // Legacy fields (kept for backward compatibility)
   coach_count_by_discipline?: Record<string, number>;
   certified_coaches_count?: number;
   foreign_coaches_count?: number;
   coaching_quality_rating?: number;
   staff_training_programs_last_12m?: boolean;
   staff_training_notes?: string;
-  coach_roster?: StaffRoster[];
-  admin_staff_count_total: number;
   maintenance_staff_count?: number;
-  security_staff_count?: number;
-  admin_roster?: StaffRoster[];
+  legacy_coach_roster?: StaffRoster[];
+  legacy_admin_roster?: StaffRoster[];
 }
 
 export interface MedicalData {
@@ -443,8 +490,8 @@ export const FORM_SECTIONS: FormSection[] = [
   },
   {
     id: 'staff',
-    title: 'Coaches & Staff',
-    description: 'Coaching staff and administrative personnel details',
+    title: 'Human Resources',
+    description: 'Coaching staff, groundsmen, administrative personnel, and support staff',
   },
   {
     id: 'medical',
