@@ -106,13 +106,16 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
     );
   }
 
+  // Format centre name with STC prefix
+  const formattedCentreName = centreName ? `STC ${centreName}` : 'STC Data Collection';
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Top Header with Respondent Info */}
       <FormHeader
         respondent={respondent}
         setRespondent={setRespondent}
-        centreName={centreName}
+        centreName={formattedCentreName}
         saveStatus={saveStatus}
         lastSaved={lastSaved}
         onExit={handleExit}

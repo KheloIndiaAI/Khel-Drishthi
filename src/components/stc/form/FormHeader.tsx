@@ -63,7 +63,7 @@ export function FormHeader({
       <div className="px-4 py-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 min-w-0">
           <h1 className="text-base sm:text-lg font-display font-bold text-foreground truncate max-w-[150px] sm:max-w-[280px]">
-            {centreName || 'STC Data Collection'}
+            {centreName}
           </h1>
           <Badge variant="secondary" className="hidden sm:inline-flex flex-shrink-0">
             Form v4
