@@ -3,21 +3,20 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
-  Building2, Users, Dumbbell, Home, UserCheck, Heart, 
-  Wrench, Trophy, Target, Paperclip, CheckCircle2
+  Building2, Users, Dumbbell, Home, UserCheck, 
+  Wrench, Trophy, Eye, Paperclip, CheckCircle2
 } from "lucide-react";
 
 const SECTION_ICONS = [
-  Building2,
-  Users,
-  Dumbbell,
-  Home,
-  UserCheck,
-  Heart,
-  Wrench,
-  Trophy,
-  Target,
-  Paperclip,
+  Building2,   // Identity
+  Users,       // Disciplines
+  Dumbbell,    // Infrastructure
+  Home,        // Hostel
+  UserCheck,   // HR
+  Wrench,      // Equipment
+  Trophy,      // Talent
+  Eye,         // Vision
+  Paperclip,   // Attachments
 ];
 
 interface SectionHeaderProps {

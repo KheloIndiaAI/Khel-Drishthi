@@ -107,6 +107,7 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
       const challenges = existingData.challenges as Record<string, unknown> || {};
       const disciplineSpecific = (challenges.disciplineSpecific as Record<string, Record<string, unknown>>) || {};
       const attachments = (challenges.attachments as unknown as FormData['attachments']) || [];
+      const vision = (challenges.vision as FormData['vision']) || { strengths: {}, challenges: {}, short_term_actions: {}, medium_term_suggestions: {}, long_term_suggestions: {} };
       const resp = (core.respondent as unknown as RespondentData) || null;
 
       setFormData({
@@ -139,6 +140,7 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
         medical: medical as FormData['medical'],
         equipment: equipment as FormData['equipment'],
         talent: talent as FormData['talent'],
+        vision,
         disciplineSpecific,
         attachments,
       });
@@ -227,6 +229,21 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
           
           if (hasOriginData && hasTrialsInfo && hasDisciplineOrigin) return 100;
           if (hasOriginData || hasTrialsInfo || hasDisciplineOrigin) return 50;
+          return 0;
+        }
+        case 'vision': {
+          const vision = formData.vision;
+          const hasStrengths = !!vision.strengths?.strength_1;
+          const hasChallenges = !!vision.challenges?.challenge_1;
+          const hasVision = !!vision.vision_statement && vision.vision_statement.length > 50;
+          const hasShortTerm = !!vision.short_term_actions?.point_1;
+          const hasNCOE = vision.fit_for_ncoe_upgrade !== undefined;
+          
+          const score = [hasStrengths, hasChallenges, hasVision, hasShortTerm, hasNCOE].filter(Boolean).length;
+          
+          if (score === 5) return 100;
+          if (score >= 3) return 60;
+          if (score >= 1) return 30;
           return 0;
         }
         case 'attachments':
