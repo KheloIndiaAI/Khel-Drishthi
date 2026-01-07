@@ -65,9 +65,6 @@ export function FormHeader({
           <h1 className="text-base sm:text-lg font-display font-bold text-foreground truncate max-w-[150px] sm:max-w-[280px]">
             {centreName}
           </h1>
-          <Badge variant="secondary" className="hidden sm:inline-flex flex-shrink-0">
-            Form v4
-          </Badge>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">

@@ -186,7 +186,7 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
       <div className="flex items-start gap-2 p-4 bg-info/10 rounded-lg border border-info/30">
         <Info className="h-5 w-5 text-info flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-medium text-foreground">Optional in v4</p>
+          <p className="text-sm font-medium text-foreground">Optional</p>
           <p className="text-sm text-muted-foreground mt-1">
             File uploads are optional. You can submit the form without uploading any documents.
           </p>
