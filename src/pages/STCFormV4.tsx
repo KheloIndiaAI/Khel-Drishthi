@@ -4,13 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageSEO } from "@/components/seo/PageSEO";
 import { STCFormLayout } from "@/components/stc/form/STCFormLayout";
 import { AccessRequestButton } from "@/components/access/AccessRequestButton";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import { useCanEditCentre } from "@/hooks/useUserAccess";
+
 export default function STCFormV4() {
   const { centreId } = useParams<{ centreId: string }>();
   const navigate = useNavigate();
 
-  // Check authentication and roles
-  const { data: session } = useQuery({
+  // Check authentication
+  const { data: session, isLoading: sessionLoading } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
       const { data } = await supabase.auth.getSession();
@@ -18,23 +20,13 @@ export default function STCFormV4() {
     },
   });
 
-  const { data: userRoles, isLoading: rolesLoading } = useQuery({
-    queryKey: ['user-roles', session?.user?.id],
-    queryFn: async () => {
-      if (!session?.user?.id) return { isAdmin: false, isEditor: false };
-      const [adminResult, editorResult] = await Promise.all([
-        supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' }),
-        supabase.rpc('has_role', { _user_id: session.user.id, _role: 'editor' }),
-      ]);
-      return {
-        isAdmin: adminResult.data || false,
-        isEditor: editorResult.data || false,
-      };
-    },
-    enabled: !!session?.user?.id,
-  });
+  // Check if user can edit this specific centre
+  const { data: canEditCentre, isLoading: accessLoading } = useCanEditCentre(
+    session?.user?.id,
+    centreId
+  );
 
-  // Fetch centre info for SEO
+  // Fetch centre info for SEO and display
   const { data: centreInfo, isLoading: centreLoading } = useQuery({
     queryKey: ['centre-info', centreId],
     queryFn: async () => {
@@ -49,9 +41,9 @@ export default function STCFormV4() {
     enabled: !!centreId,
   });
 
-  const canEdit = userRoles?.isAdmin || userRoles?.isEditor;
+  const isLoading = sessionLoading || accessLoading || centreLoading;
 
-  if (rolesLoading || centreLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
@@ -90,20 +82,33 @@ export default function STCFormV4() {
     );
   }
 
-  if (!canEdit) {
+  if (!canEditCentre) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center max-w-md space-y-6">
+          <div className="flex justify-center">
+            <div className="p-4 bg-amber-500/10 rounded-full">
+              <AlertCircle className="h-12 w-12 text-amber-500" />
+            </div>
+          </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground mb-2">Access Restricted</h1>
             <p className="text-muted-foreground">
-              You need editor access to fill STC data collection forms. 
-              Request access below and an administrator will review your request.
+              You don't have permission to edit data for <strong>{centreInfo?.centre_name || 'this centre'}</strong>.
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              If you are the centre in-charge, please request access below and an administrator will review your request.
             </p>
           </div>
           {session?.user?.id && (
             <AccessRequestButton userId={session.user.id} />
           )}
+          <button 
+            onClick={() => navigate('/infrastructure/stc')}
+            className="text-sm text-primary hover:underline"
+          >
+            ← Back to STC List
+          </button>
         </div>
       </div>
     );

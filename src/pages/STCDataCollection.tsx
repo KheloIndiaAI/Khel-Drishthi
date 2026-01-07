@@ -11,9 +11,11 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { 
   Search, Building2, MapPin, Users, CheckCircle2, 
-  Clock, Circle, Filter, ArrowUpDown 
+  Clock, Circle, Filter, ArrowUpDown, Lock, Info 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUserAccess } from '@/hooks/useUserAccess';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const STCDataCollection: React.FC = () => {
   const navigate = useNavigate();
@@ -21,9 +23,21 @@ const STCDataCollection: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<'all' | 'complete' | 'in-progress' | 'not-started'>('all');
   const [sortBy, setSortBy] = useState<'name' | 'progress' | 'state'>('name');
 
+  // Get current session
+  const { data: session } = useQuery({
+    queryKey: ['session'],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    },
+  });
+
+  // Get user access info
+  const userAccess = useUserAccess(session?.user?.id);
+
   // Fetch STC data with capacity and form progress
   const { data: stcList, isLoading } = useQuery({
-    queryKey: ['stc-list-with-progress'],
+    queryKey: ['stc-list-with-progress', userAccess.isAdmin, userAccess.assignedCentres, userAccess.assignedRegions],
     queryFn: async () => {
       // Get all STCs from stc_capacity
       const { data: stcCapacity } = await supabase
@@ -60,7 +74,7 @@ const STCDataCollection: React.FC = () => {
         .select('centre_id, form_progress');
 
       // Build final list
-      const centres = Array.from(uniqueCentres.values()).map(centre => {
+      let centres = Array.from(uniqueCentres.values()).map(centre => {
         const centreLinks = links?.filter(l => l.centre_id === centre.centre_id) || [];
         const disciplines = [...new Set(centreLinks.map(l => l.discipline_name || l.sport_name).filter(Boolean))];
         
@@ -69,16 +83,24 @@ const STCDataCollection: React.FC = () => {
         
         const formProgress = detailedData?.find(d => d.centre_id === centre.centre_id)?.form_progress || 0;
 
+        // Check if user can edit this centre
+        const canEdit = userAccess.canEditCentre(centre.centre_id);
+
         return {
           ...centre,
           disciplines,
           athleteCount,
           formProgress,
+          canEdit,
         };
       });
 
+      // For non-admins, filter to only show accessible centres (but still show all for reference)
+      // We'll show all but mark which ones are editable
+
       return centres;
     },
+    enabled: !userAccess.isLoading,
   });
 
   // Filter and sort
@@ -116,18 +138,47 @@ const STCDataCollection: React.FC = () => {
     return result;
   }, [stcList, searchTerm, statusFilter, sortBy]);
 
-  // Stats
+  // Stats (only for accessible centres for non-admins)
   const stats = React.useMemo(() => {
-    const total = stcList?.length || 0;
-    const complete = stcList?.filter(s => s.formProgress === 100).length || 0;
-    const inProgress = stcList?.filter(s => s.formProgress > 0 && s.formProgress < 100).length || 0;
-    const notStarted = stcList?.filter(s => s.formProgress === 0).length || 0;
+    const accessibleCentres = userAccess.isAdmin 
+      ? stcList 
+      : stcList?.filter(s => s.canEdit);
+    
+    const total = accessibleCentres?.length || 0;
+    const complete = accessibleCentres?.filter(s => s.formProgress === 100).length || 0;
+    const inProgress = accessibleCentres?.filter(s => s.formProgress > 0 && s.formProgress < 100).length || 0;
+    const notStarted = accessibleCentres?.filter(s => s.formProgress === 0).length || 0;
     const avgProgress = total > 0 
-      ? Math.round(stcList!.reduce((sum, s) => sum + s.formProgress, 0) / total) 
+      ? Math.round(accessibleCentres!.reduce((sum, s) => sum + s.formProgress, 0) / total) 
       : 0;
 
     return { total, complete, inProgress, notStarted, avgProgress };
-  }, [stcList]);
+  }, [stcList, userAccess.isAdmin]);
+
+  // Show access info for non-admin users
+  const accessInfo = React.useMemo(() => {
+    if (userAccess.isAdmin) return null;
+    
+    if (userAccess.assignedCentres.length > 0) {
+      return {
+        type: 'centre',
+        message: `You have access to ${userAccess.assignedCentres.length} centre(s)`,
+      };
+    }
+    
+    if (userAccess.assignedRegions.length > 0) {
+      const regionNames = userAccess.assignedRegions.map(r => r.region_name).join(', ');
+      return {
+        type: 'region',
+        message: `You have regional access: ${regionNames}`,
+      };
+    }
+
+    return {
+      type: 'none',
+      message: 'You have view-only access. Request editor access to fill forms.',
+    };
+  }, [userAccess]);
 
   return (
     <DashboardLayout>
@@ -147,6 +198,31 @@ const STCDataCollection: React.FC = () => {
           </p>
         </div>
 
+        {/* Access Info Alert */}
+        {accessInfo && !userAccess.isAdmin && (
+          <Alert className={cn(
+            accessInfo.type === 'none' ? 'border-amber-500/30 bg-amber-500/5' : 'border-primary/30 bg-primary/5'
+          )}>
+            <Info className={cn(
+              "h-4 w-4",
+              accessInfo.type === 'none' ? 'text-amber-500' : 'text-primary'
+            )} />
+            <AlertDescription className="flex items-center justify-between">
+              <span>{accessInfo.message}</span>
+              {accessInfo.type === 'none' && session?.user?.id && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/auth')}
+                  className="ml-4"
+                >
+                  Request Access
+                </Button>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="stat-card">
@@ -154,7 +230,9 @@ const STCDataCollection: React.FC = () => {
               <Building2 className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-2xl font-display font-bold">{stats.total}</p>
-                <p className="text-sm text-muted-foreground">Total STCs</p>
+                <p className="text-sm text-muted-foreground">
+                  {userAccess.isAdmin ? 'Total STCs' : 'Your STCs'}
+                </p>
               </div>
             </div>
           </div>
@@ -235,7 +313,7 @@ const STCDataCollection: React.FC = () => {
         </div>
 
         {/* STC Grid */}
-        {isLoading ? (
+        {isLoading || userAccess.isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-64 bg-muted animate-pulse rounded-xl" />
@@ -244,22 +322,32 @@ const STCDataCollection: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSTCs.map((stc) => (
-              <STCCard
-                key={stc.centre_id}
-                centreId={stc.centre_id}
-                centreName={stc.centre_name || 'Unknown STC'}
-                state={stc.state || 'Unknown'}
-                disciplines={stc.disciplines}
-                athleteCount={stc.athleteCount}
-                formProgress={stc.formProgress}
-                onClick={() => navigate(`/infrastructure/stc/${stc.centre_id}/form`)}
-              />
+              <div key={stc.centre_id} className="relative">
+                {/* Lock overlay for non-accessible centres */}
+                {!stc.canEdit && !userAccess.isAdmin && (
+                  <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center">
+                    <div className="text-center p-4">
+                      <Lock className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No edit access</p>
+                    </div>
+                  </div>
+                )}
+                <STCCard
+                  centreId={stc.centre_id}
+                  centreName={stc.centre_name || 'Unknown STC'}
+                  state={stc.state || 'Unknown'}
+                  disciplines={stc.disciplines}
+                  athleteCount={stc.athleteCount}
+                  formProgress={stc.formProgress}
+                  onClick={() => navigate(`/infrastructure/stc/${stc.centre_id}/form`)}
+                />
+              </div>
             ))}
           </div>
         )}
 
         {/* Empty State */}
-        {!isLoading && filteredSTCs.length === 0 && (
+        {!isLoading && !userAccess.isLoading && filteredSTCs.length === 0 && (
           <div className="text-center py-12">
             <Building2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-xl font-display font-bold text-foreground mb-2">
