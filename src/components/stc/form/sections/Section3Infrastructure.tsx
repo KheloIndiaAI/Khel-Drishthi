@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { Building2 } from "lucide-react";
-import type { FormData, PrefillData, DisciplineFOPDetails, LandOwnershipData, IndoorFacilityDetails, NonSanctionedFOP } from "../../utils/formConfig";
+import type { FormData, PrefillData, DisciplineFOPDetails, LandOwnershipData, IndoorFacilityDetails, NonSanctionedFOP, AdminBlockData } from "../../utils/formConfig";
 import { LandOwnershipCard } from "./infrastructure/LandOwnershipCard";
 import { DisciplineFOPCard } from "./infrastructure/DisciplineFOPCard";
 import { NonSanctionedFOPSection } from "./infrastructure/NonSanctionedFOPSection";
 import { GeneralFacilitiesCard } from "./infrastructure/GeneralFacilitiesCard";
+import { AdministrativeBlockCard } from "./infrastructure/AdministrativeBlockCard";
 import { ExpansionEnvironmentCard } from "./infrastructure/ExpansionEnvironmentCard";
 
 interface SectionProps {
@@ -114,6 +115,13 @@ export function Section3Infrastructure({ formData, setFormData }: SectionProps) 
     });
   };
 
+  const updateAdminBlock = (adminBlock: AdminBlockData) => {
+    setFormData({
+      ...formData,
+      infrastructure: { ...formData.infrastructure, admin_block: adminBlock },
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
@@ -161,7 +169,13 @@ export function Section3Infrastructure({ formData, setFormData }: SectionProps) 
         onIndoorChange={updateIndoor}
       />
 
-      {/* Card 5: Expansion & Environment */}
+      {/* Card 5: Administrative Block */}
+      <AdministrativeBlockCard
+        data={formData.infrastructure.admin_block || { admin_block_available: false, sufficient_space_for_staff: false }}
+        onChange={updateAdminBlock}
+      />
+
+      {/* Card 6: Expansion & Environment */}
       <ExpansionEnvironmentCard
         surplusLandAvailable={formData.infrastructure.surplus_land_available}
         surplusLandAcres={formData.infrastructure.surplus_land_acres}

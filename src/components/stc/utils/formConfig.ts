@@ -208,6 +208,41 @@ export interface IndoorFacilityDetails {
   renovation_status?: RenovationStatus;
 }
 
+export type InternetConnectivity = 'Broadband' | '4G/Mobile' | 'Limited' | 'None';
+export type ITEquipmentAdequacy = 'Adequate' | 'Partially Adequate' | 'Inadequate' | 'None';
+
+export interface AdminBlockData {
+  // Basic Availability
+  admin_block_available: boolean;
+  admin_block_description?: string;
+  
+  // Building Details
+  admin_block_floors?: number;
+  admin_block_area_sqft?: number;
+  admin_block_construction_year?: number;
+  
+  // Condition Assessment
+  admin_block_condition?: ConditionRating;
+  admin_block_renovation_status?: RenovationStatus;
+  
+  // Space Sufficiency
+  sufficient_space_for_staff: boolean;
+  space_insufficiency_note?: string;
+  
+  // Specific Rooms/Facilities
+  has_separate_accounts_room?: boolean;
+  has_store_room?: boolean;
+  has_meeting_room?: boolean;
+  
+  // IT & Connectivity
+  internet_connectivity?: InternetConnectivity;
+  it_equipment_adequacy?: ITEquipmentAdequacy;
+  
+  // Future Requirements
+  new_admin_block_needed?: boolean;
+  new_admin_block_justification?: string;
+}
+
 export interface InfrastructureData {
   // NEW: Land & Ownership
   land?: LandOwnershipData;
@@ -228,6 +263,9 @@ export interface InfrastructureData {
   
   // NEW: Indoor Facilities
   indoor_facilities?: IndoorFacilityDetails;
+  
+  // NEW: Administrative Block
+  admin_block?: AdminBlockData;
   
   // NEW: Surplus Land
   surplus_land_available?: boolean;
