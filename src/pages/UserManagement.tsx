@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database, MapPin, Building2, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PendingAccessRequests } from "@/components/access/PendingAccessRequests";
 import type { Session } from "@supabase/supabase-js";
@@ -58,8 +60,44 @@ const UserManagement = () => {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
   const [savingPermissions, setSavingPermissions] = useState(false);
+  
+  // Assignment state
+  const [assignmentDialogOpen, setAssignmentDialogOpen] = useState(false);
+  const [userCentreAssignments, setUserCentreAssignments] = useState<{centre_id: string; is_active: boolean}[]>([]);
+  const [userRegionAssignments, setUserRegionAssignments] = useState<{region_id: string; access_level: string; is_active: boolean}[]>([]);
+  const [selectedCentreToAdd, setSelectedCentreToAdd] = useState("");
+  const [selectedRegionToAdd, setSelectedRegionToAdd] = useState("");
+  const [selectedAccessLevel, setSelectedAccessLevel] = useState("view_edit");
+  const [savingAssignments, setSavingAssignments] = useState(false);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  // Fetch all centres for assignment dropdown
+  const { data: allCentres } = useQuery({
+    queryKey: ['all-stc-centres'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('stc_capacity')
+        .select('centre_id, centre_name, state, region')
+        .order('centre_name');
+      return data || [];
+    },
+    enabled: isAdmin,
+  });
+  
+  // Fetch all regions for assignment dropdown
+  const { data: allRegions } = useQuery({
+    queryKey: ['all-regions'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('regional_centres')
+        .select('id, name, display_name')
+        .order('sort_order');
+      return data || [];
+    },
+    enabled: isAdmin,
+  });
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -184,6 +222,112 @@ const UserManagement = () => {
     } else {
       setUserPermissions(data?.map(p => p.table_name) || []);
     }
+  };
+
+  const openAssignmentDialog = async (user: UserWithRole) => {
+    setSelectedUser(user);
+    setAssignmentDialogOpen(true);
+    setSelectedCentreToAdd("");
+    setSelectedRegionToAdd("");
+    
+    // Fetch existing centre assignments
+    const { data: centreData } = await supabase
+      .from('user_centre_assignments')
+      .select('centre_id, is_active')
+      .eq('user_id', user.id);
+    setUserCentreAssignments(centreData || []);
+    
+    // Fetch existing region assignments
+    const { data: regionData } = await supabase
+      .from('user_region_assignments')
+      .select('region_id, access_level, is_active')
+      .eq('user_id', user.id);
+    setUserRegionAssignments(regionData || []);
+  };
+
+  const addCentreAssignment = async () => {
+    if (!selectedUser || !selectedCentreToAdd) return;
+    
+    setSavingAssignments(true);
+    const { error } = await supabase
+      .from('user_centre_assignments')
+      .insert({
+        user_id: selectedUser.id,
+        centre_id: selectedCentreToAdd,
+        assigned_by: session?.user.id,
+        is_active: true,
+      });
+    
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Centre assigned" });
+      setUserCentreAssignments(prev => [...prev, { centre_id: selectedCentreToAdd, is_active: true }]);
+      setSelectedCentreToAdd("");
+    }
+    setSavingAssignments(false);
+  };
+
+  const removeCentreAssignment = async (centreId: string) => {
+    if (!selectedUser) return;
+    
+    setSavingAssignments(true);
+    const { error } = await supabase
+      .from('user_centre_assignments')
+      .delete()
+      .eq('user_id', selectedUser.id)
+      .eq('centre_id', centreId);
+    
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Centre assignment removed" });
+      setUserCentreAssignments(prev => prev.filter(a => a.centre_id !== centreId));
+    }
+    setSavingAssignments(false);
+  };
+
+  const addRegionAssignment = async () => {
+    if (!selectedUser || !selectedRegionToAdd) return;
+    
+    setSavingAssignments(true);
+    const { error } = await supabase
+      .from('user_region_assignments')
+      .insert({
+        user_id: selectedUser.id,
+        region_id: selectedRegionToAdd,
+        access_level: selectedAccessLevel,
+        assigned_by: session?.user.id,
+        is_active: true,
+      });
+    
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Region assigned" });
+      setUserRegionAssignments(prev => [...prev, { region_id: selectedRegionToAdd, access_level: selectedAccessLevel, is_active: true }]);
+      setSelectedRegionToAdd("");
+    }
+    setSavingAssignments(false);
+  };
+
+  const removeRegionAssignment = async (regionId: string) => {
+    if (!selectedUser) return;
+    
+    setSavingAssignments(true);
+    const { error } = await supabase
+      .from('user_region_assignments')
+      .delete()
+      .eq('user_id', selectedUser.id)
+      .eq('region_id', regionId);
+    
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Region assignment removed" });
+      setUserRegionAssignments(prev => prev.filter(a => a.region_id !== regionId));
+    }
+    setSavingAssignments(false);
   };
 
   const togglePermission = (tableName: string) => {
@@ -318,6 +462,7 @@ const UserManagement = () => {
                 <TableHead>Current Role</TableHead>
                 <TableHead>Change Role</TableHead>
                 <TableHead>Table Access</TableHead>
+                <TableHead>Centre/Region</TableHead>
                 <TableHead>Joined</TableHead>
               </TableRow>
             </TableHeader>
@@ -363,12 +508,29 @@ const UserManagement = () => {
                         className="gap-1"
                       >
                         <Settings2 className="h-3 w-3" />
-                        Manage
+                        Tables
                       </Button>
                     ) : user.role === 'admin' ? (
                       <span className="text-muted-foreground text-sm">All tables</span>
                     ) : (
                       <span className="text-muted-foreground text-sm">None</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {user.role === 'editor' ? (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => openAssignmentDialog(user)}
+                        className="gap-1"
+                      >
+                        <MapPin className="h-3 w-3" />
+                        Assign
+                      </Button>
+                    ) : user.role === 'admin' ? (
+                      <span className="text-muted-foreground text-sm">All centres</span>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">—</span>
                     )}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
@@ -437,6 +599,139 @@ const UserManagement = () => {
             </Button>
             <Button onClick={savePermissions} disabled={savingPermissions}>
               {savingPermissions ? "Saving..." : "Save Permissions"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Centre/Region Assignments Dialog */}
+      <Dialog open={assignmentDialogOpen} onOpenChange={setAssignmentDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              Assignments for {selectedUser?.name}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <Tabs defaultValue="centres" className="mt-4">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="centres" className="gap-2">
+                <Building2 className="h-4 w-4" /> Centres
+              </TabsTrigger>
+              <TabsTrigger value="regions" className="gap-2">
+                <MapPin className="h-4 w-4" /> Regions
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="centres" className="space-y-4 mt-4">
+              <div className="flex gap-2">
+                <Select value={selectedCentreToAdd} onValueChange={setSelectedCentreToAdd}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select centre to assign..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allCentres?.filter(c => !userCentreAssignments.some(a => a.centre_id === c.centre_id)).map(centre => (
+                      <SelectItem key={centre.centre_id} value={centre.centre_id}>
+                        {centre.centre_name} ({centre.state})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button onClick={addCentreAssignment} disabled={!selectedCentreToAdd || savingAssignments} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="border rounded-md max-h-[200px] overflow-y-auto">
+                {userCentreAssignments.length === 0 ? (
+                  <p className="text-muted-foreground text-sm text-center py-4">No centres assigned</p>
+                ) : (
+                  userCentreAssignments.map(assignment => {
+                    const centre = allCentres?.find(c => c.centre_id === assignment.centre_id);
+                    return (
+                      <div key={assignment.centre_id} className="flex items-center justify-between p-2 border-b last:border-b-0">
+                        <div>
+                          <p className="text-sm font-medium">{centre?.centre_name || assignment.centre_id}</p>
+                          <p className="text-xs text-muted-foreground">{centre?.state} • {centre?.region}</p>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => removeCentreAssignment(assignment.centre_id)}
+                          disabled={savingAssignments}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="regions" className="space-y-4 mt-4">
+              <div className="flex gap-2">
+                <Select value={selectedRegionToAdd} onValueChange={setSelectedRegionToAdd}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select region..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allRegions?.filter(r => !userRegionAssignments.some(a => a.region_id === r.id)).map(region => (
+                      <SelectItem key={region.id} value={region.id}>
+                        {region.display_name || region.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={selectedAccessLevel} onValueChange={setSelectedAccessLevel}>
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="view_only">View Only</SelectItem>
+                    <SelectItem value="view_edit">View & Edit</SelectItem>
+                    <SelectItem value="view_edit_approve">Full Access</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button onClick={addRegionAssignment} disabled={!selectedRegionToAdd || savingAssignments} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="border rounded-md max-h-[200px] overflow-y-auto">
+                {userRegionAssignments.length === 0 ? (
+                  <p className="text-muted-foreground text-sm text-center py-4">No regions assigned</p>
+                ) : (
+                  userRegionAssignments.map(assignment => {
+                    const region = allRegions?.find(r => r.id === assignment.region_id);
+                    return (
+                      <div key={assignment.region_id} className="flex items-center justify-between p-2 border-b last:border-b-0">
+                        <div>
+                          <p className="text-sm font-medium">{region?.display_name || region?.name}</p>
+                          <Badge variant="outline" className="text-xs mt-1">
+                            {assignment.access_level.replace(/_/g, ' ')}
+                          </Badge>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => removeRegionAssignment(assignment.region_id)}
+                          disabled={savingAssignments}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+          
+          <div className="flex justify-end pt-4 border-t mt-4">
+            <Button variant="outline" onClick={() => setAssignmentDialogOpen(false)}>
+              Done
             </Button>
           </div>
         </DialogContent>
