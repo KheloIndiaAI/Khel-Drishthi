@@ -221,10 +221,12 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
         }
         case 'talent': {
           const talent = formData.talent;
-          const hasTalentId = !!talent.talent_id_process;
-          const hasCompetition = !!talent.competition_participation_level;
-          if (hasTalentId && hasCompetition) return 100;
-          if (hasTalentId || hasCompetition) return 50;
+          const hasOriginData = (talent.local_athletes_count ?? 0) > 0 || (talent.other_state_athletes_count ?? 0) > 0;
+          const hasTrialsInfo = talent.trials_sufficient_publicity !== undefined;
+          const hasDisciplineOrigin = talent.discipline_origin && talent.discipline_origin.length > 0;
+          
+          if (hasOriginData && hasTrialsInfo && hasDisciplineOrigin) return 100;
+          if (hasOriginData || hasTrialsInfo || hasDisciplineOrigin) return 50;
           return 0;
         }
         case 'attachments':
