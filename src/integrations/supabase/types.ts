@@ -772,6 +772,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          assignment_type: string | null
           avatar_url: string | null
           created_at: string | null
           email: string
@@ -779,9 +780,12 @@ export type Database = {
           last_login: string | null
           name: string
           organization: string | null
+          requested_centre_id: string | null
+          requested_region_id: string | null
           updated_at: string | null
         }
         Insert: {
+          assignment_type?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email: string
@@ -789,9 +793,12 @@ export type Database = {
           last_login?: string | null
           name: string
           organization?: string | null
+          requested_centre_id?: string | null
+          requested_region_id?: string | null
           updated_at?: string | null
         }
         Update: {
+          assignment_type?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email?: string
@@ -799,9 +806,19 @@ export type Database = {
           last_login?: string | null
           name?: string
           organization?: string | null
+          requested_centre_id?: string | null
+          requested_region_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_requested_region_id_fkey"
+            columns: ["requested_region_id"]
+            isOneToOne: false
+            referencedRelation: "regional_centres"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       region_state_mappings: {
         Row: {
@@ -1398,6 +1415,71 @@ export type Database = {
         }
         Relationships: []
       }
+      user_centre_assignments: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          centre_id: string
+          id: string
+          is_active: boolean | null
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          centre_id: string
+          id?: string
+          is_active?: boolean | null
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          centre_id?: string
+          id?: string
+          is_active?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_region_assignments: {
+        Row: {
+          access_level: string | null
+          assigned_at: string | null
+          assigned_by: string | null
+          id: string
+          is_active: boolean | null
+          region_id: string
+          user_id: string
+        }
+        Insert: {
+          access_level?: string | null
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          region_id: string
+          user_id: string
+        }
+        Update: {
+          access_level?: string | null
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          region_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_region_assignments_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regional_centres"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -1448,9 +1530,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_edit_centre: {
+        Args: { _centre_id: string; _user_id: string }
+        Returns: boolean
+      }
       can_edit_table: {
         Args: { _table_name: string; _user_id: string }
         Returns: boolean
+      }
+      can_view_centre: {
+        Args: { _centre_id: string; _user_id: string }
+        Returns: boolean
+      }
+      get_user_accessible_centres: {
+        Args: { _user_id: string }
+        Returns: {
+          centre_id: string
+        }[]
       }
       has_role: {
         Args: {
