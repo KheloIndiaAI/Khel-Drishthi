@@ -110,7 +110,7 @@ export const STCCard: React.FC<STCCardProps> = ({
           {/* Action */}
           <div className="flex items-center justify-end mt-4 text-primary">
             <span className="text-sm font-medium">
-              {isComplete ? 'View Report' : 'Start/Continue Form v4'}
+              {isComplete ? 'View Report' : 'Start/Continue Form'}
             </span>
             <ChevronRight className="h-4 w-4 ml-1" />
           </div>
