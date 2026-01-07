@@ -296,6 +296,43 @@ export function Section2Disciplines({ formData, setFormData, prefillData }: Sect
                   </div>
                 </div>
 
+                {/* Auto-Calculated Metrics Summary */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">Utilization Rate</p>
+                    <p className={`text-xl font-bold ${
+                      totals.utilization >= 90 ? 'text-green-600' : 
+                      totals.utilization >= 70 ? 'text-blue-600' : 
+                      totals.utilization >= 50 ? 'text-amber-600' : 'text-red-600'
+                    }`}>
+                      {totals.utilization}%
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">Vacancy Rate</p>
+                    <p className={`text-xl font-bold ${
+                      totals.sanctioned_total > 0 
+                        ? (totals.vacancy / totals.sanctioned_total * 100) <= 10 ? 'text-green-600' :
+                          (totals.vacancy / totals.sanctioned_total * 100) <= 30 ? 'text-amber-600' : 'text-red-600'
+                        : 'text-muted-foreground'
+                    }`}>
+                      {totals.sanctioned_total > 0 
+                        ? Math.round((totals.vacancy / totals.sanctioned_total) * 100) 
+                        : 0}%
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">Vacancies</p>
+                    <p className="text-xl font-bold text-accent">{totals.vacancy}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">Surplus</p>
+                    <p className={`text-xl font-bold ${totals.surplus > 0 ? 'text-warning' : 'text-muted-foreground'}`}>
+                      {totals.surplus}
+                    </p>
+                  </div>
+                </div>
+
                 {/* Surplus Warning */}
                 {hasSurplus && (
                   <div className="flex items-start gap-2 p-3 bg-warning/10 rounded-lg mt-2">
