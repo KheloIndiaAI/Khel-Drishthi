@@ -91,13 +91,14 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
       return null;
     }
 
-    const { data: urlData } = supabase.storage
+    // Use signed URL since bucket is now private
+    const { data: signedUrlData } = await supabase.storage
       .from('stc-attachments')
-      .getPublicUrl(data.path);
+      .createSignedUrl(data.path, 3600); // 1 hour expiry
 
     return {
       file_id: data.path,
-      url: urlData.publicUrl,
+      url: signedUrlData?.signedUrl || '',
       file_type: selectedCategory,
       discipline_code: selectedDiscipline || undefined,
       caption: caption || undefined,
