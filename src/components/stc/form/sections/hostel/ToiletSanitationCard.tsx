@@ -20,6 +20,12 @@ interface Props {
 }
 
 export function ToiletSanitationCard({ hostel, updateHostel }: Props) {
+  // Auto-calculate bathroom ratio
+  const calculatedRatio = 
+    hostel.current_hostel_occupancy && hostel.functional_toilets_count && hostel.functional_toilets_count > 0
+      ? (hostel.current_hostel_occupancy / hostel.functional_toilets_count).toFixed(1)
+      : null;
+
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -91,20 +97,21 @@ export function ToiletSanitationCard({ hostel, updateHostel }: Props) {
           )}
         </div>
 
-        {/* Bathroom Ratio */}
-        <div className="space-y-2">
-          <Label htmlFor="bathroom_ratio">Bathroom Ratio (occupants per bathroom)</Label>
-          <Input
-            id="bathroom_ratio"
-            type="number"
-            min={0}
-            step={0.1}
-            placeholder="e.g., 4.5"
-            value={hostel.bathroom_ratio || ''}
-            onChange={(e) => updateHostel('bathroom_ratio', parseFloat(e.target.value) || undefined)}
-          />
+        {/* Bathroom Ratio - Auto-calculated */}
+        <div className="space-y-2 p-4 bg-muted/50 rounded-lg">
+          <Label>Bathroom Ratio (occupants per bathroom)</Label>
+          <div className="flex items-center gap-3">
+            <div className="text-2xl font-bold text-primary">
+              {calculatedRatio ?? '—'}
+            </div>
+            {calculatedRatio && (
+              <span className="text-sm text-muted-foreground">
+                occupants per bathroom
+              </span>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground">
-            Calculate: Current Occupancy ÷ Number of Bathrooms
+            Auto-calculated: Current Occupancy ({hostel.current_hostel_occupancy || 0}) ÷ Functional Toilets ({hostel.functional_toilets_count || 0})
           </p>
         </div>
       </CardContent>
