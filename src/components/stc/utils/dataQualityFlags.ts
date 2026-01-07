@@ -67,7 +67,7 @@ export function computeDataQualityFlags(
   const totalResAthletes = formData.disciplines.reduce((sum, d) => 
     sum + (d.existing_res_boys || 0) + (d.existing_res_girls || 0), 0);
   
-  if (totalResAthletes > 0 && formData.hostel.hostel_type === 'No hostel') {
+  if (totalResAthletes > 0 && formData.hostel.hostel_available === false) {
     flags.hostel_residential_inconsistency = {
       key: 'hostel_residential_inconsistency',
       severity: 'warning',
@@ -126,8 +126,7 @@ export function computeDataQualityFlags(
   }
 
   // Check hostel gender segregation
-  if (formData.hostel.hostel_type && 
-      formData.hostel.hostel_type !== 'No hostel' && 
+  if (formData.hostel.hostel_available === true && 
       formData.hostel.hostel_gender_segregation_present === undefined) {
     flags.hostel_gender_segregation_missing = {
       key: 'hostel_gender_segregation_missing',
