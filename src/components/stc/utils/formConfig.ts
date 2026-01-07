@@ -432,19 +432,49 @@ export interface MedicalData {
   injury_management_protocol_present?: boolean;
 }
 
+// NEW: Discipline-wise Equipment Details
+export interface DisciplineEquipmentDetail {
+  discipline_code: string;
+  discipline_name: string;
+  equipment_description?: string;
+  equipment_adequacy?: string;
+  utilization_level?: string;
+  utilization_barriers?: string;
+}
+
+export type EquipmentUtilizationLevel = 
+  'Fully Utilized' | 'Partially Utilized' | 'Underutilized' | 'Not Being Used';
+
+export type SNCMethodology = 
+  'Strength Training' | 'Speed/Power Training' | 'Endurance Training' | 'Flexibility/Recovery';
+
 export interface EquipmentData {
+  // ===== SPORTS EQUIPMENT - GENERAL =====
   overall_equipment_quality_rating?: number;
   equipment_age_category?: string;
   equipment_procurement_year?: number;
   training_equipment_condition_rating?: number;
   competition_grade_equipment_available?: boolean;
   video_analysis_system_available?: boolean;
-  equipment_adequacy_by_discipline?: Record<string, string>;
-  equipment_utilization_understood?: boolean;
   equipment_upgrade_needs?: string[];
   equipment_gaps?: EquipmentGap[];
+  
+  // ===== SPORTS EQUIPMENT - DISCIPLINE-WISE (ENHANCED) =====
+  discipline_equipment?: DisciplineEquipmentDetail[];
+  
+  // ===== STRENGTH & CONDITIONING (ENHANCED) =====
   snc_setup_level?: string;
+  snc_setup_description?: string;
   snc_equipment_categories?: string[];
+  snc_equipment_condition?: ConditionRating;
+  snc_structured_program?: boolean;
+  snc_methodologies?: SNCMethodology[];
+  snc_utilization_level?: EquipmentUtilizationLevel;
+  snc_utilization_barriers?: string;
+  
+  // Legacy fields (backward compatibility)
+  equipment_adequacy_by_discipline?: Record<string, string>;
+  equipment_utilization_understood?: boolean;
   snc_utilization_understood?: boolean;
 }
 
