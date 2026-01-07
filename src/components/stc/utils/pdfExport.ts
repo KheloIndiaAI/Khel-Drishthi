@@ -37,6 +37,7 @@ const COLORS = {
 
 export async function exportFormToPDF(data: ExportData): Promise<void> {
   const { formData, respondent, centreName, centreId } = data;
+  const formattedCentreName = centreName ? `STC ${centreName}` : 'STC';
   const doc = new jsPDF();
   
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -245,7 +246,7 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   // ============= SECTION 2: CENTRE IDENTITY =============
   yPos += 5;
   addSectionHeader('Centre Identity & Status', 2);
-  addField('STC Name', formData.core.stc_name);
+  addField('STC Name', formattedCentreName);
   addField('State', formData.core.state);
   addField('Regional Centre', formData.core.rc_name);
   addField('Operational Status', formData.core.operational_status);
@@ -810,7 +811,7 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
 
   // ============= SECTION 9: VISION FOR STC =============
   yPos += 5;
-  addSectionHeader(`Vision for ${centreName}`, 9);
+  addSectionHeader(`Vision for ${formattedCentreName}`, 9);
   
   addSubSectionHeader('STC Strengths');
   if (formData.vision?.strengths?.strength_1) addField('Strength 1', formData.vision.strengths.strength_1);
