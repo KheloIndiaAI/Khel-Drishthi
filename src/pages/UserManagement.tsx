@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database, MapPin, Building2, Plus, Trash2 } from "lucide-react";
+import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database, MapPin, Building2, Plus, Trash2, Zap, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PendingAccessRequests } from "@/components/access/PendingAccessRequests";
 import type { Session } from "@supabase/supabase-js";
@@ -76,24 +76,39 @@ const UserManagement = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Fetch all centres for assignment dropdown - deduplicated
+  // Fetch all centres for assignment dropdown - from centres table (unique)
   const { data: allCentres } = useQuery({
-    queryKey: ['all-stc-centres-unique'],
+    queryKey: ['all-centres-unique'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('stc_capacity')
-        .select('centre_id, centre_name, state, region')
+        .from('centres')
+        .select('centre_id, centre_name, state, region_unit')
+        .eq('centre_type', 'STC')
         .order('centre_name');
-      
-      // Deduplicate by centre_id
-      const uniqueCentres = data?.reduce((acc, curr) => {
-        if (!acc.find(c => c.centre_id === curr.centre_id)) {
-          acc.push(curr);
-        }
-        return acc;
-      }, [] as typeof data) || [];
-      
-      return uniqueCentres;
+      return data?.map(c => ({ ...c, region: c.region_unit })) || [];
+    },
+    enabled: isAdmin,
+  });
+  
+  // Fetch user assignments to check pending status
+  const { data: allCentreAssignments } = useQuery({
+    queryKey: ['all-centre-assignments'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('user_centre_assignments')
+        .select('user_id, centre_id, is_active');
+      return data || [];
+    },
+    enabled: isAdmin,
+  });
+  
+  const { data: allRegionAssignments } = useQuery({
+    queryKey: ['all-region-assignments'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('user_region_assignments')
+        .select('user_id, region_id, is_active');
+      return data || [];
     },
     enabled: isAdmin,
   });
@@ -323,6 +338,93 @@ const UserManagement = () => {
     setSavingAssignments(false);
   };
 
+  // Quick assign - auto-assign user to their requested centre/region
+  const quickAssign = async (user: UserWithRole) => {
+    if (!user.assignment_type) {
+      toast({ title: "No Request", description: "User hasn't requested a centre or region", variant: "destructive" });
+      return;
+    }
+    
+    setSaving(user.id);
+    
+    if (user.assignment_type === 'centre' && user.requested_centre_id) {
+      const { error } = await supabase
+        .from('user_centre_assignments')
+        .insert({
+          user_id: user.id,
+          centre_id: user.requested_centre_id,
+          assigned_by: session?.user.id,
+          is_active: true,
+        });
+      
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: `Assigned ${user.name} to their requested centre` });
+      }
+    } else if (user.assignment_type === 'region' && user.requested_region_id) {
+      const { error } = await supabase
+        .from('user_region_assignments')
+        .insert({
+          user_id: user.id,
+          region_id: user.requested_region_id,
+          access_level: 'view_edit',
+          assigned_by: session?.user.id,
+          is_active: true,
+        });
+      
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: `Assigned ${user.name} to their requested region` });
+      }
+    }
+    
+    setSaving(null);
+  };
+
+  // Check if user has pending request but no assignment
+  const hasPendingRequest = (user: UserWithRole) => {
+    if (!user.assignment_type) return false;
+    
+    if (user.assignment_type === 'centre' && user.requested_centre_id) {
+      return !allCentreAssignments?.some(a => a.user_id === user.id && a.is_active);
+    }
+    if (user.assignment_type === 'region' && user.requested_region_id) {
+      return !allRegionAssignments?.some(a => a.user_id === user.id && a.is_active);
+    }
+    return false;
+  };
+
+  // Download Excel template for user registration
+  const downloadExcelTemplate = () => {
+    const headers = [
+      'Full Name',
+      'Email',
+      'Contact Number',
+      'Organization/Institution',
+      'Assignment Type (centre/region)',
+      'STC Centre Name',
+      'Regional Centre',
+      'Designation',
+      'State',
+      'District',
+      'Reason for Access Request'
+    ];
+    
+    const csvContent = headers.join(',') + '\n' + 
+      'John Doe,john@example.com,9876543210,Sports Authority,centre,Agartala,,"Centre Head",Tripura,West Tripura,Need access to manage STC data\n' +
+      'Jane Smith,jane@example.com,9876543211,SAI Regional,region,,NRC Bangalore,"Regional Coordinator",Karnataka,Bangalore Urban,Regional data management';
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'user_registration_template.csv';
+    link.click();
+    
+    toast({ title: "Template Downloaded", description: "Open with Excel and fill in user details" });
+  };
+
   const removeRegionAssignment = async (regionId: string) => {
     if (!selectedUser) return;
     
@@ -446,16 +548,28 @@ const UserManagement = () => {
         <h1 className="font-display text-3xl md:text-4xl flex items-center gap-3">
           <UserCog className="h-8 w-8" /> User Management
         </h1>
+        <Button variant="outline" onClick={downloadExcelTemplate} className="gap-2">
+          <Download className="h-4 w-4" />
+          Download Template
+        </Button>
       </div>
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by name or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 max-w-md"
-        />
+      <div className="flex items-center gap-4 mb-6">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        {filteredUsers.filter(u => hasPendingRequest(u)).length > 0 && (
+          <Badge variant="destructive" className="gap-1">
+            <AlertCircle className="h-3 w-3" />
+            {filteredUsers.filter(u => hasPendingRequest(u)).length} pending assignment{filteredUsers.filter(u => hasPendingRequest(u)).length > 1 ? 's' : ''}
+          </Badge>
+        )}
       </div>
 
       {/* Pending Access Requests */}
@@ -480,20 +594,60 @@ const UserManagement = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredUsers.map(user => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
+              {filteredUsers.map(user => {
+                const isPending = hasPendingRequest(user);
+                return (
+                <TableRow key={user.id} className={isPending ? "bg-amber-50 dark:bg-amber-950/20" : ""}>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      {user.name}
+                      {isPending && (
+                        <Badge variant="outline" className="text-xs bg-amber-100 text-amber-700 border-amber-300">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Pending
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     {user.assignment_type === 'centre' && user.requested_centre_id ? (
-                      <div className="flex items-center gap-1">
-                        <Building2 className="h-3 w-3 text-blue-500" />
-                        <span className="text-xs">{allCentres?.find(c => c.centre_id === user.requested_centre_id)?.centre_name || user.requested_centre_id}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <Building2 className="h-3 w-3 text-blue-500" />
+                          <span className="text-xs">{allCentres?.find(c => c.centre_id === user.requested_centre_id)?.centre_name || user.requested_centre_id}</span>
+                        </div>
+                        {isPending && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => quickAssign(user)}
+                            disabled={saving === user.id}
+                            className="h-6 px-2 text-xs gap-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <Zap className="h-3 w-3" />
+                            Assign
+                          </Button>
+                        )}
                       </div>
                     ) : user.assignment_type === 'region' && user.requested_region_id ? (
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3 text-green-500" />
-                        <span className="text-xs">{allRegions?.find(r => r.id === user.requested_region_id)?.display_name || 'Region'}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="h-3 w-3 text-green-500" />
+                          <span className="text-xs">{allRegions?.find(r => r.id === user.requested_region_id)?.display_name || 'Region'}</span>
+                        </div>
+                        {isPending && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => quickAssign(user)}
+                            disabled={saving === user.id}
+                            className="h-6 px-2 text-xs gap-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <Zap className="h-3 w-3" />
+                            Assign
+                          </Button>
+                        )}
                       </div>
                     ) : (
                       <span className="text-muted-foreground text-xs">—</span>
@@ -565,7 +719,8 @@ const UserManagement = () => {
                     {new Date(user.created_at).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
-              ))}
+                );
+              })}
             </TableBody>
           </Table>
           {filteredUsers.length === 0 && (
