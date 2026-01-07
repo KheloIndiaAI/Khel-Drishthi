@@ -49,6 +49,12 @@ export function SectionContent({
   const hasErrors = Object.keys(validationErrors).length > 0;
   const isComplete = sectionProgress === 100 && !hasErrors;
 
+  // Get the STC name for dynamic title replacement
+  const stcName = formData.core?.stc_name || prefillData.stc_name || 'STC';
+  
+  // Replace {STC_NAME} placeholder in title with actual name
+  const dynamicTitle = section.title.replace('{STC_NAME}', stcName);
+
   if (!SectionComponent) {
     return (
       <div className="text-center py-12">
@@ -61,7 +67,7 @@ export function SectionContent({
     <div className="space-y-6">
       {/* Section Header with progress */}
       <SectionHeader
-        title={section.title}
+        title={dynamicTitle}
         description={section.description}
         sectionIndex={sectionIndex}
         progress={sectionProgress}
