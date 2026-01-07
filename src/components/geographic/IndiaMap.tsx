@@ -387,30 +387,75 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         el.addEventListener('click', (e) => {
           e.stopPropagation();
           
-          // Create popup with centre list
+          // Create popup with centre list using safe DOM methods (XSS prevention)
           const popupContent = document.createElement('div');
           popupContent.className = 'p-3 max-w-xs max-h-80 overflow-y-auto';
-          popupContent.innerHTML = `
-            <h3 class="font-bold text-base mb-1">${data.district}</h3>
-            <p class="text-xs text-gray-400 mb-2">${data.state}</p>
-            <div class="flex gap-1 mb-3 flex-wrap">
-              ${Object.entries(data.byType).map(([type, count]) => `
-                <span class="px-1.5 py-0.5 rounded text-[10px] text-white" style="background: ${CENTRE_TYPE_COLORS[type]}">${type}: ${count}</span>
-              `).join('')}
-            </div>
-            <div class="space-y-2">
-              ${data.centres.slice(0, 10).map(centre => `
-                <div class="p-2 bg-gray-800/50 rounded text-xs cursor-pointer hover:bg-gray-700/50 centre-item" data-centre-id="${centre.centre_id}">
-                  <div class="font-medium">${centre.centre_name}</div>
-                  <div class="flex items-center gap-1 mt-1">
-                    <span class="px-1 py-0.5 rounded text-[9px] text-white" style="background: ${CENTRE_TYPE_COLORS[centre.centre_type]}">${centre.centre_type}</span>
-                    ${centre.operational_status ? `<span class="text-gray-400 text-[9px]">${centre.operational_status}</span>` : ''}
-                  </div>
-                </div>
-              `).join('')}
-              ${data.centres.length > 10 ? `<p class="text-center text-gray-400 text-[10px]">+ ${data.centres.length - 10} more</p>` : ''}
-            </div>
-          `;
+          
+          // Create header safely using textContent
+          const heading = document.createElement('h3');
+          heading.className = 'font-bold text-base mb-1';
+          heading.textContent = data.district || '';
+          popupContent.appendChild(heading);
+          
+          const stateText = document.createElement('p');
+          stateText.className = 'text-xs text-gray-400 mb-2';
+          stateText.textContent = data.state || '';
+          popupContent.appendChild(stateText);
+          
+          // Create type badges container
+          const badgesContainer = document.createElement('div');
+          badgesContainer.className = 'flex gap-1 mb-3 flex-wrap';
+          Object.entries(data.byType).forEach(([type, count]) => {
+            const badge = document.createElement('span');
+            badge.className = 'px-1.5 py-0.5 rounded text-[10px] text-white';
+            badge.style.background = CENTRE_TYPE_COLORS[type] || '#888';
+            badge.textContent = `${type}: ${count}`;
+            badgesContainer.appendChild(badge);
+          });
+          popupContent.appendChild(badgesContainer);
+          
+          // Create centres list container
+          const centresContainer = document.createElement('div');
+          centresContainer.className = 'space-y-2';
+          
+          data.centres.slice(0, 10).forEach(centre => {
+            const centreItem = document.createElement('div');
+            centreItem.className = 'p-2 bg-gray-800/50 rounded text-xs cursor-pointer hover:bg-gray-700/50 centre-item';
+            centreItem.dataset.centreId = centre.centre_id;
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'font-medium';
+            nameDiv.textContent = centre.centre_name || '';
+            centreItem.appendChild(nameDiv);
+            
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'flex items-center gap-1 mt-1';
+            
+            const typeBadge = document.createElement('span');
+            typeBadge.className = 'px-1 py-0.5 rounded text-[9px] text-white';
+            typeBadge.style.background = CENTRE_TYPE_COLORS[centre.centre_type] || '#888';
+            typeBadge.textContent = centre.centre_type || '';
+            detailsDiv.appendChild(typeBadge);
+            
+            if (centre.operational_status) {
+              const statusSpan = document.createElement('span');
+              statusSpan.className = 'text-gray-400 text-[9px]';
+              statusSpan.textContent = centre.operational_status;
+              detailsDiv.appendChild(statusSpan);
+            }
+            
+            centreItem.appendChild(detailsDiv);
+            centresContainer.appendChild(centreItem);
+          });
+          
+          if (data.centres.length > 10) {
+            const moreText = document.createElement('p');
+            moreText.className = 'text-center text-gray-400 text-[10px]';
+            moreText.textContent = `+ ${data.centres.length - 10} more`;
+            centresContainer.appendChild(moreText);
+          }
+          
+          popupContent.appendChild(centresContainer);
 
           // Add click handlers to centre items
           setTimeout(() => {
@@ -506,18 +551,33 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         });
 
         el.addEventListener('mouseenter', () => {
+          // Create popup content using safe DOM methods (XSS prevention)
+          const popupDiv = document.createElement('div');
+          popupDiv.className = 'p-2';
+          
+          const stateNameDiv = document.createElement('div');
+          stateNameDiv.className = 'font-semibold';
+          stateNameDiv.textContent = state;
+          popupDiv.appendChild(stateNameDiv);
+          
+          const countDiv = document.createElement('div');
+          countDiv.className = 'text-xs text-gray-400';
+          countDiv.textContent = `${data.total} centres`;
+          popupDiv.appendChild(countDiv);
+          
+          const badgesDiv = document.createElement('div');
+          badgesDiv.className = 'flex gap-1 mt-1 flex-wrap';
+          Object.entries(data.byType).forEach(([type, count]) => {
+            const badge = document.createElement('span');
+            badge.className = 'px-1 py-0.5 rounded text-[9px] text-white';
+            badge.style.background = CENTRE_TYPE_COLORS[type] || '#888';
+            badge.textContent = `${type}: ${count}`;
+            badgesDiv.appendChild(badge);
+          });
+          popupDiv.appendChild(badgesDiv);
+          
           popup.setLngLat(coords)
-            .setHTML(`
-              <div class="p-2">
-                <div class="font-semibold">${state}</div>
-                <div class="text-xs text-gray-400">${data.total} centres</div>
-                <div class="flex gap-1 mt-1 flex-wrap">
-                  ${Object.entries(data.byType).map(([type, count]) => `
-                    <span class="px-1 py-0.5 rounded text-[9px] text-white" style="background: ${CENTRE_TYPE_COLORS[type]}">${type}: ${count}</span>
-                  `).join('')}
-                </div>
-              </div>
-            `)
+            .setDOMContent(popupDiv)
             .addTo(map.current!);
         });
 
