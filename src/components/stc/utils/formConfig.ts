@@ -537,6 +537,45 @@ export interface TalentData {
   competition_matrix?: CompetitionEntry[];
 }
 
+// NEW: Actionable Suggestion Type
+export interface ActionableSuggestion {
+  point_1?: string;
+  point_2?: string;
+  point_3?: string;
+}
+
+// NEW: Vision Data Interface
+export interface VisionData {
+  // STC Strengths (3)
+  strengths?: {
+    strength_1?: string;
+    strength_2?: string;
+    strength_3?: string;
+  };
+  
+  // STC Challenges (3)
+  challenges?: {
+    challenge_1?: string;
+    challenge_2?: string;
+    challenge_3?: string;
+  };
+  
+  // Vision Statement
+  vision_statement?: string;
+  
+  // Strategic Suggestions by Timeframe
+  short_term_actions?: ActionableSuggestion;  // 6 months - 1 year
+  medium_term_suggestions?: ActionableSuggestion;  // 1-3 years
+  long_term_suggestions?: ActionableSuggestion;  // 3-5 years
+  
+  // NCOE Upgrade Assessment
+  fit_for_ncoe_upgrade?: 'yes' | 'no' | 'not_sure';
+  ncoe_upgrade_justification?: string;
+  
+  // Additional Comments
+  other_comments?: string;
+}
+
 export interface AttachmentFile {
   file_id: string;
   url: string;
@@ -555,6 +594,7 @@ export interface FormData {
   medical: MedicalData;
   equipment: EquipmentData;
   talent: TalentData;
+  vision: VisionData;
   disciplineSpecific: Record<string, Record<string, unknown>>;
   attachments: AttachmentFile[];
   // Section 2 additional fields
@@ -619,6 +659,11 @@ export const FORM_SECTIONS: FormSection[] = [
     description: 'Athlete selection process and competition participation',
   },
   {
+    id: 'vision',
+    title: 'Vision for {STC_NAME}',
+    description: 'Share your insights on how this STC can enhance its contribution to India\'s sporting ecosystem',
+  },
+  {
     id: 'attachments',
     title: 'Attachments',
     description: 'Upload facility photos and supporting documents (optional)',
@@ -653,6 +698,13 @@ export const getDefaultFormData = (): FormData => ({
   medical: {},
   equipment: {},
   talent: {},
+  vision: {
+    strengths: {},
+    challenges: {},
+    short_term_actions: {},
+    medium_term_suggestions: {},
+    long_term_suggestions: {},
+  },
   disciplineSpecific: {},
   attachments: [],
 });

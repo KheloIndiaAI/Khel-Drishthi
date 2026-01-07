@@ -13,7 +13,8 @@ import type {
   EquipmentGap,
   DisciplineAthleteOrigin,
   DisciplineCompetitionData,
-  AttachmentFile
+  AttachmentFile,
+  VisionData
 } from './formConfig';
 
 interface ExportData {
@@ -219,7 +220,8 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
     '6. Human Resources',
     '7. Equipment & S&C',
     '8. Talent ID & Competitions',
-    '9. Attachments'
+    '9. Vision for STC',
+    '10. Attachments'
   ];
   sections.forEach(s => {
     doc.text(`• ${s}`, 18, yPos);
@@ -806,10 +808,99 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
     yPos += achievementLines.length * 5 + 5;
   }
 
-  // ============= SECTION 9: ATTACHMENTS =============
+  // ============= SECTION 9: VISION FOR STC =============
+  yPos += 5;
+  addSectionHeader(`Vision for ${centreName}`, 9);
+  
+  addSubSectionHeader('STC Strengths');
+  if (formData.vision?.strengths?.strength_1) addField('Strength 1', formData.vision.strengths.strength_1);
+  if (formData.vision?.strengths?.strength_2) addField('Strength 2', formData.vision.strengths.strength_2);
+  if (formData.vision?.strengths?.strength_3) addField('Strength 3', formData.vision.strengths.strength_3);
+  
+  addSubSectionHeader('Critical Challenges');
+  if (formData.vision?.challenges?.challenge_1) addField('Challenge 1', formData.vision.challenges.challenge_1);
+  if (formData.vision?.challenges?.challenge_2) addField('Challenge 2', formData.vision.challenges.challenge_2);
+  if (formData.vision?.challenges?.challenge_3) addField('Challenge 3', formData.vision.challenges.challenge_3);
+  
+  if (formData.vision?.vision_statement) {
+    addSubSectionHeader('Vision Statement');
+    checkPageBreak(40);
+    const visionLines = doc.splitTextToSize(formData.vision.vision_statement, pageWidth - 32);
+    doc.text(visionLines, 18, yPos);
+    yPos += visionLines.length * 5 + 5;
+  }
+  
+  // Strategic Roadmap Table
+  const hasStrategicSuggestions = 
+    formData.vision?.short_term_actions?.point_1 ||
+    formData.vision?.medium_term_suggestions?.point_1 ||
+    formData.vision?.long_term_suggestions?.point_1;
+  
+  if (hasStrategicSuggestions) {
+    addSubSectionHeader('Strategic Roadmap');
+    
+    const roadmapData = [
+      [
+        'Short-Term (6m-1yr)',
+        formData.vision?.short_term_actions?.point_1 || '-',
+        formData.vision?.short_term_actions?.point_2 || '-',
+        formData.vision?.short_term_actions?.point_3 || '-',
+      ],
+      [
+        'Medium-Term (1-3yr)',
+        formData.vision?.medium_term_suggestions?.point_1 || '-',
+        formData.vision?.medium_term_suggestions?.point_2 || '-',
+        formData.vision?.medium_term_suggestions?.point_3 || '-',
+      ],
+      [
+        'Long-Term (3-5yr)',
+        formData.vision?.long_term_suggestions?.point_1 || '-',
+        formData.vision?.long_term_suggestions?.point_2 || '-',
+        formData.vision?.long_term_suggestions?.point_3 || '-',
+      ],
+    ];
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Timeframe', 'Suggestion 1', 'Suggestion 2', 'Suggestion 3']],
+      body: roadmapData,
+      theme: 'striped',
+      headStyles: { fillColor: COLORS.primary, textColor: 255, fontSize: 8 },
+      styles: { fontSize: 8, cellPadding: 3 },
+      columnStyles: {
+        0: { cellWidth: 35, fontStyle: 'bold' },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 50 },
+        3: { cellWidth: 50 },
+      },
+      margin: { left: 14, right: 14 },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+    });
+    yPos = (doc as any).lastAutoTable.finalY + 8;
+  }
+  
+  addSubSectionHeader('NCOE Upgrade Assessment');
+  const ncoeLabels: Record<string, string> = {
+    'yes': 'Yes - Ready for upgrade',
+    'no': 'No - Not ready at this time',
+    'not_sure': 'Potentially - With improvements',
+  };
+  addField('Fit for NCOE Upgrade', ncoeLabels[formData.vision?.fit_for_ncoe_upgrade || ''] || 'Not assessed');
+  if (formData.vision?.ncoe_upgrade_justification) {
+    addField('Justification', formData.vision.ncoe_upgrade_justification);
+  }
+  
+  if (formData.vision?.other_comments) {
+    addSubSectionHeader('Additional Comments');
+    const commentLines = doc.splitTextToSize(formData.vision.other_comments, pageWidth - 32);
+    doc.text(commentLines, 18, yPos);
+    yPos += commentLines.length * 5 + 5;
+  }
+
+  // ============= SECTION 10: ATTACHMENTS =============
   if (formData.attachments.length > 0) {
     yPos += 5;
-    addSectionHeader('Attachments', 9);
+    addSectionHeader('Attachments', 10);
     addField('Total Attachments', formData.attachments.length);
     
     // Group by file type
