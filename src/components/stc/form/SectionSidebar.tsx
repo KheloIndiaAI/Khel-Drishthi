@@ -31,6 +31,7 @@ const SECTION_SHORT_TITLES: Record<string, string> = {
   'medical': 'Medical',
   'equipment': 'Equipment',
   'talent': 'Talent',
+  'vision': 'Vision',
   'disciplineSpecific': 'Discipline',
   'attachments': 'Attachments',
 };
