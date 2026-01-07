@@ -37,7 +37,8 @@ const COLORS = {
 
 export async function exportFormToPDF(data: ExportData): Promise<void> {
   const { formData, respondent, centreName, centreId } = data;
-  const formattedCentreName = centreName ? `STC ${centreName}` : 'STC';
+  // Format centre name with STC prefix in uppercase for professional look
+  const formattedCentreName = centreName ? `STC ${centreName.toUpperCase()}` : 'STC';
   const doc = new jsPDF();
   
   const pageWidth = doc.internal.pageSize.getWidth();

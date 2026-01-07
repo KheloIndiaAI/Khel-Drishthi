@@ -36,7 +36,7 @@ export function Section9Vision({ formData, setFormData, prefillData }: SectionPr
 
   const vision = formData.vision || {};
   const rawStcName = formData.core.stc_name || prefillData.stc_name || '';
-  const stcName = rawStcName ? `STC ${rawStcName}` : 'this STC';
+  const stcName = rawStcName ? `STC ${rawStcName.toUpperCase()}` : 'this STC';
 
   const updateVision = (updates: Partial<VisionData>) => {
     setFormData({
