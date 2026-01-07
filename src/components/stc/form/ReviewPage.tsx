@@ -12,9 +12,10 @@ import { FORM_SECTIONS } from "../utils/formConfig";
 import { computeDerivedKPIs } from "../utils/derivedMetrics";
 import { computeDataQualityFlags } from "../utils/dataQualityFlags";
 import { computeScoring } from "../utils/scoringEngine";
+import { exportFormToPDF } from "../utils/pdfExport";
 import {
   CheckCircle2, AlertTriangle, AlertCircle, Send, ArrowRight,
-  Users, Building2, Dumbbell, Trophy
+  Users, Building2, Dumbbell, Trophy, Download
 } from "lucide-react";
 import type { FormData, RespondentData } from "../utils/formConfig";
 import confetti from "canvas-confetti";
@@ -40,6 +41,7 @@ export function ReviewPage({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [consentAccuracy, setConsentAccuracy] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Compute derived data
   const derivedKPIs = computeDerivedKPIs(formData, disciplines);
@@ -123,6 +125,31 @@ export function ReviewPage({
     respondent.respondent_mobile && 
     respondent.respondent_email &&
     respondent.respondent_role;
+
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      await exportFormToPDF({
+        formData,
+        respondent,
+        centreName,
+        centreId,
+        disciplines,
+      });
+      toast({
+        title: "PDF Exported",
+        description: "Your STC report has been downloaded successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Failed to generate PDF. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -269,6 +296,37 @@ export function ReviewPage({
                 </div>
               </button>
             ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Export to PDF */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-foreground">Export Report</h3>
+              <p className="text-sm text-muted-foreground">
+                Download your form data as a PDF document
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={handleExportPDF}
+              disabled={isExporting}
+            >
+              {isExporting ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent mr-2" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export PDF
+                </>
+              )}
+            </Button>
           </div>
         </CardContent>
       </Card>
