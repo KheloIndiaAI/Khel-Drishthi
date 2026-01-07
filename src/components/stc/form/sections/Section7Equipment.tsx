@@ -34,7 +34,6 @@ const EQUIPMENT_UPGRADE_NEEDS = [
   "Replace",
   "Repair",
   "Add new",
-  "Calibration",
   "Other",
 ];
 
@@ -227,25 +226,6 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="competition_grade"
-                checked={formData.equipment.competition_grade_equipment_available || false}
-                onCheckedChange={(checked) => updateEquipment('competition_grade_equipment_available', checked)}
-              />
-              <Label htmlFor="competition_grade" className="cursor-pointer">Competition-grade Equipment</Label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Switch
-                id="video_analysis"
-                checked={formData.equipment.video_analysis_system_available || false}
-                onCheckedChange={(checked) => updateEquipment('video_analysis_system_available', checked)}
-              />
-              <Label htmlFor="video_analysis" className="cursor-pointer">Video Analysis System</Label>
-            </div>
-          </div>
         </CardContent>
       </Card>
 
@@ -282,7 +262,7 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
                 <div className="space-y-2">
                   <Label>Description of equipment available</Label>
                   <Textarea
-                    placeholder="e.g., Training hurdles (10), starting blocks (6), shot puts (various weights), timing equipment..."
+                    placeholder="Please provide details of equipment present for this discipline (e.g., type, quantity, brand, condition)"
                     value={de.equipment_description || ''}
                     onChange={(e) => updateDisciplineEquipment(de.discipline_code, 'equipment_description', e.target.value)}
                     rows={3}
@@ -390,54 +370,57 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
         </CardHeader>
         <CardContent className="space-y-3">
           {(formData.equipment.equipment_gaps || []).map((gap, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-2 p-3 bg-secondary/30 rounded-lg">
-              <Select
-                value={gap.discipline_code || ''}
-                onValueChange={(value) => updateGap(index, 'discipline_code', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Discipline" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="General">General</SelectItem>
-                  {disciplines.map((d) => (
-                    <SelectItem key={d} value={d}>{d}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                placeholder="Item name"
+            <div key={index} className="p-3 bg-secondary/30 rounded-lg space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <Select
+                  value={gap.discipline_code || ''}
+                  onValueChange={(value) => updateGap(index, 'discipline_code', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Discipline" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="General">General</SelectItem>
+                    {disciplines.map((d) => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  type="number"
+                  min={1}
+                  placeholder="Qty"
+                  value={gap.gap_qty_required}
+                  onChange={(e) => updateGap(index, 'gap_qty_required', parseInt(e.target.value) || 1)}
+                />
+                <Select
+                  value={gap.gap_priority}
+                  onValueChange={(value) => updateGap(index, 'gap_priority', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive"
+                  onClick={() => removeGap(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <Textarea
+                placeholder="What equipment needs to be procured on priority? What challenges are you facing (e.g., fund constraints, procurement delays, vendor issues, approval pending)?"
                 value={gap.gap_item_name}
                 onChange={(e) => updateGap(index, 'gap_item_name', e.target.value)}
+                rows={2}
               />
-              <Input
-                type="number"
-                min={1}
-                placeholder="Qty"
-                value={gap.gap_qty_required}
-                onChange={(e) => updateGap(index, 'gap_qty_required', parseInt(e.target.value) || 1)}
-              />
-              <Select
-                value={gap.gap_priority}
-                onValueChange={(value) => updateGap(index, 'gap_priority', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="High">High</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="Low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="text-destructive"
-                onClick={() => removeGap(index)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
             </div>
           ))}
           {(formData.equipment.equipment_gaps || []).length === 0 && (
