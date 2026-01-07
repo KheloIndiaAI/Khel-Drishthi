@@ -106,8 +106,8 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
     );
   }
 
-  // Format centre name with STC prefix
-  const formattedCentreName = centreName ? `STC ${centreName}` : 'STC Data Collection';
+  // Format centre name with STC prefix in uppercase for professional look
+  const formattedCentreName = centreName ? `STC ${centreName.toUpperCase()}` : 'STC Data Collection';
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
