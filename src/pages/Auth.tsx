@@ -28,7 +28,7 @@ const Auth = () => {
   const [selectedRegionId, setSelectedRegionId] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
-  const [loginMode, setLoginMode] = useState<'email' | 'username'>('username');
+  const [loginMode, setLoginMode] = useState<'email' | 'username'>('email');
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
