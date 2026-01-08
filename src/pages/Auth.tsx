@@ -17,6 +17,8 @@ import { Loader2, LogIn, UserPlus, Building2, MapPin, Eye } from "lucide-react";
 const emailSchema = z.string().email("Please enter a valid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
 
+const DOMAIN = '@kheldrishti.local';
+
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +28,8 @@ const Auth = () => {
   const [selectedRegionId, setSelectedRegionId] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [loginMode, setLoginMode] = useState<'email' | 'username'>('username');
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -172,15 +176,32 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateInputs()) return;
+    
+    let loginEmail = email;
+    
+    // If using username mode, construct the email
+    if (loginMode === 'username') {
+      if (!username.trim()) {
+        toast({ title: "Validation Error", description: "Please enter your username", variant: "destructive" });
+        return;
+      }
+      loginEmail = `${username.trim().toLowerCase()}${DOMAIN}`;
+    } else {
+      if (!validateInputs()) return;
+    }
+
+    if (!password || password.length < 6) {
+      toast({ title: "Validation Error", description: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
 
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
 
     if (error) {
       let message = error.message;
       if (error.message.includes('Invalid login')) {
-        message = "Invalid email or password. Please try again.";
+        message = "Invalid username/email or password. Please try again.";
       }
       toast({ title: "Sign In Error", description: message, variant: "destructive" });
     }
@@ -214,17 +235,56 @@ const Auth = () => {
               
               <TabsContent value="signin">
                 <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
-                    <Input
-                      id="signin-email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
+                  {/* Login mode toggle */}
+                  <div className="flex gap-2 p-1 bg-muted rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setLoginMode('username')}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        loginMode === 'username' ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Username
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLoginMode('email')}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        loginMode === 'email' ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Email
+                    </button>
                   </div>
+
+                  {loginMode === 'username' ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-username">Username</Label>
+                      <Input
+                        id="signin-username"
+                        type="text"
+                        placeholder="e.g., stcagartala or rckolkata"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Enter your username without @kheldrishti.local
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email">Email</Label>
+                      <Input
+                        id="signin-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="signin-password">Password</Label>
                     <Input
