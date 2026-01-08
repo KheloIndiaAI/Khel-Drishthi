@@ -12,9 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database, MapPin, Building2, Plus, Trash2, Zap, AlertCircle, Download } from "lucide-react";
+import { Lock, Search, UserCog, Shield, Eye, Edit, Settings2, Database, MapPin, Building2, Plus, Trash2, Zap, AlertCircle, Download, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PendingAccessRequests } from "@/components/access/PendingAccessRequests";
+import { BulkUserCreationDialog } from "@/components/admin/BulkUserCreationDialog";
+import { BlankFormDownload } from "@/components/admin/BlankFormDownload";
 import type { Session } from "@supabase/supabase-js";
 import type { Database as SupabaseDB } from "@/integrations/supabase/types";
 
@@ -63,6 +65,7 @@ const UserManagement = () => {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
   const [savingPermissions, setSavingPermissions] = useState(false);
+  const [bulkCreateDialogOpen, setBulkCreateDialogOpen] = useState(false);
   
   // Assignment state
   const [assignmentDialogOpen, setAssignmentDialogOpen] = useState(false);
@@ -548,10 +551,21 @@ const UserManagement = () => {
         <h1 className="font-display text-3xl md:text-4xl flex items-center gap-3">
           <UserCog className="h-8 w-8" /> User Management
         </h1>
-        <Button variant="outline" onClick={downloadExcelTemplate} className="gap-2">
-          <Download className="h-4 w-4" />
-          Download Template
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setBulkCreateDialogOpen(true)} className="gap-2">
+            <Users className="h-4 w-4" />
+            Bulk Create Users
+          </Button>
+          <Button variant="outline" onClick={downloadExcelTemplate} className="gap-2">
+            <Download className="h-4 w-4" />
+            Download Template
+          </Button>
+        </div>
+      </div>
+
+      {/* Blank Form Download */}
+      <div className="mb-6">
+        <BlankFormDownload />
       </div>
 
       <div className="flex items-center gap-4 mb-6">

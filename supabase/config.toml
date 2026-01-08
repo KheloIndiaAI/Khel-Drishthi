@@ -1,1 +1,13 @@
 project_id = "cvzmuynfmdivlflgnjra"
+
+[functions.get-mapbox-token]
+verify_jwt = false
+
+[functions.import-centres]
+verify_jwt = false
+
+[functions.import-data]
+verify_jwt = false
+
+[functions.bulk-create-users]
+verify_jwt = false
