@@ -3,16 +3,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Wifi } from "lucide-react";
-import type { HostelData, WaterSupply } from "../../../utils/formConfig";
-import { HOSTEL_AMENITIES, WATER_SUPPLY_OPTIONS } from "../../../utils/hostelValidation";
+import type { HostelData } from "../../../utils/formConfig";
+import { HOSTEL_AMENITIES } from "../../../utils/hostelValidation";
 
 interface Props {
   hostel: HostelData;
@@ -29,7 +22,6 @@ export function HostelAmenitiesCard({ hostel, updateHostel }: Props) {
   };
 
   const showOtherAmenityNote = hostel.hostel_amenities?.includes('Other');
-  const showWaterIssueNote = hostel.water_supply === 'Tanker';
 
   return (
     <Card>
@@ -68,38 +60,6 @@ export function HostelAmenitiesCard({ hostel, updateHostel }: Props) {
               value={hostel.hostel_amenities_other_note || ''}
               onChange={(e) => updateHostel('hostel_amenities_other_note', e.target.value)}
               placeholder="List other amenities available..."
-              rows={2}
-            />
-          </div>
-        )}
-
-        {/* Water Supply */}
-        <div className="space-y-2">
-          <Label htmlFor="water_supply">Water Supply</Label>
-          <Select
-            value={hostel.water_supply || ''}
-            onValueChange={(value) => updateHostel('water_supply', value as WaterSupply)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select water supply type" />
-            </SelectTrigger>
-            <SelectContent>
-              {WATER_SUPPLY_OPTIONS.map((option) => (
-                <SelectItem key={option} value={option}>{option}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Water Issue Note */}
-        {showWaterIssueNote && (
-          <div className="space-y-2">
-            <Label htmlFor="water_issue">Describe water supply issues:</Label>
-            <Textarea
-              id="water_issue"
-              value={hostel.water_supply_issue_note || ''}
-              onChange={(e) => updateHostel('water_supply_issue_note', e.target.value)}
-              placeholder="E.g., frequency of tanker supply, storage capacity..."
               rows={2}
             />
           </div>

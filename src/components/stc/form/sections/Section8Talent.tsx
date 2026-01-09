@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -14,12 +15,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Trophy, AlertTriangle, Users, Megaphone, Medal, Star, ChevronDown } from "lucide-react";
-import type { FormData, PrefillData, DisciplineAthleteOrigin, DisciplineCompetitionData } from "../../utils/formConfig";
+import { Trophy, AlertTriangle, Users, Megaphone, Medal, Star, ChevronDown, Plus, Trash2 } from "lucide-react";
+import type { FormData, PrefillData, DisciplineAthleteOrigin, DisciplineCompetitionData, StateWiseAthletes } from "../../utils/formConfig";
 
 interface SectionProps {
   formData: FormData;
@@ -41,6 +49,47 @@ const PUBLICITY_METHODS = [
 
 const COMPETITION_LEVELS = ["State", "National", "International"] as const;
 
+// All Indian States and Union Territories
+const INDIAN_STATES_UTS = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  // Union Territories
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
+];
+
 export function Section8Talent({ formData, setFormData }: SectionProps) {
   const updateTalent = <K extends keyof FormData['talent']>(key: K, value: FormData['talent'][K]) => {
     setFormData({
@@ -61,6 +110,7 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
         discipline_name: d.discipline_name,
         local_athletes_count: undefined,
         other_state_athletes_count: undefined,
+        state_wise_athletes: [],
       }));
     
     if (newOrigins.length > 0) {
@@ -99,10 +149,13 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
   // Discipline-wise origin totals
   const disciplineOriginTotals = useMemo(() => {
     const origins = formData.talent.discipline_origin || [];
-    return origins.reduce((acc, d) => ({
-      local: acc.local + (d.local_athletes_count || 0),
-      other: acc.other + (d.other_state_athletes_count || 0),
-    }), { local: 0, other: 0 });
+    return origins.reduce((acc, d) => {
+      const stateWiseTotal = (d.state_wise_athletes || []).reduce((sum, s) => sum + (s.athlete_count || 0), 0);
+      return {
+        local: acc.local + (d.local_athletes_count || 0),
+        other: acc.other + stateWiseTotal,
+      };
+    }, { local: 0, other: 0 });
   }, [formData.talent.discipline_origin]);
 
   const hasDisciplineOriginMismatch = stcOriginTotal > 0 && 
@@ -129,11 +182,51 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
   }, [formData.talent.discipline_competitions]);
 
   // Update discipline origin
-  const updateDisciplineOrigin = (code: string, field: keyof DisciplineAthleteOrigin, value: number | undefined) => {
+  const updateDisciplineOrigin = (code: string, field: keyof DisciplineAthleteOrigin, value: number | undefined | StateWiseAthletes[]) => {
     const origins = formData.talent.discipline_origin || [];
     const updated = origins.map(o => 
       o.discipline_code === code ? { ...o, [field]: value } : o
     );
+    updateTalent('discipline_origin', updated);
+  };
+
+  // Add state-wise athlete entry for a discipline
+  const addStateWiseAthlete = (disciplineCode: string) => {
+    const origins = formData.talent.discipline_origin || [];
+    const updated = origins.map(o => {
+      if (o.discipline_code === disciplineCode) {
+        const stateWise = o.state_wise_athletes || [];
+        return { ...o, state_wise_athletes: [...stateWise, { state_name: '', athlete_count: 0 }] };
+      }
+      return o;
+    });
+    updateTalent('discipline_origin', updated);
+  };
+
+  // Update state-wise athlete entry
+  const updateStateWiseAthlete = (disciplineCode: string, index: number, field: keyof StateWiseAthletes, value: string | number) => {
+    const origins = formData.talent.discipline_origin || [];
+    const updated = origins.map(o => {
+      if (o.discipline_code === disciplineCode) {
+        const stateWise = [...(o.state_wise_athletes || [])];
+        stateWise[index] = { ...stateWise[index], [field]: value };
+        return { ...o, state_wise_athletes: stateWise };
+      }
+      return o;
+    });
+    updateTalent('discipline_origin', updated);
+  };
+
+  // Remove state-wise athlete entry
+  const removeStateWiseAthlete = (disciplineCode: string, index: number) => {
+    const origins = formData.talent.discipline_origin || [];
+    const updated = origins.map(o => {
+      if (o.discipline_code === disciplineCode) {
+        const stateWise = (o.state_wise_athletes || []).filter((_, i) => i !== index);
+        return { ...o, state_wise_athletes: stateWise };
+      }
+      return o;
+    });
     updateTalent('discipline_origin', updated);
   };
 
@@ -213,7 +306,7 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
         </CardContent>
       </Card>
 
-      {/* Card 2: Discipline-wise Athlete Origin */}
+      {/* Card 2: Discipline-wise Athlete Origin with State-wise Breakdown */}
       {formData.disciplines.length > 0 && (
         <Card>
           <CardHeader className="pb-3">
@@ -221,57 +314,111 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
               <Users className="h-4 w-4" />
               Athlete Origin by Discipline
             </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              For each discipline, enter local athletes and specify which states other athletes come from.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Discipline</TableHead>
-                    <TableHead className="text-center">Local Athletes</TableHead>
-                    <TableHead className="text-center">Other State</TableHead>
-                    <TableHead className="text-center">Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(formData.talent.discipline_origin || []).map((origin) => {
-                    const total = (origin.local_athletes_count || 0) + (origin.other_state_athletes_count || 0);
-                    return (
-                      <TableRow key={origin.discipline_code}>
-                        <TableCell className="font-medium">{origin.discipline_name}</TableCell>
-                        <TableCell>
+            {(formData.talent.discipline_origin || []).map((origin) => {
+              const stateWiseTotal = (origin.state_wise_athletes || []).reduce((sum, s) => sum + (s.athlete_count || 0), 0);
+              const total = (origin.local_athletes_count || 0) + stateWiseTotal;
+              
+              return (
+                <Collapsible key={origin.discipline_code} className="border rounded-lg">
+                  <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{origin.discipline_name}</span>
+                      <span className="text-xs px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
+                        Total: {total}
+                      </span>
+                    </div>
+                    <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="px-4 pb-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Local Athletes (Same State)</Label>
+                        <Input
+                          type="number"
+                          min={0}
+                          value={origin.local_athletes_count ?? ''}
+                          onChange={(e) => updateDisciplineOrigin(
+                            origin.discipline_code, 
+                            'local_athletes_count', 
+                            e.target.value ? parseInt(e.target.value) : undefined
+                          )}
+                        />
+                      </div>
+                      <div className="flex items-end">
+                        <div className="text-center p-3 bg-secondary/30 rounded-lg w-full">
+                          <p className="text-xs text-muted-foreground">Other States Total</p>
+                          <p className="text-lg font-bold text-foreground">{stateWiseTotal}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* State-wise Athletes Breakdown */}
+                    <div className="border-t border-border pt-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">Other State Athletes Breakdown</Label>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => addStateWiseAthlete(origin.discipline_code)}
+                        >
+                          <Plus className="h-3 w-3 mr-1" /> Add State
+                        </Button>
+                      </div>
+                      
+                      {(origin.state_wise_athletes || []).length === 0 && (
+                        <p className="text-sm text-muted-foreground text-center py-2">
+                          Click "Add State" to specify which states other athletes come from
+                        </p>
+                      )}
+
+                      {(origin.state_wise_athletes || []).map((stateAthlete, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Select
+                            value={stateAthlete.state_name}
+                            onValueChange={(value) => updateStateWiseAthlete(origin.discipline_code, index, 'state_name', value)}
+                          >
+                            <SelectTrigger className="flex-1">
+                              <SelectValue placeholder="Select state" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {INDIAN_STATES_UTS.map((state) => (
+                                <SelectItem key={state} value={state}>{state}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <Input
                             type="number"
                             min={0}
-                            className="w-20 mx-auto text-center"
-                            value={origin.local_athletes_count ?? ''}
-                            onChange={(e) => updateDisciplineOrigin(
+                            className="w-24"
+                            placeholder="Count"
+                            value={stateAthlete.athlete_count || ''}
+                            onChange={(e) => updateStateWiseAthlete(
                               origin.discipline_code, 
-                              'local_athletes_count', 
-                              e.target.value ? parseInt(e.target.value) : undefined
+                              index, 
+                              'athlete_count', 
+                              parseInt(e.target.value) || 0
                             )}
                           />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="number"
-                            min={0}
-                            className="w-20 mx-auto text-center"
-                            value={origin.other_state_athletes_count ?? ''}
-                            onChange={(e) => updateDisciplineOrigin(
-                              origin.discipline_code, 
-                              'other_state_athletes_count', 
-                              e.target.value ? parseInt(e.target.value) : undefined
-                            )}
-                          />
-                        </TableCell>
-                        <TableCell className="text-center font-medium">{total}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="text-destructive h-9 w-9"
+                            onClick={() => removeStateWiseAthlete(origin.discipline_code, index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              );
+            })}
 
             <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
               <span className="text-sm font-medium">Summary:</span>
@@ -375,25 +522,22 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
               </div>
             </RadioGroup>
 
-            {/* Poor Turnout Reasons (only if No) */}
-            {formData.talent.trials_good_turnout === false && (
-              <div className="space-y-2 pl-4 border-l-2 border-destructive/20">
-                <Label htmlFor="turnout_reasons" className="text-sm font-medium">
-                  Please describe the reasons and challenges for poor turnout:
-                </Label>
-                <Textarea
-                  id="turnout_reasons"
-                  placeholder="e.g., Lack of awareness, transportation issues, timing conflicts, limited outreach to rural areas..."
-                  value={formData.talent.trials_poor_turnout_reasons || ''}
-                  onChange={(e) => updateTalent('trials_poor_turnout_reasons', e.target.value)}
-                  rows={3}
-                />
-              </div>
-            )}
+            {/* Turnout Notes - ALWAYS VISIBLE (non-conditional) */}
+            <div className="space-y-2">
+              <Label htmlFor="turnout_notes" className="text-sm font-medium">
+                Brief about turnout - reasons for good/poor turnout and any challenges:
+              </Label>
+              <Textarea
+                id="turnout_notes"
+                placeholder="e.g., Good turnout due to strong outreach to schools and district sports offices. OR Poor turnout due to lack of awareness, transportation issues, timing conflicts, limited outreach to rural areas..."
+                value={formData.talent.trials_turnout_notes || ''}
+                onChange={(e) => updateTalent('trials_turnout_notes', e.target.value)}
+                rows={3}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
-
       {/* Card 4: Competition Participation by Discipline */}
       {formData.disciplines.length > 0 && (
         <Card>

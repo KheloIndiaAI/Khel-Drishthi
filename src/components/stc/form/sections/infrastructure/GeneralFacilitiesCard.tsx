@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Select,
   SelectContent,
@@ -10,17 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building, Dumbbell, Home, AlertCircle } from "lucide-react";
+import { Building, Home, AlertCircle, Info } from "lucide-react";
 import type { IndoorFacilityDetails, ConditionRating, RenovationStatus } from "../../../utils/formConfig";
 import { CONDITION_OPTIONS, RENOVATION_STATUS_OPTIONS } from "../../../utils/disciplineFOPConfig";
 
 interface GeneralFacilitiesCardProps {
   warmupAreaAvailable?: boolean;
   warmupAreaDescription?: string;
-  sncGymDescription?: string;
   indoorFacilities: IndoorFacilityDetails;
   onWarmupChange: (available: boolean, description?: string) => void;
-  onSncGymChange: (description: string) => void;
   onIndoorChange: (data: IndoorFacilityDetails) => void;
   errors?: Record<string, string>;
 }
@@ -28,10 +27,8 @@ interface GeneralFacilitiesCardProps {
 export function GeneralFacilitiesCard({
   warmupAreaAvailable,
   warmupAreaDescription,
-  sncGymDescription,
   indoorFacilities,
   onWarmupChange,
-  onSncGymChange,
   onIndoorChange,
   errors
 }: GeneralFacilitiesCardProps) {
@@ -88,24 +85,6 @@ export function GeneralFacilitiesCard({
               />
             </div>
           )}
-        </div>
-
-        {/* S&C / Gym */}
-        <div className="space-y-3 border-t border-border pt-4">
-          <div className="flex items-center gap-2">
-            <Dumbbell className="h-4 w-4 text-muted-foreground" />
-            <Label className="font-medium">Strength & Conditioning / Gym Facilities</Label>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>Description of S&C/Gym facilities available at the centre</Label>
-            <Textarea
-              value={sncGymDescription || ''}
-              onChange={(e) => onSncGymChange(e.target.value)}
-              placeholder="Describe available S&C/Gym equipment and setup (e.g., free weights, machines, cardio equipment)..."
-              rows={3}
-            />
-          </div>
         </div>
 
         {/* Indoor Facilities */}
@@ -168,6 +147,13 @@ export function GeneralFacilitiesCard({
                       area_sqft: parseInt(e.target.value) || undefined 
                     })}
                   />
+                  {/* Area unit confirmation nudge */}
+                  <Alert className="py-2">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription className="text-xs">
+                      Please confirm this value is in <strong>Square Feet (sq ft)</strong>
+                    </AlertDescription>
+                  </Alert>
                 </div>
 
                 <div className="space-y-2">
@@ -233,6 +219,20 @@ export function GeneralFacilitiesCard({
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              {/* Repair Needs Textarea */}
+              <div className="space-y-2 border-t border-border pt-4">
+                <Label>Repair/Maintenance Needed</Label>
+                <Textarea
+                  value={indoorFacilities.repair_notes || ''}
+                  onChange={(e) => onIndoorChange({ ...indoorFacilities, repair_notes: e.target.value })}
+                  placeholder="Details about repair or maintenance needed for indoor facilities..."
+                  rows={2}
+                />
+                <p className="text-xs text-muted-foreground">
+                  📷 Consider adding photos of indoor facilities in the Attachments section
+                </p>
               </div>
             </div>
           )}
