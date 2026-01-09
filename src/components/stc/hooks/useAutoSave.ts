@@ -59,7 +59,7 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
         equipment_inventory: JSON.parse(JSON.stringify(formData.equipment || {})),
         athlete_details: JSON.parse(JSON.stringify({
           ...formData.talent,
-          disciplines: formData.disciplines, // Include discipline/athlete data here
+          disciplines: formData.disciplines, // Include discipline/athlete data with notes and catchment
         })),
         challenges: JSON.parse(JSON.stringify({
           disciplineSpecific: formData.disciplineSpecific || {},
