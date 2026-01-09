@@ -47,7 +47,8 @@ const PUBLICITY_METHODS = [
   "Other",
 ];
 
-const COMPETITION_LEVELS = ["State", "National", "International"] as const;
+// UPDATED: Removed "State" from competition levels
+const COMPETITION_LEVELS = ["National", "International"] as const;
 
 // All Indian States and Union Territories
 const INDIAN_STATES_UTS = [
@@ -162,14 +163,10 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
     (disciplineOriginTotals.local + disciplineOriginTotals.other) > 0 &&
     Math.abs(stcOriginTotal - (disciplineOriginTotals.local + disciplineOriginTotals.other)) > 0;
 
-  // Competition summary calculations
+  // Competition summary calculations (State removed)
   const competitionSummary = useMemo(() => {
     const comps = formData.talent.discipline_competitions || [];
     return {
-      state: {
-        participants: comps.reduce((sum, c) => sum + (c.state_participants_current || 0) + (c.state_participants_5yr || 0), 0),
-        medals: comps.reduce((sum, c) => sum + (c.state_medals_current || 0) + (c.state_medals_5yr || 0), 0),
-      },
       national: {
         participants: comps.reduce((sum, c) => sum + (c.national_participants_current || 0) + (c.national_participants_5yr || 0), 0),
         medals: comps.reduce((sum, c) => sum + (c.national_medals_current || 0) + (c.national_medals_5yr || 0), 0),
@@ -538,7 +535,8 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
           </div>
         </CardContent>
       </Card>
-      {/* Card 4: Competition Participation by Discipline */}
+
+      {/* Card 4: Competition Participation by Discipline (State REMOVED) */}
       {formData.disciplines.length > 0 && (
         <Card>
           <CardHeader className="pb-3">
@@ -546,6 +544,9 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
               <Medal className="h-4 w-4" />
               Competition Participation by Discipline
             </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              National and International level participation and medals only.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             {(formData.talent.discipline_competitions || []).map((comp) => (
@@ -573,7 +574,7 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
                       </TableHeader>
                       <TableBody>
                         {COMPETITION_LEVELS.map((level) => {
-                          const levelLower = level.toLowerCase() as 'state' | 'national' | 'international';
+                          const levelLower = level.toLowerCase() as 'national' | 'international';
                           return (
                             <TableRow key={level}>
                               <TableCell className="font-medium">{level}</TableCell>
@@ -639,15 +640,10 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
               </Collapsible>
             ))}
 
-            {/* Competition Summary */}
+            {/* Competition Summary (State removed) */}
             <div className="mt-4 p-4 bg-secondary/20 rounded-lg">
               <h5 className="text-sm font-semibold mb-3">STC Competition Summary (All Periods Combined)</h5>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <p className="text-xs text-muted-foreground">State</p>
-                  <p className="font-bold">{competitionSummary.state.participants} participants</p>
-                  <p className="text-sm text-primary">{competitionSummary.state.medals} medals</p>
-                </div>
+              <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
                   <p className="text-xs text-muted-foreground">National</p>
                   <p className="font-bold">{competitionSummary.national.participants} participants</p>

@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Wifi } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Wifi, ShieldCheck } from "lucide-react";
 import type { HostelData } from "../../../utils/formConfig";
 import { HOSTEL_AMENITIES } from "../../../utils/hostelValidation";
 
@@ -22,6 +22,11 @@ export function HostelAmenitiesCard({ hostel, updateHostel }: Props) {
   };
 
   const showOtherAmenityNote = hostel.hostel_amenities?.includes('Other');
+
+  // Convert legacy boolean to string format
+  const fireSafetyValue = typeof hostel.fire_safety_equipment === 'boolean' 
+    ? (hostel.fire_safety_equipment ? 'Yes' : 'No')
+    : hostel.fire_safety_equipment || '';
 
   return (
     <Card>
@@ -65,25 +70,29 @@ export function HostelAmenitiesCard({ hostel, updateHostel }: Props) {
           </div>
         )}
 
-        {/* Power Backup & Fire Safety */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-2 p-3 border rounded-lg">
-            <Switch
-              id="power_backup"
-              checked={hostel.power_backup_available || false}
-              onCheckedChange={(checked) => updateHostel('power_backup_available', checked)}
-            />
-            <Label htmlFor="power_backup" className="cursor-pointer">Power Backup Available</Label>
+        {/* Fire Safety Equipment - Radio Button */}
+        <div className="space-y-3 p-4 border rounded-lg">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-destructive" />
+            <Label className="text-sm font-medium">Fire Safety Equipment Available?</Label>
           </div>
-
-          <div className="flex items-center gap-2 p-3 border rounded-lg">
-            <Switch
-              id="fire_safety"
-              checked={hostel.fire_safety_equipment || false}
-              onCheckedChange={(checked) => updateHostel('fire_safety_equipment', checked)}
-            />
-            <Label htmlFor="fire_safety" className="cursor-pointer">Fire Safety Equipment</Label>
-          </div>
+          <RadioGroup
+            value={fireSafetyValue}
+            onValueChange={(value) => updateHostel('fire_safety_equipment', value as 'Yes' | 'No')}
+            className="flex gap-6"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Yes" id="fire_safety_yes" />
+              <Label htmlFor="fire_safety_yes" className="cursor-pointer">Yes</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="No" id="fire_safety_no" />
+              <Label htmlFor="fire_safety_no" className="cursor-pointer">No</Label>
+            </div>
+          </RadioGroup>
+          <p className="text-xs text-muted-foreground">
+            Fire extinguishers, smoke detectors, fire alarms, etc.
+          </p>
         </div>
       </CardContent>
     </Card>

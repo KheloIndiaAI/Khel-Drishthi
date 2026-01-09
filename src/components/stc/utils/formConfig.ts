@@ -97,7 +97,8 @@ export interface GroundsmanRoster {
 
 export interface AdminRoster {
   staff_name: string;
-  designation: string;  // LDC, UDC, Assistant, Superintendent
+  designation: string;  // Deputy Director, Assistant Director, Section Officer, LDC, UDC, Assistant, Superintendent, Other
+  designation_other?: string;  // NEW: Custom designation when "Other" is selected
   employment_nature: string;  // Permanent, Contractual, Outsourced, Casual
   posted_since_date?: string;
 }
@@ -335,6 +336,13 @@ export interface NewHostelRequirement {
   justification?: string;
 }
 
+// NEW: Support Staff Structure
+export interface SupportStaff {
+  security_count?: number;
+  housekeeping_count?: number;
+  horticulture_count?: number;
+}
+
 export interface HostelData {
   // Basic Availability
   hostel_available: boolean;
@@ -365,13 +373,11 @@ export interface HostelData {
   hostel_gender_segregation_type?: string;
   hostel_gender_segregation_note?: string;
   
-  // Amenities (water_supply REMOVED)
+  // Amenities (water_supply REMOVED, power_backup REMOVED)
   hostel_amenities?: string[];
   hostel_amenities_other_note?: string;
-  // water_supply?: WaterSupply;  // REMOVED
-  // water_supply_issue_note?: string;  // REMOVED
-  power_backup_available?: boolean;
-  fire_safety_equipment?: boolean;
+  // power_backup_available?: boolean;  // REMOVED
+  fire_safety_equipment?: 'Yes' | 'No';  // UPDATED: Changed from boolean to Yes/No
   
   // Toilet & Sanitation
   toilet_type?: string;
@@ -403,6 +409,7 @@ export interface HostelData {
   recreation_facilities?: boolean;
   water_supply?: WaterSupply;  // Keep for backward compatibility
   water_supply_issue_note?: string;  // Keep for backward compatibility
+  power_backup_available?: boolean;  // Keep for backward compatibility
 }
 
 export interface StaffData {
@@ -423,8 +430,9 @@ export interface StaffData {
   pocso_posh_awareness?: AwarenessLevel;
   procurement_accounting_knowledge?: KnowledgeLevel;
   
-  // ===== SUPPORT STAFF =====
-  security_staff_count?: number;
+  // ===== SUPPORT STAFF (RESTRUCTURED) =====
+  support_staff?: SupportStaff;  // NEW: Structured support staff
+  security_staff_count?: number;  // Keep for backward compatibility
   
   // Legacy fields (kept for backward compatibility)
   coach_count_by_discipline?: Record<string, number>;
@@ -515,24 +523,25 @@ export interface DisciplineAthleteOrigin {
   state_wise_athletes?: StateWiseAthletes[];  // NEW: Breakdown by state
 }
 
-// NEW: Discipline-wise Competition Data
+// NEW: Discipline-wise Competition Data (State level REMOVED)
 export interface DisciplineCompetitionData {
   discipline_code: string;
   discipline_name: string;
-  // 2025-26 (Current Year)
-  state_participants_current?: number;
-  state_medals_current?: number;
+  // 2025-26 (Current Year) - State REMOVED
   national_participants_current?: number;
   national_medals_current?: number;
   international_participants_current?: number;
   international_medals_current?: number;
-  // 2020-2024 (5-Year Cumulative)
-  state_participants_5yr?: number;
-  state_medals_5yr?: number;
+  // 2020-2024 (5-Year Cumulative) - State REMOVED
   national_participants_5yr?: number;
   national_medals_5yr?: number;
   international_participants_5yr?: number;
   international_medals_5yr?: number;
+  // Legacy fields for backward compatibility
+  state_participants_current?: number;
+  state_medals_current?: number;
+  state_participants_5yr?: number;
+  state_medals_5yr?: number;
 }
 
 export interface TalentData {
@@ -735,6 +744,11 @@ export const getDefaultFormData = (): FormData => ({
   staff: {
     coach_count_total: 0,
     admin_staff_count_total: 0,
+    support_staff: {
+      security_count: undefined,
+      housekeeping_count: undefined,
+      horticulture_count: undefined,
+    },
   },
   medical: {},
   equipment: {},

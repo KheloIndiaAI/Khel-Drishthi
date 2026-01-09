@@ -26,6 +26,9 @@ interface AdminStaffCardProps {
 }
 
 const ADMIN_DESIGNATIONS = [
+  'Deputy Director',
+  'Assistant Director',
+  'Section Officer',
   'LDC (Lower Division Clerk)',
   'UDC (Upper Division Clerk)',
   'Assistant',
@@ -55,6 +58,10 @@ export function AdminStaffCard({ formData, updateStaff }: AdminStaffCardProps) {
   const updateAdmin = (index: number, field: keyof AdminRoster, value: unknown) => {
     const updated = [...(formData.staff.admin_roster || [])];
     updated[index] = { ...updated[index], [field]: value };
+    // Clear designation_other if designation is not "Other"
+    if (field === 'designation' && value !== 'Other') {
+      updated[index].designation_other = undefined;
+    }
     updateStaff('admin_roster', updated);
   };
 
@@ -175,7 +182,7 @@ export function AdminStaffCard({ formData, updateStaff }: AdminStaffCardProps) {
                     onValueChange={(value) => updateAdmin(index, 'designation', value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="LDC / UDC / Assistant" />
+                      <SelectValue placeholder="Select designation" />
                     </SelectTrigger>
                     <SelectContent>
                       {ADMIN_DESIGNATIONS.map((d) => (
@@ -184,6 +191,18 @@ export function AdminStaffCard({ formData, updateStaff }: AdminStaffCardProps) {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Conditional "Other" designation input */}
+                {admin.designation === 'Other' && (
+                  <div className="space-y-1 md:col-span-2">
+                    <Label className="text-xs">Specify Designation <span className="text-destructive">*</span></Label>
+                    <Input
+                      placeholder="Enter designation"
+                      value={admin.designation_other || ''}
+                      onChange={(e) => updateAdmin(index, 'designation_other', e.target.value)}
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-1">
                   <Label className="text-xs">Nature of Employment</Label>
@@ -221,14 +240,15 @@ export function AdminStaffCard({ formData, updateStaff }: AdminStaffCardProps) {
                         )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
                       <Calendar
                         mode="single"
                         selected={admin.posted_since_date ? new Date(admin.posted_since_date) : undefined}
                         onSelect={(date) => updateAdmin(index, 'posted_since_date', date?.toISOString().split('T')[0])}
                         disabled={(date) => date > new Date()}
                         initialFocus
-                        className={cn("p-3 pointer-events-auto")}
+                        fromYear={1980}
+                        toYear={new Date().getFullYear()}
                       />
                     </PopoverContent>
                   </Popover>
