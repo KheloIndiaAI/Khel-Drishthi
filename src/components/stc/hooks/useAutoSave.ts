@@ -123,6 +123,11 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
       setSaveStatus('saved');
       setLastSaved(new Date());
       saveInProgressRef.current = false;
+      // Show brief toast on successful save
+      toast.success('Saved!', {
+        duration: 1500,
+        position: 'bottom-center',
+      });
     },
     onError: (error) => {
       console.error('[AutoSave] Save failed:', error);

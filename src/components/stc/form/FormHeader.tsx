@@ -56,9 +56,15 @@ export function FormHeader({
     const now = new Date();
     const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
     
-    if (diff < 60) return 'just now';
+    if (diff < 10) return 'just now';
+    if (diff < 60) return `${diff}s ago`;
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatFullTimestamp = (date: Date | null) => {
+    if (!date) return '';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   };
 
   return (
@@ -98,27 +104,41 @@ export function FormHeader({
             )}
           </Button>
 
-          {/* Save Status - visible on all sizes */}
+          {/* Save Status & Last Saved Timestamp */}
           <AnimatePresence mode="wait">
             <motion.div 
               key={saveStatus}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground"
+              className="flex items-center gap-1.5 sm:gap-2"
             >
+              {saveStatus === 'saving' && (
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span className="hidden sm:inline">Saving...</span>
+                </span>
+              )}
               {saveStatus === 'saved' && lastSaved && (
-                <>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm">
                   <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600" />
-                  <span className="hidden sm:inline">Saved {formatLastSaved(lastSaved)}</span>
-                  <span className="sm:hidden">✓</span>
-                </>
+                  <span className="text-green-600 font-medium hidden sm:inline">Saved</span>
+                  <span className="text-muted-foreground hidden md:inline" title={`Last saved at ${formatFullTimestamp(lastSaved)}`}>
+                    {formatLastSaved(lastSaved)}
+                  </span>
+                  <span className="sm:hidden text-green-600">✓</span>
+                </div>
               )}
               {saveStatus === 'error' && (
-                <>
-                  <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
-                  <span>Error - Retry</span>
-                </>
+                <div className="flex items-center gap-1 text-xs text-destructive">
+                  <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span>Error</span>
+                </div>
+              )}
+              {saveStatus === 'idle' && lastSaved && (
+                <span className="text-xs text-muted-foreground hidden md:inline" title={`Last saved at ${formatFullTimestamp(lastSaved)}`}>
+                  Last saved {formatLastSaved(lastSaved)}
+                </span>
               )}
             </motion.div>
           </AnimatePresence>
