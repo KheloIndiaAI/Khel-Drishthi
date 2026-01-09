@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Database, CheckCircle2, CalendarIcon, MapPin } from "lucide-react";
+import { Database, CheckCircle2, CalendarIcon, MapPin, Phone } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { FormData, PrefillData } from "../../utils/formConfig";
@@ -281,6 +281,22 @@ export function Section1Identity({ formData, setFormData, prefillData, errors }:
               value={formData.core.cic_designation || ''}
               onChange={(e) => updateCore('cic_designation', e.target.value)}
               placeholder="e.g., Coach / Senior Coach / Assistant Director / Deputy Director"
+            />
+          </div>
+
+          {/* NEW: CIC Phone Number */}
+          <div className="space-y-2">
+            <Label htmlFor="cic_phone" className="flex items-center gap-1">
+              <Phone className="h-3.5 w-3.5" />
+              Phone Number of Centre In Charge
+            </Label>
+            <Input
+              id="cic_phone"
+              type="tel"
+              value={formData.core.cic_phone || ''}
+              onChange={(e) => updateCore('cic_phone', e.target.value)}
+              placeholder="e.g., 9876543210"
+              className="max-w-[250px]"
             />
           </div>
 

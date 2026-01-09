@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,7 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, Wifi, Monitor, AlertCircle } from "lucide-react";
-import type { AdminBlockData, ConditionRating, RenovationStatus, InternetConnectivity, ITEquipmentAdequacy } from "../../../utils/formConfig";
+import type { AdminBlockData, ConditionRating, RenovationStatus, InternetConnectivity, ITEquipmentAdequacy, FloorType } from "../../../utils/formConfig";
+import { FLOOR_OPTIONS } from "../../../utils/formConfig";
 import { CONDITION_OPTIONS, RENOVATION_STATUS_OPTIONS } from "../../../utils/disciplineFOPConfig";
 
 const INTERNET_CONNECTIVITY_OPTIONS: InternetConnectivity[] = [
@@ -89,13 +90,21 @@ export function AdministrativeBlockCard({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>Number of Floors</Label>
-                  <Input
-                    type="number"
-                    min={1}
+                  <Select
                     value={data.admin_block_floors || ''}
-                    onChange={(e) => updateField('admin_block_floors', parseInt(e.target.value) || undefined)}
-                    placeholder="e.g., 2"
-                  />
+                    onValueChange={(value) => updateField('admin_block_floors', value as FloorType)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select floors" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FLOOR_OPTIONS.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="space-y-2">
