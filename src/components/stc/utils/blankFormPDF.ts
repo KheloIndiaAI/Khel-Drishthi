@@ -19,142 +19,6 @@ interface PDFOptions {
   type: 'printable' | 'fillable';
 }
 
-// ==================== HELPER: Draw Athletic Track Background (Cover Page) ====================
-function drawAthleticTrackBackground(doc: jsPDF): void {
-  const centerX = 105;
-  const centerY = 175;
-  
-  // Set very low opacity for background effect
-  doc.setDrawColor(COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b);
-  doc.setLineWidth(0.3);
-  
-  // Draw concentric track ovals (6 lanes)
-  for (let i = 0; i < 6; i++) {
-    const radiusX = 75 - (i * 8);
-    const radiusY = 40 - (i * 4);
-    if (radiusX > 0 && radiusY > 0) {
-      doc.ellipse(centerX, centerY, radiusX, radiusY, 'S');
-    }
-  }
-  
-  // Draw straight section lines
-  doc.setLineWidth(0.2);
-  for (let i = 0; i < 6; i++) {
-    const offset = i * 8;
-    doc.line(30 + offset, centerY - 40 + (i * 4), 30 + offset, centerY + 40 - (i * 4));
-    doc.line(180 - offset, centerY - 40 + (i * 4), 180 - offset, centerY + 40 - (i * 4));
-  }
-  
-  // Draw finish line
-  doc.setLineWidth(0.5);
-  doc.line(105, centerY - 40, 105, centerY + 40);
-}
-
-// ==================== HELPER: Draw Sports Watermark ====================
-function drawSportsWatermark(doc: jsPDF, sectionNumber: number): void {
-  doc.setDrawColor(COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b);
-  doc.setLineWidth(0.15);
-  
-  const centerX = 150;
-  const centerY = 200;
-  
-  switch (sectionNumber) {
-    case 1: // Flag wave for Identity
-      for (let i = 0; i < 5; i++) {
-        const y = centerY - 30 + (i * 15);
-        doc.setDrawColor(i < 2 ? COLORS.saffron.r : (i < 4 ? 255 : COLORS.indiaGreen.r), 
-                         i < 2 ? COLORS.saffron.g : (i < 4 ? 255 : COLORS.indiaGreen.g), 
-                         i < 2 ? COLORS.saffron.b : (i < 4 ? 255 : COLORS.indiaGreen.b));
-        doc.line(centerX - 30, y, centerX + 30, y + 5);
-      }
-      break;
-    case 2: // Runner silhouette for Disciplines
-      // Simple running figure
-      doc.ellipse(centerX, centerY - 25, 8, 10, 'S'); // head
-      doc.line(centerX, centerY - 15, centerX - 5, centerY + 10); // body
-      doc.line(centerX - 5, centerY + 10, centerX - 20, centerY + 30); // back leg
-      doc.line(centerX - 5, centerY + 10, centerX + 15, centerY + 25); // front leg
-      doc.line(centerX, centerY - 10, centerX - 20, centerY - 5); // back arm
-      doc.line(centerX, centerY - 10, centerX + 15, centerY - 15); // front arm
-      break;
-    case 3: // Stadium outline for Infrastructure
-      // Stadium arch
-      doc.ellipse(centerX, centerY, 40, 25, 'S');
-      doc.line(centerX - 40, centerY, centerX - 40, centerY + 20);
-      doc.line(centerX + 40, centerY, centerX + 40, centerY + 20);
-      doc.line(centerX - 40, centerY + 20, centerX + 40, centerY + 20);
-      // Floodlights
-      doc.line(centerX - 50, centerY - 10, centerX - 50, centerY + 25);
-      doc.line(centerX + 50, centerY - 10, centerX + 50, centerY + 25);
-      break;
-    case 4: // Building for Hostel
-      // Building outline
-      doc.rect(centerX - 25, centerY - 30, 50, 60, 'S');
-      // Windows
-      for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 3; col++) {
-          doc.rect(centerX - 20 + (col * 15), centerY - 25 + (row * 14), 8, 10, 'S');
-        }
-      }
-      // Door
-      doc.rect(centerX - 5, centerY + 15, 10, 15, 'S');
-      break;
-    case 5: // People for HR
-      // Three figures
-      for (let i = 0; i < 3; i++) {
-        const x = centerX - 25 + (i * 25);
-        doc.ellipse(x, centerY - 15, 6, 8, 'S'); // head
-        doc.line(x, centerY - 7, x, centerY + 15); // body
-        doc.line(x, centerY + 15, x - 8, centerY + 30); // left leg
-        doc.line(x, centerY + 15, x + 8, centerY + 30); // right leg
-      }
-      break;
-    case 6: // Dumbbell for Equipment
-      // Dumbbell shape
-      doc.ellipse(centerX - 25, centerY, 8, 15, 'S');
-      doc.rect(centerX - 17, centerY - 5, 34, 10, 'S');
-      doc.ellipse(centerX + 25, centerY, 8, 15, 'S');
-      break;
-    case 7: // Podium for Talent
-      // Podium
-      doc.rect(centerX - 30, centerY, 20, 30, 'S'); // 2nd place
-      doc.rect(centerX - 10, centerY - 15, 20, 45, 'S'); // 1st place
-      doc.rect(centerX + 10, centerY + 10, 20, 20, 'S'); // 3rd place
-      // Medal circles
-      doc.ellipse(centerX, centerY - 25, 5, 5, 'S');
-      break;
-    case 8: // Rising star for Vision
-      // Star shape (simplified)
-      const starPoints = [
-        [centerX, centerY - 30],
-        [centerX + 8, centerY - 10],
-        [centerX + 30, centerY - 8],
-        [centerX + 12, centerY + 8],
-        [centerX + 18, centerY + 30],
-        [centerX, centerY + 15],
-        [centerX - 18, centerY + 30],
-        [centerX - 12, centerY + 8],
-        [centerX - 30, centerY - 8],
-        [centerX - 8, centerY - 10],
-      ];
-      for (let i = 0; i < starPoints.length; i++) {
-        const next = (i + 1) % starPoints.length;
-        doc.line(starPoints[i][0], starPoints[i][1], starPoints[next][0], starPoints[next][1]);
-      }
-      break;
-    case 9: // Document for Attachments
-      // Document icon
-      doc.rect(centerX - 20, centerY - 30, 40, 55, 'S');
-      // Lines on document
-      for (let i = 0; i < 5; i++) {
-        doc.line(centerX - 15, centerY - 20 + (i * 10), centerX + 15, centerY - 20 + (i * 10));
-      }
-      // Folded corner
-      doc.line(centerX + 10, centerY - 30, centerX + 20, centerY - 20);
-      break;
-  }
-}
-
 // ==================== HELPER: Add Page Header ====================
 function addPageHeader(doc: jsPDF, sectionNumber: number, sectionTitle: string, pageNumber: number): void {
   // Navy header bar
@@ -220,11 +84,11 @@ function addConditionalBox(doc: jsPDF, condition: string, yPos: number, height: 
   doc.roundedRect(18, yPos, 174, height, 2, 2, 'FD');
   doc.setLineDashPattern([], 0);
   
-  // Condition label
+  // Condition label (removed arrow character to avoid stray characters)
   doc.setTextColor(COLORS.conditionalBorder.r, COLORS.conditionalBorder.g, COLORS.conditionalBorder.b);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'bold');
-  doc.text(`↳ ${condition}`, 22, yPos + 5);
+  doc.text(condition, 22, yPos + 5);
   
   // Reset
   doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
@@ -307,7 +171,6 @@ function checkPageBreak(doc: jsPDF, yPos: number, requiredSpace: number, section
     doc.addPage();
     pageNumber++;
     addPageHeader(doc, sectionNumber, sectionTitle, pageNumber);
-    drawSportsWatermark(doc, sectionNumber);
     return { y: 35, page: pageNumber };
   }
   return { y: yPos, page: pageNumber };
@@ -329,38 +192,38 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   // ==================== COVER PAGE ====================
   // Navy header bar
   doc.setFillColor(COLORS.navyBlue.r, COLORS.navyBlue.g, COLORS.navyBlue.b);
-  doc.rect(0, 0, 210, 45, 'F');
+  doc.rect(0, 0, 210, 50, 'F');
   
-  // Try to add logo - using a placeholder position for now
-  // Logo would be added here if we could embed the image
+  // Large SAI Logo placeholder (prominent, centered)
   doc.setFillColor(COLORS.white.r, COLORS.white.g, COLORS.white.b);
-  doc.ellipse(105, 25, 15, 15, 'F');
+  doc.roundedRect(75, 8, 60, 35, 3, 3, 'F');
   doc.setTextColor(COLORS.navyBlue.r, COLORS.navyBlue.g, COLORS.navyBlue.b);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('SAI LOGO', 105, 28, { align: 'center' });
   doc.setFontSize(8);
-  doc.text('SAI', 105, 27, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.text('Sports Authority of India', 105, 36, { align: 'center' });
   
   // Saffron accent line
   doc.setFillColor(COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b);
-  doc.rect(0, 45, 210, 4, 'F');
+  doc.rect(0, 50, 210, 4, 'F');
   
   // Main Title
   doc.setTextColor(COLORS.navyBlue.r, COLORS.navyBlue.g, COLORS.navyBlue.b);
   doc.setFontSize(26);
   doc.setFont('helvetica', 'bold');
-  doc.text('SPORTS AUTHORITY OF INDIA', 105, 62, { align: 'center' });
+  doc.text('SPORTS AUTHORITY OF INDIA', 105, 68, { align: 'center' });
   
   // Subtitle
   doc.setTextColor(COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  doc.text('Nurturing Talent, Measuring Excellence - STC Profile', 105, 72, { align: 'center' });
+  doc.text('Nurturing Talent, Measuring Excellence - STC Profile', 105, 78, { align: 'center' });
   
   // Green accent line
   doc.setFillColor(COLORS.indiaGreen.r, COLORS.indiaGreen.g, COLORS.indiaGreen.b);
-  doc.rect(60, 78, 90, 1.5, 'F');
-  
-  // Draw athletic track background
-  drawAthleticTrackBackground(doc);
+  doc.rect(60, 84, 90, 1.5, 'F');
   
   // Instructions box
   let instrY = 95;
@@ -407,13 +270,13 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.setTextColor(COLORS.conditionalBorder.r, COLORS.conditionalBorder.g, COLORS.conditionalBorder.b);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.text('⚠ IMPORTANT NOTES', 28, notesY + 8);
+  doc.text('IMPORTANT NOTES', 28, notesY + 8);
   
   doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text('• Data should be current unless otherwise specified.', 28, notesY + 15);
-  doc.text('• Use sanctioned strength as per official records.', 28, notesY + 20);
+  doc.text('- Data should be current unless otherwise specified.', 28, notesY + 15);
+  doc.text('- Use sanctioned strength as per official records.', 28, notesY + 20);
   
   // Table of Contents
   let tocY = 185;
@@ -444,7 +307,7 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   tocY += 8;
-  tocItems.forEach((item, index) => {
+  tocItems.forEach((item) => {
     doc.setFillColor(COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b);
     doc.circle(43, tocY - 1.5, 1.5, 'F');
     doc.text(item, 48, tocY);
@@ -463,7 +326,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber = 2;
   addPageHeader(doc, 1, 'Centre Identity & Status', pageNumber);
-  drawSportsWatermark(doc, 1);
   
   let y = 35;
   
@@ -525,7 +387,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber = 3;
   addPageHeader(doc, 2, 'Disciplines & Athlete Strength', pageNumber);
-  drawSportsWatermark(doc, 2);
   
   y = 35;
   
@@ -617,7 +478,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber = 4;
   addPageHeader(doc, 3, 'Infrastructure & Field of Play', pageNumber);
-  drawSportsWatermark(doc, 3);
   
   y = 35;
   
@@ -641,8 +501,8 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   
   autoTable(doc, {
     startY: y,
-    head: [['Discipline', 'Exclusive to SAI?', 'FoP Type', 'Construction Year', 'Condition', 'Renovation Status']],
-    body: Array(8).fill(['', '☐ Yes ☐ No', '☐ Indoor ☐ Outdoor', '', '', '']),
+    head: [['Discipline', 'Exclusive?', 'FoP Type', 'Year Built', 'Condition', 'Status']],
+    body: Array(8).fill(['', '☐ Yes ☐ No', '☐ In ☐ Out', '', '', '']),
     styles: { fontSize: 8, cellPadding: 2 },
     headStyles: { 
       fillColor: [COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b],
@@ -667,7 +527,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber = 5;
   addPageHeader(doc, 3, 'Infrastructure & Field of Play (contd.)', pageNumber);
-  drawSportsWatermark(doc, 3);
   
   y = 35;
   
@@ -706,7 +565,7 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   y = addTextField(doc, 'Description', y, 60, 22);
   y = addTextField(doc, 'Area (sqft)', y, 25, 110);
   y = addTextField(doc, 'Construction Year', y, 20, 22);
-  y = addCheckboxOptions(doc, 'Condition', ['Excellent', 'Good', 'Needs Minor Repair', 'Needs Major Renovation'], y, 70);
+  y = addCheckboxOptions(doc, 'Condition', ['Excellent', 'Good', 'Minor Repair', 'Major Renovation'], y, 70);
   y += 8;
   
   // Card 3.5: Administrative Block
@@ -719,13 +578,13 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   y = addTextField(doc, 'Number of Floors', y, 15, 24);
   y = addTextField(doc, 'Area (sqft)', y, 25, 80);
   y = addTextField(doc, 'Construction Year', y, 20, 130);
-  y = addCheckboxOptions(doc, 'Condition', ['Excellent', 'Good', 'Needs Minor Repair', 'Needs Major Renovation'], y, 24);
+  y = addCheckboxOptions(doc, 'Condition', ['Excellent', 'Good', 'Minor Repair', 'Major Renovation'], y, 24);
   y = addCheckboxOptions(doc, 'Sufficient Space for Staff', ['Yes', 'No'], y, 24);
   y = addCheckboxOptions(doc, 'Has Separate Accounts Room', ['Yes', 'No'], y, 24);
   y = addCheckboxOptions(doc, 'Has Store Room', ['Yes', 'No'], y, 100);
   y = addCheckboxOptions(doc, 'Has Meeting Room', ['Yes', 'No'], y, 24);
   y = addCheckboxOptions(doc, 'Internet Connectivity', ['Broadband', '4G/Mobile', 'Limited', 'None'], y, 24);
-  y = addCheckboxOptions(doc, 'IT Equipment Adequacy', ['Adequate', 'Partially Adequate', 'Inadequate', 'None'], y, 24);
+  y = addCheckboxOptions(doc, 'IT Equipment Adequacy', ['Adequate', 'Partial', 'Inadequate', 'None'], y, 24);
   y += 5;
   
   // Conditional for Admin Block NOT exists
@@ -755,7 +614,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 4, 'Hostel & Amenities', pageNumber);
-  drawSportsWatermark(doc, 4);
   
   y = 35;
   
@@ -821,7 +679,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 4, 'Hostel & Amenities (contd.)', pageNumber);
-  drawSportsWatermark(doc, 4);
   
   y = 35;
   
@@ -838,12 +695,12 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   y = addCheckboxOptions(doc, 'Mess Operator', ['SAI', 'Outsourced'], y, 22);
   y = addTextField(doc, 'If Outsourced - Contractor Name', y, 70, 22);
   y = addTextField(doc, 'Dining Seating Capacity', y, 25, 22);
-  y = addCheckboxOptions(doc, 'Dining Area Quality', ['Excellent', 'Good', 'Needs Minor Repair', 'Needs Major Renovation'], y, 22);
+  y = addCheckboxOptions(doc, 'Dining Area Quality', ['Excellent', 'Good', 'Minor Repair', 'Major Renovation'], y, 22);
   y += 5;
   
   // Card 4.7: Overall Quality
   y = addCard(doc, 'Card 4.7: Overall Hostel Quality', y, 35);
-  y = addCheckboxOptions(doc, 'Overall Quality', ['Excellent', 'Good', 'Needs Minor Repair', 'Needs Major Renovation'], y, 22);
+  y = addCheckboxOptions(doc, 'Overall Quality', ['Excellent', 'Good', 'Minor Repair', 'Major Renovation'], y, 22);
   doc.setFontSize(8);
   doc.text('Improvement Needs (check all that apply):', 22, y);
   y += 4;
@@ -876,7 +733,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 5, 'Human Resources', pageNumber);
-  drawSportsWatermark(doc, 5);
   
   y = 35;
   
@@ -889,7 +745,7 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.roundedRect(22, y, 170, 12, 2, 2, 'F');
   doc.setFontSize(8);
   doc.setTextColor(COLORS.textMuted.r, COLORS.textMuted.g, COLORS.textMuted.b);
-  doc.text('Auto-Calculate: Total Athletes ÷ Total Coaches = Coach:Athlete Ratio', 26, y + 7);
+  doc.text('Formula: Total Athletes / Total Coaches = Coach:Athlete Ratio', 26, y + 7);
   doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
   y += 15;
   
@@ -913,10 +769,27 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
     margin: { left: 22, right: 14 },
   });
   
-  y = (doc as any).lastAutoTable.finalY + 5;
-  doc.setFontSize(7);
-  doc.setTextColor(COLORS.textMuted.r, COLORS.textMuted.g, COLORS.textMuted.b);
-  doc.text('Designation: High Performance Coach / Senior Coach / Coach / Assistant Coach  |  Employment: Permanent / Contractual / Deputation', 22, y);
+  y = (doc as any).lastAutoTable.finalY + 8;
+  
+  // Card 5.2: Administrative Staff
+  y = addCard(doc, 'Card 5.2: Administrative Staff', y, 45);
+  y += 2;
+  
+  autoTable(doc, {
+    startY: y,
+    head: [['#', 'Name', 'Designation', 'Posted Since', 'Responsibilities']],
+    body: Array(5).fill(['', '', '', '', '']),
+    styles: { fontSize: 8, cellPadding: 2 },
+    headStyles: { 
+      fillColor: [COLORS.navyBlue.r, COLORS.navyBlue.g, COLORS.navyBlue.b],
+      textColor: [255, 255, 255],
+      fontSize: 7 
+    },
+    columnStyles: { 0: { cellWidth: 10 } },
+    margin: { left: 22, right: 14 },
+  });
+  
+  y = (doc as any).lastAutoTable.finalY + 8;
   
   addPageFooter(doc, pageNumber);
   
@@ -924,72 +797,29 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 5, 'Human Resources (contd.)', pageNumber);
-  drawSportsWatermark(doc, 5);
   
   y = 35;
   
-  // Card 5.2: Groundsmen
-  y = addCard(doc, 'Card 5.2: Groundsmen', y, 55);
+  // Card 5.3: Groundsmen & Support Staff
+  y = addCard(doc, 'Card 5.3: Groundsmen & Support Staff', y, 35);
   y = addTextField(doc, 'Total Number of Groundsmen', y, 20, 22);
-  y += 2;
-  
-  autoTable(doc, {
-    startY: y,
-    head: [['#', 'Name', 'Employment Nature', 'Assigned FoP/Area']],
-    body: Array(6).fill(['', '', '', '']),
-    styles: { fontSize: 8, cellPadding: 2 },
-    headStyles: { 
-      fillColor: [COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b],
-      textColor: [255, 255, 255],
-      fontSize: 7 
-    },
-    columnStyles: { 0: { cellWidth: 10 } },
-    margin: { left: 22, right: 14 },
-  });
-  
-  y = (doc as any).lastAutoTable.finalY + 3;
-  doc.setFontSize(7);
-  doc.setTextColor(COLORS.textMuted.r, COLORS.textMuted.g, COLORS.textMuted.b);
-  doc.text('Employment: Permanent / Contractual / Outsourced / Casual', 22, y);
-  doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
-  y += 8;
-  
-  // Card 5.3: Administrative Staff
-  y = addCard(doc, 'Card 5.3: Administrative Staff', y, 55);
-  y = addTextField(doc, 'Total Number of Admin Staff', y, 20, 22);
-  y += 2;
-  
-  autoTable(doc, {
-    startY: y,
-    head: [['#', 'Name', 'Designation', 'Employment Nature', 'Posted Since']],
-    body: Array(6).fill(['', '', '', '', '']),
-    styles: { fontSize: 8, cellPadding: 2 },
-    headStyles: { 
-      fillColor: [COLORS.saffron.r, COLORS.saffron.g, COLORS.saffron.b],
-      textColor: [255, 255, 255],
-      fontSize: 7 
-    },
-    columnStyles: { 0: { cellWidth: 10 } },
-    margin: { left: 22, right: 14 },
-  });
-  
-  y = (doc as any).lastAutoTable.finalY + 3;
-  doc.setFontSize(7);
-  doc.setTextColor(COLORS.textMuted.r, COLORS.textMuted.g, COLORS.textMuted.b);
-  doc.text('Designation: LDC / UDC / Assistant / Superintendent', 22, y);
-  doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
-  y += 8;
-  
-  // Card 5.4: Staff Awareness
-  y = addCard(doc, 'Card 5.4: Staff Awareness & Knowledge', y, 30);
-  y = addCheckboxOptions(doc, 'AMS & NSRS Awareness', ['Fully Aware', 'Partially Aware', 'Not Aware', 'Training Needed'], y, 22);
-  y = addCheckboxOptions(doc, 'POCSO & POSH Awareness', ['Fully Aware', 'Partially Aware', 'Not Aware', 'Training Needed'], y, 22);
-  y = addCheckboxOptions(doc, 'Procurement & Accounting Knowledge', ['Expert', 'Proficient', 'Basic', 'Needs Training'], y, 22);
+  y = addTextField(doc, 'Total Number of Support Staff', y, 20, 22);
+  y = addTextArea(doc, 'Notes on staffing adequacy:', y, 2, 22);
   y += 5;
   
-  // Card 5.5: Security Staff
-  y = addCard(doc, 'Card 5.5: Security Staff', y, 15);
-  y = addTextField(doc, 'Total Security Staff Count', y, 20, 22);
+  // Card 5.4: Security Staff
+  y = addCard(doc, 'Card 5.4: Security Staff', y, 25);
+  y = addCheckboxOptions(doc, 'Security Provider', ['SAI Staff', 'Outsourced', 'None'], y, 22);
+  y = addTextField(doc, 'Number of Security Personnel', y, 20, 22);
+  y = addCheckboxOptions(doc, 'Security Adequate', ['Yes', 'No'], y, 100);
+  y += 5;
+  
+  // Card 5.5: Staff Awareness
+  y = addCard(doc, 'Card 5.5: Staff Awareness & Training', y, 30);
+  y = addCheckboxOptions(doc, 'Sports Science Awareness', ['High', 'Medium', 'Low', 'None'], y, 22);
+  y = addCheckboxOptions(doc, 'Nutrition Planning Awareness', ['High', 'Medium', 'Low', 'None'], y, 22);
+  y = addCheckboxOptions(doc, 'Anti-Doping Awareness', ['High', 'Medium', 'Low', 'None'], y, 22);
+  y += 5;
   
   addPageFooter(doc, pageNumber);
   
@@ -997,7 +827,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 6, 'Equipment & Strength & Conditioning', pageNumber);
-  drawSportsWatermark(doc, 6);
   
   y = 35;
   
@@ -1075,7 +904,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 6, 'Equipment & S&C (contd.)', pageNumber);
-  drawSportsWatermark(doc, 6);
   
   y = 35;
   
@@ -1098,7 +926,7 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   });
   y += 6;
   
-  y = addCheckboxOptions(doc, 'S&C Equipment Condition', ['Excellent', 'Good', 'Needs Minor Repair', 'Needs Major Renovation'], y, 22);
+  y = addCheckboxOptions(doc, 'S&C Equipment Condition', ['Excellent', 'Good', 'Minor Repair', 'Major Renovation'], y, 22);
   y = addCheckboxOptions(doc, 'Structured S&C Program in Place', ['Yes', 'No'], y, 22);
   y += 2;
   
@@ -1122,7 +950,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 7, 'Talent Identification & Competitions', pageNumber);
-  drawSportsWatermark(doc, 7);
   
   y = 35;
   
@@ -1200,7 +1027,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 7, 'Talent ID & Competitions (contd.)', pageNumber);
-  drawSportsWatermark(doc, 7);
   
   y = 35;
   
@@ -1245,7 +1071,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 8, 'Vision for STC', pageNumber);
-  drawSportsWatermark(doc, 8);
   
   y = 35;
   
@@ -1304,7 +1129,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 8, 'Vision for STC (contd.)', pageNumber);
-  drawSportsWatermark(doc, 8);
   
   y = 35;
   
@@ -1328,7 +1152,6 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.addPage();
   pageNumber++;
   addPageHeader(doc, 9, 'Attachments & Declaration', pageNumber);
-  drawSportsWatermark(doc, 9);
   
   y = 35;
   
@@ -1343,7 +1166,7 @@ export function generateBlankFormPDF(options: PDFOptions): jsPDF {
   doc.setTextColor(COLORS.indiaGreen.r, COLORS.indiaGreen.g, COLORS.indiaGreen.b);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('📎 ATTACHMENT INSTRUCTIONS', 20, y + 7);
+  doc.text('ATTACHMENT INSTRUCTIONS', 20, y + 7);
   doc.setTextColor(COLORS.textPrimary.r, COLORS.textPrimary.g, COLORS.textPrimary.b);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
