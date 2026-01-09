@@ -60,6 +60,10 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
         athlete_details: JSON.parse(JSON.stringify({
           ...formData.talent,
           disciplines: formData.disciplines, // Include discipline/athlete data with notes and catchment
+          // Section 2 additional fields
+          had_previous_disciplines: formData.had_previous_disciplines,
+          previous_disciplines: formData.previous_disciplines || [],
+          new_discipline_suggestions: formData.new_discipline_suggestions || '',
         })),
         challenges: JSON.parse(JSON.stringify({
           disciplineSpecific: formData.disciplineSpecific || {},

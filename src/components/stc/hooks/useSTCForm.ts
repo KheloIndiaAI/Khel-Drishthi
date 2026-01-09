@@ -109,6 +109,11 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
       const attachments = (challenges.attachments as unknown as FormData['attachments']) || [];
       const vision = (challenges.vision as FormData['vision']) || { strengths: {}, challenges: {}, short_term_actions: {}, medium_term_suggestions: {}, long_term_suggestions: {} };
       const resp = (core.respondent as unknown as RespondentData) || (existingData.respondent as unknown as RespondentData) || null;
+      
+      // Extract Section 2 additional fields from athlete_details
+      const hadPreviousDisciplines = talent.had_previous_disciplines as boolean | undefined;
+      const previousDisciplines = (talent.previous_disciplines as FormData['previous_disciplines']) || [];
+      const newDisciplineSuggestions = (talent.new_discipline_suggestions as string) || '';
 
       // Load saved disciplines from athlete_details.disciplines if available
       const savedDisciplines = (talent.disciplines as unknown as FormData['disciplines']) || [];
@@ -172,6 +177,10 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
         vision,
         disciplineSpecific,
         attachments,
+        // Section 2 additional fields
+        had_previous_disciplines: hadPreviousDisciplines,
+        previous_disciplines: previousDisciplines,
+        new_discipline_suggestions: newDisciplineSuggestions,
       });
 
       if (resp?.respondent_name) {
