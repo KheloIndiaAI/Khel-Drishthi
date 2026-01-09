@@ -288,17 +288,20 @@ export const CONDITION_OPTIONS: string[] = [
   'Needs Major Renovation',
 ];
 
+// UPDATED: Added 'Need to be Planned' option
 export const RENOVATION_STATUS_OPTIONS: string[] = [
   'Not Required',
   'Planned',
+  'Need to be Planned',
   'Ongoing',
   'Recently Completed',
 ];
 
+// UPDATED: Changed 'Shared' to 'Other'
 export const LAND_OWNERSHIP_OPTIONS: string[] = [
   'Owned by SAI',
   'Lease',
-  'Shared',
+  'Other',
 ];
 
 export const TRAVEL_MODE_OPTIONS: string[] = [

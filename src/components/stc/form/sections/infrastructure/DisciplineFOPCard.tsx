@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +16,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Target, AlertCircle, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Target, AlertCircle, CheckCircle2, Camera } from "lucide-react";
 import { useState } from "react";
 import type { DisciplineFOPDetails, ConditionRating, RenovationStatus, FOPType, TravelMode } from "../../../utils/formConfig";
 import { 
@@ -49,6 +50,9 @@ export function DisciplineFOPCard({ fop, onChange, errors }: DisciplineFOPCardPr
   const hasErrors = Object.keys(errors || {}).some(key => 
     key.includes(fop.discipline_code)
   );
+
+  // Determine if we need to show distance/travel mode fields
+  const showDistanceFields = fop.fop_exclusive_to_sai === false || fop.fop_within_campus === false;
 
   return (
     <Card className={hasErrors ? 'border-destructive/50' : isComplete ? 'border-primary/30' : ''}>
@@ -175,6 +179,84 @@ export function DisciplineFOPCard({ fop, onChange, errors }: DisciplineFOPCardPr
                   </div>
                 </div>
 
+                {/* NEW: FOP Location within campus question */}
+                <div className="space-y-2 border-t border-border pt-4">
+                  <Label className="flex items-center gap-1">
+                    Is FOP located within the campus? <span className="text-destructive">*</span>
+                  </Label>
+                  <RadioGroup
+                    value={fop.fop_within_campus === true ? 'yes' : fop.fop_within_campus === false ? 'no' : ''}
+                    onValueChange={(value) => updateField('fop_within_campus', value === 'yes')}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id={`fop_campus_yes_${fop.discipline_code}`} />
+                      <Label htmlFor={`fop_campus_yes_${fop.discipline_code}`} className="cursor-pointer">Yes</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id={`fop_campus_no_${fop.discipline_code}`} />
+                      <Label htmlFor={`fop_campus_no_${fop.discipline_code}`} className="cursor-pointer">No</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {/* Distance/Travel fields when FOP is NOT within campus */}
+                {fop.fop_within_campus === false && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-secondary/50 rounded-lg">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-1">
+                        Distance from STC (km) <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        min={0}
+                        step={0.1}
+                        value={fop.fop_distance_km ?? ''}
+                        onChange={(e) => updateField('fop_distance_km', parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-1">
+                        Mode of Travel <span className="text-destructive">*</span>
+                      </Label>
+                      <Select
+                        value={fop.fop_travel_mode || ''}
+                        onValueChange={(value) => updateField('fop_travel_mode', value as TravelMode)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select travel mode" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TRAVEL_MODE_OPTIONS.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+
+                {/* NEW: FOP Details Text Box */}
+                <div className="space-y-2 border-t border-border pt-4">
+                  <Label htmlFor={`fop_details_${fop.discipline_code}`}>
+                    FOP Details (Condition, Renovation, Features)
+                  </Label>
+                  <Textarea
+                    id={`fop_details_${fop.discipline_code}`}
+                    value={fop.fop_details_note || ''}
+                    onChange={(e) => updateField('fop_details_note', e.target.value)}
+                    placeholder="Provide details about the FOP condition, any renovation done/planned, special features, etc."
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Camera className="h-3 w-3" />
+                    Consider adding photos of this facility in the Attachments section
+                  </p>
+                </div>
+
                 {/* Discipline-specific fields */}
                 <DisciplineSpecificFields
                   disciplineName={fop.discipline_name}
@@ -232,6 +314,24 @@ export function DisciplineFOPCard({ fop, onChange, errors }: DisciplineFOPCardPr
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* NEW: FOP Details Text Box */}
+                <div className="space-y-2 border-t border-border pt-4">
+                  <Label htmlFor={`fop_details_ext_${fop.discipline_code}`}>
+                    FOP Details (Condition, Renovation, Features)
+                  </Label>
+                  <Textarea
+                    id={`fop_details_ext_${fop.discipline_code}`}
+                    value={fop.fop_details_note || ''}
+                    onChange={(e) => updateField('fop_details_note', e.target.value)}
+                    placeholder="Provide details about the FOP condition, any renovation done/planned, special features, etc."
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Camera className="h-3 w-3" />
+                    Consider adding photos of this facility in the Attachments section
+                  </p>
                 </div>
 
                 {/* Still show discipline-specific fields */}

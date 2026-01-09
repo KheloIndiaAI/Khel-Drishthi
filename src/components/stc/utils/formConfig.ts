@@ -141,6 +141,7 @@ export interface CoreData {
   // Centre In Charge (CIC) fields
   cic_name?: string;
   cic_designation?: string;
+  cic_phone?: string;  // NEW: CIC Phone Number
   cic_posted_since?: string;
   // Geo coordinates
   latitude?: number;
@@ -154,15 +155,17 @@ export interface CoreData {
 
 // ============= NEW INFRASTRUCTURE INTERFACES =============
 
-export type LandOwnershipType = 'Owned by SAI' | 'Lease' | 'Shared';
+export type LandOwnershipType = 'Owned by SAI' | 'Lease' | 'Other';  // UPDATED: Changed 'Shared' to 'Other'
 export type ConditionRating = 'Excellent' | 'Good' | 'Needs Minor Repair' | 'Needs Major Renovation';
-export type RenovationStatus = 'Not Required' | 'Planned' | 'Ongoing' | 'Recently Completed';
+export type RenovationStatus = 'Not Required' | 'Planned' | 'Need to be Planned' | 'Ongoing' | 'Recently Completed';  // UPDATED: Added 'Need to be Planned'
 export type FOPType = 'Indoor' | 'Outdoor';
 export type TravelMode = 'By Walk' | 'Hired Vehicle' | 'SAI Vehicle' | 'Public Transport' | 'Other';
+export type FloorType = 'Ground Only (G)' | 'G+1' | 'G+2' | 'G+3' | 'G+4' | 'G+5' | 'G+6 or more';  // NEW: Floor type options
 
 export interface LandOwnershipData {
   land_area_acres?: number;
   land_ownership?: LandOwnershipType;
+  land_ownership_other_note?: string;  // NEW: Explanation for 'Other' ownership
   // MOU fields (only if NOT owned by SAI)
   mou_signed?: boolean;
   mou_tenure_years?: number;
@@ -181,7 +184,13 @@ export interface DisciplineFOPDetails {
   fop_condition?: ConditionRating;
   fop_renovation_status?: RenovationStatus;
   
-  // If NOT exclusive
+  // NEW: FOP Details Text Box
+  fop_details_note?: string;  // Brief on condition, renovation, features
+  
+  // NEW: FOP Location within campus
+  fop_within_campus?: boolean;
+  
+  // If NOT within campus (or NOT exclusive)
   fop_owned_by?: string;
   fop_distance_km?: number;
   fop_travel_mode?: TravelMode;
@@ -203,9 +212,11 @@ export interface IndoorFacilityDetails {
   has_indoor_facilities?: boolean;
   description?: string;
   area_sqft?: number;
+  area_sqft_confirmed?: boolean;  // NEW: Confirmation that area is in sq ft
   construction_year?: number;
   condition?: ConditionRating;
   renovation_status?: RenovationStatus;
+  repair_notes?: string;  // NEW: Details about repair/maintenance needed
 }
 
 export type InternetConnectivity = 'Broadband' | '4G/Mobile' | 'Limited' | 'None';
@@ -217,7 +228,7 @@ export interface AdminBlockData {
   admin_block_description?: string;
   
   // Building Details
-  admin_block_floors?: number;
+  admin_block_floors?: FloorType;  // UPDATED: Changed from number to FloorType
   admin_block_area_sqft?: number;
   admin_block_construction_year?: number;
   
@@ -258,8 +269,8 @@ export interface InfrastructureData {
   warmup_area_available?: boolean;
   warmup_area_description?: string;
   
-  // NEW: S&C / Gym
-  snc_gym_description?: string;
+  // REMOVED: S&C / Gym (now captured in Equipment section)
+  // snc_gym_description?: string;  // REMOVED
   
   // NEW: Indoor Facilities
   indoor_facilities?: IndoorFacilityDetails;
@@ -293,6 +304,7 @@ export interface InfrastructureData {
   mou_renewal_year?: number;
   mou_pending_reason?: string[];
   mou_expected_date?: string;
+  snc_gym_description?: string;  // Keep for backward compatibility but not used in new form
 }
 
 // ============= HOSTEL INTERFACES =============
@@ -330,7 +342,9 @@ export interface HostelData {
   
   // Building Details
   hostel_building_year?: number;
-  number_of_floors?: number;
+  number_of_floors?: FloorType;  // UPDATED: Changed from number to FloorType
+  hostel_building_condition_note?: string;  // NEW: Description of hostel building condition
+  hostel_renovation_status?: RenovationStatus;  // NEW: Renovation status for hostel
   
   // Capacity & Type
   hostel_type?: HostelType;
@@ -351,11 +365,11 @@ export interface HostelData {
   hostel_gender_segregation_type?: string;
   hostel_gender_segregation_note?: string;
   
-  // Amenities
+  // Amenities (water_supply REMOVED)
   hostel_amenities?: string[];
   hostel_amenities_other_note?: string;
-  water_supply?: WaterSupply;
-  water_supply_issue_note?: string;
+  // water_supply?: WaterSupply;  // REMOVED
+  // water_supply_issue_note?: string;  // REMOVED
   power_backup_available?: boolean;
   fire_safety_equipment?: boolean;
   
@@ -371,6 +385,7 @@ export interface HostelData {
   mess_contractor_name?: string;
   dining_seating_capacity?: number;
   dining_area_quality?: OverallQuality;
+  dining_hall_description?: string;  // NEW: Description of dining hall status/condition
   
   // Overall Quality
   overall_hostel_quality?: OverallQuality;
@@ -386,6 +401,8 @@ export interface HostelData {
   mess_quality_rating?: number;
   laundry_facility?: boolean;
   recreation_facilities?: boolean;
+  water_supply?: WaterSupply;  // Keep for backward compatibility
+  water_supply_issue_note?: string;  // Keep for backward compatibility
 }
 
 export interface StaffData {
@@ -440,6 +457,7 @@ export interface DisciplineEquipmentDetail {
   equipment_adequacy?: string;
   utilization_level?: string;
   utilization_barriers?: string;
+  equipment_purchase_needs?: string;  // NEW: What equipment needs to be purchased and why
 }
 
 export type EquipmentUtilizationLevel = 
@@ -452,12 +470,12 @@ export interface EquipmentData {
   // ===== SPORTS EQUIPMENT - GENERAL =====
   overall_equipment_quality_rating?: number;
   equipment_age_category?: string;
-  equipment_procurement_year?: number;
-  training_equipment_condition_rating?: number;
+  // REMOVED: equipment_procurement_year?: number;
+  // REMOVED: training_equipment_condition_rating?: number;
   competition_grade_equipment_available?: boolean;
   video_analysis_system_available?: boolean;
-  equipment_upgrade_needs?: string[];
-  equipment_gaps?: EquipmentGap[];
+  // REMOVED: equipment_upgrade_needs?: string[];
+  // REMOVED: equipment_gaps?: EquipmentGap[];
   
   // ===== SPORTS EQUIPMENT - DISCIPLINE-WISE (ENHANCED) =====
   discipline_equipment?: DisciplineEquipmentDetail[];
@@ -476,6 +494,16 @@ export interface EquipmentData {
   equipment_adequacy_by_discipline?: Record<string, string>;
   equipment_utilization_understood?: boolean;
   snc_utilization_understood?: boolean;
+  equipment_procurement_year?: number;  // Keep for backward compatibility
+  training_equipment_condition_rating?: number;  // Keep for backward compatibility
+  equipment_upgrade_needs?: string[];  // Keep for backward compatibility
+  equipment_gaps?: EquipmentGap[];  // Keep for backward compatibility
+}
+
+// NEW: State-wise Athletes for Discipline Origin
+export interface StateWiseAthletes {
+  state_name: string;
+  athlete_count: number;
 }
 
 // NEW: Discipline-wise Athlete Origin
@@ -484,6 +512,7 @@ export interface DisciplineAthleteOrigin {
   discipline_name: string;
   local_athletes_count?: number;
   other_state_athletes_count?: number;
+  state_wise_athletes?: StateWiseAthletes[];  // NEW: Breakdown by state
 }
 
 // NEW: Discipline-wise Competition Data
@@ -521,7 +550,7 @@ export interface TalentData {
   
   // NEW: Selection Trials Turnout
   trials_good_turnout?: boolean;
-  trials_poor_turnout_reasons?: string;
+  trials_turnout_notes?: string;  // UPDATED: Renamed from trials_poor_turnout_reasons, now non-conditional
   
   // NEW: Discipline-wise Competitions
   discipline_competitions?: DisciplineCompetitionData[];
@@ -535,6 +564,7 @@ export interface TalentData {
   athletes_participated_count?: number;
   competition_levels?: string[];
   competition_matrix?: CompetitionEntry[];
+  trials_poor_turnout_reasons?: string;  // Keep for backward compatibility
 }
 
 // NEW: Actionable Suggestion Type
@@ -621,6 +651,17 @@ export interface PrefillData {
     ex_nonres_girls: number;
   }>;
 }
+
+// Floor options constant for dropdowns
+export const FLOOR_OPTIONS: FloorType[] = [
+  'Ground Only (G)',
+  'G+1',
+  'G+2',
+  'G+3',
+  'G+4',
+  'G+5',
+  'G+6 or more',
+];
 
 export const FORM_SECTIONS: FormSection[] = [
   {

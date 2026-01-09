@@ -29,6 +29,7 @@ export function LandOwnershipCard({ data, onChange, errors }: LandOwnershipCardP
   };
 
   const showMouSection = data.land_ownership && data.land_ownership !== 'Owned by SAI';
+  const showOtherExplanation = data.land_ownership === 'Other';
 
   return (
     <Card>
@@ -64,7 +65,7 @@ export function LandOwnershipCard({ data, onChange, errors }: LandOwnershipCardP
 
           <div className="space-y-2">
             <Label className="flex items-center gap-1">
-              Land Ownership <span className="text-destructive">*</span>
+              Ownership Status <span className="text-destructive">*</span>
             </Label>
             <Select
               value={data.land_ownership || ''}
@@ -89,6 +90,29 @@ export function LandOwnershipCard({ data, onChange, errors }: LandOwnershipCardP
             )}
           </div>
         </div>
+
+        {/* Other Ownership Explanation - NEW */}
+        {showOtherExplanation && (
+          <div className="space-y-2 p-4 bg-secondary/30 rounded-lg">
+            <Label htmlFor="ownership_other_note" className="flex items-center gap-1">
+              Please explain the ownership status <span className="text-destructive">*</span>
+            </Label>
+            <Textarea
+              id="ownership_other_note"
+              value={data.land_ownership_other_note || ''}
+              onChange={(e) => updateField('land_ownership_other_note', e.target.value)}
+              placeholder="Describe the ownership arrangement (e.g., shared with state sports department, temporary arrangement, etc.)"
+              rows={2}
+              className={errors?.land_ownership_other_note ? 'border-destructive' : ''}
+            />
+            {errors?.land_ownership_other_note && (
+              <p className="text-sm text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {errors.land_ownership_other_note}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* MOU Section - Conditional */}
         {showMouSection && (
