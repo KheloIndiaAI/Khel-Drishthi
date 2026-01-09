@@ -131,17 +131,36 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
 
       console.log('[useSTCForm] Loading existing data, disciplines:', disciplinesToUse.length);
 
+      console.log('[useSTCForm] Loaded core from DB:', core);
+      
+      // Merge ALL saved core fields, ensuring they are all preserved
       setFormData({
         core: {
-          ...core,
           stc_id: centreId,
-          stc_name: prefillData.stc_name || (core.stc_name as string) || '',
+          stc_name: (core.stc_name as string) || prefillData.stc_name || '',
           verify_stc_name: (core.verify_stc_name as boolean) || false,
-          state: prefillData.state || (core.state as string) || '',
+          state: (core.state as string) || prefillData.state || '',
           verify_state: (core.verify_state as boolean) || false,
-          rc_name: prefillData.region || (core.rc_name as string) || '',
+          rc_name: (core.rc_name as string) || prefillData.region || '',
           verify_rc_name: (core.verify_rc_name as boolean) || false,
           operational_status: (core.operational_status as string) || 'Fully operational',
+          // Load ALL other saved fields from core
+          district: (core.district as string) || '',
+          pincode: (core.pincode as string) || '',
+          address_line: (core.address_line as string) || '',
+          year_inclusion: (core.year_inclusion as number) || undefined,
+          cic_name: (core.cic_name as string) || '',
+          cic_designation: (core.cic_designation as string) || '',
+          cic_posted_since: (core.cic_posted_since as string) || '',
+          // Spread any other fields we may have missed
+          ...Object.fromEntries(
+            Object.entries(core).filter(([key]) => 
+              !['stc_id', 'stc_name', 'verify_stc_name', 'state', 'verify_state', 
+                'rc_name', 'verify_rc_name', 'operational_status', 'district', 
+                'pincode', 'address_line', 'year_inclusion', 'cic_name', 
+                'cic_designation', 'cic_posted_since', 'respondent'].includes(key)
+            )
+          ),
         },
         disciplines: disciplinesToUse,
         infrastructure: infrastructure as FormData['infrastructure'],
