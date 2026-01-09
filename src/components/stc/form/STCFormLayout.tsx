@@ -46,7 +46,7 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
     disciplines,
   } = useSTCForm(centreId);
 
-  const { saveStatus, lastSaved, triggerSave } = useAutoSave({
+  const { saveStatus, lastSaved, triggerSave, isSaving } = useAutoSave({
     centreId,
     formData,
     respondent,
@@ -57,10 +57,12 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
   const isCurrentSectionComplete = currentProgress === 100;
 
   const handleSectionChange = useCallback((index: number) => {
+    // Save before changing section
+    triggerSave();
     setCurrentSection(index);
     // Scroll to top when changing sections
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [triggerSave]);
 
   const handleNext = useCallback(() => {
     if (currentSection < FORM_SECTIONS.length) {
@@ -78,6 +80,10 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
     triggerSave();
     navigate('/infrastructure/stc');
   };
+
+  const handleManualSave = useCallback(() => {
+    triggerSave();
+  }, [triggerSave]);
 
   // Keyboard navigation
   const { shortcuts } = useKeyboardNavigation({
@@ -119,6 +125,8 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
         saveStatus={saveStatus}
         lastSaved={lastSaved}
         onExit={handleExit}
+        onManualSave={handleManualSave}
+        isSaving={isSaving}
         currentSection={currentSection}
         totalSections={FORM_SECTIONS.length}
       />
@@ -236,7 +244,9 @@ export function STCFormLayout({ centreId, centreName, state, region }: STCFormLa
         onPrevious={handlePrevious}
         onNext={handleNext}
         onOpenSidebar={() => setSidebarOpen(true)}
+        onSave={handleManualSave}
         saveStatus={saveStatus}
+        isSaving={isSaving}
         isReviewSection={isReviewSection}
       />
 

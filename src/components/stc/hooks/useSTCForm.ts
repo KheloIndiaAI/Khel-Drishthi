@@ -108,38 +108,48 @@ export function useSTCForm(centreId: string): UseSTCFormReturn {
       const disciplineSpecific = (challenges.disciplineSpecific as Record<string, Record<string, unknown>>) || {};
       const attachments = (challenges.attachments as unknown as FormData['attachments']) || [];
       const vision = (challenges.vision as FormData['vision']) || { strengths: {}, challenges: {}, short_term_actions: {}, medium_term_suggestions: {}, long_term_suggestions: {} };
-      const resp = (core.respondent as unknown as RespondentData) || null;
+      const resp = (core.respondent as unknown as RespondentData) || (existingData.respondent as unknown as RespondentData) || null;
+
+      // Load saved disciplines from athlete_details.disciplines if available
+      const savedDisciplines = (talent.disciplines as unknown as FormData['disciplines']) || [];
+      
+      // Use saved disciplines if they exist and have data, otherwise use prefill
+      const disciplinesToUse = savedDisciplines.length > 0 
+        ? savedDisciplines 
+        : prefillData.disciplines.map(d => ({
+            discipline_code: d.discipline_code,
+            discipline_name: d.discipline_name,
+            sanctioned_res_boys: d.san_res_boys,
+            sanctioned_res_girls: d.san_res_girls,
+            sanctioned_nonres_boys: d.san_nonres_boys,
+            sanctioned_nonres_girls: d.san_nonres_girls,
+            existing_res_boys: d.ex_res_boys,
+            existing_res_girls: d.ex_res_girls,
+            existing_nonres_boys: d.ex_nonres_boys,
+            existing_nonres_girls: d.ex_nonres_girls,
+          }));
+
+      console.log('[useSTCForm] Loading existing data, disciplines:', disciplinesToUse.length);
 
       setFormData({
         core: {
+          ...core,
           stc_id: centreId,
-          stc_name: prefillData.stc_name,
+          stc_name: prefillData.stc_name || (core.stc_name as string) || '',
           verify_stc_name: (core.verify_stc_name as boolean) || false,
-          state: prefillData.state,
+          state: prefillData.state || (core.state as string) || '',
           verify_state: (core.verify_state as boolean) || false,
-          rc_name: prefillData.region,
+          rc_name: prefillData.region || (core.rc_name as string) || '',
           verify_rc_name: (core.verify_rc_name as boolean) || false,
           operational_status: (core.operational_status as string) || 'Fully operational',
-          ...core,
         },
-        disciplines: prefillData.disciplines.map(d => ({
-          discipline_code: d.discipline_code,
-          discipline_name: d.discipline_name,
-          sanctioned_res_boys: d.san_res_boys,
-          sanctioned_res_girls: d.san_res_girls,
-          sanctioned_nonres_boys: d.san_nonres_boys,
-          sanctioned_nonres_girls: d.san_nonres_girls,
-          existing_res_boys: d.ex_res_boys,
-          existing_res_girls: d.ex_res_girls,
-          existing_nonres_boys: d.ex_nonres_boys,
-          existing_nonres_girls: d.ex_nonres_girls,
-        })),
+        disciplines: disciplinesToUse,
         infrastructure: infrastructure as FormData['infrastructure'],
         hostel: { hostel_available: false, ...hostel } as FormData['hostel'],
         staff: { coach_count_total: 0, admin_staff_count_total: 0, ...staff } as FormData['staff'],
         medical: medical as FormData['medical'],
         equipment: equipment as FormData['equipment'],
-        talent: talent as FormData['talent'],
+        talent: { ...(talent as FormData['talent']) },
         vision,
         disciplineSpecific,
         attachments,
