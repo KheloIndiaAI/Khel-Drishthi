@@ -15,7 +15,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
-import { X, ChevronDown, ChevronUp, Save, CheckCircle2, AlertCircle, User } from "lucide-react";
+import { X, ChevronDown, Save, CheckCircle2, AlertCircle, User, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RespondentData } from "../hooks/useSTCForm";
@@ -27,6 +27,8 @@ interface FormHeaderProps {
   saveStatus: 'idle' | 'saving' | 'saved' | 'error';
   lastSaved: Date | null;
   onExit: () => void;
+  onManualSave?: () => void;
+  isSaving?: boolean;
   currentSection?: number;
   totalSections?: number;
 }
@@ -38,6 +40,8 @@ export function FormHeader({
   saveStatus,
   lastSaved,
   onExit,
+  onManualSave,
+  isSaving = false,
   currentSection = 0,
   totalSections = 10,
 }: FormHeaderProps) {
@@ -73,6 +77,27 @@ export function FormHeader({
             <span>{currentSection + 1}/{totalSections + 1}</span>
           </div>
 
+          {/* Manual Save Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onManualSave}
+            disabled={isSaving || saveStatus === 'saving'}
+            className="h-9 px-3 gap-2 touch-target"
+          >
+            {isSaving || saveStatus === 'saving' ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="hidden sm:inline">Saving...</span>
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                <span className="hidden sm:inline">Save</span>
+              </>
+            )}
+          </Button>
+
           {/* Save Status - visible on all sizes */}
           <AnimatePresence mode="wait">
             <motion.div 
@@ -82,27 +107,18 @@ export function FormHeader({
               exit={{ opacity: 0, scale: 0.9 }}
               className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground"
             >
-              {saveStatus === 'saving' && (
-                <>
-                  <Save className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-pulse text-primary" />
-                  <span className="hidden xs:inline">Saving...</span>
-                </>
-              )}
               {saveStatus === 'saved' && lastSaved && (
                 <>
-                  <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent" />
+                  <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600" />
                   <span className="hidden sm:inline">Saved {formatLastSaved(lastSaved)}</span>
-                  <span className="sm:hidden">Saved</span>
+                  <span className="sm:hidden">✓</span>
                 </>
               )}
               {saveStatus === 'error' && (
                 <>
                   <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
-                  <span>Error</span>
+                  <span>Error - Retry</span>
                 </>
-              )}
-              {saveStatus === 'idle' && (
-                <span className="text-muted-foreground/50">–</span>
               )}
             </motion.div>
           </AnimatePresence>

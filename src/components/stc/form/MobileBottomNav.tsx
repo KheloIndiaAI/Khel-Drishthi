@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { 
-  ChevronLeft, ChevronRight, Menu, CheckCircle2, Save, AlertCircle 
+  ChevronLeft, ChevronRight, Menu, CheckCircle2, Save, AlertCircle, Loader2 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,7 +12,9 @@ interface MobileBottomNavProps {
   onPrevious: () => void;
   onNext: () => void;
   onOpenSidebar: () => void;
+  onSave?: () => void;
   saveStatus: 'idle' | 'saving' | 'saved' | 'error';
+  isSaving?: boolean;
   isReviewSection: boolean;
 }
 
@@ -23,7 +25,9 @@ export function MobileBottomNav({
   onPrevious,
   onNext,
   onOpenSidebar,
+  onSave,
   saveStatus,
+  isSaving = false,
   isReviewSection,
 }: MobileBottomNavProps) {
   const overallProgress = sectionProgress.length > 0
@@ -53,8 +57,8 @@ export function MobileBottomNav({
       
       <div className="bg-card/95 backdrop-blur-md border-t border-border px-4 py-3 safe-area-bottom">
         <div className="flex items-center justify-between">
-          {/* Left: Menu + Save Status */}
-          <div className="flex items-center gap-3">
+          {/* Left: Menu + Save Button */}
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
@@ -64,34 +68,36 @@ export function MobileBottomNav({
               <Menu className="h-5 w-5" />
             </Button>
             
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={saveStatus}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="flex items-center gap-1.5 text-xs text-muted-foreground"
-              >
-                {saveStatus === 'saving' && (
-                  <>
-                    <Save className="h-3.5 w-3.5 animate-pulse text-primary" />
-                    <span>Saving</span>
-                  </>
-                )}
-                {saveStatus === 'saved' && (
-                  <>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-accent" />
-                    <span>Saved</span>
-                  </>
-                )}
-                {saveStatus === 'error' && (
-                  <>
-                    <AlertCircle className="h-3.5 w-3.5 text-destructive" />
-                    <span>Error</span>
-                  </>
-                )}
-              </motion.div>
-            </AnimatePresence>
+            {/* Save Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-10 px-3 rounded-xl touch-target gap-1.5"
+              onClick={onSave}
+              disabled={isSaving || saveStatus === 'saving'}
+            >
+              {isSaving || saveStatus === 'saving' ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-xs">Saving</span>
+                </>
+              ) : saveStatus === 'saved' ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <span className="text-xs">Saved</span>
+                </>
+              ) : saveStatus === 'error' ? (
+                <>
+                  <AlertCircle className="h-4 w-4 text-destructive" />
+                  <span className="text-xs">Retry</span>
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  <span className="text-xs">Save</span>
+                </>
+              )}
+            </Button>
           </div>
 
           {/* Center: Section indicator */}
