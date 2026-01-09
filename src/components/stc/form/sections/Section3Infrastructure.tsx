@@ -78,12 +78,6 @@ export function Section3Infrastructure({ formData, setFormData }: SectionProps) 
     });
   };
 
-  const updateSncGym = (description: string) => {
-    setFormData({
-      ...formData,
-      infrastructure: { ...formData.infrastructure, snc_gym_description: description },
-    });
-  };
 
   const updateIndoor = (indoor: IndoorFacilityDetails) => {
     setFormData({
@@ -162,10 +156,8 @@ export function Section3Infrastructure({ formData, setFormData }: SectionProps) 
       <GeneralFacilitiesCard
         warmupAreaAvailable={formData.infrastructure.warmup_area_available}
         warmupAreaDescription={formData.infrastructure.warmup_area_description}
-        sncGymDescription={formData.infrastructure.snc_gym_description}
         indoorFacilities={formData.infrastructure.indoor_facilities || {}}
         onWarmupChange={updateWarmup}
-        onSncGymChange={updateSncGym}
         onIndoorChange={updateIndoor}
       />
 

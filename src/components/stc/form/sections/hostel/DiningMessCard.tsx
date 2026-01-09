@@ -91,6 +91,21 @@ export function DiningMessCard({ hostel, updateHostel }: Props) {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Dining Hall Description */}
+        <div className="space-y-2">
+          <Label htmlFor="dining_description">Dining Hall Status & Condition</Label>
+          <Textarea
+            id="dining_description"
+            value={hostel.dining_hall_description || ''}
+            onChange={(e) => updateHostel('dining_hall_description', e.target.value)}
+            placeholder="Brief description regarding the status and condition of the dining hall..."
+            rows={3}
+          />
+          <p className="text-xs text-muted-foreground">
+            📷 Consider adding photos of the dining area in the Attachments section
+          </p>
+        </div>
       </CardContent>
     </Card>
   );

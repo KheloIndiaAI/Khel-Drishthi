@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,8 +18,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Wrench, Plus, Trash2, ChevronDown, Dumbbell, Target } from "lucide-react";
-import type { FormData, PrefillData, EquipmentGap, DisciplineEquipmentDetail, EquipmentUtilizationLevel, SNCMethodology } from "../../utils/formConfig";
+import { Wrench, ChevronDown, Dumbbell, Target } from "lucide-react";
+import type { FormData, PrefillData, DisciplineEquipmentDetail, EquipmentUtilizationLevel, SNCMethodology } from "../../utils/formConfig";
 
 interface SectionProps {
   formData: FormData;
@@ -29,13 +28,6 @@ interface SectionProps {
   disciplines: string[];
   errors: Record<string, string>;
 }
-
-const EQUIPMENT_UPGRADE_NEEDS = [
-  "Replace",
-  "Repair",
-  "Add new",
-  "Other",
-];
 
 const SNC_EQUIPMENT = [
   "Racks",
@@ -94,32 +86,13 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
         equipment_adequacy: undefined,
         utilization_level: undefined,
         utilization_barriers: undefined,
+        equipment_purchase_needs: undefined,
       }));
     
     if (newEquipment.length > 0) {
       updateEquipment('discipline_equipment', [...existingEquipment, ...newEquipment]);
     }
   }, [disciplines]);
-
-  const addEquipmentGap = () => {
-    const newGap: EquipmentGap = {
-      gap_item_name: '',
-      gap_qty_required: 1,
-      gap_priority: 'Medium',
-    };
-    updateEquipment('equipment_gaps', [...(formData.equipment.equipment_gaps || []), newGap]);
-  };
-
-  const updateGap = (index: number, field: keyof EquipmentGap, value: unknown) => {
-    const updated = [...(formData.equipment.equipment_gaps || [])];
-    updated[index] = { ...updated[index], [field]: value };
-    updateEquipment('equipment_gaps', updated);
-  };
-
-  const removeGap = (index: number) => {
-    const updated = (formData.equipment.equipment_gaps || []).filter((_, i) => i !== index);
-    updateEquipment('equipment_gaps', updated);
-  };
 
   const updateDisciplineEquipment = (
     disciplineCode: string,
@@ -192,40 +165,6 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
               </Select>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="procurement_year">Equipment Procurement Year</Label>
-              <Input
-                id="procurement_year"
-                type="number"
-                min={1990}
-                max={new Date().getFullYear()}
-                value={formData.equipment.equipment_procurement_year || ''}
-                onChange={(e) => updateEquipment('equipment_procurement_year', parseInt(e.target.value) || undefined)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Training Equipment Condition (1-5)</Label>
-              <Select
-                value={String(formData.equipment.training_equipment_condition_rating || '')}
-                onValueChange={(value) => updateEquipment('training_equipment_condition_rating', parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Rate condition" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 - Poor</SelectItem>
-                  <SelectItem value="2">2 - Below Average</SelectItem>
-                  <SelectItem value="3">3 - Average</SelectItem>
-                  <SelectItem value="4">4 - Good</SelectItem>
-                  <SelectItem value="5">5 - Excellent</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
         </CardContent>
       </Card>
 
@@ -315,6 +254,20 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
                     />
                   </div>
                 )}
+
+                {/* Equipment Purchase Needs - NEW FIELD */}
+                <div className="space-y-2 border-t border-border pt-4">
+                  <Label>Equipment Purchase Needs</Label>
+                  <Textarea
+                    placeholder="What equipment needs to be purchased for this discipline and why? Include details about priority, estimated costs, and any procurement challenges..."
+                    value={de.equipment_purchase_needs || ''}
+                    onChange={(e) => updateDisciplineEquipment(de.discipline_code, 'equipment_purchase_needs', e.target.value)}
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Describe equipment gaps and procurement needs specific to this discipline
+                  </p>
+                </div>
               </CollapsibleContent>
             </Collapsible>
           ))}
@@ -326,111 +279,6 @@ export function Section7Equipment({ formData, setFormData, disciplines }: Sectio
           )}
         </CardContent>
       </Card>
-
-      {/* Card 3: Equipment Upgrade Needs */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Equipment Upgrade Needs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            {EQUIPMENT_UPGRADE_NEEDS.map((need) => (
-              <div key={need} className="flex items-center gap-2">
-                <Checkbox
-                  id={`upgrade_${need}`}
-                  checked={formData.equipment.equipment_upgrade_needs?.includes(need) || false}
-                  onCheckedChange={(checked) => {
-                    const current = formData.equipment.equipment_upgrade_needs || [];
-                    updateEquipment(
-                      'equipment_upgrade_needs',
-                      checked
-                        ? [...current, need]
-                        : current.filter((n) => n !== need)
-                    );
-                  }}
-                />
-                <Label htmlFor={`upgrade_${need}`} className="text-sm cursor-pointer">
-                  {need}
-                </Label>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card 4: Equipment Gap Items */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Equipment Gap Items</CardTitle>
-            <Button size="sm" variant="outline" onClick={addEquipmentGap}>
-              <Plus className="h-4 w-4 mr-1" /> Add Gap Item
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {(formData.equipment.equipment_gaps || []).map((gap, index) => (
-            <div key={index} className="p-3 bg-secondary/30 rounded-lg space-y-3">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                <Select
-                  value={gap.discipline_code || ''}
-                  onValueChange={(value) => updateGap(index, 'discipline_code', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Discipline" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="General">General</SelectItem>
-                    {disciplines.map((d) => (
-                      <SelectItem key={d} value={d}>{d}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  type="number"
-                  min={1}
-                  placeholder="Qty"
-                  value={gap.gap_qty_required}
-                  onChange={(e) => updateGap(index, 'gap_qty_required', parseInt(e.target.value) || 1)}
-                />
-                <Select
-                  value={gap.gap_priority}
-                  onValueChange={(value) => updateGap(index, 'gap_priority', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Priority" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="High">High</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Low">Low</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => removeGap(index)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <Textarea
-                placeholder="What equipment needs to be procured on priority? What challenges are you facing (e.g., fund constraints, procurement delays, vendor issues, approval pending)?"
-                value={gap.gap_item_name}
-                onChange={(e) => updateGap(index, 'gap_item_name', e.target.value)}
-                rows={2}
-              />
-            </div>
-          ))}
-          {(formData.equipment.equipment_gaps || []).length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-4">
-              No equipment gaps recorded. Click "Add Gap Item" if needed.
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
       {/* Card 5: Strength & Conditioning Setup */}
       <Card>
         <CardHeader className="pb-3">
