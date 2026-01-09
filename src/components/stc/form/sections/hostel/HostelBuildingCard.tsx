@@ -11,8 +11,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, AlertTriangle } from "lucide-react";
-import type { HostelData, HostelType } from "../../../utils/formConfig";
+import type { HostelData, HostelType, FloorType, RenovationStatus } from "../../../utils/formConfig";
 import { HOSTEL_TYPES } from "../../../utils/hostelValidation";
+import { RENOVATION_STATUS_OPTIONS } from "../../../utils/disciplineFOPConfig";
+
+const FLOOR_OPTIONS: FloorType[] = [
+  'Ground Only (G)',
+  'G+1',
+  'G+2',
+  'G+3',
+  'G+4',
+  'G+5',
+  'G+6 or more',
+];
 
 interface Props {
   hostel: HostelData;
@@ -114,16 +125,51 @@ export function HostelBuildingCard({
 
               <div className="space-y-2">
                 <Label htmlFor="floors">Number of Floors</Label>
-                <Input
-                  id="floors"
-                  type="number"
-                  min={1}
-                  max={20}
-                  placeholder="e.g., 3"
+                <Select
                   value={hostel.number_of_floors || ''}
-                  onChange={(e) => updateHostel('number_of_floors', parseInt(e.target.value) || undefined)}
-                />
+                  onValueChange={(value) => updateHostel('number_of_floors', value as FloorType)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select floors" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FLOOR_OPTIONS.map((floor) => (
+                      <SelectItem key={floor} value={floor}>{floor}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="hostel_renovation_status">Renovation Status</Label>
+              <Select
+                value={hostel.hostel_renovation_status || ''}
+                onValueChange={(value) => updateHostel('hostel_renovation_status', value as RenovationStatus)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select renovation status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {RENOVATION_STATUS_OPTIONS.map((status) => (
+                    <SelectItem key={status} value={status}>{status}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="hostel_building_condition_note">Hostel Building Condition & Details</Label>
+              <Textarea
+                id="hostel_building_condition_note"
+                value={hostel.hostel_building_condition_note || ''}
+                onChange={(e) => updateHostel('hostel_building_condition_note', e.target.value)}
+                placeholder="Describe the condition and details of the hostel building..."
+                rows={3}
+              />
+              <p className="text-xs text-muted-foreground">
+                📷 Consider adding photos of the hostel building in the Attachments section
+              </p>
             </div>
           </>
         )}
