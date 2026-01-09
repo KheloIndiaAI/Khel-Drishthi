@@ -1,10 +1,12 @@
 import { useState, useRef, useCallback } from "react";
-import { Paperclip, Upload, Info, X, Image, FileText, Loader2, Eye, Trash2 } from "lucide-react";
+import { Paperclip, Upload, Info, X, Image, FileText, Loader2, Eye, Trash2, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { FormData, PrefillData, AttachmentFile } from "../../utils/formConfig";
@@ -37,8 +39,16 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
   const [selectedCategory, setSelectedCategory] = useState<FileCategory>('facility');
   const [selectedDiscipline, setSelectedDiscipline] = useState<string>('');
   const [caption, setCaption] = useState('');
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Get all image attachments for lightbox
+  const imageAttachments = formData.attachments.filter(a => a.file_type !== 'document');
+  const documentAttachments = formData.attachments.filter(a => a.file_type === 'document');
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -165,9 +175,22 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
     });
   };
 
-  const getFileIcon = (fileType: string) => {
-    if (fileType === 'document') return <FileText className="h-8 w-8 text-blue-500" />;
-    return <Image className="h-8 w-8 text-green-500" />;
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const navigateLightbox = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setLightboxIndex((prev) => (prev > 0 ? prev - 1 : imageAttachments.length - 1));
+    } else {
+      setLightboxIndex((prev) => (prev < imageAttachments.length - 1 ? prev + 1 : 0));
+    }
+  };
+
+  const openPdfViewer = (url: string) => {
+    setPdfUrl(url);
+    setPdfViewerOpen(true);
   };
 
   const groupedAttachments = formData.attachments.reduce((acc, file) => {
@@ -187,9 +210,9 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
       <div className="flex items-start gap-2 p-4 bg-info/10 rounded-lg border border-info/30">
         <Info className="h-5 w-5 text-info flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-medium text-foreground">Optional</p>
+          <p className="text-sm font-medium text-foreground">Optional but Recommended</p>
           <p className="text-sm text-muted-foreground mt-1">
-            File uploads are optional. You can submit the form without uploading any documents.
+            Photos and documents help validate the assessment. Add captions to describe what each file shows.
           </p>
         </div>
       </div>
@@ -197,7 +220,7 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
       {/* Upload Configuration */}
       <Card>
         <CardContent className="pt-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Category *</Label>
               <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as FileCategory)}>
@@ -228,15 +251,17 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
                 </Select>
               </div>
             )}
+          </div>
 
-            <div className="space-y-2">
-              <Label>Caption (optional)</Label>
-              <Input
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                placeholder="Brief description"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>Caption / Description *</Label>
+            <Textarea
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              placeholder="Describe what this photo/document shows (e.g., 'Main training hall - view from entrance', 'MoU with State Sports Authority')"
+              rows={2}
+            />
+            <p className="text-xs text-muted-foreground">A good caption helps reviewers understand the context</p>
           </div>
 
           {/* Drop Zone */}
@@ -271,10 +296,7 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
                   Drag and drop files here, or click to browse
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Supported: Photos (JPG, PNG, WEBP), Documents (PDF, DOC)
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Maximum file size: 10MB per file
+                  Supported: Photos (JPG, PNG, WEBP), Documents (PDF, DOC) • Max 10MB
                 </p>
               </>
             )}
@@ -282,69 +304,118 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
         </CardContent>
       </Card>
 
-      {/* Uploaded Files */}
-      {formData.attachments.length > 0 && (
+      {/* Gallery View for Images */}
+      {imageAttachments.length > 0 && (
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-foreground">
-            Uploaded Files ({formData.attachments.length})
+          <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <Image className="h-4 w-4" />
+            Photo Gallery ({imageAttachments.length})
           </h4>
 
-          {Object.entries(groupedAttachments).map(([category, files]) => (
-            <Card key={category}>
-              <CardContent className="pt-4">
-                <h5 className="text-sm font-medium text-muted-foreground uppercase mb-3">
-                  {FILE_CATEGORIES.find(c => c.value === category)?.label || category}
-                </h5>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {files.map((file) => (
-                    <div
-                      key={file.file_id}
-                      className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg group"
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {imageAttachments.map((file, index) => (
+              <div
+                key={file.file_id}
+                className="group relative aspect-square bg-secondary/30 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => openLightbox(index)}
+              >
+                <img
+                  src={file.url}
+                  alt={file.caption || 'Attachment'}
+                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white text-xs line-clamp-2">
+                      {file.caption || FILE_CATEGORIES.find(c => c.value === file.file_type)?.label}
+                    </p>
+                  </div>
+                  <div className="absolute top-2 right-2 flex gap-1">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-7 w-7"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openLightbox(index);
+                      }}
                     >
-                      {file.url && file.file_type !== 'document' ? (
-                        <img
-                          src={file.url}
-                          alt={file.caption || 'Attachment'}
-                          className="h-12 w-12 object-cover rounded"
-                        />
-                      ) : (
-                        getFileIcon(file.file_type)
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {file.caption || file.file_id.split('/').pop()}
-                        </p>
-                        {file.discipline_code && (
-                          <p className="text-xs text-muted-foreground">{file.discipline_code}</p>
-                        )}
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(file.uploaded_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => window.open(file.url, '_blank')}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
-                          onClick={() => handleDelete(file.file_id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                      <ZoomIn className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      className="h-7 w-7"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(file.file_id);
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+                {/* Category badge */}
+                <div className="absolute top-2 left-2">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/50 text-white">
+                    {FILE_CATEGORIES.find(c => c.value === file.file_type)?.label?.split(' ')[0]}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Documents List */}
+      {documentAttachments.length > 0 && (
+        <div className="space-y-4">
+          <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Documents ({documentAttachments.length})
+          </h4>
+
+          <div className="space-y-2">
+            {documentAttachments.map((file) => (
+              <div
+                key={file.file_id}
+                className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg group"
+              >
+                <FileText className="h-8 w-8 text-blue-500 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {file.caption || file.file_id.split('/').pop()}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(file.uploaded_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (file.url.includes('.pdf')) {
+                        openPdfViewer(file.url);
+                      } else {
+                        window.open(file.url, '_blank');
+                      }
+                    }}
+                  >
+                    <Eye className="h-4 w-4 mr-1" /> View
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    onClick={() => handleDelete(file.file_id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -364,6 +435,79 @@ export function Section10Attachments({ formData, setFormData, disciplines }: Sec
           <li>Equipment inventory documents</li>
         </ul>
       </div>
+
+      {/* Lightbox Dialog */}
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogContent className="max-w-4xl h-[90vh] p-0 bg-black/95">
+          <DialogHeader className="absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/70 to-transparent">
+            <DialogTitle className="text-white text-sm">
+              {imageAttachments[lightboxIndex]?.caption || 'Photo'} ({lightboxIndex + 1} / {imageAttachments.length})
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="relative h-full flex items-center justify-center p-4">
+            {imageAttachments[lightboxIndex] && (
+              <img
+                src={imageAttachments[lightboxIndex].url}
+                alt={imageAttachments[lightboxIndex].caption || 'Attachment'}
+                className="max-w-full max-h-full object-contain"
+              />
+            )}
+            
+            {/* Navigation */}
+            {imageAttachments.length > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 bg-black/50 hover:bg-black/70 text-white"
+                  onClick={() => navigateLightbox('prev')}
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 bg-black/50 hover:bg-black/70 text-white"
+                  onClick={() => navigateLightbox('next')}
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Caption at bottom */}
+          {imageAttachments[lightboxIndex]?.caption && (
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+              <p className="text-white text-center">
+                {imageAttachments[lightboxIndex].caption}
+              </p>
+              {imageAttachments[lightboxIndex].discipline_code && (
+                <p className="text-white/70 text-center text-sm mt-1">
+                  Discipline: {imageAttachments[lightboxIndex].discipline_code}
+                </p>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* PDF Viewer Dialog */}
+      <Dialog open={pdfViewerOpen} onOpenChange={setPdfViewerOpen}>
+        <DialogContent className="max-w-5xl h-[90vh] p-0">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle>Document Viewer</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 h-full">
+            <iframe
+              src={pdfUrl}
+              className="w-full h-[calc(90vh-60px)]"
+              title="PDF Viewer"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
