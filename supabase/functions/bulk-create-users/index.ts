@@ -142,7 +142,8 @@ Deno.serve(async (req) => {
           email_confirm: true,
           user_metadata: {
             name: item.name,
-            assignment_type: type === 'stc' ? 'centre' : 'region',
+            // Must satisfy public.profiles check constraint: profiles_assignment_type_check
+            assignment_type: type === 'stc' ? 'centre_incharge' : 'regional_officer',
             requested_centre_id: type === 'stc' ? item.id : undefined,
             requested_region_id: type === 'region' ? item.id : undefined,
           },
