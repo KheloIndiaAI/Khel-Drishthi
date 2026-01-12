@@ -374,7 +374,7 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
                       )}
 
                       {(origin.state_wise_athletes || []).map((stateAthlete, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                        <div key={index} className="flex items-center gap-2 relative z-50">
                           <Select
                             value={stateAthlete.state_name}
                             onValueChange={(value) => updateStateWiseAthlete(origin.discipline_code, index, 'state_name', value)}
@@ -382,7 +382,7 @@ export function Section8Talent({ formData, setFormData }: SectionProps) {
                             <SelectTrigger className="flex-1">
                               <SelectValue placeholder="Select state" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="z-[100] pointer-events-auto max-h-60">
                               {INDIAN_STATES_UTS.map((state) => (
                                 <SelectItem key={state} value={state}>{state}</SelectItem>
                               ))}

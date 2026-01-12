@@ -115,6 +115,8 @@ export function BulkUserCreationDialog({ open, onOpenChange }: BulkUserCreationD
     setSelectedRegions(new Set());
   };
 
+  const [statusMessage, setStatusMessage] = useState<string>('');
+
   const createUsers = async () => {
     const totalSelected = selectedSTCs.size + selectedRegions.size;
     if (totalSelected === 0) {
@@ -124,56 +126,84 @@ export function BulkUserCreationDialog({ open, onOpenChange }: BulkUserCreationD
 
     setCreating(true);
     setResults(null);
+    setStatusMessage('Connecting to server...');
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({ title: "Error", description: "You must be logged in", variant: "destructive" });
+        setCreating(false);
+        setStatusMessage('');
         return;
       }
+
+      console.log('[BulkCreate] Starting bulk user creation, session:', !!session);
 
       const allResults: CreatedCredential[] = [];
 
       // Create STC users
       if (selectedSTCs.size > 0) {
+        setStatusMessage(`Creating ${selectedSTCs.size} STC users...`);
         const stcItems = stcs?.filter(s => selectedSTCs.has(s.centre_id)).map(s => ({
           id: s.centre_id,
           name: s.centre_name,
           state: s.state || undefined,
         })) || [];
 
+        console.log('[BulkCreate] Invoking edge function for STCs:', stcItems.length);
+
         const { data, error } = await supabase.functions.invoke('bulk-create-users', {
           body: { type: 'stc', items: stcItems },
         });
 
+        console.log('[BulkCreate] STC response:', { data, error });
+
         if (error) {
-          console.error('STC creation error:', error);
-          toast({ title: "Error", description: error.message, variant: "destructive" });
+          console.error('[BulkCreate] STC creation error:', error);
+          toast({ 
+            title: "Error Creating STC Users", 
+            description: `${error.message || 'Unknown error'}. Check console for details.`, 
+            variant: "destructive" 
+          });
         } else if (data?.credentials) {
           allResults.push(...data.credentials);
+        } else {
+          console.warn('[BulkCreate] No credentials returned for STCs:', data);
         }
       }
 
       // Create Region users
       if (selectedRegions.size > 0) {
+        setStatusMessage(`Creating ${selectedRegions.size} Regional users...`);
         const regionItems = regions?.filter(r => selectedRegions.has(r.id)).map(r => ({
           id: r.id,
           name: r.display_name || r.name,
         })) || [];
 
+        console.log('[BulkCreate] Invoking edge function for Regions:', regionItems.length);
+
         const { data, error } = await supabase.functions.invoke('bulk-create-users', {
           body: { type: 'region', items: regionItems },
         });
 
+        console.log('[BulkCreate] Region response:', { data, error });
+
         if (error) {
-          console.error('Region creation error:', error);
-          toast({ title: "Error", description: error.message, variant: "destructive" });
+          console.error('[BulkCreate] Region creation error:', error);
+          toast({ 
+            title: "Error Creating Regional Users", 
+            description: `${error.message || 'Unknown error'}. Check console for details.`, 
+            variant: "destructive" 
+          });
         } else if (data?.credentials) {
           allResults.push(...data.credentials);
+        } else {
+          console.warn('[BulkCreate] No credentials returned for Regions:', data);
         }
       }
 
       setResults(allResults);
+      setStatusMessage('');
       
       const successCount = allResults.filter(r => r.success).length;
       const failCount = allResults.filter(r => !r.success).length;
@@ -185,11 +215,18 @@ export function BulkUserCreationDialog({ open, onOpenChange }: BulkUserCreationD
         });
       } else if (failCount > 0) {
         toast({ title: "Creation Failed", description: `All ${failCount} users failed to create`, variant: "destructive" });
+      } else if (allResults.length === 0) {
+        toast({ title: "No Response", description: "No user creation results received. Please try again.", variant: "destructive" });
       }
 
-    } catch (err) {
-      console.error('Bulk creation error:', err);
-      toast({ title: "Error", description: "Failed to create users", variant: "destructive" });
+    } catch (err: any) {
+      console.error('[BulkCreate] Bulk creation error:', err);
+      toast({ 
+        title: "Error", 
+        description: err?.message || "Failed to create users. Check console for details.", 
+        variant: "destructive" 
+      });
+      setStatusMessage('');
     } finally {
       setCreating(false);
     }
@@ -417,8 +454,17 @@ export function BulkUserCreationDialog({ open, onOpenChange }: BulkUserCreationD
                 disabled={creating || (selectedSTCs.size === 0 && selectedRegions.size === 0)}
                 className="gap-2"
               >
-                {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Users className="h-4 w-4" />}
-                Create {selectedSTCs.size + selectedRegions.size} Users
+                {creating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {statusMessage || 'Processing...'}
+                  </>
+                ) : (
+                  <>
+                    <Users className="h-4 w-4" />
+                    Create {selectedSTCs.size + selectedRegions.size} Users
+                  </>
+                )}
               </Button>
             </div>
           </Tabs>
