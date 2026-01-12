@@ -11,6 +11,7 @@ import MobileBottomNav from "@/components/layout/MobileBottomNav";
 // Critical path - load immediately
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 
 // Lazy load public routes
 const SportDetail = lazy(() => import("./pages/SportDetail"));
@@ -21,8 +22,7 @@ const Medals = lazy(() => import("./pages/Medals"));
 const GeographicAnalytics = lazy(() => import("./pages/GeographicAnalytics"));
 const SchemaDocumentation = lazy(() => import("./pages/SchemaDocumentation"));
 
-// Lazy load auth routes
-const Auth = lazy(() => import("./pages/Auth"));
+// Lazy load auth routes (except Auth which is critical)
 const FirstAdminSetup = lazy(() => import("./pages/FirstAdminSetup"));
 
 // Lazy load admin routes (bundled together)
