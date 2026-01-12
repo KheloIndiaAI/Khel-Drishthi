@@ -127,7 +127,7 @@ export const RegionalCentreDetail = ({
         </Card>
       </div>
 
-      {/* Centre Type Breakdown */}
+      {/* Centre Type Breakdown - Clickable */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2">
@@ -137,22 +137,38 @@ export const RegionalCentreDetail = ({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-saffron/10 rounded-lg p-3 text-center">
+            <button 
+              onClick={() => document.getElementById('centres-NCOE')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-saffron/10 rounded-lg p-3 text-center hover:bg-saffron/20 transition-colors cursor-pointer"
+              disabled={region.ncoe === 0}
+            >
               <p className="text-2xl font-bold text-saffron">{region.ncoe}</p>
               <p className="text-xs text-saffron font-medium">NCOE</p>
-            </div>
-            <div className="bg-india-green/10 rounded-lg p-3 text-center">
+            </button>
+            <button 
+              onClick={() => document.getElementById('centres-STC')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-india-green/10 rounded-lg p-3 text-center hover:bg-india-green/20 transition-colors cursor-pointer"
+              disabled={region.stc === 0}
+            >
               <p className="text-2xl font-bold text-india-green">{region.stc}</p>
               <p className="text-xs text-india-green font-medium">STC</p>
-            </div>
-            <div className="bg-purple-500/10 rounded-lg p-3 text-center">
+            </button>
+            <button 
+              onClick={() => document.getElementById('centres-KIC')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-purple-500/10 rounded-lg p-3 text-center hover:bg-purple-500/20 transition-colors cursor-pointer"
+              disabled={region.kic === 0}
+            >
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{region.kic}</p>
               <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">KIC</p>
-            </div>
-            <div className="bg-india-navy/10 rounded-lg p-3 text-center">
+            </button>
+            <button 
+              onClick={() => document.getElementById('centres-KISCE')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-india-navy/10 rounded-lg p-3 text-center hover:bg-india-navy/20 transition-colors cursor-pointer"
+              disabled={region.kisce === 0}
+            >
               <p className="text-2xl font-bold text-india-navy dark:text-blue-400">{region.kisce}</p>
               <p className="text-xs text-india-navy dark:text-blue-400 font-medium">KISCE</p>
-            </div>
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -210,7 +226,7 @@ export const RegionalCentreDetail = ({
         if (typeCentres.length === 0) return null;
 
         return (
-          <Card key={type}>
+          <Card key={type} id={`centres-${type}`}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
                 <Badge className={cn("text-xs", centreTypeColors[type])}>
@@ -220,7 +236,7 @@ export const RegionalCentreDetail = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="max-h-64">
+              <div className="max-h-64 overflow-y-auto">
                 <div className="space-y-2">
                   {typeCentres.map(centre => {
                     const capacity = capacityMap.get(centre.centre_id);
@@ -262,7 +278,7 @@ export const RegionalCentreDetail = ({
                     );
                   })}
                 </div>
-              </ScrollArea>
+              </div>
             </CardContent>
           </Card>
         );

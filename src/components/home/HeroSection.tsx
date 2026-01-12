@@ -174,10 +174,12 @@ const CentreCard = ({ centres, delay }: CentreCardProps) => {
 interface AthleteCardProps {
   athletes: number;
   sanctioned: number;
+  ncoeAthletes: number;
+  stcAthletes: number;
   delay: number;
 }
 
-const AthleteCard = ({ athletes, sanctioned, delay }: AthleteCardProps) => {
+const AthleteCard = ({ athletes, sanctioned, ncoeAthletes, stcAthletes, delay }: AthleteCardProps) => {
   const percentage = Math.round((athletes / sanctioned) * 100);
   
   return (
@@ -192,6 +194,18 @@ const AthleteCard = ({ athletes, sanctioned, delay }: AthleteCardProps) => {
         </span>
       </div>
       <p className="text-sm text-gray-700 font-semibold mb-2">Elite Athletes</p>
+      
+      {/* NCOE/STC Breakdown */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs mb-2">
+        <div className="flex justify-between">
+          <span className="text-gray-500">NCOE</span>
+          <span className="font-semibold text-gray-700">{ncoeAthletes.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">STC</span>
+          <span className="font-semibold text-gray-700">{stcAthletes.toLocaleString()}</span>
+        </div>
+      </div>
       
       {/* Progress bar */}
       <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
@@ -296,6 +310,8 @@ const HeroSection = () => {
           <AthleteCard
             athletes={8068}
             sanctioned={9157}
+            ncoeAthletes={3245}
+            stcAthletes={4823}
             delay={500}
           />
         </div>
