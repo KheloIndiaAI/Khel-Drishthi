@@ -209,6 +209,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="touch-target touch-feedback"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -231,11 +232,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <Button
                       variant={isActive ? "default" : "ghost"}
                       className={cn(
-                        "w-full justify-start gap-3",
+                        "w-full justify-start gap-3 touch-target touch-feedback",
                         isActive && "bg-primary text-primary-foreground"
                       )}
                     >
-                      <item.icon className="h-4 w-4" />
+                      <item.icon className="h-5 w-5" />
                       {item.label}
                     </Button>
                   </Link>
@@ -254,8 +255,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         )}
       </header>
 
-      {/* Main Content */}
-      <main className="container py-6 md:py-8">
+      {/* Main Content - Add bottom padding for mobile nav */}
+      <main className="container py-6 md:py-8 pb-mobile-nav">
         {children}
       </main>
 
