@@ -933,6 +933,12 @@ const UserManagement = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Bulk User Creation Dialog */}
+      <BulkUserCreationDialog 
+        open={bulkCreateDialogOpen} 
+        onOpenChange={setBulkCreateDialogOpen} 
+      />
     </DashboardLayout>
   );
 };
