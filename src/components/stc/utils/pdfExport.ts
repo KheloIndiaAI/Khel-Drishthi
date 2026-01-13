@@ -56,15 +56,44 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
 
   const formatValue = (value: unknown): string => {
     if (value === undefined || value === null || value === '') return 'Not provided';
-    if (typeof value === 'boolean') return value ? '✓ Yes' : '✗ No';
+    // Use text-based checkboxes for better PDF font compatibility
+    if (typeof value === 'boolean') return value ? '[X] Yes' : '[ ] No';
     if (typeof value === 'number') return String(value);
     if (Array.isArray(value)) return value.length > 0 ? value.join(', ') : 'None';
-    return String(value);
+    // Decode HTML entities and clean up strings
+    const strValue = String(value)
+      .replace(/&#x26;/g, '&')
+      .replace(/&#x27;/g, "'")
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"');
+    return strValue;
   };
 
   const formatRating = (rating: number | undefined, maxRating: number = 5): string => {
     if (rating === undefined || rating === null) return 'Not rated';
-    return `${'★'.repeat(rating)}${'☆'.repeat(maxRating - rating)} (${rating}/${maxRating})`;
+    // Use filled/empty circles for better PDF compatibility
+    return `${'●'.repeat(rating)}${'○'.repeat(maxRating - rating)} (${rating}/${maxRating})`;
+  };
+  
+  const formatDateDisplay = (date: Date): string => {
+    return date.toLocaleDateString('en-IN', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric'
+    });
+  };
+  
+  const formatDateTimeDisplay = (date: Date): string => {
+    return date.toLocaleDateString('en-IN', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   const addSectionHeader = (title: string, sectionNumber?: number) => {
@@ -113,9 +142,10 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
     const maxWidth = pageWidth - 28 - labelWidth - indent;
     const lines = doc.splitTextToSize(displayValue, maxWidth);
     
-    if (displayValue.startsWith('✓')) {
+    // Color checkboxes appropriately
+    if (displayValue.startsWith('[X]')) {
       doc.setTextColor(...COLORS.accent);
-    } else if (displayValue.startsWith('✗')) {
+    } else if (displayValue.startsWith('[ ]')) {
       doc.setTextColor(...COLORS.muted);
     } else {
       doc.setTextColor(...COLORS.text);
@@ -158,7 +188,7 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   doc.setTextColor(...COLORS.muted);
   doc.text(`Centre ID: ${centreId}`, pageWidth / 2, 65, { align: 'center' });
   doc.text(`Assessment Year: ${respondent.assessment_year}`, pageWidth / 2, 72, { align: 'center' });
-  doc.text(`Generated: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}`, pageWidth / 2, 79, { align: 'center' });
+  doc.text(`Generated: ${formatDateDisplay(new Date())}`, pageWidth / 2, 79, { align: 'center' });
   
   // Quick Stats Box
   yPos = 95;
@@ -196,8 +226,13 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   doc.text(`• Non-Residential: ${totalNonResidential}`, statsCol1X, yPos);
   doc.text(`• Hostel: ${formData.hostel.hostel_available ? `Available (${formData.hostel.hostel_bed_capacity || 'N/A'} beds)` : 'Not Available'}`, statsCol2X, yPos);
   yPos += 7;
-  doc.text(`• Coaches: ${formData.staff.coach_count_total || 0}`, statsCol1X, yPos);
-  doc.text(`• Admin Staff: ${formData.staff.admin_staff_count_total || 0}`, statsCol2X, yPos);
+  // Calculate staff counts from rosters for accuracy
+  const coachCount = formData.staff.coach_roster?.length || formData.staff.coach_count_total || 0;
+  const adminCount = formData.staff.admin_roster?.length || formData.staff.admin_staff_count_total || 0;
+  const groundsmenCount = formData.staff.groundsmen_roster?.length || formData.staff.groundsmen_count_total || 0;
+  
+  doc.text(`• Coaches: ${coachCount}`, statsCol1X, yPos);
+  doc.text(`• Admin Staff: ${adminCount}`, statsCol2X, yPos);
   yPos += 7;
   doc.text(`• Equipment Quality: ${formatRating(formData.equipment.overall_equipment_quality_rating)}`, statsCol1X, yPos);
   doc.text(`• Status: ${formData.core.operational_status || 'Unknown'}`, statsCol2X, yPos);
@@ -554,7 +589,13 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   addSectionHeader('Human Resources', 6);
   
   addSubSectionHeader('Coaching Staff');
-  addField('Total Coaches', formData.staff.coach_count_total);
+  // Use roster length for accuracy, fallback to manual count
+  const coachDisplayCount = formData.staff.coach_roster?.length || formData.staff.coach_count_total || 0;
+  addField('Total Coaches', coachDisplayCount);
+  if (formData.staff.coach_count_total && formData.staff.coach_roster?.length && 
+      formData.staff.coach_count_total !== formData.staff.coach_roster.length) {
+    addNote(`Note: Reported count (${formData.staff.coach_count_total}) differs from roster entries (${formData.staff.coach_roster.length})`);
+  }
   
   if (formData.staff.coach_roster?.length) {
     checkPageBreak(50);
@@ -581,7 +622,13 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   }
   
   addSubSectionHeader('Groundsmen');
-  addField('Total Groundsmen', formData.staff.groundsmen_count_total);
+  // Use roster length for accuracy, fallback to manual count
+  const groundsmenDisplayCount = formData.staff.groundsmen_roster?.length || formData.staff.groundsmen_count_total || 0;
+  addField('Total Groundsmen', groundsmenDisplayCount);
+  if (formData.staff.groundsmen_count_total && formData.staff.groundsmen_roster?.length && 
+      formData.staff.groundsmen_count_total !== formData.staff.groundsmen_roster.length) {
+    addNote(`Note: Reported count (${formData.staff.groundsmen_count_total}) differs from roster entries (${formData.staff.groundsmen_roster.length})`);
+  }
   
   if (formData.staff.groundsmen_roster?.length) {
     checkPageBreak(40);
@@ -605,7 +652,13 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
   }
   
   addSubSectionHeader('Administrative Staff');
-  addField('Total Admin Staff', formData.staff.admin_staff_count_total);
+  // Use roster length for accuracy, fallback to manual count
+  const adminDisplayCount = formData.staff.admin_roster?.length || formData.staff.admin_staff_count_total || 0;
+  addField('Total Admin Staff', adminDisplayCount);
+  if (formData.staff.admin_staff_count_total && formData.staff.admin_roster?.length && 
+      formData.staff.admin_staff_count_total !== formData.staff.admin_roster.length) {
+    addNote(`Note: Reported count (${formData.staff.admin_staff_count_total}) differs from roster entries (${formData.staff.admin_roster.length})`);
+  }
   
   if (formData.staff.admin_roster?.length) {
     checkPageBreak(40);
@@ -929,7 +982,7 @@ export async function exportFormToPDF(data: ExportData): Promise<void> {
     doc.setFontSize(8);
     doc.setTextColor(...COLORS.muted);
     doc.text(
-      `Page ${i} of ${pageCount} | ${centreName} | Generated: ${new Date().toLocaleString('en-IN')}`,
+      `Page ${i} of ${pageCount} | ${centreName} | Generated: ${formatDateTimeDisplay(new Date())}`,
       pageWidth / 2,
       pageHeight - 10,
       { align: 'center' }
