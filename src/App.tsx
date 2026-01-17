@@ -44,6 +44,7 @@ const STCFormV4 = lazy(() => import("./pages/STCFormV4"));
 const STCReport = lazy(() => import("./pages/STCReport"));
 const HostelDashboard = lazy(() => import("./pages/HostelDashboard"));
 const HRDashboard = lazy(() => import("./pages/HRDashboard"));
+const Chintan = lazy(() => import("./pages/Chintan"));
 
 // Optimized QueryClient configuration
 const queryClient = new QueryClient({
@@ -68,6 +69,7 @@ const App = () => (
             <Routes>
               {/* Critical routes */}
               <Route path="/" element={<Home />} />
+              <Route path="/chintan" element={<Chintan />} />
               
               {/* Public routes */}
               <Route path="/sport/:sportId" element={<SportDetail />} />
