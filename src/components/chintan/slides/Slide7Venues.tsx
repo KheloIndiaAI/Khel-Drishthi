@@ -64,15 +64,15 @@ export const Slide7Venues = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4">
+    <div className="w-full max-w-6xl mx-auto px-4 flex flex-col h-full">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-6"
+        className="text-center mb-4"
       >
-        <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
+        <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-2">
           Venue Selection Matrix
         </h2>
         <p className="text-lg text-foreground/70">
@@ -80,112 +80,114 @@ export const Slide7Venues = () => {
         </p>
       </motion.div>
 
-      {/* 3D Carousel - Larger Cards */}
-      <div className="relative h-[450px] flex items-center justify-center perspective-1000">
-        <div className="relative w-full max-w-xl">
-          <AnimatePresence mode="wait">
-            {venues.map((venue, index) => {
-              const offset = index - activeIndex;
-              const isActive = index === activeIndex;
-              
-              // Only render nearby cards for performance
-              if (Math.abs(offset) > 2) return null;
+      {/* 3D Carousel - Centered Cards */}
+      <div className="flex-1 flex items-center justify-center min-h-0">
+        <div className="relative w-full h-[420px] perspective-1000">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {venues.map((venue, index) => {
+                const offset = index - activeIndex;
+                const isActive = index === activeIndex;
+                
+                // Only render nearby cards for performance
+                if (Math.abs(offset) > 2) return null;
 
-              return (
-                <motion.div
-                  key={venue.city}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{
-                    opacity: isActive ? 1 : 0.3,
-                    scale: isActive ? 1 : 0.7,
-                    x: offset * 320,
-                    z: isActive ? 50 : -100,
-                    rotateY: offset * -12,
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md ${
-                    isActive ? "z-20" : "z-10"
-                  }`}
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  <GlassmorphicCard
-                    className={`p-8 transition-all duration-300 ${
-                      isActive ? "shadow-2xl border-[#FF9933]/50" : ""
+                return (
+                  <motion.div
+                    key={venue.city}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{
+                      opacity: isActive ? 1 : 0.3,
+                      scale: isActive ? 1 : 0.7,
+                      x: offset * 320,
+                      z: isActive ? 50 : -100,
+                      rotateY: offset * -12,
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className={`absolute w-full max-w-lg ${
+                      isActive ? "z-20" : "z-10"
                     }`}
+                    style={{ transformStyle: "preserve-3d" }}
                   >
-                    {/* City Badge */}
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <MapPin className="w-7 h-7 text-[#FF9933]" />
-                        <span className="font-bold text-2xl text-foreground">
-                          {venue.city}
+                    <GlassmorphicCard
+                      className={`p-8 md:p-10 transition-all duration-300 ${
+                        isActive ? "shadow-2xl border-[#FF9933]/50" : ""
+                      }`}
+                    >
+                      {/* City Badge */}
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-8 h-8 text-[#FF9933]" />
+                          <span className="font-bold text-2xl md:text-3xl text-foreground">
+                            {venue.city}
+                          </span>
+                        </div>
+                        {isActive && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="px-4 py-2 rounded bg-[#FF9933]/20"
+                          >
+                            <Star className="w-6 h-6 text-[#FF9933]" />
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {/* State */}
+                      <p className="text-lg text-foreground/60 mb-6">{venue.state}</p>
+
+                      {/* Details - Larger */}
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-4 p-4 rounded-lg bg-white/30">
+                          <Building className="w-6 h-6 text-[#138808]" />
+                          <span className="text-lg font-medium text-foreground">
+                            {venue.properties}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 rounded-lg bg-white/30">
+                          <Plane className="w-6 h-6 text-[#000080]" />
+                          <span className="text-lg text-foreground">
+                            {venue.transit} {venue.transitType}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Type Badge */}
+                      <div className="mt-6 p-4 rounded-xl bg-[#000080]/10 text-center">
+                        <span className="text-lg font-semibold text-[#000080]">
+                          {venue.type}
                         </span>
                       </div>
-                      {isActive && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="px-3 py-1.5 rounded bg-[#FF9933]/20"
-                        >
-                          <Star className="w-5 h-5 text-[#FF9933]" />
-                        </motion.div>
-                      )}
-                    </div>
 
-                    {/* State */}
-                    <p className="text-base text-foreground/60 mb-6">{venue.state}</p>
+                      {/* Highlight */}
+                      <p className="mt-5 text-base text-foreground/60 text-center italic">
+                        {venue.highlight}
+                      </p>
+                    </GlassmorphicCard>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
 
-                    {/* Details - Larger */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/30">
-                        <Building className="w-5 h-5 text-[#138808]" />
-                        <span className="text-base font-medium text-foreground">
-                          {venue.properties}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/30">
-                        <Plane className="w-5 h-5 text-[#000080]" />
-                        <span className="text-base text-foreground">
-                          {venue.transit} {venue.transitType}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Type Badge */}
-                    <div className="mt-6 p-3 rounded-xl bg-[#000080]/10 text-center">
-                      <span className="text-base font-semibold text-[#000080]">
-                        {venue.type}
-                      </span>
-                    </div>
-
-                    {/* Highlight */}
-                    <p className="mt-4 text-sm text-foreground/60 text-center italic">
-                      {venue.highlight}
-                    </p>
-                  </GlassmorphicCard>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+          {/* Navigation Arrows - Positioned relative to carousel container */}
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+          >
+            <ChevronLeft className="w-8 h-8 text-[#000080]" />
+          </button>
+          <button
+            onClick={() => navigate(1)}
+            className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+          >
+            <ChevronRight className="w-8 h-8 text-[#000080]" />
+          </button>
         </div>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
-        >
-          <ChevronLeft className="w-8 h-8 text-[#000080]" />
-        </button>
-        <button
-          onClick={() => navigate(1)}
-          className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
-        >
-          <ChevronRight className="w-8 h-8 text-[#000080]" />
-        </button>
       </div>
 
       {/* Venue Indicators */}
-      <div className="flex justify-center gap-3 mt-4">
+      <div className="flex justify-center gap-3 mt-4 pb-4">
         {venues.map((venue, index) => (
           <button
             key={venue.city}

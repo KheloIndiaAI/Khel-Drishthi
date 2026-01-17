@@ -3,15 +3,24 @@ import { GlassmorphicCard } from "../shared/GlassmorphicCard";
 import { Building2 } from "lucide-react";
 
 // Generate calendar days from Feb 12 to March 9, 2026
-const generateCalendarWeeks = () => {
-  const weeks: { date: number; month: string; isHighlighted: boolean; highlightColor?: string }[][] = [];
+interface CalendarDay {
+  date: number;
+  month: string;
+  isHighlighted: boolean;
+  highlightColor?: string;
+  festival?: string;
+  festivalColor?: string;
+}
+
+const generateCalendarWeeks = (): CalendarDay[][] => {
+  const weeks: CalendarDay[][] = [];
   
   // Week 1: Feb 12-15 (Thu-Sun)
   weeks.push([
     { date: 12, month: "Feb", isHighlighted: false },
     { date: 13, month: "Feb", isHighlighted: false },
     { date: 14, month: "Feb", isHighlighted: false },
-    { date: 15, month: "Feb", isHighlighted: false },
+    { date: 15, month: "Feb", isHighlighted: false, festival: "Maha Shivaratri", festivalColor: "#6B21A8" },
   ]);
   
   // Week 2: Feb 16-22 (Mon-Sun)
@@ -40,7 +49,7 @@ const generateCalendarWeeks = () => {
   weeks.push([
     { date: 2, month: "Mar", isHighlighted: false },
     { date: 3, month: "Mar", isHighlighted: false },
-    { date: 4, month: "Mar", isHighlighted: false },
+    { date: 4, month: "Mar", isHighlighted: false, festival: "Holi", festivalColor: "#EC4899" },
     { date: 5, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
     { date: 6, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
     { date: 7, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
@@ -161,17 +170,31 @@ export const Slide6Timing = () => {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.6 + weekIndex * 0.1 + dayIndex * 0.03 }}
-                    className={`h-12 md:h-14 rounded-lg flex flex-col items-center justify-center transition-all duration-300 ${
+                    className={`h-14 md:h-16 rounded-lg flex flex-col items-center justify-center transition-all duration-300 relative ${
                       day.isHighlighted
                         ? "text-white shadow-lg transform hover:scale-105"
+                        : day.festival
+                        ? "shadow-md transform hover:scale-105"
                         : "bg-white/50 text-foreground hover:bg-white/70"
                     }`}
                     style={{
-                      backgroundColor: day.isHighlighted ? day.highlightColor : undefined,
+                      backgroundColor: day.isHighlighted 
+                        ? day.highlightColor 
+                        : day.festival 
+                        ? day.festivalColor 
+                        : undefined,
                     }}
                   >
-                    <span className="text-lg md:text-xl font-bold">{day.date}</span>
-                    <span className="text-[10px] opacity-70">{day.month}</span>
+                    <span className={`text-lg md:text-xl font-bold ${day.festival ? 'text-white' : ''}`}>
+                      {day.date}
+                    </span>
+                    {day.festival ? (
+                      <span className="text-[8px] md:text-[10px] text-white/90 font-medium">
+                        {day.festival}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] opacity-70">{day.month}</span>
+                    )}
                   </motion.div>
                 ))}
                 
@@ -201,6 +224,14 @@ export const Slide6Timing = () => {
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-[#000080]" />
               <span className="text-xs text-foreground/70">5-8 Mar (Option C)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-[#6B21A8]" />
+              <span className="text-xs text-foreground/70">Maha Shivaratri (15 Feb)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-[#EC4899]" />
+              <span className="text-xs text-foreground/70">Holi (4 Mar)</span>
             </div>
           </motion.div>
         </GlassmorphicCard>
