@@ -7,28 +7,28 @@ interface MasterSlideProps {
 export const MasterSlide = ({ children }: MasterSlideProps) => {
   return (
     <div className="relative h-full w-full flex flex-col">
-      {/* Header Bar */}
-      <header className="relative z-10 flex items-center justify-between px-6 py-3 md:px-10 md:py-4">
+      {/* Header Bar - Fixed, No Animation */}
+      <header className="relative z-20 flex items-center justify-between px-6 py-4 md:px-12 md:py-5">
         {/* Left: Emblem of India */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
             alt="Emblem of India"
-            className="h-12 w-auto md:h-16"
+            className="h-14 w-auto md:h-20"
           />
           <div className="hidden md:block">
-            <p className="text-xs font-medium text-foreground/70">
+            <p className="text-sm font-medium text-foreground/70">
               Government of India
             </p>
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-base font-semibold text-foreground">
               Ministry of Youth Affairs & Sports
             </p>
           </div>
         </div>
 
-        {/* Right: Excellence Decade Badge */}
-        <div className="chintan-badge-saffron">
-          <span className="text-xs md:text-sm font-bold tracking-wide">
+        {/* Right: Excellence Decade Badge - Larger */}
+        <div className="px-4 py-2 md:px-6 md:py-3 rounded-full bg-[#FF9933] text-white shadow-lg">
+          <span className="text-sm md:text-base font-bold tracking-wide">
             2026–2036 Excellence Decade
           </span>
         </div>

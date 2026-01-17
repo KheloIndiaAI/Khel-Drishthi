@@ -1,96 +1,207 @@
 import { motion } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { Calendar, Clock, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
+
+// Generate calendar days from Feb 12 to March 9, 2026
+const generateCalendarWeeks = () => {
+  const weeks: { date: number; month: string; isHighlighted: boolean; highlightColor?: string }[][] = [];
+  
+  // Week 1: Feb 12-15 (Thu-Sun)
+  weeks.push([
+    { date: 12, month: "Feb", isHighlighted: false },
+    { date: 13, month: "Feb", isHighlighted: false },
+    { date: 14, month: "Feb", isHighlighted: false },
+    { date: 15, month: "Feb", isHighlighted: false },
+  ]);
+  
+  // Week 2: Feb 16-22 (Mon-Sun)
+  weeks.push([
+    { date: 16, month: "Feb", isHighlighted: false },
+    { date: 17, month: "Feb", isHighlighted: false },
+    { date: 18, month: "Feb", isHighlighted: false },
+    { date: 19, month: "Feb", isHighlighted: true, highlightColor: "#FF9933" },
+    { date: 20, month: "Feb", isHighlighted: true, highlightColor: "#FF9933" },
+    { date: 21, month: "Feb", isHighlighted: true, highlightColor: "#FF9933" },
+    { date: 22, month: "Feb", isHighlighted: true, highlightColor: "#FF9933" },
+  ]);
+  
+  // Week 3: Feb 23-Mar 1 (Mon-Sun)
+  weeks.push([
+    { date: 23, month: "Feb", isHighlighted: false },
+    { date: 24, month: "Feb", isHighlighted: false },
+    { date: 25, month: "Feb", isHighlighted: false },
+    { date: 26, month: "Feb", isHighlighted: true, highlightColor: "#138808" },
+    { date: 27, month: "Feb", isHighlighted: true, highlightColor: "#138808" },
+    { date: 28, month: "Feb", isHighlighted: true, highlightColor: "#138808" },
+    { date: 1, month: "Mar", isHighlighted: true, highlightColor: "#138808" },
+  ]);
+  
+  // Week 4: Mar 2-8 (Mon-Sun)
+  weeks.push([
+    { date: 2, month: "Mar", isHighlighted: false },
+    { date: 3, month: "Mar", isHighlighted: false },
+    { date: 4, month: "Mar", isHighlighted: false },
+    { date: 5, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
+    { date: 6, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
+    { date: 7, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
+    { date: 8, month: "Mar", isHighlighted: true, highlightColor: "#000080" },
+  ]);
+  
+  // Week 5: Mar 9 (Mon)
+  weeks.push([
+    { date: 9, month: "Mar", isHighlighted: false },
+  ]);
+  
+  return weeks;
+};
+
+const calendarWeeks = generateCalendarWeeks();
 
 export const Slide6Timing = () => {
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Header */}
+    <div className="w-full max-w-5xl mx-auto px-4">
+      {/* Header with Date Motion */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-6"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
           Strategic Timing
         </h2>
-        <p className="text-lg text-foreground/70">
-          Optimal Window for National Convergence
-        </p>
+        
+        {/* Animated Date Range */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#FF9933]/20 via-white to-[#138808]/20 border border-white/40 shadow-lg"
+        >
+          <motion.span
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-2xl md:text-3xl font-bold text-[#FF9933]"
+          >
+            12 Feb
+          </motion.span>
+          <motion.span
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="w-8 md:w-16 h-0.5 bg-[#000080]/40"
+          />
+          <motion.span
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-2xl md:text-3xl font-bold text-[#138808]"
+          >
+            09 Mar
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-lg text-[#000080] font-medium"
+          >
+            2026
+          </motion.span>
+        </motion.div>
+
+        {/* Parliament Break Context */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#000080]/10"
+        >
+          <Building2 className="w-4 h-4 text-[#000080]" />
+          <span className="text-sm font-medium text-[#000080]">
+            Parliament Budget Session Break
+          </span>
+        </motion.div>
       </motion.div>
 
-      {/* Calendar Block */}
+      {/* Full Calendar */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
       >
-        <GlassmorphicCard className="text-center p-8 md:p-12">
-          {/* Calendar Icon */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.5, type: "spring" }}
-            className="w-20 h-20 rounded-2xl bg-[#FF9933]/20 mx-auto mb-8 flex items-center justify-center"
-          >
-            <Calendar className="w-10 h-10 text-[#FF9933]" />
-          </motion.div>
-
-          {/* Date Range */}
-          <div className="flex items-center justify-center gap-4 md:gap-8 mb-8">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="text-center"
-            >
-              <div className="text-4xl md:text-6xl font-bold text-[#FF9933]">12</div>
-              <div className="text-lg text-foreground/70">Feb</div>
-              <div className="text-sm text-foreground/50">2026</div>
-            </motion.div>
-
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 0.7, duration: 0.4 }}
-              className="w-12 md:w-24 h-0.5 bg-[#000080]/30"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="text-center"
-            >
-              <div className="text-4xl md:text-6xl font-bold text-[#138808]">09</div>
-              <div className="text-lg text-foreground/70">Mar</div>
-              <div className="text-sm text-foreground/50">2026</div>
-            </motion.div>
+        <GlassmorphicCard className="p-6">
+          {/* Calendar Header */}
+          <div className="grid grid-cols-7 gap-2 mb-4 text-center">
+            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+              <div key={day} className="text-xs font-semibold text-[#000080]/70 py-2">
+                {day}
+              </div>
+            ))}
           </div>
 
-          {/* Context Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#000080]/10"
-          >
-            <Building2 className="w-4 h-4 text-[#000080]" />
-            <span className="text-sm font-medium text-[#000080]">
-              Parliament Budget Session Break
-            </span>
-          </motion.div>
+          {/* Calendar Weeks */}
+          <div className="space-y-2">
+            {calendarWeeks.map((week, weekIndex) => (
+              <motion.div
+                key={weekIndex}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 + weekIndex * 0.1 }}
+                className="grid grid-cols-7 gap-2"
+              >
+                {/* Add empty cells for first week alignment (starts Thursday) */}
+                {weekIndex === 0 && [0, 1, 2].map((i) => (
+                  <div key={`empty-start-${i}`} className="h-12" />
+                ))}
+                
+                {week.map((day, dayIndex) => (
+                  <motion.div
+                    key={`${day.month}-${day.date}`}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.6 + weekIndex * 0.1 + dayIndex * 0.03 }}
+                    className={`h-12 md:h-14 rounded-lg flex flex-col items-center justify-center transition-all duration-300 ${
+                      day.isHighlighted
+                        ? "text-white shadow-lg transform hover:scale-105"
+                        : "bg-white/50 text-foreground hover:bg-white/70"
+                    }`}
+                    style={{
+                      backgroundColor: day.isHighlighted ? day.highlightColor : undefined,
+                    }}
+                  >
+                    <span className="text-lg md:text-xl font-bold">{day.date}</span>
+                    <span className="text-[10px] opacity-70">{day.month}</span>
+                  </motion.div>
+                ))}
+                
+                {/* Add empty cells for last week (ends Monday) */}
+                {weekIndex === 4 && [0, 1, 2, 3, 4, 5].map((i) => (
+                  <div key={`empty-end-${i}`} className="h-12" />
+                ))}
+              </motion.div>
+            ))}
+          </div>
 
-          {/* Duration indicator */}
+          {/* Legend */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mt-8 flex items-center justify-center gap-2 text-foreground/60"
+            transition={{ delay: 1.2 }}
+            className="mt-6 flex flex-wrap justify-center gap-4 pt-4 border-t border-white/40"
           >
-            <Clock className="w-4 h-4" />
-            <span className="text-sm">26-Day Strategic Window</span>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-[#FF9933]" />
+              <span className="text-xs text-foreground/70">19-22 Feb (Option A)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-[#138808]" />
+              <span className="text-xs text-foreground/70">26 Feb - 1 Mar (Option B)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-[#000080]" />
+              <span className="text-xs text-foreground/70">5-8 Mar (Option C)</span>
+            </div>
           </motion.div>
         </GlassmorphicCard>
       </motion.div>

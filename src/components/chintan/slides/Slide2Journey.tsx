@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { MapPin, Calendar } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 const journeyData = [
   {
@@ -26,53 +26,53 @@ const journeyData = [
 const containerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.2 },
+    transition: { staggerChildren: 0.25 },
   },
 };
 
 const cardVariants = {
   hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.7 } },
 };
 
 export const Slide2Journey = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-4">
       {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-10"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
           Journey of Convergence
         </h2>
-        <p className="text-lg text-foreground/70">
+        <p className="text-lg md:text-xl text-foreground/70">
           A Historical Timeline of Past Shivirs
         </p>
       </motion.div>
 
-      {/* Timeline Cards */}
+      {/* Timeline Cards - Larger */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-3 gap-8"
       >
         {journeyData.map((item, index) => (
           <motion.div key={item.year} variants={cardVariants}>
-            <GlassmorphicCard hover className="h-full relative overflow-hidden">
-              {/* Year Badge */}
+            <GlassmorphicCard hover className="h-full relative overflow-hidden min-h-[220px] p-8">
+              {/* Year Badge - Larger */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5 + index * 0.2, type: "spring" }}
-                className="absolute -top-3 -right-3 w-20 h-20 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: item.color, opacity: 0.9 }}
+                className="absolute -top-4 -right-4 w-24 h-24 rounded-full flex items-center justify-center shadow-lg"
+                style={{ backgroundColor: item.color, opacity: 0.95 }}
               >
                 <span
-                  className={`text-xl font-bold ${
+                  className={`text-2xl font-bold ${
                     item.color === "#FFFFFF" ? "text-[#000080]" : "text-white"
                   }`}
                 >
@@ -80,23 +80,23 @@ export const Slide2Journey = () => {
                 </span>
               </motion.div>
 
-              <div className="pt-4">
-                {/* Location */}
-                <div className="flex items-center gap-2 mb-3">
-                  <MapPin className="w-5 h-5 text-[#FF9933]" />
-                  <span className="font-semibold text-foreground">
+              <div className="pt-2">
+                {/* Location - Larger */}
+                <div className="flex items-center gap-3 mb-4">
+                  <MapPin className="w-6 h-6 text-[#FF9933]" />
+                  <span className="font-bold text-xl text-foreground">
                     {item.location}
                   </span>
                 </div>
 
-                {/* Theme */}
-                <p className="text-foreground/70 text-sm leading-relaxed">
+                {/* Theme - Larger */}
+                <p className="text-foreground/70 text-base md:text-lg leading-relaxed">
                   {item.theme}
                 </p>
 
                 {/* Decorative bottom border */}
                 <div
-                  className="mt-4 h-1 w-full rounded-full"
+                  className="mt-6 h-1.5 w-full rounded-full"
                   style={{
                     background: `linear-gradient(90deg, ${item.color} 0%, transparent 100%)`,
                   }}
@@ -106,15 +106,6 @@ export const Slide2Journey = () => {
           </motion.div>
         ))}
       </motion.div>
-
-      {/* Connecting Line (Desktop) */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="hidden md:block absolute top-1/2 left-[16%] right-[16%] h-0.5 bg-[#000080]/20 -z-10"
-        style={{ transformOrigin: "left" }}
-      />
     </div>
   );
 };
