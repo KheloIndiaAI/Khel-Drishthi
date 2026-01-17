@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Building, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Building, Star, Plane } from "lucide-react";
 
 const venues = [
+  {
+    city: "Bhuj",
+    state: "Gujarat",
+    properties: "Rann Utsav - Tent City",
+    type: "Unique Desert Experience",
+    transit: "80 km",
+    transitType: "from Airport",
+    highlight: "White Desert Grandeur",
+  },
   {
     city: "Visakhapatnam",
     state: "Andhra Pradesh",
     properties: "Novotel / Radisson",
     type: "Urban Powerhouse",
     transit: "30 min",
+    transitType: "from Airport",
     highlight: "Coastal City Dynamics",
   },
   {
@@ -18,6 +28,7 @@ const venues = [
     properties: "Ananta Spa & Resorts",
     type: "Grand Scale Unified Campus",
     transit: "60 min",
+    transitType: "from Airport",
     highlight: "Heritage & Hospitality",
   },
   {
@@ -26,6 +37,7 @@ const venues = [
     properties: "Eco Retreat",
     type: "Focus Retreat Format",
     transit: "81 km",
+    transitType: "from Airport",
     highlight: "Serene & Focused",
   },
   {
@@ -34,6 +46,7 @@ const venues = [
     properties: "Taj / Gateway",
     type: "High-Security Destination",
     transit: "70 km",
+    transitType: "from Airport",
     highlight: "Premium Security Setup",
   },
 ];
@@ -51,25 +64,25 @@ export const Slide7Venues = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto px-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-8"
+        className="text-center mb-6"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
           Venue Selection Matrix
         </h2>
         <p className="text-lg text-foreground/70">
-          Four Premium Destination Options
+          Five Premium Destination Options
         </p>
       </motion.div>
 
-      {/* 3D Carousel */}
-      <div className="relative h-[400px] flex items-center justify-center perspective-1000">
-        <div className="relative w-full max-w-lg">
+      {/* 3D Carousel - Larger Cards */}
+      <div className="relative h-[450px] flex items-center justify-center perspective-1000">
+        <div className="relative w-full max-w-xl">
           <AnimatePresence mode="wait">
             {venues.map((venue, index) => {
               const offset = index - activeIndex;
@@ -83,28 +96,28 @@ export const Slide7Venues = () => {
                   key={venue.city}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{
-                    opacity: isActive ? 1 : 0.4,
-                    scale: isActive ? 1 : 0.75,
-                    x: offset * 280,
+                    opacity: isActive ? 1 : 0.3,
+                    scale: isActive ? 1 : 0.7,
+                    x: offset * 320,
                     z: isActive ? 50 : -100,
-                    rotateY: offset * -15,
+                    rotateY: offset * -12,
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm ${
+                  className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md ${
                     isActive ? "z-20" : "z-10"
                   }`}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <GlassmorphicCard
-                    className={`p-6 transition-all duration-300 ${
+                    className={`p-8 transition-all duration-300 ${
                       isActive ? "shadow-2xl border-[#FF9933]/50" : ""
                     }`}
                   >
                     {/* City Badge */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-5 h-5 text-[#FF9933]" />
-                        <span className="font-bold text-lg text-foreground">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-7 h-7 text-[#FF9933]" />
+                        <span className="font-bold text-2xl text-foreground">
                           {venue.city}
                         </span>
                       </div>
@@ -112,41 +125,41 @@ export const Slide7Venues = () => {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="px-2 py-1 rounded bg-[#FF9933]/20"
+                          className="px-3 py-1.5 rounded bg-[#FF9933]/20"
                         >
-                          <Star className="w-4 h-4 text-[#FF9933]" />
+                          <Star className="w-5 h-5 text-[#FF9933]" />
                         </motion.div>
                       )}
                     </div>
 
                     {/* State */}
-                    <p className="text-sm text-foreground/60 mb-4">{venue.state}</p>
+                    <p className="text-base text-foreground/60 mb-6">{venue.state}</p>
 
-                    {/* Details */}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Building className="w-4 h-4 text-[#138808]" />
-                        <span className="text-sm text-foreground">
+                    {/* Details - Larger */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/30">
+                        <Building className="w-5 h-5 text-[#138808]" />
+                        <span className="text-base font-medium text-foreground">
                           {venue.properties}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#000080]" />
-                        <span className="text-sm text-foreground">
-                          Transit: {venue.transit}
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/30">
+                        <Plane className="w-5 h-5 text-[#000080]" />
+                        <span className="text-base text-foreground">
+                          {venue.transit} {venue.transitType}
                         </span>
                       </div>
                     </div>
 
                     {/* Type Badge */}
-                    <div className="mt-4 p-2 rounded-lg bg-[#000080]/10 text-center">
-                      <span className="text-sm font-medium text-[#000080]">
+                    <div className="mt-6 p-3 rounded-xl bg-[#000080]/10 text-center">
+                      <span className="text-base font-semibold text-[#000080]">
                         {venue.type}
                       </span>
                     </div>
 
                     {/* Highlight */}
-                    <p className="mt-4 text-xs text-foreground/50 text-center italic">
+                    <p className="mt-4 text-sm text-foreground/60 text-center italic">
                       {venue.highlight}
                     </p>
                   </GlassmorphicCard>
@@ -159,27 +172,27 @@ export const Slide7Venues = () => {
         {/* Navigation Arrows */}
         <button
           onClick={() => navigate(-1)}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+          className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
         >
-          <ChevronLeft className="w-6 h-6 text-[#000080]" />
+          <ChevronLeft className="w-8 h-8 text-[#000080]" />
         </button>
         <button
           onClick={() => navigate(1)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+          className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
         >
-          <ChevronRight className="w-6 h-6 text-[#000080]" />
+          <ChevronRight className="w-8 h-8 text-[#000080]" />
         </button>
       </div>
 
       {/* Venue Indicators */}
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center gap-3 mt-4">
         {venues.map((venue, index) => (
           <button
             key={venue.city}
             onClick={() => setActiveIndex(index)}
             className={`w-3 h-3 rounded-full transition-all ${
               index === activeIndex
-                ? "bg-[#FF9933] scale-125"
+                ? "bg-[#FF9933] scale-150"
                 : "bg-[#000080]/30 hover:bg-[#000080]/50"
             }`}
           />

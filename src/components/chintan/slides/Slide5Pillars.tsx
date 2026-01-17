@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { Medal, Shield, Network } from "lucide-react";
+import { Medal, Shield, Network, Building2 } from "lucide-react";
 
 const pillars = [
   {
@@ -24,38 +24,45 @@ const pillars = [
     color: "#000080",
     bgColor: "#00008020",
   },
+  {
+    icon: Building2,
+    title: "Fast-Paced Infra Upgradation",
+    description: "Accelerated modernization of sports infrastructure across all states",
+    color: "#FF9933",
+    bgColor: "#FF993320",
+  },
 ];
 
 export const Slide5Pillars = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-10"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
           Thematic Pillars
         </h2>
         <p className="text-lg text-foreground/70">
-          Three Strategic Foundations for Sports Excellence
+          Four Strategic Foundations for Sports Excellence
         </p>
       </motion.div>
 
-      {/* Pillars Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Pillars Grid - Now 4 columns */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {pillars.map((pillar, index) => (
           <motion.div
             key={pillar.title}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + index * 0.15, duration: 0.6 }}
+            transition={{ delay: 0.3 + index * 0.12, duration: 0.6 }}
             whileHover={{ scale: 1.05, y: -8 }}
             className="group"
           >
-            <GlassmorphicCard className="h-full text-center relative overflow-hidden transition-all duration-300 group-hover:shadow-2xl">
+            <GlassmorphicCard className="h-full text-center relative overflow-hidden transition-all duration-300 group-hover:shadow-2xl p-6">
               {/* Glow effect on hover */}
               <motion.div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -68,18 +75,18 @@ export const Slide5Pillars = () => {
               <motion.div
                 whileHover={{ rotate: [0, -10, 10, 0] }}
                 transition={{ duration: 0.5 }}
-                className="relative z-10 w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center transition-all duration-300"
+                className="relative z-10 w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300"
                 style={{ backgroundColor: pillar.bgColor }}
               >
                 <pillar.icon
-                  className="w-10 h-10 transition-transform duration-300 group-hover:scale-110"
+                  className="w-8 h-8 transition-transform duration-300 group-hover:scale-110"
                   style={{ color: pillar.color }}
                 />
               </motion.div>
 
               {/* Title */}
               <h3
-                className="relative z-10 text-xl font-bold mb-3 transition-colors duration-300"
+                className="relative z-10 text-lg font-bold mb-2 transition-colors duration-300"
                 style={{ color: pillar.color }}
               >
                 {pillar.title}

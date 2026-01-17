@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { FileText, Trophy, Target } from "lucide-react";
+import { FileText, Trophy, Target, Scale, Globe } from "lucide-react";
 
 const triggers = [
   {
@@ -10,28 +10,40 @@ const triggers = [
     color: "#FF9933",
   },
   {
+    icon: Scale,
+    title: "National Sports Governance Act 2025",
+    description: "Launch of comprehensive sports governance legislation",
+    color: "#000080",
+  },
+  {
     icon: Trophy,
     title: "2030 CWG Ahmedabad",
     description: "Commonwealth Games hosting confirmation",
     color: "#138808",
   },
   {
+    icon: Globe,
+    title: "World Para Athletic Championship",
+    description: "Hosting international para athletics event in India",
+    color: "#FF9933",
+  },
+  {
     icon: Target,
     title: "Mission 2036",
     description: "Olympic Games roadmap & bidding strategy",
-    color: "#000080",
+    color: "#138808",
   },
 ];
 
 export const Slide3Anchor = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-10"
+        className="text-center mb-8"
       >
         <span className="chintan-badge-navy mb-4 inline-block">Strategic Anchor</span>
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
@@ -39,34 +51,34 @@ export const Slide3Anchor = () => {
         </h2>
       </motion.div>
 
-      {/* Three Triggers */}
+      {/* Five Triggers - Updated Grid */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+        className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8"
       >
         {triggers.map((trigger, index) => (
           <motion.div
             key={trigger.title}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + index * 0.15 }}
+            transition={{ delay: 0.4 + index * 0.1 }}
           >
-            <GlassmorphicCard hover className="h-full text-center">
+            <GlassmorphicCard hover className="h-full text-center p-4">
               <div
-                className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center"
                 style={{ backgroundColor: `${trigger.color}20` }}
               >
                 <trigger.icon
-                  className="w-8 h-8"
+                  className="w-6 h-6"
                   style={{ color: trigger.color }}
                 />
               </div>
-              <h3 className="text-lg font-bold text-foreground mb-2">
+              <h3 className="text-sm font-bold text-foreground mb-2 leading-tight">
                 {trigger.title}
               </h3>
-              <p className="text-sm text-foreground/70">{trigger.description}</p>
+              <p className="text-xs text-foreground/70">{trigger.description}</p>
             </GlassmorphicCard>
           </motion.div>
         ))}
