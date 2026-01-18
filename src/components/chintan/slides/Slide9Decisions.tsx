@@ -23,14 +23,18 @@ const decisions = [
   },
 ];
 
-export const Slide9Decisions = () => {
+interface Slide9DecisionsProps {
+  forCapture?: boolean;
+}
+
+export const Slide9Decisions = ({ forCapture = false }: Slide9DecisionsProps) => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-12"
       >
         <span className="chintan-badge-saffron mb-4 inline-block">
@@ -49,10 +53,10 @@ export const Slide9Decisions = () => {
         {decisions.map((decision, index) => (
           <motion.div
             key={decision.title}
-            initial={{ opacity: 0, x: -30 }}
+            initial={forCapture ? false : { opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 + index * 0.15 }}
-            whileHover={{ x: 10 }}
+            transition={{ delay: forCapture ? 0 : 0.3 + index * 0.15 }}
+            whileHover={forCapture ? undefined : { x: 10 }}
           >
             <GlassmorphicCard
               className="relative overflow-hidden group cursor-pointer"
@@ -65,18 +69,20 @@ export const Slide9Decisions = () => {
                 }}
               />
               
-              {/* Pulsing border glow */}
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    `0 0 0px ${decision.color}00`,
-                    `0 0 20px ${decision.color}40`,
-                    `0 0 0px ${decision.color}00`,
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-              />
+              {/* Pulsing border glow - disable in capture mode */}
+              {!forCapture && (
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      `0 0 0px ${decision.color}00`,
+                      `0 0 20px ${decision.color}40`,
+                      `0 0 0px ${decision.color}00`,
+                    ],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                />
+              )}
 
               <div className="relative z-10 flex items-center gap-6">
                 {/* Number */}
@@ -108,10 +114,10 @@ export const Slide9Decisions = () => {
                   </p>
                 </div>
 
-                {/* Status indicator */}
+                {/* Status indicator - static in capture mode */}
                 <div className="flex-shrink-0">
                   <CircleDot
-                    className="w-6 h-6 animate-pulse"
+                    className={`w-6 h-6 ${forCapture ? '' : 'animate-pulse'}`}
                     style={{ color: decision.color }}
                   />
                 </div>

@@ -35,14 +35,18 @@ const triggers = [
   },
 ];
 
-export const Slide3Anchor = () => {
+interface Slide3AnchorProps {
+  forCapture?: boolean;
+}
+
+export const Slide3Anchor = ({ forCapture = false }: Slide3AnchorProps) => {
   return (
     <div className="w-full max-w-7xl mx-auto px-4">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-8"
       >
         <span className="chintan-badge-navy mb-4 inline-block">Strategic Anchor</span>
@@ -53,19 +57,19 @@ export const Slide3Anchor = () => {
 
       {/* Five Triggers - Updated Grid */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={forCapture ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: forCapture ? 0 : 0.3 }}
         className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8"
       >
         {triggers.map((trigger, index) => (
           <motion.div
             key={trigger.title}
-            initial={{ opacity: 0, y: 30 }}
+            initial={forCapture ? false : { opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + index * 0.1 }}
+            transition={{ delay: forCapture ? 0 : 0.4 + index * 0.1 }}
           >
-            <GlassmorphicCard hover className="h-full text-center p-4">
+            <GlassmorphicCard hover={!forCapture} className="h-full text-center p-4">
               <div
                 className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center"
                 style={{ backgroundColor: `${trigger.color}20` }}
@@ -86,9 +90,9 @@ export const Slide3Anchor = () => {
 
       {/* Policy to Podium Ladder Graphic */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={forCapture ? false : { opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: forCapture ? 0 : 0.8 }}
         className="flex justify-center"
       >
         <GlassmorphicCard className="inline-flex items-center gap-4 px-8">
@@ -96,9 +100,9 @@ export const Slide3Anchor = () => {
             {["Policy", "Planning", "Execution", "Podium"].map((step, i) => (
               <motion.div
                 key={step}
-                initial={{ height: 0 }}
+                initial={forCapture ? false : { height: 0 }}
                 animate={{ height: 24 + i * 16 }}
-                transition={{ delay: 1 + i * 0.1, duration: 0.4 }}
+                transition={forCapture ? { duration: 0 } : { delay: 1 + i * 0.1, duration: 0.4 }}
                 className="w-12 rounded-t-lg flex items-end justify-center pb-1"
                 style={{
                   background: `linear-gradient(180deg, ${

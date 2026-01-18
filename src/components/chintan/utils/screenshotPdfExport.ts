@@ -55,8 +55,16 @@ const renderAndCapture = async (
     
     root.render(element);
     
-    // Wait for render and any images to load
+    // Wait for render, animations to complete, and images to load
+    // Using 2500ms to ensure all staggered Framer Motion animations complete
     setTimeout(async () => {
+      // Ensure DOM is fully painted using double requestAnimationFrame
+      await new Promise<void>(rafResolve => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => rafResolve());
+        });
+      });
+      
       try {
         const canvas = await captureSlide(offscreenContainer);
         root.unmount();
@@ -65,7 +73,7 @@ const renderAndCapture = async (
         root.unmount();
         reject(error);
       }
-    }, 800); // Allow time for animations and images to load
+    }, 2500); // Increased from 800ms to allow all animations to complete
   });
 };
 

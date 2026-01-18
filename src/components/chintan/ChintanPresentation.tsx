@@ -68,9 +68,10 @@ export const ChintanPresentation = () => {
     
     try {
       // Create slide elements for export (each wrapped in MasterSlide with forCapture mode)
+      // Pass forCapture prop to each slide component to skip animations
       const slideElements = slideComponents.map((SlideComponent, index) => (
         <MasterSlide key={index} forCapture>
-          <SlideComponent />
+          <SlideComponent forCapture />
         </MasterSlide>
       ));
 

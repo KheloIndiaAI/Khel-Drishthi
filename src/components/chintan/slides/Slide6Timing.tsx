@@ -66,14 +66,18 @@ const generateCalendarWeeks = (): CalendarDay[][] => {
 
 const calendarWeeks = generateCalendarWeeks();
 
-export const Slide6Timing = () => {
+interface Slide6TimingProps {
+  forCapture?: boolean;
+}
+
+export const Slide6Timing = ({ forCapture = false }: Slide6TimingProps) => {
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
       {/* Header with Date Motion */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-6"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
@@ -82,37 +86,37 @@ export const Slide6Timing = () => {
         
         {/* Animated Date Range */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={forCapture ? false : { opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ delay: forCapture ? 0 : 0.3, duration: forCapture ? 0 : 0.5 }}
           className="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#FF9933]/20 via-white to-[#138808]/20 border border-white/40 shadow-lg"
         >
           <motion.span
-            initial={{ x: -20, opacity: 0 }}
+            initial={forCapture ? false : { x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: forCapture ? 0 : 0.5 }}
             className="text-2xl md:text-3xl font-bold text-[#FF9933]"
           >
             12 Feb
           </motion.span>
           <motion.span
-            initial={{ scaleX: 0 }}
+            initial={forCapture ? false : { scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ delay: 0.6, duration: 0.4 }}
+            transition={{ delay: forCapture ? 0 : 0.6, duration: forCapture ? 0 : 0.4 }}
             className="w-8 md:w-16 h-0.5 bg-[#000080]/40"
           />
           <motion.span
-            initial={{ x: 20, opacity: 0 }}
+            initial={forCapture ? false : { x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: forCapture ? 0 : 0.5 }}
             className="text-2xl md:text-3xl font-bold text-[#138808]"
           >
             09 Mar
           </motion.span>
           <motion.span
-            initial={{ opacity: 0 }}
+            initial={forCapture ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: forCapture ? 0 : 0.7 }}
             className="text-lg text-[#000080] font-medium"
           >
             2026
@@ -121,9 +125,9 @@ export const Slide6Timing = () => {
 
         {/* Parliament Break Context */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={forCapture ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: forCapture ? 0 : 0.8 }}
           className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#000080]/10"
         >
           <Building2 className="w-4 h-4 text-[#000080]" />
@@ -135,9 +139,9 @@ export const Slide6Timing = () => {
 
       {/* Full Calendar */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={forCapture ? false : { opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
+        transition={{ delay: forCapture ? 0 : 0.4, duration: forCapture ? 0 : 0.6 }}
       >
         <GlassmorphicCard className="p-6">
           {/* Calendar Header */}
@@ -154,9 +158,9 @@ export const Slide6Timing = () => {
             {calendarWeeks.map((week, weekIndex) => (
               <motion.div
                 key={weekIndex}
-                initial={{ opacity: 0, x: -20 }}
+                initial={forCapture ? false : { opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + weekIndex * 0.1 }}
+                transition={{ delay: forCapture ? 0 : 0.5 + weekIndex * 0.1 }}
                 className="grid grid-cols-7 gap-2"
               >
                 {/* Add empty cells for first week alignment (starts Thursday) */}
@@ -167,9 +171,9 @@ export const Slide6Timing = () => {
                 {week.map((day, dayIndex) => (
                   <motion.div
                     key={`${day.month}-${day.date}`}
-                    initial={{ scale: 0.8, opacity: 0 }}
+                    initial={forCapture ? false : { scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.6 + weekIndex * 0.1 + dayIndex * 0.03 }}
+                    transition={{ delay: forCapture ? 0 : 0.6 + weekIndex * 0.1 + dayIndex * 0.03 }}
                     className={`h-14 md:h-16 rounded-lg flex flex-col items-center justify-center transition-all duration-300 relative ${
                       day.isHighlighted
                         ? "text-white shadow-lg transform hover:scale-105"
@@ -208,9 +212,9 @@ export const Slide6Timing = () => {
 
           {/* Legend */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={forCapture ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: forCapture ? 0 : 1.2 }}
             className="mt-6 flex flex-wrap justify-center gap-4 pt-4 border-t border-white/40"
           >
             <div className="flex items-center gap-2">

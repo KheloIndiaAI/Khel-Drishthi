@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassmorphicCard } from "../shared/GlassmorphicCard";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Building, Star, Plane } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Building, Star, Plane } from "lucide-react";
 
 const venues = [
   {
@@ -51,7 +51,11 @@ const venues = [
   },
 ];
 
-export const Slide7Venues = () => {
+interface Slide7VenuesProps {
+  forCapture?: boolean;
+}
+
+export const Slide7Venues = ({ forCapture = false }: Slide7VenuesProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const navigate = (direction: number) => {
@@ -63,13 +67,16 @@ export const Slide7Venues = () => {
     });
   };
 
+  // In capture mode, show the first venue as active
+  const displayIndex = forCapture ? 0 : activeIndex;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 flex flex-col h-full">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-4"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-2">
@@ -86,24 +93,26 @@ export const Slide7Venues = () => {
           <div className="absolute inset-0 flex items-center justify-center">
             <AnimatePresence mode="wait">
               {venues.map((venue, index) => {
-                const offset = index - activeIndex;
-                const isActive = index === activeIndex;
+                const offset = index - displayIndex;
+                const isActive = index === displayIndex;
                 
-                // Only render nearby cards for performance
-                if (Math.abs(offset) > 2) return null;
+                // Only render nearby cards for performance (or all in capture mode)
+                if (!forCapture && Math.abs(offset) > 2) return null;
+                // In capture mode, only show active card
+                if (forCapture && !isActive) return null;
 
                 return (
                   <motion.div
                     key={venue.city}
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={forCapture ? false : { opacity: 0, scale: 0.8 }}
                     animate={{
                       opacity: isActive ? 1 : 0.3,
                       scale: isActive ? 1 : 0.7,
-                      x: offset * 320,
+                      x: forCapture ? 0 : offset * 320,
                       z: isActive ? 50 : -100,
-                      rotateY: offset * -12,
+                      rotateY: forCapture ? 0 : offset * -12,
                     }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    transition={forCapture ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 30 }}
                     className={`absolute w-full max-w-lg ${
                       isActive ? "z-20" : "z-10"
                     }`}
@@ -124,7 +133,7 @@ export const Slide7Venues = () => {
                         </div>
                         {isActive && (
                           <motion.div
-                            initial={{ scale: 0 }}
+                            initial={forCapture ? false : { scale: 0 }}
                             animate={{ scale: 1 }}
                             className="px-4 py-2 rounded bg-[#FF9933]/20"
                           >
@@ -170,36 +179,42 @@ export const Slide7Venues = () => {
             </AnimatePresence>
           </div>
 
-          {/* Navigation Arrows - Positioned relative to carousel container */}
-          <button
-            onClick={() => navigate(-1)}
-            className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
-          >
-            <ChevronLeft className="w-8 h-8 text-[#000080]" />
-          </button>
-          <button
-            onClick={() => navigate(1)}
-            className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
-          >
-            <ChevronRight className="w-8 h-8 text-[#000080]" />
-          </button>
+          {/* Navigation Arrows - Hide in capture mode */}
+          {!forCapture && (
+            <>
+              <button
+                onClick={() => navigate(-1)}
+                className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+              >
+                <ChevronLeft className="w-8 h-8 text-[#000080]" />
+              </button>
+              <button
+                onClick={() => navigate(1)}
+                className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full chintan-glass-card hover:scale-110 transition-transform"
+              >
+                <ChevronRight className="w-8 h-8 text-[#000080]" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Venue Indicators */}
-      <div className="flex justify-center gap-3 mt-4 pb-4">
-        {venues.map((venue, index) => (
-          <button
-            key={venue.city}
-            onClick={() => setActiveIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              index === activeIndex
-                ? "bg-[#FF9933] scale-150"
-                : "bg-[#000080]/30 hover:bg-[#000080]/50"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Venue Indicators - Hide in capture mode */}
+      {!forCapture && (
+        <div className="flex justify-center gap-3 mt-4 pb-4">
+          {venues.map((venue, index) => (
+            <button
+              key={venue.city}
+              onClick={() => setActiveIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === activeIndex
+                  ? "bg-[#FF9933] scale-150"
+                  : "bg-[#000080]/30 hover:bg-[#000080]/50"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
