@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "sonner";
 import { MasterSlide } from "./MasterSlide";
 import { SlideNavigation } from "./SlideNavigation";
 import { Slide1Cover } from "./slides/Slide1Cover";
@@ -12,6 +13,7 @@ import { Slide7Venues } from "./slides/Slide7Venues";
 import { Slide8Logistics } from "./slides/Slide8Logistics";
 import { Slide9Decisions } from "./slides/Slide9Decisions";
 import { Slide10Branding } from "./slides/Slide10Branding";
+import { exportChintanToPDF } from "./utils/screenshotPdfExport";
 
 const TOTAL_SLIDES = 10;
 
@@ -45,6 +47,8 @@ const slideComponents = [
 
 export const ChintanPresentation = () => {
   const [[currentSlide, direction], setSlide] = useState([0, 0]);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
 
   const paginate = useCallback((newDirection: number) => {
     setSlide(([current]) => {
@@ -56,6 +60,38 @@ export const ChintanPresentation = () => {
 
   const goToSlide = useCallback((index: number) => {
     setSlide(([current]) => [index, index > current ? 1 : -1]);
+  }, []);
+
+  const handleExportPDF = useCallback(async () => {
+    setIsExporting(true);
+    setExportProgress(0);
+    
+    try {
+      // Create slide elements for export (each wrapped in MasterSlide with forCapture mode)
+      const slideElements = slideComponents.map((SlideComponent, index) => (
+        <MasterSlide key={index} forCapture>
+          <SlideComponent />
+        </MasterSlide>
+      ));
+
+      await exportChintanToPDF(slideElements, {
+        onProgress: (current, total) => {
+          setExportProgress(current);
+        },
+      });
+      
+      toast.success("PDF exported successfully!", {
+        description: "Chintan-Shivir-2026-Pitch-Deck.pdf has been downloaded.",
+      });
+    } catch (error) {
+      console.error("PDF export failed:", error);
+      toast.error("Failed to export PDF", {
+        description: "Please try again.",
+      });
+    } finally {
+      setIsExporting(false);
+      setExportProgress(0);
+    }
   }, []);
 
   // Keyboard navigation
@@ -134,6 +170,9 @@ export const ChintanPresentation = () => {
         onPrev={() => paginate(-1)}
         onNext={() => paginate(1)}
         onGoTo={goToSlide}
+        onExportPDF={handleExportPDF}
+        isExporting={isExporting}
+        exportProgress={exportProgress}
       />
     </div>
   );

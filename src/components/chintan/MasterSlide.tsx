@@ -2,11 +2,13 @@ import { ReactNode } from "react";
 
 interface MasterSlideProps {
   children: ReactNode;
+  /** Hide navigation elements when capturing for PDF export */
+  forCapture?: boolean;
 }
 
-export const MasterSlide = ({ children }: MasterSlideProps) => {
+export const MasterSlide = ({ children, forCapture = false }: MasterSlideProps) => {
   return (
-    <div className="relative h-full w-full flex flex-col">
+    <div className={`relative h-full w-full flex flex-col ${forCapture ? 'chintan-mesh-bg' : ''}`}>
       {/* Header Bar - Fixed, No Animation */}
       <header className="relative z-20 flex items-center justify-between px-6 py-4 md:px-12 md:py-5">
         {/* Left: Emblem of India */}
@@ -15,6 +17,7 @@ export const MasterSlide = ({ children }: MasterSlideProps) => {
             src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
             alt="Emblem of India"
             className="h-14 w-auto md:h-20"
+            crossOrigin="anonymous"
           />
           <div className="hidden md:block">
             <p className="text-sm font-medium text-foreground/70">
