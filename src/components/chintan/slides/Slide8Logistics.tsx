@@ -10,14 +10,18 @@ const transitData = [
   { venue: "Bekal", time: "70 km", type: "Road" },
 ];
 
-export const Slide8Logistics = () => {
+interface Slide8LogisticsProps {
+  forCapture?: boolean;
+}
+
+export const Slide8Logistics = ({ forCapture = false }: Slide8LogisticsProps) => {
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-10"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
@@ -30,9 +34,9 @@ export const Slide8Logistics = () => {
 
       {/* Transit Matrix - Full Width */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={forCapture ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: forCapture ? 0 : 0.3 }}
       >
         <GlassmorphicCard className="p-8">
           <div className="flex items-center gap-3 mb-8">
@@ -46,9 +50,9 @@ export const Slide8Logistics = () => {
             {transitData.map((item, index) => (
               <motion.div
                 key={item.venue}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={forCapture ? false : { opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
+                transition={{ delay: forCapture ? 0 : 0.4 + index * 0.1 }}
                 className="p-4 rounded-xl bg-gradient-to-br from-white/60 to-white/30 border border-white/40 hover:shadow-lg transition-all"
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -74,9 +78,9 @@ export const Slide8Logistics = () => {
 
           {/* Summary Note */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={forCapture ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
+            transition={{ delay: forCapture ? 0 : 0.9 }}
             className="mt-8 p-4 rounded-xl bg-[#138808]/10 text-center"
           >
             <span className="text-base font-medium text-[#138808]">

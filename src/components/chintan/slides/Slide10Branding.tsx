@@ -28,14 +28,18 @@ const taglineOptions = [
   },
 ];
 
-export const Slide10Branding = () => {
+interface Slide10BrandingProps {
+  forCapture?: boolean;
+}
+
+export const Slide10Branding = ({ forCapture = false }: Slide10BrandingProps) => {
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={forCapture ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: forCapture ? 0 : 0.6 }}
         className="text-center mb-8"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-[#000080] mb-3">
@@ -51,10 +55,10 @@ export const Slide10Branding = () => {
         {taglineOptions.map((option, index) => (
           <motion.div
             key={option.id}
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={forCapture ? false : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 + index * 0.1 }}
-            whileHover={{ scale: 1.02 }}
+            transition={{ delay: forCapture ? 0 : 0.3 + index * 0.1 }}
+            whileHover={forCapture ? undefined : { scale: 1.02 }}
           >
             <GlassmorphicCard
               className={`relative overflow-hidden h-full ${
@@ -66,7 +70,7 @@ export const Slide10Branding = () => {
               {/* Highlight badge */}
               {option.highlight && (
                 <motion.div
-                  initial={{ x: -100 }}
+                  initial={forCapture ? false : { x: -100 }}
                   animate={{ x: 0 }}
                   className="absolute top-0 right-0 bg-[#FF9933] text-white px-3 py-1 text-xs font-bold rounded-bl-lg"
                 >
@@ -103,9 +107,9 @@ export const Slide10Branding = () => {
 
       {/* Closing Statement */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={forCapture ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: forCapture ? 0 : 0.8 }}
         className="text-center"
       >
         <GlassmorphicCard className="inline-block px-12 py-6">
