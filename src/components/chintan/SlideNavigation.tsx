@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface SlideNavigationProps {
@@ -7,6 +7,9 @@ interface SlideNavigationProps {
   onPrev: () => void;
   onNext: () => void;
   onGoTo: (index: number) => void;
+  onExportPDF?: () => void;
+  isExporting?: boolean;
+  exportProgress?: number;
 }
 
 export const SlideNavigation = ({
@@ -15,6 +18,9 @@ export const SlideNavigation = ({
   onPrev,
   onNext,
   onGoTo,
+  onExportPDF,
+  isExporting = false,
+  exportProgress = 0,
 }: SlideNavigationProps) => {
   const canGoPrev = currentSlide > 0;
   const canGoNext = currentSlide < totalSlides - 1;
@@ -74,11 +80,43 @@ export const SlideNavigation = ({
         ))}
       </nav>
 
-      {/* Slide Counter */}
-      <div className="fixed bottom-6 right-6 z-50 chintan-glass-card px-3 py-1.5 rounded-lg">
-        <span className="text-sm font-medium text-[#000080]">
-          {currentSlide + 1} / {totalSlides}
-        </span>
+      {/* Bottom Right Controls */}
+      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        {/* Export PDF Button */}
+        {onExportPDF && (
+          <button
+            onClick={onExportPDF}
+            disabled={isExporting}
+            className={`chintan-glass-card px-4 py-2 rounded-lg flex items-center gap-2 
+              transition-all duration-300 ${
+                isExporting 
+                  ? "opacity-70 cursor-wait" 
+                  : "hover:scale-105 hover:shadow-lg"
+              }`}
+            aria-label="Export to PDF"
+          >
+            {isExporting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-[#000080]" />
+                <span className="text-sm font-medium text-[#000080]">
+                  {exportProgress}/{totalSlides}
+                </span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 text-[#000080]" />
+                <span className="text-sm font-medium text-[#000080]">PDF</span>
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Slide Counter */}
+        <div className="chintan-glass-card px-3 py-1.5 rounded-lg">
+          <span className="text-sm font-medium text-[#000080]">
+            {currentSlide + 1} / {totalSlides}
+          </span>
+        </div>
       </div>
     </>
   );
