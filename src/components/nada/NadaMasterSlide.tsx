@@ -11,10 +11,10 @@ export const NadaMasterSlide = ({ children, forCapture = false }: NadaMasterSlid
       {/* Header with NADA branding */}
       <header className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-8 py-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(210,100%,40%)] via-[hsl(185,80%,45%)] to-[hsl(170,70%,35%)] flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-sm">N</span>
           </div>
-          <span className="text-sm font-medium text-foreground/70">NADA</span>
+          <span className="text-sm font-medium text-foreground/70">NADA India</span>
         </div>
       </header>
 
@@ -25,8 +25,8 @@ export const NadaMasterSlide = ({ children, forCapture = false }: NadaMasterSlid
 
       {/* Footer */}
       <footer className="absolute bottom-0 left-0 right-0 px-8 py-4 flex items-center justify-between text-xs text-muted-foreground">
-        <span>National Anti-Doping Agency</span>
-        <span>© 2025</span>
+        <span>National Anti-Doping Agency (NADA) | Ministry of Youth Affairs & Sports</span>
+        <span>© 2026</span>
       </footer>
     </div>
   );

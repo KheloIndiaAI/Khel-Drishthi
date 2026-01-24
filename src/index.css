@@ -530,3 +530,178 @@ html {
 .perspective-1000 {
   perspective: 1000px;
 }
+
+/* ===== NADA Presentation Styles ===== */
+
+/* NADA Color Variables */
+:root {
+  --nada-blue: 210 100% 40%;
+  --nada-cyan: 185 80% 45%;
+  --nada-teal: 170 70% 35%;
+  --nada-navy: 230 60% 20%;
+  --nada-red: 0 70% 50%;
+}
+
+.nada-mesh-bg {
+  background: 
+    radial-gradient(ellipse at 0% 0%, hsla(210, 100%, 40%, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, hsla(185, 80%, 45%, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 30%, hsla(170, 70%, 35%, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 1) 100%);
+  background-attachment: fixed;
+}
+
+.dark .nada-mesh-bg {
+  background: 
+    radial-gradient(ellipse at 0% 0%, hsla(210, 100%, 40%, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, hsla(185, 80%, 45%, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 30%, hsla(170, 70%, 35%, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.98) 0%, rgba(15, 23, 42, 1) 100%);
+  background-attachment: fixed;
+}
+
+.nada-glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 102, 204, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 102, 204, 0.08);
+}
+
+.dark .nada-glass-card {
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(0, 172, 193, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.nada-badge-blue {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(210, 100%, 40%) 0%, hsl(200, 100%, 50%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(210, 100%, 40%, 0.3);
+}
+
+.nada-badge-cyan {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(185, 80%, 45%) 0%, hsl(175, 70%, 50%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(185, 80%, 45%, 0.3);
+}
+
+.nada-badge-teal {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(170, 70%, 35%) 0%, hsl(160, 60%, 45%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(170, 70%, 35%, 0.3);
+}
+
+.nada-badge-red {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(0, 70%, 50%) 0%, hsl(10, 80%, 55%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(0, 70%, 50%, 0.3);
+}
+
+.nada-badge-navy {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(230, 60%, 20%) 0%, hsl(220, 70%, 30%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(230, 60%, 20%, 0.3);
+}
+
+.nada-badge-green {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(145, 70%, 35%) 0%, hsl(155, 60%, 45%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(145, 70%, 35%, 0.3);
+}
+
+.nada-badge-orange {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  background: linear-gradient(135deg, hsl(30, 90%, 50%) 0%, hsl(40, 95%, 55%) 100%);
+  color: white;
+  box-shadow: 0 4px 12px hsla(30, 90%, 50%, 0.3);
+}
+
+.nada-stat-card {
+  @apply relative overflow-hidden rounded-xl p-6;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 102, 204, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
+}
+
+.dark .nada-stat-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(0, 172, 193, 0.15);
+}
+
+.nada-gradient-text {
+  background: linear-gradient(135deg, hsl(210, 100%, 40%) 0%, hsl(185, 80%, 45%) 50%, hsl(170, 70%, 35%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nada-title-gradient {
+  background: linear-gradient(135deg, hsl(210, 100%, 35%) 0%, hsl(200, 90%, 45%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nada-progress-bar {
+  @apply h-3 rounded-full overflow-hidden;
+  background: hsla(210, 20%, 90%, 0.5);
+}
+
+.nada-progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-1000 ease-out;
+  background: linear-gradient(90deg, hsl(210, 100%, 40%) 0%, hsl(185, 80%, 45%) 100%);
+}
+
+.dark .nada-progress-bar {
+  background: hsla(210, 20%, 20%, 0.5);
+}
+
+/* NADA Table Styles */
+.nada-table {
+  @apply w-full border-collapse;
+}
+
+.nada-table th {
+  @apply px-4 py-3 text-left text-sm font-semibold;
+  background: linear-gradient(135deg, hsla(210, 100%, 40%, 0.1) 0%, hsla(185, 80%, 45%, 0.1) 100%);
+  border-bottom: 2px solid hsla(210, 100%, 40%, 0.2);
+}
+
+.nada-table td {
+  @apply px-4 py-3 text-sm;
+  border-bottom: 1px solid hsla(210, 20%, 80%, 0.3);
+}
+
+.nada-table tr:hover td {
+  background: hsla(210, 100%, 40%, 0.05);
+}
+
+/* NADA Timeline */
+.nada-timeline-item {
+  @apply relative pl-8;
+}
+
+.nada-timeline-item::before {
+  content: '';
+  @apply absolute left-0 top-2 w-4 h-4 rounded-full;
+  background: linear-gradient(135deg, hsl(210, 100%, 40%) 0%, hsl(185, 80%, 45%) 100%);
+  box-shadow: 0 0 0 4px hsla(210, 100%, 40%, 0.2);
+}
+
+.nada-timeline-item::after {
+  content: '';
+  @apply absolute left-[7px] top-6 w-0.5 h-full;
+  background: linear-gradient(180deg, hsla(210, 100%, 40%, 0.3) 0%, transparent 100%);
+}
+
+.nada-timeline-item:last-child::after {
+  display: none;
+}

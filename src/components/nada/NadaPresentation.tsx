@@ -2,9 +2,23 @@ import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NadaMasterSlide } from "./NadaMasterSlide";
 import { NadaSlideNavigation } from "./NadaSlideNavigation";
-import { NadaSlide1Cover } from "./slides/NadaSlide1Cover";
+import { NadaSlide1Title } from "./slides/NadaSlide1Title";
+import { NadaSlide2Statistics } from "./slides/NadaSlide2Statistics";
+import { NadaSlide3Disciplines } from "./slides/NadaSlide3Disciplines";
+import { NadaSlide4Education } from "./slides/NadaSlide4Education";
+import { NadaSlide5Infrastructure } from "./slides/NadaSlide5Infrastructure";
+import { NadaSlide6ASP } from "./slides/NadaSlide6ASP";
+import { NadaSlide7Employment } from "./slides/NadaSlide7Employment";
+import { NadaSlide8Deterrence } from "./slides/NadaSlide8Deterrence";
+import { NadaSlide9Global } from "./slides/NadaSlide9Global";
+import { NadaSlide10Practices } from "./slides/NadaSlide10Practices";
+import { NadaSlide11Proposal } from "./slides/NadaSlide11Proposal";
+import { NadaSlide12Legal } from "./slides/NadaSlide12Legal";
+import { NadaSlide13Synergy } from "./slides/NadaSlide13Synergy";
+import { NadaSlide14Roadmap } from "./slides/NadaSlide14Roadmap";
+import { exportNadaToPDF } from "./utils/nadaPdfExport";
 
-const TOTAL_SLIDES = 1;
+const TOTAL_SLIDES = 14;
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -22,12 +36,26 @@ const slideVariants = {
 };
 
 const slideComponents = [
-  NadaSlide1Cover,
-  // More slides will be added here
+  NadaSlide1Title,
+  NadaSlide2Statistics,
+  NadaSlide3Disciplines,
+  NadaSlide4Education,
+  NadaSlide5Infrastructure,
+  NadaSlide6ASP,
+  NadaSlide7Employment,
+  NadaSlide8Deterrence,
+  NadaSlide9Global,
+  NadaSlide10Practices,
+  NadaSlide11Proposal,
+  NadaSlide12Legal,
+  NadaSlide13Synergy,
+  NadaSlide14Roadmap,
 ];
 
 export const NadaPresentation = () => {
   const [[currentSlide, direction], setSlide] = useState([0, 0]);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
 
   const paginate = useCallback((newDirection: number) => {
     setSlide(([current]) => {
@@ -41,9 +69,32 @@ export const NadaPresentation = () => {
     setSlide(([current]) => [index, index > current ? 1 : -1]);
   }, []);
 
+  const handleExportPDF = useCallback(async () => {
+    setIsExporting(true);
+    setExportProgress(0);
+
+    try {
+      const slideElements = slideComponents.map((SlideComponent, index) => (
+        <NadaMasterSlide key={index} forCapture>
+          <SlideComponent forCapture />
+        </NadaMasterSlide>
+      ));
+
+      await exportNadaToPDF(slideElements, {
+        onProgress: (current, total) => {
+          setExportProgress(Math.round((current / total) * 100));
+        },
+      });
+    } finally {
+      setIsExporting(false);
+      setExportProgress(0);
+    }
+  }, []);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isExporting) return;
       if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") {
         e.preventDefault();
         paginate(1);
@@ -58,7 +109,7 @@ export const NadaPresentation = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [paginate, goToSlide]);
+  }, [paginate, goToSlide, isExporting]);
 
   // Touch/swipe navigation
   useEffect(() => {
@@ -70,6 +121,7 @@ export const NadaPresentation = () => {
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
+      if (isExporting) return;
       touchEndX = e.changedTouches[0].screenX;
       const diff = touchStartX - touchEndX;
       if (Math.abs(diff) > 50) {
@@ -84,7 +136,7 @@ export const NadaPresentation = () => {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [paginate]);
+  }, [paginate, isExporting]);
 
   const CurrentSlideComponent = slideComponents[currentSlide];
 
@@ -116,6 +168,9 @@ export const NadaPresentation = () => {
         onPrev={() => paginate(-1)}
         onNext={() => paginate(1)}
         onGoTo={goToSlide}
+        onExport={handleExportPDF}
+        isExporting={isExporting}
+        exportProgress={exportProgress}
       />
     </div>
   );
