@@ -36,15 +36,15 @@ export const TimelineItem = ({
 
   return (
     <motion.div
-      initial={forCapture ? false : { opacity: 0, x: -30 }}
+      initial={forCapture ? false : { opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={forCapture ? { duration: 0 } : { delay, duration: 0.5 }}
-      className="relative pl-10 pb-8"
+      transition={forCapture ? { duration: 0 } : { delay, duration: 0.4 }}
+      className="relative pl-12 pb-8"
     >
       {/* Dot */}
       <div
         className={cn(
-          "absolute left-0 top-1 w-5 h-5 rounded-full",
+          "absolute left-0 top-1 w-6 h-6 rounded-full",
           variantColors[variant],
           shadowColors[variant]
         )}
@@ -52,14 +52,14 @@ export const TimelineItem = ({
       
       {/* Line */}
       {!isLast && (
-        <div className="absolute left-[9px] top-6 w-0.5 h-full bg-gradient-to-b from-[hsla(210,100%,40%,0.3)] to-transparent" />
+        <div className="absolute left-[11px] top-7 w-0.5 h-full bg-gradient-to-b from-[hsla(210,100%,40%,0.3)] to-transparent" />
       )}
       
       {/* Content */}
-      <div className="nada-glass-card rounded-lg p-4">
-        <div className="nada-badge-blue text-xs mb-2">{date}</div>
-        <h4 className="font-semibold text-foreground mb-1">{title}</h4>
-        <p className="text-sm text-muted-foreground">{description}</p>
+      <div className="nada-glass-card rounded-xl p-5">
+        <div className="nada-badge-blue text-sm mb-3">{date}</div>
+        <h4 className="text-xl font-bold text-foreground mb-2">{title}</h4>
+        <p className="text-base text-muted-foreground leading-relaxed">{description}</p>
       </div>
     </motion.div>
   );

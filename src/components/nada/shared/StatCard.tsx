@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
@@ -70,8 +70,8 @@ export const StatCard = ({
   };
 
   const trendColors = {
-    up: "text-green-500",
-    down: "text-red-500",
+    up: "text-green-600",
+    down: "text-red-600",
     neutral: "text-muted-foreground",
   };
 
@@ -79,29 +79,29 @@ export const StatCard = ({
     <motion.div
       initial={forCapture ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={forCapture ? { duration: 0 } : { delay, duration: 0.5 }}
+      transition={forCapture ? { duration: 0 } : { delay, duration: 0.4 }}
       className="nada-stat-card"
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-4">
         {Icon && (
-          <div className={cn("p-2 rounded-lg bg-gradient-to-br", variantColors[variant])}>
-            <Icon className="w-5 h-5 text-white" />
+          <div className={cn("p-3 rounded-xl bg-gradient-to-br", variantColors[variant])}>
+            <Icon className="w-7 h-7 text-white" />
           </div>
         )}
         {trend && trendValue && (
-          <span className={cn("text-sm font-medium", trendColors[trend])}>
+          <span className={cn("text-base font-bold", trendColors[trend])}>
             {trend === "up" ? "↑" : trend === "down" ? "↓" : "→"} {trendValue}
           </span>
         )}
       </div>
       
-      <div className="space-y-1">
-        <div className={cn("text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent", variantColors[variant])}>
+      <div className="space-y-2">
+        <div className={cn("text-5xl font-bold bg-gradient-to-r bg-clip-text text-transparent", variantColors[variant])}>
           {prefix}{displayValue.toLocaleString()}{suffix}
         </div>
-        <div className="text-sm font-medium text-foreground">{label}</div>
+        <div className="text-lg font-semibold text-foreground">{label}</div>
         {sublabel && (
-          <div className="text-xs text-muted-foreground">{sublabel}</div>
+          <div className="text-base text-muted-foreground">{sublabel}</div>
         )}
       </div>
     </motion.div>

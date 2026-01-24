@@ -25,12 +25,12 @@ export const NadaGlassmorphicCard = ({
 
   return (
     <motion.div
-      initial={forCapture ? false : { opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={forCapture ? false : { opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={
         forCapture
           ? { duration: 0 }
-          : { delay, duration: 0.5, ease: "easeOut" }
+          : { delay, duration: 0.4, ease: "easeOut" }
       }
       className={cn(baseClasses, highlightClasses, className)}
     >

@@ -33,9 +33,9 @@ export const ProgressBar = ({
   };
 
   const sizeClasses = {
-    sm: "h-2",
-    md: "h-3",
-    lg: "h-4",
+    sm: "h-3",
+    md: "h-4",
+    lg: "h-5",
   };
 
   return (
@@ -47,9 +47,9 @@ export const ProgressBar = ({
     >
       {(label || showPercentage) && (
         <div className="flex justify-between items-center mb-2">
-          {label && <span className="text-sm font-medium text-foreground">{label}</span>}
+          {label && <span className="text-base font-semibold text-foreground">{label}</span>}
           {showPercentage && (
-            <span className="text-sm font-bold nada-gradient-text">{percentage}%</span>
+            <span className="text-base font-bold nada-gradient-text">{percentage}%</span>
           )}
         </div>
       )}
@@ -57,7 +57,7 @@ export const ProgressBar = ({
         <motion.div
           initial={forCapture ? { width: `${percentage}%` } : { width: 0 }}
           animate={{ width: `${percentage}%` }}
-          transition={forCapture ? { duration: 0 } : { delay: delay + 0.2, duration: 1, ease: "easeOut" }}
+          transition={forCapture ? { duration: 0 } : { delay: delay + 0.2, duration: 0.8, ease: "easeOut" }}
           className={cn("nada-progress-bar-fill bg-gradient-to-r", variantColors[variant])}
         />
       </div>
