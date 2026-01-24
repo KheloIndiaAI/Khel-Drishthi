@@ -45,6 +45,7 @@ const STCReport = lazy(() => import("./pages/STCReport"));
 const HostelDashboard = lazy(() => import("./pages/HostelDashboard"));
 const HRDashboard = lazy(() => import("./pages/HRDashboard"));
 const Chintan = lazy(() => import("./pages/Chintan"));
+const Nada = lazy(() => import("./pages/Nada"));
 
 // Optimized QueryClient configuration
 const queryClient = new QueryClient({
@@ -70,6 +71,7 @@ const App = () => (
               {/* Critical routes */}
               <Route path="/" element={<Home />} />
               <Route path="/chintan" element={<Chintan />} />
+              <Route path="/nada" element={<Nada />} />
               
               {/* Public routes */}
               <Route path="/sport/:sportId" element={<SportDetail />} />
