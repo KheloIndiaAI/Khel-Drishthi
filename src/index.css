@@ -561,79 +561,76 @@ html {
 }
 
 .nada-glass-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 102, 204, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 102, 204, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(0, 102, 204, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.06);
 }
 
 .dark .nada-glass-card {
-  background: rgba(30, 41, 59, 0.75);
-  border: 1px solid rgba(0, 172, 193, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(30, 41, 59, 0.95);
+  border: 2px solid rgba(0, 172, 193, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nada-badge-blue {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(210, 100%, 40%) 0%, hsl(200, 100%, 50%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(210, 100%, 40%, 0.3);
 }
 
 .nada-badge-cyan {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(185, 80%, 45%) 0%, hsl(175, 70%, 50%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(185, 80%, 45%, 0.3);
 }
 
 .nada-badge-teal {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(170, 70%, 35%) 0%, hsl(160, 60%, 45%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(170, 70%, 35%, 0.3);
 }
 
 .nada-badge-red {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(0, 70%, 50%) 0%, hsl(10, 80%, 55%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(0, 70%, 50%, 0.3);
 }
 
 .nada-badge-navy {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(230, 60%, 20%) 0%, hsl(220, 70%, 30%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(230, 60%, 20%, 0.3);
 }
 
 .nada-badge-green {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(145, 70%, 35%) 0%, hsl(155, 60%, 45%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(145, 70%, 35%, 0.3);
 }
 
 .nada-badge-orange {
-  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold text-sm;
+  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-base;
   background: linear-gradient(135deg, hsl(30, 90%, 50%) 0%, hsl(40, 95%, 55%) 100%);
   color: white;
   box-shadow: 0 4px 12px hsla(30, 90%, 50%, 0.3);
 }
 
 .nada-stat-card {
-  @apply relative overflow-hidden rounded-xl p-6;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 102, 204, 0.12);
-  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
+  @apply relative overflow-hidden rounded-xl p-8;
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(0, 102, 204, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.06);
 }
 
 .dark .nada-stat-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(0, 172, 193, 0.15);
+  background: rgba(30, 41, 59, 0.95);
+  border: 2px solid rgba(0, 172, 193, 0.15);
 }
 
 .nada-gradient-text {
@@ -651,7 +648,7 @@ html {
 }
 
 .nada-progress-bar {
-  @apply h-3 rounded-full overflow-hidden;
+  @apply h-4 rounded-full overflow-hidden;
   background: hsla(210, 20%, 90%, 0.5);
 }
 

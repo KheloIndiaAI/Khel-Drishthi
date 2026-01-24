@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -8,9 +8,6 @@ interface NadaSlideNavigationProps {
   onPrev: () => void;
   onNext: () => void;
   onGoTo: (index: number) => void;
-  onExport?: () => void;
-  isExporting?: boolean;
-  exportProgress?: number;
 }
 
 export const NadaSlideNavigation = ({
@@ -19,38 +16,34 @@ export const NadaSlideNavigation = ({
   onPrev,
   onNext,
   onGoTo,
-  onExport,
-  isExporting = false,
-  exportProgress = 0,
 }: NadaSlideNavigationProps) => {
   return (
     <>
       {/* Previous/Next buttons */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 z-20">
         <Button
           variant="outline"
           size="icon"
           onClick={onPrev}
-          disabled={currentSlide === 0 || isExporting}
-          className="rounded-full bg-background/80 backdrop-blur-sm border-[hsl(210,100%,40%)]/20 hover:bg-background hover:border-[hsl(210,100%,40%)]/40"
+          disabled={currentSlide === 0}
+          className="rounded-full w-12 h-12 bg-background/90 border-2 border-[hsl(210,100%,40%)]/30 hover:bg-background hover:border-[hsl(210,100%,40%)]/50"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-6 w-6" />
         </Button>
 
         {/* Dot indicators */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {Array.from({ length: totalSlides }).map((_, index) => (
             <button
               key={index}
               onClick={() => onGoTo(index)}
-              disabled={isExporting}
-              className="relative w-2 h-2 rounded-full bg-[hsl(210,100%,40%)]/20 hover:bg-[hsl(210,100%,40%)]/40 transition-colors disabled:opacity-50"
+              className="relative w-3 h-3 rounded-full bg-[hsl(210,100%,40%)]/20 hover:bg-[hsl(210,100%,40%)]/40 transition-colors"
             >
               {currentSlide === index && (
                 <motion.div
                   layoutId="nadaActiveDot"
                   className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(210,100%,40%)] to-[hsl(185,80%,45%)]"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                 />
               )}
             </button>
@@ -61,31 +54,15 @@ export const NadaSlideNavigation = ({
           variant="outline"
           size="icon"
           onClick={onNext}
-          disabled={currentSlide === totalSlides - 1 || isExporting}
-          className="rounded-full bg-background/80 backdrop-blur-sm border-[hsl(210,100%,40%)]/20 hover:bg-background hover:border-[hsl(210,100%,40%)]/40"
+          disabled={currentSlide === totalSlides - 1}
+          className="rounded-full w-12 h-12 bg-background/90 border-2 border-[hsl(210,100%,40%)]/30 hover:bg-background hover:border-[hsl(210,100%,40%)]/50"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-6 w-6" />
         </Button>
       </div>
 
-      {/* Export button */}
-      {onExport && (
-        <div className="absolute bottom-8 left-8 z-20">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onExport}
-            disabled={isExporting}
-            className="gap-2 bg-background/80 backdrop-blur-sm border-[hsl(210,100%,40%)]/20 hover:bg-background hover:border-[hsl(210,100%,40%)]/40"
-          >
-            <Download className="h-4 w-4" />
-            {isExporting ? `Exporting ${exportProgress}%` : "Export PDF"}
-          </Button>
-        </div>
-      )}
-
       {/* Slide counter */}
-      <div className="absolute bottom-8 right-8 text-sm text-muted-foreground z-20">
+      <div className="absolute bottom-8 right-12 text-base font-bold text-foreground z-20">
         {currentSlide + 1} / {totalSlides}
       </div>
     </>

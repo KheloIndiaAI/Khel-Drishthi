@@ -16,7 +16,6 @@ import { NadaSlide11Proposal } from "./slides/NadaSlide11Proposal";
 import { NadaSlide12Legal } from "./slides/NadaSlide12Legal";
 import { NadaSlide13Synergy } from "./slides/NadaSlide13Synergy";
 import { NadaSlide14Roadmap } from "./slides/NadaSlide14Roadmap";
-import { exportNadaToPDF } from "./utils/nadaPdfExport";
 
 const TOTAL_SLIDES = 14;
 
@@ -54,8 +53,6 @@ const slideComponents = [
 
 export const NadaPresentation = () => {
   const [[currentSlide, direction], setSlide] = useState([0, 0]);
-  const [isExporting, setIsExporting] = useState(false);
-  const [exportProgress, setExportProgress] = useState(0);
 
   const paginate = useCallback((newDirection: number) => {
     setSlide(([current]) => {
@@ -69,32 +66,9 @@ export const NadaPresentation = () => {
     setSlide(([current]) => [index, index > current ? 1 : -1]);
   }, []);
 
-  const handleExportPDF = useCallback(async () => {
-    setIsExporting(true);
-    setExportProgress(0);
-
-    try {
-      const slideElements = slideComponents.map((SlideComponent, index) => (
-        <NadaMasterSlide key={index} forCapture>
-          <SlideComponent forCapture />
-        </NadaMasterSlide>
-      ));
-
-      await exportNadaToPDF(slideElements, {
-        onProgress: (current, total) => {
-          setExportProgress(Math.round((current / total) * 100));
-        },
-      });
-    } finally {
-      setIsExporting(false);
-      setExportProgress(0);
-    }
-  }, []);
-
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isExporting) return;
       if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") {
         e.preventDefault();
         paginate(1);
@@ -109,7 +83,7 @@ export const NadaPresentation = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [paginate, goToSlide, isExporting]);
+  }, [paginate, goToSlide]);
 
   // Touch/swipe navigation
   useEffect(() => {
@@ -121,7 +95,6 @@ export const NadaPresentation = () => {
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
-      if (isExporting) return;
       touchEndX = e.changedTouches[0].screenX;
       const diff = touchStartX - touchEndX;
       if (Math.abs(diff) > 50) {
@@ -136,7 +109,7 @@ export const NadaPresentation = () => {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [paginate, isExporting]);
+  }, [paginate]);
 
   const CurrentSlideComponent = slideComponents[currentSlide];
 
@@ -151,8 +124,8 @@ export const NadaPresentation = () => {
           animate="center"
           exit="exit"
           transition={{
-            x: { type: "tween", ease: "easeInOut", duration: 0.5 },
-            opacity: { duration: 0.4 },
+            x: { type: "tween", ease: "easeInOut", duration: 0.4 },
+            opacity: { duration: 0.3 },
           }}
           className="absolute inset-0"
         >
@@ -168,9 +141,6 @@ export const NadaPresentation = () => {
         onPrev={() => paginate(-1)}
         onNext={() => paginate(1)}
         onGoTo={goToSlide}
-        onExport={handleExportPDF}
-        isExporting={isExporting}
-        exportProgress={exportProgress}
       />
     </div>
   );
