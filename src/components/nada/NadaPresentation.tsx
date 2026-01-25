@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+// NADA Presentation Component
 import { AnimatePresence, motion } from "framer-motion";
 import { NadaMasterSlide } from "./NadaMasterSlide";
 import { NadaSlideNavigation } from "./NadaSlideNavigation";
