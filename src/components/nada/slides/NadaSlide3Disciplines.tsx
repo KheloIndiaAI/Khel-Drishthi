@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Dumbbell, PersonStanding, Swords, CheckCircle2, AlertTriangle } from "lucide-react";
 import { NadaGlassmorphicCard } from "../shared/NadaGlassmorphicCard";
-import { ProgressBar } from "../shared/ProgressBar";
 
 interface NadaSlide3DisciplinesProps {
   forCapture?: boolean;
@@ -51,7 +50,7 @@ export const NadaSlide3Disciplines = ({ forCapture = false }: NadaSlide3Discipli
         initial={forCapture ? false : { opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={forCapture ? { duration: 0 } : { duration: 0.4 }}
-        className="text-center mb-8"
+        className="text-center mb-6"
       >
         <h2 className="text-4xl md:text-5xl font-bold nada-gradient-text mb-3">
           Performance Analysis: Successes & Challenges
@@ -60,45 +59,45 @@ export const NadaSlide3Disciplines = ({ forCapture = false }: NadaSlide3Discipli
       </motion.div>
 
       {/* Discipline Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {disciplines.map((discipline, index) => (
           <NadaGlassmorphicCard
             key={discipline.name}
             forCapture={forCapture}
             delay={0.1 + index * 0.1}
             variant={discipline.status === "warning" ? "highlight" : "default"}
-            className="p-8"
+            className="p-6"
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className={`p-4 rounded-xl ${
+            <div className="flex items-center justify-between mb-4">
+              <div className={`p-3 rounded-xl ${
                 discipline.status === "success" 
                   ? "bg-gradient-to-br from-[hsl(145,70%,35%)] to-[hsl(155,60%,45%)]"
                   : "bg-gradient-to-br from-[hsl(30,90%,50%)] to-[hsl(40,95%,55%)]"
               }`}>
-                <discipline.icon className="w-8 h-8 text-white" />
+                <discipline.icon className="w-7 h-7 text-white" />
               </div>
               {discipline.status === "success" ? (
-                <CheckCircle2 className="w-8 h-8 text-[hsl(145,70%,35%)]" />
+                <CheckCircle2 className="w-7 h-7 text-[hsl(145,70%,35%)]" />
               ) : (
-                <AlertTriangle className="w-8 h-8 text-[hsl(30,90%,50%)]" />
+                <AlertTriangle className="w-7 h-7 text-[hsl(30,90%,50%)]" />
               )}
             </div>
 
             {/* Title */}
-            <h3 className="text-2xl font-bold text-foreground mb-2">{discipline.name}</h3>
-            <p className="text-base text-muted-foreground mb-6">{discipline.subtitle}</p>
+            <h3 className="text-xl font-bold text-foreground mb-1">{discipline.name}</h3>
+            <p className="text-base text-muted-foreground mb-4">{discipline.subtitle}</p>
 
             {/* AAF Comparison */}
-            <div className="flex items-center justify-between mb-6 p-4 rounded-xl bg-background/50">
+            <div className="flex items-center justify-between mb-4 p-3 rounded-xl bg-background/50">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground mb-1">2023 AAF</p>
-                <p className="text-2xl font-bold text-[hsl(0,70%,50%)]">{discipline.aaf2023}%</p>
+                <p className="text-xl font-bold text-[hsl(0,70%,50%)]">{discipline.aaf2023}%</p>
               </div>
-              <span className="text-2xl text-muted-foreground">→</span>
+              <span className="text-xl text-muted-foreground">→</span>
               <div className="text-center">
                 <p className="text-sm text-muted-foreground mb-1">2025 AAF</p>
-                <p className={`text-2xl font-bold ${
+                <p className={`text-xl font-bold ${
                   discipline.aaf2025 < discipline.aaf2023 
                     ? "text-[hsl(145,70%,35%)]" 
                     : "text-[hsl(30,90%,50%)]"
@@ -108,20 +107,9 @@ export const NadaSlide3Disciplines = ({ forCapture = false }: NadaSlide3Discipli
               </div>
             </div>
 
-            {/* Progress */}
-            <ProgressBar
-              value={100 - discipline.aaf2025 * 10}
-              max={100}
-              label="Compliance Score"
-              forCapture={forCapture}
-              delay={0.2 + index * 0.1}
-              variant={discipline.variant}
-              size="md"
-            />
-
             {/* Stats */}
-            <div className="mt-6 pt-6 border-t-2 border-border/30">
-              <div className="flex justify-between items-center mb-3">
+            <div className="pt-4 border-t-2 border-border/30">
+              <div className="flex justify-between items-center mb-2">
                 <span className="text-base text-muted-foreground">Samples Collected</span>
                 <span className="text-lg font-bold text-foreground">{discipline.samples}</span>
               </div>
@@ -131,12 +119,12 @@ export const NadaSlide3Disciplines = ({ forCapture = false }: NadaSlide3Discipli
         ))}
       </div>
 
-      {/* Actionable Insight */}
+      {/* Actionable Insight - Prominent with left border */}
       <motion.div
         initial={forCapture ? false : { opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }}
-        className="nada-glass-card rounded-xl p-6 flex items-center gap-6"
+        className="nada-glass-card rounded-xl p-6 flex items-center gap-6 border-l-4 border-[hsl(210,100%,40%)]"
       >
         <div className="p-4 rounded-xl bg-gradient-to-br from-[hsl(210,100%,40%)] to-[hsl(185,80%,45%)] flex-shrink-0">
           <CheckCircle2 className="w-8 h-8 text-white" />
