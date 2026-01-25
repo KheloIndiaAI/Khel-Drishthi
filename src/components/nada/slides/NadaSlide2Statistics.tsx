@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, TestTube, AlertTriangle } from "lucide-react";
-import { ProgressBar } from "../shared/ProgressBar";
 import { NadaGlassmorphicCard } from "../shared/NadaGlassmorphicCard";
 
 interface NadaSlide2StatisticsProps {
@@ -40,35 +39,23 @@ export const NadaSlide2Statistics = ({ forCapture = false }: NadaSlide2Statistic
             </div>
           </div>
           
-          <div className="space-y-6">
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-base text-muted-foreground mb-1">2023</p>
-                <p className="text-4xl font-bold text-foreground">5,606</p>
-              </div>
-              <motion.div
-                initial={forCapture ? false : { scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={forCapture ? { duration: 0 } : { delay: 0.3, duration: 0.3 }}
-                className="text-4xl text-muted-foreground"
-              >
-                →
-              </motion.div>
-              <div className="text-right">
-                <p className="text-base text-muted-foreground mb-1">2025</p>
-                <p className="text-4xl font-bold nada-gradient-text">7,939</p>
-              </div>
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-base text-muted-foreground mb-1">2023</p>
+              <p className="text-5xl font-bold text-foreground">5,606</p>
             </div>
-            
-            <ProgressBar
-              value={7939}
-              max={10000}
-              label="Sample Collection Progress"
-              forCapture={forCapture}
-              delay={0.2}
-              variant="blue"
-              size="lg"
-            />
+            <motion.div
+              initial={forCapture ? false : { scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={forCapture ? { duration: 0 } : { delay: 0.3, duration: 0.3 }}
+              className="text-4xl text-muted-foreground"
+            >
+              →
+            </motion.div>
+            <div className="text-right">
+              <p className="text-base text-muted-foreground mb-1">2025</p>
+              <p className="text-5xl font-bold nada-gradient-text">7,939</p>
+            </div>
           </div>
         </NadaGlassmorphicCard>
 
@@ -87,35 +74,30 @@ export const NadaSlide2Statistics = ({ forCapture = false }: NadaSlide2Statistic
             </div>
           </div>
           
-          <div className="space-y-6">
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-base text-muted-foreground mb-1">2023 AAF</p>
-                <p className="text-4xl font-bold text-[hsl(0,70%,50%)]">3.8%</p>
-              </div>
-              <motion.div
-                initial={forCapture ? false : { scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={forCapture ? { duration: 0 } : { delay: 0.35, duration: 0.3 }}
-                className="text-4xl text-muted-foreground"
-              >
-                →
-              </motion.div>
-              <div className="text-right">
-                <p className="text-base text-muted-foreground mb-1">2025 AAF</p>
-                <p className="text-4xl font-bold text-[hsl(145,70%,35%)]">1.6%</p>
-              </div>
+          <div className="flex justify-between items-end mb-4">
+            <div>
+              <p className="text-base text-muted-foreground mb-1">2023 AAF</p>
+              <p className="text-5xl font-bold text-[hsl(0,70%,50%)]">3.8%</p>
             </div>
-            
-            <ProgressBar
-              value={16}
-              max={100}
-              label="Current AAF Rate"
-              forCapture={forCapture}
-              delay={0.25}
-              variant="green"
-              size="lg"
-            />
+            <motion.div
+              initial={forCapture ? false : { scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={forCapture ? { duration: 0 } : { delay: 0.35, duration: 0.3 }}
+              className="text-4xl text-muted-foreground"
+            >
+              →
+            </motion.div>
+            <div className="text-right">
+              <p className="text-base text-muted-foreground mb-1">2025 AAF</p>
+              <p className="text-5xl font-bold text-[hsl(145,70%,35%)]">1.6%</p>
+            </div>
+          </div>
+          
+          {/* Prominent percentage drop */}
+          <div className="p-4 rounded-xl bg-[hsl(145,70%,35%)]/10 border-l-4 border-[hsl(145,70%,35%)]">
+            <p className="text-2xl font-bold text-[hsl(145,70%,35%)]">
+              −2.2 percentage points drop
+            </p>
           </div>
         </NadaGlassmorphicCard>
       </div>

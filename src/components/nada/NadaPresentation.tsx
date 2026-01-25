@@ -16,8 +16,9 @@ import { NadaSlide11Proposal } from "./slides/NadaSlide11Proposal";
 import { NadaSlide12Legal } from "./slides/NadaSlide12Legal";
 import { NadaSlide13Synergy } from "./slides/NadaSlide13Synergy";
 import { NadaSlide14Roadmap } from "./slides/NadaSlide14Roadmap";
+import { NadaSlide15Closing } from "./slides/NadaSlide15Closing";
 
-const TOTAL_SLIDES = 14;
+const TOTAL_SLIDES = 15;
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -49,6 +50,7 @@ const slideComponents = [
   NadaSlide12Legal,
   NadaSlide13Synergy,
   NadaSlide14Roadmap,
+  NadaSlide15Closing,
 ];
 
 export const NadaPresentation = () => {
