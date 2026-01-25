@@ -27,11 +27,21 @@ export const NadaSlide15Closing = ({ forCapture = false }: NadaSlide15ClosingPro
         PLAY FAIR
       </motion.h1>
 
+      {/* Tagline */}
+      <motion.p
+        initial={forCapture ? false : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.5 }}
+        className="mt-8 text-2xl md:text-3xl text-muted-foreground font-medium max-w-3xl"
+      >
+        Lets Build a Cleaner, Fairer, and Stronger, Sporting Nation
+      </motion.p>
+
       {/* Subtle underline accent */}
       <motion.div
         initial={forCapture ? false : { scaleX: 0 }}
         animate={{ scaleX: 1 }}
-        transition={forCapture ? { duration: 0 } : { delay: 0.6, duration: 0.5, ease: "easeOut" }}
+        transition={forCapture ? { duration: 0 } : { delay: 0.7, duration: 0.5, ease: "easeOut" }}
         className="mt-8 h-1.5 w-48 rounded-full bg-gradient-to-r from-[hsl(210,100%,40%)] via-[hsl(185,80%,45%)] to-[hsl(170,70%,35%)]"
       />
     </div>
