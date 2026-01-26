@@ -3,6 +3,8 @@ import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NadaMasterSlide } from "./NadaMasterSlide";
 import { NadaSlideNavigation } from "./NadaSlideNavigation";
+import { NadaFullscreenToggle } from "./NadaFullscreenToggle";
+import { NadaKeyboardShortcuts } from "./NadaKeyboardShortcuts";
 import { NadaSlide1Title } from "./slides/NadaSlide1Title";
 import { NadaSlide2Statistics } from "./slides/NadaSlide2Statistics";
 import { NadaSlide3Disciplines } from "./slides/NadaSlide3Disciplines";
@@ -20,6 +22,24 @@ import { NadaSlide14Roadmap } from "./slides/NadaSlide14Roadmap";
 import { NadaSlide15Closing } from "./slides/NadaSlide15Closing";
 
 const TOTAL_SLIDES = 15;
+
+const slideTitles = [
+  "", // Title slide - no header
+  "Statistical Progress",
+  "High-Risk Disciplines",
+  "Education & Outreach",
+  "Infrastructure",
+  "ASP Accountability",
+  "Employment Deterrence",
+  "Field Intelligence",
+  "Global Approaches",
+  "Best Practices",
+  "Proposal",
+  "Legal Framework",
+  "Inter-Agency Synergy",
+  "Roadmap",
+  "", // Closing slide - no header
+];
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -56,6 +76,7 @@ const slideComponents = [
 
 export const NadaPresentation = () => {
   const [[currentSlide, direction], setSlide] = useState([0, 0]);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const paginate = useCallback((newDirection: number) => {
     setSlide(([current]) => {
@@ -67,6 +88,16 @@ export const NadaPresentation = () => {
 
   const goToSlide = useCallback((index: number) => {
     setSlide(([current]) => [index, index > current ? 1 : -1]);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error("Error attempting to enable fullscreen:", err);
+      });
+    } else {
+      document.exitFullscreen();
+    }
   }, []);
 
   // Keyboard navigation
@@ -81,12 +112,20 @@ export const NadaPresentation = () => {
       } else if (e.key >= "1" && e.key <= "9") {
         const slideIndex = parseInt(e.key) - 1;
         if (slideIndex < TOTAL_SLIDES) goToSlide(slideIndex);
+      } else if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === "?") {
+        e.preventDefault();
+        setShowShortcuts((prev) => !prev);
+      } else if (e.key === "Escape") {
+        setShowShortcuts(false);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [paginate, goToSlide]);
+  }, [paginate, goToSlide, toggleFullscreen]);
 
   // Touch/swipe navigation
   useEffect(() => {
@@ -115,6 +154,7 @@ export const NadaPresentation = () => {
   }, [paginate]);
 
   const CurrentSlideComponent = slideComponents[currentSlide];
+  const currentSlideTitle = slideTitles[currentSlide];
 
   return (
     <div className="relative h-screen w-screen overflow-hidden nada-mesh-bg">
@@ -132,18 +172,25 @@ export const NadaPresentation = () => {
           }}
           className="absolute inset-0"
         >
-          <NadaMasterSlide>
+          <NadaMasterSlide slideTitle={currentSlideTitle}>
             <CurrentSlideComponent />
           </NadaMasterSlide>
         </motion.div>
       </AnimatePresence>
 
+      <NadaFullscreenToggle />
+      
       <NadaSlideNavigation
         currentSlide={currentSlide}
         totalSlides={TOTAL_SLIDES}
         onPrev={() => paginate(-1)}
         onNext={() => paginate(1)}
         onGoTo={goToSlide}
+      />
+
+      <NadaKeyboardShortcuts
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
       />
     </div>
   );

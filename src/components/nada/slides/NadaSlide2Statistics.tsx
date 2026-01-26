@@ -25,7 +25,7 @@ export const NadaSlide2Statistics = ({ forCapture = false }: NadaSlide2Statistic
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* Testing Velocity Card */}
-        <NadaGlassmorphicCard forCapture={forCapture} delay={0.1} className="p-8">
+        <NadaGlassmorphicCard forCapture={forCapture} delay={0.1} className="p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-4 rounded-xl bg-gradient-to-br from-[hsl(210,100%,40%)] to-[hsl(185,80%,45%)]">
               <TestTube className="w-8 h-8 text-white" />
@@ -60,7 +60,7 @@ export const NadaSlide2Statistics = ({ forCapture = false }: NadaSlide2Statistic
         </NadaGlassmorphicCard>
 
         {/* AAF Reduction Card */}
-        <NadaGlassmorphicCard forCapture={forCapture} delay={0.15} className="p-8">
+        <NadaGlassmorphicCard forCapture={forCapture} delay={0.15} className="p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-4 rounded-xl bg-gradient-to-br from-[hsl(145,70%,35%)] to-[hsl(155,60%,45%)]">
               <TrendingDown className="w-8 h-8 text-white" />
