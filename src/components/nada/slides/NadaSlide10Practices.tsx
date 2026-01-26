@@ -24,13 +24,13 @@ export const NadaSlide10Practices = ({ forCapture = false }: NadaSlide10Practice
         ))}
       </div>
 
-      <motion.div initial={forCapture ? false : { opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }} className="nada-glass-card rounded-xl p-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Common Success Factors</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div initial={forCapture ? false : { opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }} className="nada-glass-card rounded-xl p-6">
+        <h3 className="text-xl font-bold text-foreground mb-5 text-center">Common Success Factors</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[{ badge: "Focus", text: "Target supply chains, not just end users", color: "blue" }, { badge: "Collaboration", text: "Inter-agency cooperation is essential", color: "cyan" }, { badge: "Penalties", text: "Heavy penalties for manufacturers & traffickers", color: "teal" }].map((item) => (
-            <div key={item.badge} className="p-6 rounded-xl bg-background/50 text-center">
-              <div className={`nada-badge-${item.color} mb-4`}>{item.badge}</div>
-              <p className="text-lg text-muted-foreground">{item.text}</p>
+            <div key={item.badge} className="p-4 rounded-xl bg-background/50 text-center">
+              <div className={`nada-badge-${item.color} mb-3`}>{item.badge}</div>
+              <p className="text-base text-muted-foreground">{item.text}</p>
             </div>
           ))}
         </div>

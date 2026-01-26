@@ -43,12 +43,12 @@ export const NadaSlide12Legal = ({ forCapture = false }: NadaSlide12LegalProps) 
 
       <motion.div initial={forCapture ? false : { opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }} className="nada-glass-card rounded-xl overflow-hidden">
         <table className="nada-table">
-          <thead><tr><th className="text-lg">Legal Framework</th><th className="text-lg">Target Substances</th><th className="text-lg text-right">Max Penalty</th></tr></thead>
+          <thead><tr><th className="text-base">Legal Framework</th><th className="text-base">Target Substances</th><th className="text-base text-right">Max Penalty</th></tr></thead>
           <tbody>
             {legalFrameworks.map((framework) => (
               <tr key={framework.act}>
-                <td className="text-lg font-semibold text-foreground">{framework.act}</td>
-                <td className="text-lg text-muted-foreground">{framework.targets}</td>
+                <td className="text-base font-semibold text-foreground">{framework.act}</td>
+                <td className="text-base text-muted-foreground">{framework.targets}</td>
                 <td className="text-right"><span className={`${severityBadges[framework.severity as keyof typeof severityBadges]}`}>{framework.maxPenalty}</span></td>
               </tr>
             ))}

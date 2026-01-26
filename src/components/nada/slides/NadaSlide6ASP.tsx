@@ -21,7 +21,7 @@ export const NadaSlide6ASP = ({ forCapture = false }: NadaSlide6ASPProps) => {
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-        <NadaGlassmorphicCard forCapture={forCapture} delay={0.1} variant="highlight" className="p-8">
+        <NadaGlassmorphicCard forCapture={forCapture} delay={0.1} variant="highlight" className="p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-4 rounded-xl bg-gradient-to-br from-[hsl(0,70%,50%)] to-[hsl(10,80%,55%)]">
               <AlertTriangle className="w-8 h-8 text-white" />
@@ -29,7 +29,7 @@ export const NadaSlide6ASP = ({ forCapture = false }: NadaSlide6ASPProps) => {
             <span className="nada-badge-red">Critical Reform</span>
           </div>
           <h3 className="text-2xl font-bold text-foreground mb-4">Strict Liability for Enablers</h3>
-          <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+          <p className="text-base text-muted-foreground mb-6 leading-relaxed">
             Responsibility of the coach and Athlete Support Personnel (ASP) must be <strong className="text-foreground">invariably fixed</strong> in every violation case.
           </p>
           <div className="space-y-4">
@@ -53,7 +53,7 @@ export const NadaSlide6ASP = ({ forCapture = false }: NadaSlide6ASPProps) => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-foreground mb-2">{mandate.title}</h4>
-                  <p className="text-lg text-muted-foreground">{mandate.description}</p>
+                  <p className="text-base text-muted-foreground">{mandate.description}</p>
                 </div>
               </div>
             </NadaGlassmorphicCard>

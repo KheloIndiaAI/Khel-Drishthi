@@ -37,7 +37,7 @@ export const NadaSlideNavigation = ({
             <button
               key={index}
               onClick={() => onGoTo(index)}
-              className="relative w-3 h-3 rounded-full bg-[hsl(210,100%,40%)]/20 hover:bg-[hsl(210,100%,40%)]/40 transition-colors"
+              className="relative w-3.5 h-3.5 rounded-full bg-[hsl(210,100%,40%)]/20 hover:bg-[hsl(210,100%,40%)]/40 transition-colors"
             >
               {currentSlide === index && (
                 <motion.div

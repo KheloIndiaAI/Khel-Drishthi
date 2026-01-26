@@ -30,20 +30,20 @@ export const NadaSlide7Employment = ({ forCapture = false }: NadaSlide7Employmen
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {measures.map((measure, index) => (
-          <NadaGlassmorphicCard key={measure.title} forCapture={forCapture} delay={0.15 + index * 0.1} className="p-8 flex flex-col h-full">
+          <NadaGlassmorphicCard key={measure.title} forCapture={forCapture} delay={0.15 + index * 0.1} className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
-              <div className={`p-4 rounded-xl bg-gradient-to-br ${measure.variant === "blue" ? "from-[hsl(210,100%,40%)] to-[hsl(200,100%,50%)]" : measure.variant === "red" ? "from-[hsl(0,70%,50%)] to-[hsl(10,80%,55%)]" : "from-[hsl(230,60%,20%)] to-[hsl(220,70%,30%)]"}`}>
-                <measure.icon className="w-8 h-8 text-white" />
+              <div className={`p-3 rounded-xl bg-gradient-to-br ${measure.variant === "blue" ? "from-[hsl(210,100%,40%)] to-[hsl(200,100%,50%)]" : measure.variant === "red" ? "from-[hsl(0,70%,50%)] to-[hsl(10,80%,55%)]" : "from-[hsl(230,60%,20%)] to-[hsl(220,70%,30%)]"}`}>
+                <measure.icon className="w-7 h-7 text-white" />
               </div>
               <span className={`nada-badge-${measure.variant}`}>{measure.badge}</span>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-3">{measure.title}</h3>
-            <p className="text-lg text-muted-foreground mb-6 flex-grow leading-relaxed">{measure.description}</p>
-            <div className="space-y-3 pt-6 border-t-2 border-border/30">
+            <h3 className="text-xl font-bold text-foreground mb-2">{measure.title}</h3>
+            <p className="text-base text-muted-foreground mb-4 flex-grow leading-relaxed">{measure.description}</p>
+            <div className="space-y-2 pt-4 border-t-2 border-border/30">
               {measure.targets.map((target) => (
-                <div key={target} className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[hsl(210,100%,40%)]" />
-                  <span className="text-base text-muted-foreground">{target}</span>
+                <div key={target} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[hsl(210,100%,40%)]" />
+                  <span className="text-sm text-muted-foreground">{target}</span>
                 </div>
               ))}
             </div>

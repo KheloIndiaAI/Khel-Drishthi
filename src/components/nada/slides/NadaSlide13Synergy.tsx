@@ -23,26 +23,26 @@ export const NadaSlide13Synergy = ({ forCapture = false }: NadaSlide13SynergyPro
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {agencies.map((agency, index) => (
-          <NadaGlassmorphicCard key={agency.name} forCapture={forCapture} delay={0.1 + index * 0.08} className="p-8">
-            <div className="flex items-start gap-6">
-              <div className={`p-4 rounded-xl bg-gradient-to-br ${variantColors[agency.variant]} flex-shrink-0`}>
-                <agency.icon className="w-8 h-8 text-white" />
+          <NadaGlassmorphicCard key={agency.name} forCapture={forCapture} delay={0.1 + index * 0.08} className="p-6">
+            <div className="flex items-start gap-5">
+              <div className={`p-3 rounded-xl bg-gradient-to-br ${variantColors[agency.variant]} flex-shrink-0`}>
+                <agency.icon className="w-7 h-7 text-white" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-2xl font-bold text-foreground">{agency.name}</h3>
+                  <h3 className="text-xl font-bold text-foreground">{agency.name}</h3>
                   <span className={`nada-badge-${agency.variant}`}>Partner</span>
                 </div>
-                <p className="text-base text-muted-foreground mb-2">{agency.fullName}</p>
-                <p className="text-lg text-muted-foreground leading-relaxed">{agency.role}</p>
+                <p className="text-sm text-muted-foreground mb-1">{agency.fullName}</p>
+                <p className="text-base text-muted-foreground leading-relaxed">{agency.role}</p>
               </div>
             </div>
           </NadaGlassmorphicCard>
         ))}
       </div>
 
-      <motion.div initial={forCapture ? false : { opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }} className="nada-glass-card rounded-xl p-8">
-        <h3 className="text-2xl font-bold text-foreground text-center mb-6">Unified Command Structure</h3>
+      <motion.div initial={forCapture ? false : { opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={forCapture ? { duration: 0 } : { delay: 0.5, duration: 0.4 }} className="nada-glass-card rounded-xl p-6">
+        <h3 className="text-xl font-bold text-foreground text-center mb-5">Unified Command Structure</h3>
         <div className="flex flex-wrap items-center justify-center gap-4">
           {agencies.map((agency, index) => (
             <div key={agency.name} className="flex items-center gap-4">
@@ -51,9 +51,9 @@ export const NadaSlide13Synergy = ({ forCapture = false }: NadaSlide13SynergyPro
             </div>
           ))}
         </div>
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[hsl(210,100%,40%)] to-[hsl(185,80%,45%)] text-white text-xl font-bold">
-            <Shield className="w-6 h-6" />NADA Coordination Hub
+        <div className="mt-6 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-[hsl(210,100%,40%)] to-[hsl(185,80%,45%)] text-white text-lg font-bold">
+            <Shield className="w-5 h-5" />NADA Coordination Hub
           </div>
         </div>
       </motion.div>
