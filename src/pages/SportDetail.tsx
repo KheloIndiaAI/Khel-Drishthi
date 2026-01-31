@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -67,6 +69,21 @@ const SportDetail = () => {
         .select("*")
         .eq("sport_id", sportId)
         .order("event_std");
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!sportId,
+  });
+
+  // Fetch disciplines for this sport
+  const { data: disciplines } = useQuery({
+    queryKey: ["sport-disciplines", sportId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("disciplines")
+        .select("*")
+        .eq("sport_id", sportId)
+        .order("discipline_std");
       if (error) throw error;
       return data;
     },
@@ -175,6 +192,23 @@ const SportDetail = () => {
     enabled: !!sportId,
   });
 
+  // Group events by discipline - must be before early returns
+  const eventsByDiscipline = useMemo(() => {
+    if (!events || !disciplines) return {};
+    
+    return disciplines.reduce((acc, disc) => {
+      const discEvents = events.filter(e => e.discipline_id === disc.discipline_id);
+      acc[disc.discipline_id] = {
+        name: disc.discipline_std,
+        events: discEvents,
+        la28Count: discEvents.filter(e => e.present_la28 === 1).length,
+        ag26Count: discEvents.filter(e => e.present_ag2026 === 1).length,
+        bothCount: discEvents.filter(e => e.present_la28 === 1 && e.present_ag2026 === 1).length
+      };
+      return acc;
+    }, {} as Record<string, { name: string; events: typeof events; la28Count: number; ag26Count: number; bothCount: number }>);
+  }, [events, disciplines]);
+
   if (sportLoading) {
     return (
       <DashboardLayout>
@@ -217,6 +251,11 @@ const SportDetail = () => {
   const menEvents = events?.filter((e) => e.gender_std === "Men") || [];
   const womenEvents = events?.filter((e) => e.gender_std === "Women") || [];
   const mixedEvents = events?.filter((e) => e.gender_std === "Mixed") || [];
+
+  // Event type breakdown
+  const individualEvents = events?.filter((e) => e.event_type_std === "Individual") || [];
+  const teamEvents = events?.filter((e) => e.event_type_std === "Team") || [];
+  const duetEvents = events?.filter((e) => e.event_type_std === "Duet") || [];
   
   const ncoeAthletes = ncoeCapacity?.reduce((sum, r) => sum + (r.ex_grand_total || 0), 0) || 0;
   const ncoeSanctioned = ncoeCapacity?.reduce((sum, r) => sum + (r.san_grand_total || 0), 0) || 0;
@@ -554,19 +593,92 @@ const SportDetail = () => {
             </div>
           </div>
 
+          {/* Event Type Distribution */}
+          {(individualEvents.length > 0 || teamEvents.length > 0 || duetEvents.length > 0) && (
+            <div className="mb-6">
+              <h4 className="text-xs text-muted-foreground uppercase tracking-wide mb-3">Event Type Distribution</h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-emerald-500/10 rounded-lg p-3 text-center border border-emerald-500/20">
+                  <p className="text-2xl font-bold text-emerald-600">{individualEvents.length}</p>
+                  <p className="text-xs text-muted-foreground">Individual Events</p>
+                </div>
+                <div className="bg-amber-500/10 rounded-lg p-3 text-center border border-amber-500/20">
+                  <p className="text-2xl font-bold text-amber-600">{teamEvents.length}</p>
+                  <p className="text-xs text-muted-foreground">Team Events</p>
+                </div>
+                <div className="bg-cyan-500/10 rounded-lg p-3 text-center border border-cyan-500/20">
+                  <p className="text-2xl font-bold text-cyan-600">{duetEvents.length}</p>
+                  <p className="text-xs text-muted-foreground">Duet Events</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Events by Discipline */}
+          {disciplines && disciplines.length > 1 && (
+            <div className="mb-6">
+              <h4 className="text-xs text-muted-foreground uppercase tracking-wide mb-3">Events by Discipline</h4>
+              <Accordion type="single" collapsible className="w-full">
+                {disciplines.map((disc) => {
+                  const discData = eventsByDiscipline[disc.discipline_id];
+                  if (!discData || discData.events.length === 0) return null;
+                  return (
+                    <AccordionItem key={disc.discipline_id} value={disc.discipline_id}>
+                      <AccordionTrigger className="hover:no-underline">
+                        <div className="flex items-center justify-between w-full pr-4">
+                          <span className="font-medium">{discData.name}</span>
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="text-saffron">{discData.la28Count} LA28</span>
+                            <span className="text-india-green">{discData.ag26Count} AG26</span>
+                          </div>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-1 max-h-48 overflow-y-auto">
+                          {discData.events.map((event) => (
+                            <div key={event.event_id} className="flex items-center justify-between text-sm py-1.5 px-2 rounded hover:bg-muted/50">
+                              <span className="truncate flex-1">{event.event_std}</span>
+                              <div className="flex gap-1.5 ml-2">
+                                <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                                  {event.gender_std}
+                                </Badge>
+                                {event.event_type_std && (
+                                  <Badge variant="outline" className="text-[10px] h-5">
+                                    {event.event_type_std}
+                                  </Badge>
+                                )}
+                                <div className="flex gap-0.5">
+                                  {event.present_la28 === 1 && <div className="h-2 w-2 rounded-full bg-saffron" title="LA28" />}
+                                  {event.present_ag2026 === 1 && <div className="h-2 w-2 rounded-full bg-india-green" title="AG26" />}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+            </div>
+          )}
+
           {/* Event Lists by Category */}
           <div>
             <h4 className="text-xs text-muted-foreground uppercase tracking-wide mb-3">Event Details</h4>
             <Tabs defaultValue="common" className="w-full">
-              <TabsList className="w-full grid grid-cols-4 h-9 mb-3">
+              <TabsList className="w-full grid grid-cols-5 h-9 mb-3">
                 <TabsTrigger value="common" className="text-xs gap-1">
                   <span className="hidden sm:inline">Common</span> ({bothGamesEvents.length})
                 </TabsTrigger>
                 <TabsTrigger value="la28only" className="text-xs gap-1">
-                  <span className="hidden sm:inline">LA28 Only</span> ({la28OnlyEvents.length})
+                  <span className="hidden sm:inline">LA28</span> ({la28OnlyEvents.length})
                 </TabsTrigger>
                 <TabsTrigger value="ag26only" className="text-xs gap-1">
-                  <span className="hidden sm:inline">AG26 Only</span> ({ag26OnlyEvents.length})
+                  <span className="hidden sm:inline">AG26</span> ({ag26OnlyEvents.length})
+                </TabsTrigger>
+                <TabsTrigger value="compare" className="text-xs gap-1">
+                  <span className="hidden sm:inline">Compare</span>
                 </TabsTrigger>
                 <TabsTrigger value="all" className="text-xs gap-1">
                   <span className="hidden sm:inline">All</span> ({events?.length || 0})
@@ -656,6 +768,63 @@ const SportDetail = () => {
                     ) : (
                       <p className="text-sm text-muted-foreground text-center py-4">No events exclusive to AG26</p>
                     )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Compare Tab - Side by Side */}
+              <TabsContent value="compare" className="mt-0">
+                <Card>
+                  <CardContent className="pt-3 pb-2">
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Side-by-side comparison of events across both games
+                    </p>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="text-xs">Event</TableHead>
+                            <TableHead className="text-xs">Gender</TableHead>
+                            <TableHead className="text-xs text-center">LA28</TableHead>
+                            <TableHead className="text-xs text-center">AG26</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {events && events.length > 0 ? (
+                            events.map((event) => (
+                              <TableRow key={event.event_id}>
+                                <TableCell className="text-xs py-2 max-w-[200px] truncate">{event.event_std}</TableCell>
+                                <TableCell className="text-xs py-2">
+                                  <Badge variant="outline" className={`text-[10px] h-5 ${event.gender_std === "Men" ? "border-blue-300 text-blue-600" : event.gender_std === "Women" ? "border-pink-300 text-pink-600" : "border-purple-300 text-purple-600"}`}>
+                                    {event.gender_std}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-center py-2">
+                                  {event.present_la28 === 1 ? (
+                                    <div className="h-3 w-3 rounded-full bg-saffron mx-auto" title="In LA28" />
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </TableCell>
+                                <TableCell className="text-center py-2">
+                                  {event.present_ag2026 === 1 ? (
+                                    <div className="h-3 w-3 rounded-full bg-india-green mx-auto" title="In AG26" />
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={4} className="text-center py-4 text-muted-foreground">
+                                No events found
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
