@@ -8,7 +8,7 @@ import {
   Zap, Flame, Crown, Shield, type LucideIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { GlobalSearchTrigger } from "@/components/search/GlobalSearchTrigger";
 
 interface Sport {
   sport_id: string;
