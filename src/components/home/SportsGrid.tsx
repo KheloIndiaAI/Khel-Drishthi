@@ -382,16 +382,11 @@ const SportsGrid = ({ sports }: SportsGridProps) => {
     <div className="space-y-6">
       {/* Search + Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* Search */}
+        {/* Global Search Trigger */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search sports..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
+          <GlobalSearchTrigger />
         </div>
+
         
         {/* Filter Tabs */}
         <div className="flex flex-wrap gap-2">
