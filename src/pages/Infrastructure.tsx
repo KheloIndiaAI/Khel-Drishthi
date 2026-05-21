@@ -663,6 +663,12 @@ const Infrastructure = () => {
         </Button>
       </div>
 
+      {/* Global Search */}
+      <div className="mb-6 max-w-2xl">
+        <GlobalSearchTrigger placeholder="Search sports, states, districts, centres, events…" />
+      </div>
+
+
       {/* Summary Dashboard */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
         <Card className="col-span-2">
