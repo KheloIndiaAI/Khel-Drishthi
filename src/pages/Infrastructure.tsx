@@ -31,6 +31,7 @@ import { StateDetail } from "@/components/infrastructure/StateDetail";
 import { useRegionMappings } from "@/hooks/useRegionMappings";
 import { REGION_COLORS, getRegionDisplayName } from "@/lib/regionMapping";
 import PageSEO, { infrastructurePageSchema, infrastructureBreadcrumbs } from "@/components/seo/PageSEO";
+import { GlobalSearchTrigger } from "@/components/search/GlobalSearchTrigger";
 
 const Infrastructure = () => {
   const [mainView, setMainView] = useState<ViewMode>("region");
