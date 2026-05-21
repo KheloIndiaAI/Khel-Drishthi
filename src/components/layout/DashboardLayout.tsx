@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { GlobalSearchProvider } from "@/components/search/GlobalSearch";
 
 interface DashboardLayoutProps {
   children: ReactNode;
