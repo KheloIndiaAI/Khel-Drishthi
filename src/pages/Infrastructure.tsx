@@ -31,6 +31,7 @@ import { StateDetail } from "@/components/infrastructure/StateDetail";
 import { useRegionMappings } from "@/hooks/useRegionMappings";
 import { REGION_COLORS, getRegionDisplayName } from "@/lib/regionMapping";
 import PageSEO, { infrastructurePageSchema, infrastructureBreadcrumbs } from "@/components/seo/PageSEO";
+import { GlobalSearchTrigger } from "@/components/search/GlobalSearchTrigger";
 
 const Infrastructure = () => {
   const [mainView, setMainView] = useState<ViewMode>("region");
@@ -661,6 +662,12 @@ const Infrastructure = () => {
           </Link>
         </Button>
       </div>
+
+      {/* Global Search */}
+      <div className="mb-6 max-w-2xl">
+        <GlobalSearchTrigger placeholder="Search sports, states, districts, centres, events…" />
+      </div>
+
 
       {/* Summary Dashboard */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
