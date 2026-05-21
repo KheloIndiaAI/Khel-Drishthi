@@ -281,6 +281,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </div>
       </footer>
     </div>
+    </GlobalSearchProvider>
   );
 };
 
