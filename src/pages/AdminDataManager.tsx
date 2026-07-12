@@ -151,29 +151,91 @@ const AdminDataManager = () => {
     setEditedData({});
   };
 
-  const exportToCSV = () => {
-    if (data.length === 0) return;
-
-    const headers = Object.keys(data[0]);
-    const csvContent = [
+  // Convert an array of rows to CSV text
+  const rowsToCSV = (rows: Record<string, unknown>[]): string => {
+    if (rows.length === 0) return '';
+    const headers = Object.keys(rows[0]);
+    const escape = (v: unknown) => {
+      if (v === null || v === undefined) return '';
+      const s = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    return [
       headers.join(','),
-      ...data.map(row => 
-        headers.map(header => {
-          const value = row[header];
-          if (value === null || value === undefined) return '';
-          const stringValue = String(value);
-          return stringValue.includes(',') || stringValue.includes('"') 
-            ? `"${stringValue.replace(/"/g, '""')}"` 
-            : stringValue;
-        }).join(',')
-      )
+      ...rows.map(r => headers.map(h => escape(r[h])).join(',')),
     ].join('\n');
+  };
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Fetch every row from a table using 1000-row batching to bypass PostgREST limits
+  const fetchAllRows = async (tableName: string): Promise<Record<string, unknown>[]> => {
+    const batchSize = 1000;
+    const all: Record<string, unknown>[] = [];
+    let from = 0;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { data: batch, error } = await supabase
+        .from(tableName as never)
+        .select('*')
+        .range(from, from + batchSize - 1);
+      if (error) throw error;
+      if (!batch || batch.length === 0) break;
+      all.push(...(batch as Record<string, unknown>[]));
+      if (batch.length < batchSize) break;
+      from += batchSize;
+    }
+    return all;
+  };
+
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${activeTable}_export_${new Date().toISOString().split('T')[0]}.csv`;
+    link.href = url;
+    link.download = filename;
     link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  const exportCurrentTable = async () => {
+    setExportingCurrent(true);
+    try {
+      const rows = await fetchAllRows(activeTable);
+      if (rows.length === 0) {
+        toast({ title: "No data", description: `${activeTable} is empty.` });
+        return;
+      }
+      const csv = rowsToCSV(rows);
+      downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
+        `${activeTable}_${new Date().toISOString().split('T')[0]}.csv`);
+      toast({ title: "Exported", description: `${rows.length} rows from ${activeTable}` });
+    } catch (e) {
+      toast({ title: "Export failed", description: String(e), variant: "destructive" });
+    } finally {
+      setExportingCurrent(false);
+    }
+  };
+
+  const exportAllTables = async () => {
+    setExportingAll(true);
+    try {
+      const zip = new JSZip();
+      let totalRows = 0;
+      for (const t of EXPORT_ALL_TABLES) {
+        try {
+          const rows = await fetchAllRows(t);
+          totalRows += rows.length;
+          zip.file(`${t}.csv`, rowsToCSV(rows));
+        } catch (err) {
+          zip.file(`${t}__ERROR.txt`, `Failed to export ${t}: ${String(err)}`);
+        }
+      }
+      const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+      downloadBlob(blob, `khel-drishti-data_${new Date().toISOString().split('T')[0]}.zip`);
+      toast({ title: "Exported", description: `${EXPORT_ALL_TABLES.length} tables · ${totalRows.toLocaleString()} rows` });
+    } catch (e) {
+      toast({ title: "Export failed", description: String(e), variant: "destructive" });
+    } finally {
+      setExportingAll(false);
+    }
   };
 
   const filteredData = data.filter(row =>
