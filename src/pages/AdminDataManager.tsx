@@ -7,11 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Lock, Search, Download, Save, X, Edit2 } from "lucide-react";
+import { Lock, Search, Download, Save, X, Edit2, Archive, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@supabase/supabase-js";
+import JSZip from "jszip";
 
 type TableName = 'sports' | 'centres' | 'events' | 'disciplines' | 'ncoe_capacity' | 'stc_capacity' | 'olympic_medals' | 'olympic_participation';
+
+// Tables included in the "Export All" zip bundle
+const EXPORT_ALL_TABLES: string[] = [
+  'sports', 'disciplines', 'events', 'event_overlap',
+  'centres', 'centre_sport_links', 'regional_centres', 'region_state_mappings',
+  'ncoe_capacity', 'stc_capacity',
+  'stc_detailed_data', 'stc_discipline_strength', 'stc_competition_summary',
+  'stc_equipment_gaps', 'stc_staff_roster',
+  'olympic_medals', 'olympic_participation', 'olympic_timeline',
+  'eco_categories', 'sport_notes',
+];
 
 const TABLES: { name: TableName; label: string; editable: string[] }[] = [
   { name: 'sports', label: 'Sports', editable: ['sport_name', 'sport_category', 'is_tops', 'is_tagg', 'is_teams'] },
