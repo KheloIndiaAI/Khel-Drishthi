@@ -300,6 +300,35 @@ const Auth = () => {
                     {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <LogIn className="h-4 w-4 mr-2" />}
                     Sign In
                   </Button>
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      className="text-xs text-muted-foreground hover:text-primary underline underline-offset-2"
+                      onClick={async () => {
+                        const target = loginMode === 'email' ? email : (username ? `${username.trim().toLowerCase()}${DOMAIN}` : '');
+                        if (!target) {
+                          toast({ title: "Enter your email", description: "Switch to Email mode and enter the account email to receive a reset link.", variant: "destructive" });
+                          return;
+                        }
+                        if (loginMode === 'username' && target.endsWith(DOMAIN)) {
+                          toast({ title: "Use email mode", description: "Password reset needs a real email address. Switch to Email login mode.", variant: "destructive" });
+                          return;
+                        }
+                        setLoading(true);
+                        const { error } = await supabase.auth.resetPasswordForEmail(target, {
+                          redirectTo: `${window.location.origin}/reset-password`,
+                        });
+                        setLoading(false);
+                        if (error) {
+                          toast({ title: "Reset failed", description: error.message, variant: "destructive" });
+                        } else {
+                          toast({ title: "Check your inbox", description: `Password reset link sent to ${target}.` });
+                        }
+                      }}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                 </form>
               </TabsContent>
               
