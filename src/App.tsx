@@ -24,6 +24,7 @@ const SchemaDocumentation = lazy(() => import("./pages/SchemaDocumentation"));
 
 // Lazy load auth routes (except Auth which is critical)
 const FirstAdminSetup = lazy(() => import("./pages/FirstAdminSetup"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // Lazy load admin routes (bundled together)
 const Admin = lazy(() => import("./pages/Admin"));
@@ -91,6 +92,7 @@ const App = () => (
               {/* Auth routes */}
               <Route path="/auth" element={<Auth />} />
               <Route path="/setup" element={<FirstAdminSetup />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               
               {/* Admin routes */}
               <Route path="/admin" element={<Admin />} />
