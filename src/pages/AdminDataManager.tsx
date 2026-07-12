@@ -46,6 +46,8 @@ const AdminDataManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedData, setEditedData] = useState<Record<string, unknown>>({});
+  const [exportingAll, setExportingAll] = useState(false);
+  const [exportingCurrent, setExportingCurrent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
