@@ -7,11 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Lock, Search, Download, Save, X, Edit2 } from "lucide-react";
+import { Lock, Search, Download, Save, X, Edit2, Archive, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@supabase/supabase-js";
+import JSZip from "jszip";
 
 type TableName = 'sports' | 'centres' | 'events' | 'disciplines' | 'ncoe_capacity' | 'stc_capacity' | 'olympic_medals' | 'olympic_participation';
+
+// Tables included in the "Export All" zip bundle
+const EXPORT_ALL_TABLES: string[] = [
+  'sports', 'disciplines', 'events', 'event_overlap',
+  'centres', 'centre_sport_links', 'regional_centres', 'region_state_mappings',
+  'ncoe_capacity', 'stc_capacity',
+  'stc_detailed_data', 'stc_discipline_strength', 'stc_competition_summary',
+  'stc_equipment_gaps', 'stc_staff_roster',
+  'olympic_medals', 'olympic_participation', 'olympic_timeline',
+  'eco_categories', 'sport_notes',
+];
 
 const TABLES: { name: TableName; label: string; editable: string[] }[] = [
   { name: 'sports', label: 'Sports', editable: ['sport_name', 'sport_category', 'is_tops', 'is_tagg', 'is_teams'] },
@@ -34,6 +46,8 @@ const AdminDataManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedData, setEditedData] = useState<Record<string, unknown>>({});
+  const [exportingAll, setExportingAll] = useState(false);
+  const [exportingCurrent, setExportingCurrent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -137,29 +151,91 @@ const AdminDataManager = () => {
     setEditedData({});
   };
 
-  const exportToCSV = () => {
-    if (data.length === 0) return;
-
-    const headers = Object.keys(data[0]);
-    const csvContent = [
+  // Convert an array of rows to CSV text
+  const rowsToCSV = (rows: Record<string, unknown>[]): string => {
+    if (rows.length === 0) return '';
+    const headers = Object.keys(rows[0]);
+    const escape = (v: unknown) => {
+      if (v === null || v === undefined) return '';
+      const s = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    return [
       headers.join(','),
-      ...data.map(row => 
-        headers.map(header => {
-          const value = row[header];
-          if (value === null || value === undefined) return '';
-          const stringValue = String(value);
-          return stringValue.includes(',') || stringValue.includes('"') 
-            ? `"${stringValue.replace(/"/g, '""')}"` 
-            : stringValue;
-        }).join(',')
-      )
+      ...rows.map(r => headers.map(h => escape(r[h])).join(',')),
     ].join('\n');
+  };
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Fetch every row from a table using 1000-row batching to bypass PostgREST limits
+  const fetchAllRows = async (tableName: string): Promise<Record<string, unknown>[]> => {
+    const batchSize = 1000;
+    const all: Record<string, unknown>[] = [];
+    let from = 0;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { data: batch, error } = await supabase
+        .from(tableName as never)
+        .select('*')
+        .range(from, from + batchSize - 1);
+      if (error) throw error;
+      if (!batch || batch.length === 0) break;
+      all.push(...(batch as Record<string, unknown>[]));
+      if (batch.length < batchSize) break;
+      from += batchSize;
+    }
+    return all;
+  };
+
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${activeTable}_export_${new Date().toISOString().split('T')[0]}.csv`;
+    link.href = url;
+    link.download = filename;
     link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  const exportCurrentTable = async () => {
+    setExportingCurrent(true);
+    try {
+      const rows = await fetchAllRows(activeTable);
+      if (rows.length === 0) {
+        toast({ title: "No data", description: `${activeTable} is empty.` });
+        return;
+      }
+      const csv = rowsToCSV(rows);
+      downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
+        `${activeTable}_${new Date().toISOString().split('T')[0]}.csv`);
+      toast({ title: "Exported", description: `${rows.length} rows from ${activeTable}` });
+    } catch (e) {
+      toast({ title: "Export failed", description: String(e), variant: "destructive" });
+    } finally {
+      setExportingCurrent(false);
+    }
+  };
+
+  const exportAllTables = async () => {
+    setExportingAll(true);
+    try {
+      const zip = new JSZip();
+      let totalRows = 0;
+      for (const t of EXPORT_ALL_TABLES) {
+        try {
+          const rows = await fetchAllRows(t);
+          totalRows += rows.length;
+          zip.file(`${t}.csv`, rowsToCSV(rows));
+        } catch (err) {
+          zip.file(`${t}__ERROR.txt`, `Failed to export ${t}: ${String(err)}`);
+        }
+      }
+      const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+      downloadBlob(blob, `khel-drishti-data_${new Date().toISOString().split('T')[0]}.zip`);
+      toast({ title: "Exported", description: `${EXPORT_ALL_TABLES.length} tables · ${totalRows.toLocaleString()} rows` });
+    } catch (e) {
+      toast({ title: "Export failed", description: String(e), variant: "destructive" });
+    } finally {
+      setExportingAll(false);
+    }
   };
 
   const filteredData = data.filter(row =>
@@ -207,11 +283,18 @@ const AdminDataManager = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
         <h1 className="font-display text-3xl md:text-4xl">Data Manager</h1>
-        <Button onClick={exportToCSV} variant="outline" className="gap-2">
-          <Download className="h-4 w-4" /> Export CSV
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button onClick={exportCurrentTable} variant="outline" className="gap-2" disabled={exportingCurrent}>
+            {exportingCurrent ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            Export current table
+          </Button>
+          <Button onClick={exportAllTables} className="gap-2" disabled={exportingAll}>
+            {exportingAll ? <Loader2 className="h-4 w-4 animate-spin" /> : <Archive className="h-4 w-4" />}
+            Export all data (ZIP)
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTable} onValueChange={(v) => setActiveTable(v as TableName)}>
