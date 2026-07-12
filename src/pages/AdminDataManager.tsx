@@ -283,11 +283,18 @@ const AdminDataManager = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
         <h1 className="font-display text-3xl md:text-4xl">Data Manager</h1>
-        <Button onClick={exportToCSV} variant="outline" className="gap-2">
-          <Download className="h-4 w-4" /> Export CSV
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button onClick={exportCurrentTable} variant="outline" className="gap-2" disabled={exportingCurrent}>
+            {exportingCurrent ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            Export current table
+          </Button>
+          <Button onClick={exportAllTables} className="gap-2" disabled={exportingAll}>
+            {exportingAll ? <Loader2 className="h-4 w-4 animate-spin" /> : <Archive className="h-4 w-4" />}
+            Export all data (ZIP)
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTable} onValueChange={(v) => setActiveTable(v as TableName)}>
