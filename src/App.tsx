@@ -99,6 +99,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/data" element={<AdminDataManager />} />
+              <Route path="/admin/export" element={<AdminExport />} />
               <Route path="/admin/forms" element={<FormBuilder />} />
               <Route path="/admin/users" element={<UserManagement />} />
               <Route path="/admin/editor" element={<DataEditor />} />
