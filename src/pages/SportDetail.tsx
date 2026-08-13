@@ -1045,7 +1045,13 @@ const SportDetail = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* Global Olympic Context */}
+          <div className="mt-6">
+            <GlobalContextSection sportId={sportId!} />
+          </div>
         </div>
+
 
         {/* Right Column - Notes */}
         <div className="space-y-4">
