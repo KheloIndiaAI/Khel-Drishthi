@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut, MapPin } from "lucide-react";
+import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut, MapPin, Download } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 
 const Admin = () => {
