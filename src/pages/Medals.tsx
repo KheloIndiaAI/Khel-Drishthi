@@ -176,12 +176,17 @@ const Medals = () => {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Total</p>
-                <p className="text-3xl font-display">{filteredMedals?.length || 0}</p>
+                <p className="text-3xl font-display">{filteredOfficial?.length || 0}</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <p className="text-xs text-muted-foreground mb-6 -mt-3">
+        India's 1924 mountaineering prize (Prix olympique d'alpinisme) is preserved in our records but excluded from official IOC tallies.
+      </p>
+
 
       {/* Charts Row */}
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
