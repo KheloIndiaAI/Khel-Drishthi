@@ -619,7 +619,7 @@ export type Database = {
       }
       oly_athletes: {
         Row: {
-          athlete_id: number
+          athlete_id: string
           birth_year: number | null
           country_noc: string | null
           display_name: string | null
@@ -636,7 +636,7 @@ export type Database = {
           weight_kg: number | null
         }
         Insert: {
-          athlete_id: number
+          athlete_id: string
           birth_year?: number | null
           country_noc?: string | null
           display_name?: string | null
@@ -653,7 +653,7 @@ export type Database = {
           weight_kg?: number | null
         }
         Update: {
-          athlete_id?: number
+          athlete_id?: string
           birth_year?: number | null
           country_noc?: string | null
           display_name?: string | null
@@ -823,7 +823,7 @@ export type Database = {
       }
       oly_medals: {
         Row: {
-          athlete_id: number | null
+          athlete_id: string | null
           athlete_name: string | null
           canonical_discipline: string | null
           country_noc: string | null
@@ -836,7 +836,7 @@ export type Database = {
           year: number | null
         }
         Insert: {
-          athlete_id?: number | null
+          athlete_id?: string | null
           athlete_name?: string | null
           canonical_discipline?: string | null
           country_noc?: string | null
@@ -849,7 +849,7 @@ export type Database = {
           year?: number | null
         }
         Update: {
-          athlete_id?: number | null
+          athlete_id?: string | null
           athlete_name?: string | null
           canonical_discipline?: string | null
           country_noc?: string | null
@@ -880,7 +880,7 @@ export type Database = {
       }
       oly_participations: {
         Row: {
-          athlete_id: number | null
+          athlete_id: string | null
           canonical_discipline: string | null
           country_noc: string | null
           data_completeness: string | null
@@ -894,7 +894,7 @@ export type Database = {
           year: number | null
         }
         Insert: {
-          athlete_id?: number | null
+          athlete_id?: string | null
           canonical_discipline?: string | null
           country_noc?: string | null
           data_completeness?: string | null
@@ -908,7 +908,7 @@ export type Database = {
           year?: number | null
         }
         Update: {
-          athlete_id?: number | null
+          athlete_id?: string | null
           canonical_discipline?: string | null
           country_noc?: string | null
           data_completeness?: string | null
