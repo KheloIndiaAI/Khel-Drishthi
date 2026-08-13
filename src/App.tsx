@@ -29,6 +29,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 // Lazy load admin routes (bundled together)
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminDataManager = lazy(() => import("./pages/AdminDataManager"));
+const AdminExport = lazy(() => import("./pages/AdminExport"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const FormBuilder = lazy(() => import("./pages/FormBuilder"));
 const PublicForm = lazy(() => import("./pages/PublicForm"));
@@ -98,6 +99,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/data" element={<AdminDataManager />} />
+              <Route path="/admin/export" element={<AdminExport />} />
               <Route path="/admin/forms" element={<FormBuilder />} />
               <Route path="/admin/users" element={<UserManagement />} />
               <Route path="/admin/editor" element={<DataEditor />} />

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut, MapPin } from "lucide-react";
+import { Upload, Users, Shield, Lock, Database, FileText, BarChart3, LogOut, MapPin, Download } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 
 const Admin = () => {
@@ -147,6 +147,13 @@ const Admin = () => {
           <CardContent>
             <p className="text-muted-foreground mb-4">View, search, edit, and export all database tables</p>
             <Link to="/admin/data"><Button className="w-full">Manage Data</Button></Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><Download className="h-5 w-5" />Export &amp; Documentation</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">Download all portal data (CSV) and the full schema, design and navigation reference</p>
+            <Link to="/admin/export"><Button className="w-full">Open Exports</Button></Link>
           </CardContent>
         </Card>
         <Card>

@@ -11,6 +11,7 @@ import { Lock, Search, Download, Save, X, Edit2, Archive, Loader2 } from "lucide
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@supabase/supabase-js";
 import JSZip from "jszip";
+import { fetchAllRows, rowsToCSV, downloadBlob } from "@/lib/exportAllData";
 
 type TableName = 'sports' | 'centres' | 'events' | 'disciplines' | 'ncoe_capacity' | 'stc_capacity' | 'olympic_medals' | 'olympic_participation';
 
@@ -151,49 +152,6 @@ const AdminDataManager = () => {
     setEditedData({});
   };
 
-  // Convert an array of rows to CSV text
-  const rowsToCSV = (rows: Record<string, unknown>[]): string => {
-    if (rows.length === 0) return '';
-    const headers = Object.keys(rows[0]);
-    const escape = (v: unknown) => {
-      if (v === null || v === undefined) return '';
-      const s = typeof v === 'object' ? JSON.stringify(v) : String(v);
-      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-    };
-    return [
-      headers.join(','),
-      ...rows.map(r => headers.map(h => escape(r[h])).join(',')),
-    ].join('\n');
-  };
-
-  // Fetch every row from a table using 1000-row batching to bypass PostgREST limits
-  const fetchAllRows = async (tableName: string): Promise<Record<string, unknown>[]> => {
-    const batchSize = 1000;
-    const all: Record<string, unknown>[] = [];
-    let from = 0;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const { data: batch, error } = await supabase
-        .from(tableName as never)
-        .select('*')
-        .range(from, from + batchSize - 1);
-      if (error) throw error;
-      if (!batch || batch.length === 0) break;
-      all.push(...(batch as Record<string, unknown>[]));
-      if (batch.length < batchSize) break;
-      from += batchSize;
-    }
-    return all;
-  };
-
-  const downloadBlob = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
 
   const exportCurrentTable = async () => {
     setExportingCurrent(true);
