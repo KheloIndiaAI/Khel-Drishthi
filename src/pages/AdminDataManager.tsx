@@ -11,6 +11,7 @@ import { Lock, Search, Download, Save, X, Edit2, Archive, Loader2 } from "lucide
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@supabase/supabase-js";
 import JSZip from "jszip";
+import { fetchAllRows, rowsToCSV, downloadBlob } from "@/lib/exportAllData";
 
 type TableName = 'sports' | 'centres' | 'events' | 'disciplines' | 'ncoe_capacity' | 'stc_capacity' | 'olympic_medals' | 'olympic_participation';
 
