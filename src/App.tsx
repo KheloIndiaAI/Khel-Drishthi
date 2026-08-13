@@ -19,6 +19,7 @@ const Infrastructure = lazy(() => import("./pages/Infrastructure"));
 const InfrastructureInsights = lazy(() => import("./pages/InfrastructureInsights"));
 const Capacity = lazy(() => import("./pages/Capacity"));
 const Medals = lazy(() => import("./pages/Medals"));
+const Benchmark = lazy(() => import("./pages/Benchmark"));
 const GeographicAnalytics = lazy(() => import("./pages/GeographicAnalytics"));
 const SchemaDocumentation = lazy(() => import("./pages/SchemaDocumentation"));
 
@@ -89,6 +90,7 @@ const App = () => (
               <Route path="/geographic" element={<GeographicAnalytics />} />
               <Route path="/medals" element={<Medals />} />
               <Route path="/history" element={<Medals />} />
+              <Route path="/benchmark" element={<Benchmark />} />
               
               {/* Auth routes */}
               <Route path="/auth" element={<Auth />} />
