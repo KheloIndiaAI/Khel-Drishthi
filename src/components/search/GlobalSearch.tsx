@@ -37,6 +37,8 @@ export const GlobalSearchProvider = ({ children }: { children: ReactNode }) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { index, isLoading } = useGlobalSearchIndex();
+  const { athletes, isLoading: athletesLoading } = useAthleteSearch(query);
+
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
