@@ -29,6 +29,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 // Lazy load admin routes (bundled together)
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminDataManager = lazy(() => import("./pages/AdminDataManager"));
+const AdminExport = lazy(() => import("./pages/AdminExport"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const FormBuilder = lazy(() => import("./pages/FormBuilder"));
 const PublicForm = lazy(() => import("./pages/PublicForm"));
