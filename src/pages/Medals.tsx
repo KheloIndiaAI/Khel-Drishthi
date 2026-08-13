@@ -286,8 +286,8 @@ const Medals = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Sports</SelectItem>
-            {sports.map(sport => (
-              <SelectItem key={sport} value={sport!}>{sport}</SelectItem>
+            {sportOptions.map(sport => (
+              <SelectItem key={sport.key} value={sport.key}>{sport.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
