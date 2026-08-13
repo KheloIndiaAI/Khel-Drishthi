@@ -98,11 +98,11 @@ const Medals = () => {
   const pieData = sportMedals 
     ? Object.entries(sportMedals)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 6)
+        .slice(0, 10)
         .map(([name, value]) => ({ name, value }))
     : [];
 
-  const COLORS = ['hsl(var(--primary))', 'hsl(var(--saffron))', 'hsl(var(--india-green))', '#8884d8', '#82ca9d', '#ffc658'];
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--saffron))', 'hsl(var(--india-green))', '#8884d8', '#82ca9d', '#ffc658', '#e07a5f', '#3d84a8', '#b56576', '#6d597a'];
 
   return (
     <DashboardLayout>
