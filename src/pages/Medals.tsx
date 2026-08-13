@@ -38,18 +38,33 @@ const Medals = () => {
     },
   });
 
-  // Get unique sports and decades
-  const sports = [...new Set(medals?.map(m => m.sport_std).filter(Boolean))].sort();
+  // Sport options keyed by sport_id where available, falling back to sport_std
+  const sportOptions = Object.values(
+    (medals || []).reduce((acc: Record<string, { key: string; label: string }>, m) => {
+      const label = m.sport_std || m.sport_raw || "Unknown";
+      const key = m.sport_id || label;
+      if (!acc[key]) acc[key] = { key, label };
+      return acc;
+    }, {})
+  ).sort((a, b) => a.label.localeCompare(b.label));
+
   const decades = [...new Set(medals?.map(m => Math.floor(m.year / 10) * 10))].sort((a, b) => b - a);
 
-  // Filter medals
-  const filteredMedals = medals?.filter(m => {
-    const matchesSport = sportFilter === "all" || m.sport_std === sportFilter;
+  const matchesFilters = (m: { sport_id: string | null; sport_std: string | null; sport_raw: string | null; year: number }) => {
+    const key = m.sport_id || m.sport_std || m.sport_raw || "Unknown";
+    const matchesSport = sportFilter === "all" || key === sportFilter;
     const matchesDecade = decadeFilter === "all" || Math.floor(m.year / 10) * 10 === parseInt(decadeFilter);
     return matchesSport && matchesDecade;
-  });
+  };
 
-  // Process medal data for area chart
+  // Full list (includes the 1924 Alpinism prize) for the winners list
+  const filteredMedals = medals?.filter(matchesFilters);
+
+  // Official IOC-aligned records exclude the 1924 Prix olympique d'alpinisme
+  const officialMedals = medals?.filter(m => m.sport_raw !== "Alpinism");
+  const filteredOfficial = officialMedals?.filter(matchesFilters);
+
+  // Process medal data for area chart (all Games years with a medal)
   const medalChartData = medals
     ? Object.entries(
         medals.reduce((acc: Record<number, { gold: number; silver: number; bronze: number; total: number }>, medal) => {
@@ -67,10 +82,11 @@ const Medals = () => {
       })).sort((a, b) => a.year - b.year)
     : [];
 
-  // Medal counts by type
-  const goldCount = filteredMedals?.filter(m => m.medal === "Gold").length || 0;
-  const silverCount = filteredMedals?.filter(m => m.medal === "Silver").length || 0;
-  const bronzeCount = filteredMedals?.filter(m => m.medal === "Bronze").length || 0;
+  // Medal counts by type (official tallies)
+  const goldCount = filteredOfficial?.filter(m => m.medal === "Gold").length || 0;
+  const silverCount = filteredOfficial?.filter(m => m.medal === "Silver").length || 0;
+  const bronzeCount = filteredOfficial?.filter(m => m.medal === "Bronze").length || 0;
+
 
   // Sport-wise medal distribution
   const sportMedals = medals?.reduce((acc: Record<string, number>, m) => {
@@ -82,11 +98,11 @@ const Medals = () => {
   const pieData = sportMedals 
     ? Object.entries(sportMedals)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 6)
+        .slice(0, 10)
         .map(([name, value]) => ({ name, value }))
     : [];
 
-  const COLORS = ['hsl(var(--primary))', 'hsl(var(--saffron))', 'hsl(var(--india-green))', '#8884d8', '#82ca9d', '#ffc658'];
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--saffron))', 'hsl(var(--india-green))', '#8884d8', '#82ca9d', '#ffc658', '#e07a5f', '#3d84a8', '#b56576', '#6d597a'];
 
   return (
     <DashboardLayout>
@@ -160,12 +176,17 @@ const Medals = () => {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Total</p>
-                <p className="text-3xl font-display">{filteredMedals?.length || 0}</p>
+                <p className="text-3xl font-display">{filteredOfficial?.length || 0}</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <p className="text-xs text-muted-foreground mb-6 -mt-3">
+        India's 1924 mountaineering prize (Prix olympique d'alpinisme) is preserved in our records but excluded from official IOC tallies.
+      </p>
+
 
       {/* Charts Row */}
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
@@ -270,8 +291,8 @@ const Medals = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Sports</SelectItem>
-            {sports.map(sport => (
-              <SelectItem key={sport} value={sport!}>{sport}</SelectItem>
+            {sportOptions.map(sport => (
+              <SelectItem key={sport.key} value={sport.key}>{sport.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
