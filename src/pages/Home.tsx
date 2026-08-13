@@ -40,14 +40,14 @@ const Home = () => {
         <section id="sports">
           <div className="mb-4">
             <h2 className="font-display text-2xl md:text-3xl">Sports Ecosystem</h2>
-            <p className="text-muted-foreground text-sm mt-1 flex items-center gap-1.5">
-              Browse
+            <p className="text-muted-foreground text-sm mt-1">
+              Browse{" "}
               {sportsLoading ? (
                 <Skeleton className="h-4 w-8 inline-block" />
               ) : (
                 <span>{sports?.length || 0}</span>
               )}
-              sports across priority schemes
+              {" "}sports across priority schemes
             </p>
           </div>
           
