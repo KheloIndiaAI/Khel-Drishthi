@@ -9,7 +9,9 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useGlobalSearchIndex, SearchEntityType, SearchItem } from "@/hooks/useGlobalSearchIndex";
-import { Trophy, Layers, Flag, Building2, MapPin, Map, Award } from "lucide-react";
+import { useAthleteSearch } from "@/hooks/useAthleteSearch";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Layers, Flag, Building2, MapPin, Map, Award, Medal, Loader2 } from "lucide-react";
 
 interface SearchCtx {
   open: boolean;
