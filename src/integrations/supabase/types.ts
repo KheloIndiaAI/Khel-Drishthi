@@ -617,7 +617,391 @@ export type Database = {
           },
         ]
       }
+      oly_athletes: {
+        Row: {
+          athlete_id: number
+          birth_year: number | null
+          country_noc: string | null
+          display_name: string | null
+          era: string | null
+          first_olympics_year: number | null
+          gender: string | null
+          height_cm: number | null
+          kd_sport_id: string | null
+          last_olympics_year: number | null
+          medal_data_quality: string | null
+          medal_summary: string | null
+          primary_discipline: string | null
+          total_medals: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          athlete_id: number
+          birth_year?: number | null
+          country_noc?: string | null
+          display_name?: string | null
+          era?: string | null
+          first_olympics_year?: number | null
+          gender?: string | null
+          height_cm?: number | null
+          kd_sport_id?: string | null
+          last_olympics_year?: number | null
+          medal_data_quality?: string | null
+          medal_summary?: string | null
+          primary_discipline?: string | null
+          total_medals?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          athlete_id?: number
+          birth_year?: number | null
+          country_noc?: string | null
+          display_name?: string | null
+          era?: string | null
+          first_olympics_year?: number | null
+          gender?: string | null
+          height_cm?: number | null
+          kd_sport_id?: string | null
+          last_olympics_year?: number | null
+          medal_data_quality?: string | null
+          medal_summary?: string | null
+          primary_discipline?: string | null
+          total_medals?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      oly_countries: {
+        Row: {
+          country_name: string
+          country_noc: string
+        }
+        Insert: {
+          country_name: string
+          country_noc: string
+        }
+        Update: {
+          country_name?: string
+          country_noc?: string
+        }
+        Relationships: []
+      }
+      oly_country_groups: {
+        Row: {
+          active_from: number | null
+          active_to: number | null
+          bloc: string | null
+          modern_noc: string
+          original_noc: string
+        }
+        Insert: {
+          active_from?: number | null
+          active_to?: number | null
+          bloc?: string | null
+          modern_noc: string
+          original_noc: string
+        }
+        Update: {
+          active_from?: number | null
+          active_to?: number | null
+          bloc?: string | null
+          modern_noc?: string
+          original_noc?: string
+        }
+        Relationships: []
+      }
+      oly_disciplines: {
+        Row: {
+          canonical_name: string
+          discipline_id: number
+          is_competition: boolean | null
+          kd_sport_id: string | null
+        }
+        Insert: {
+          canonical_name: string
+          discipline_id: number
+          is_competition?: boolean | null
+          kd_sport_id?: string | null
+        }
+        Update: {
+          canonical_name?: string
+          discipline_id?: number
+          is_competition?: boolean | null
+          kd_sport_id?: string | null
+        }
+        Relationships: []
+      }
+      oly_editions: {
+        Row: {
+          display_city: string | null
+          edition_id: number
+          games_name: string | null
+          host_city: string | null
+          host_country_noc: string | null
+          is_held: boolean | null
+          is_intercalated: boolean | null
+          season: string
+          year: number
+        }
+        Insert: {
+          display_city?: string | null
+          edition_id: number
+          games_name?: string | null
+          host_city?: string | null
+          host_country_noc?: string | null
+          is_held?: boolean | null
+          is_intercalated?: boolean | null
+          season: string
+          year: number
+        }
+        Update: {
+          display_city?: string | null
+          edition_id?: number
+          games_name?: string | null
+          host_city?: string | null
+          host_country_noc?: string | null
+          is_held?: boolean | null
+          is_intercalated?: boolean | null
+          season?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      oly_medal_tally: {
+        Row: {
+          bronze: number | null
+          canonical_discipline: string | null
+          country_name: string | null
+          country_noc: string
+          discipline_id: number | null
+          edition_id: number
+          gold: number | null
+          host_city: string | null
+          host_country_noc: string | null
+          is_intercalated: boolean | null
+          kd_sport_id: string | null
+          season: string | null
+          silver: number | null
+          total: number | null
+          year: number
+        }
+        Insert: {
+          bronze?: number | null
+          canonical_discipline?: string | null
+          country_name?: string | null
+          country_noc: string
+          discipline_id?: number | null
+          edition_id: number
+          gold?: number | null
+          host_city?: string | null
+          host_country_noc?: string | null
+          is_intercalated?: boolean | null
+          kd_sport_id?: string | null
+          season?: string | null
+          silver?: number | null
+          total?: number | null
+          year: number
+        }
+        Update: {
+          bronze?: number | null
+          canonical_discipline?: string | null
+          country_name?: string | null
+          country_noc?: string
+          discipline_id?: number | null
+          edition_id?: number
+          gold?: number | null
+          host_city?: string | null
+          host_country_noc?: string | null
+          is_intercalated?: boolean | null
+          kd_sport_id?: string | null
+          season?: string | null
+          silver?: number | null
+          total?: number | null
+          year?: number
+        }
+        Relationships: []
+      }
+      oly_medals: {
+        Row: {
+          athlete_id: number | null
+          athlete_name: string | null
+          canonical_discipline: string | null
+          country_noc: string | null
+          edition_id: number | null
+          event: string | null
+          kd_sport_id: string | null
+          medal_id: number
+          medal_type: string | null
+          season: string | null
+          year: number | null
+        }
+        Insert: {
+          athlete_id?: number | null
+          athlete_name?: string | null
+          canonical_discipline?: string | null
+          country_noc?: string | null
+          edition_id?: number | null
+          event?: string | null
+          kd_sport_id?: string | null
+          medal_id: number
+          medal_type?: string | null
+          season?: string | null
+          year?: number | null
+        }
+        Update: {
+          athlete_id?: number | null
+          athlete_name?: string | null
+          canonical_discipline?: string | null
+          country_noc?: string | null
+          edition_id?: number | null
+          event?: string | null
+          kd_sport_id?: string | null
+          medal_id?: number
+          medal_type?: string | null
+          season?: string | null
+          year?: number | null
+        }
+        Relationships: []
+      }
+      oly_meta: {
+        Row: {
+          key: string
+          value: string | null
+        }
+        Insert: {
+          key: string
+          value?: string | null
+        }
+        Update: {
+          key?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
+      oly_participations: {
+        Row: {
+          athlete_id: number | null
+          canonical_discipline: string | null
+          country_noc: string | null
+          data_completeness: string | null
+          edition_id: number | null
+          event_name: string | null
+          is_medal_winning: boolean | null
+          kd_sport_id: string | null
+          participation_id: number
+          result_place: string | null
+          season: string | null
+          year: number | null
+        }
+        Insert: {
+          athlete_id?: number | null
+          canonical_discipline?: string | null
+          country_noc?: string | null
+          data_completeness?: string | null
+          edition_id?: number | null
+          event_name?: string | null
+          is_medal_winning?: boolean | null
+          kd_sport_id?: string | null
+          participation_id: number
+          result_place?: string | null
+          season?: string | null
+          year?: number | null
+        }
+        Update: {
+          athlete_id?: number | null
+          canonical_discipline?: string | null
+          country_noc?: string | null
+          data_completeness?: string | null
+          edition_id?: number | null
+          event_name?: string | null
+          is_medal_winning?: boolean | null
+          kd_sport_id?: string | null
+          participation_id?: number
+          result_place?: string | null
+          season?: string | null
+          year?: number | null
+        }
+        Relationships: []
+      }
+      oly_search_aliases: {
+        Row: {
+          alias: string
+          entity_key: string
+          entity_type: string
+        }
+        Insert: {
+          alias: string
+          entity_key: string
+          entity_type: string
+        }
+        Update: {
+          alias?: string
+          entity_key?: string
+          entity_type?: string
+        }
+        Relationships: []
+      }
+      oly_sport_map: {
+        Row: {
+          canonical_discipline: string
+          kd_sport_id: string
+        }
+        Insert: {
+          canonical_discipline: string
+          kd_sport_id: string
+        }
+        Update: {
+          canonical_discipline?: string
+          kd_sport_id?: string
+        }
+        Relationships: []
+      }
       olympic_medals: {
+        Row: {
+          athlete_or_team: string | null
+          created_at: string | null
+          event_raw: string | null
+          games_name: string | null
+          id: string
+          medal: string | null
+          source: string | null
+          sport_id: string | null
+          sport_raw: string | null
+          sport_std: string | null
+          year: number | null
+          year_raw: string | null
+        }
+        Insert: {
+          athlete_or_team?: string | null
+          created_at?: string | null
+          event_raw?: string | null
+          games_name?: string | null
+          id?: string
+          medal?: string | null
+          source?: string | null
+          sport_id?: string | null
+          sport_raw?: string | null
+          sport_std?: string | null
+          year?: number | null
+          year_raw?: string | null
+        }
+        Update: {
+          athlete_or_team?: string | null
+          created_at?: string | null
+          event_raw?: string | null
+          games_name?: string | null
+          id?: string
+          medal?: string | null
+          source?: string | null
+          sport_id?: string | null
+          sport_raw?: string | null
+          sport_std?: string | null
+          year?: number | null
+          year_raw?: string | null
+        }
+        Relationships: []
+      }
+      olympic_medals_legacy: {
         Row: {
           athlete_or_team: string
           created_at: string | null
@@ -671,6 +1055,45 @@ export type Database = {
         ]
       }
       olympic_participation: {
+        Row: {
+          athletes: number | null
+          created_at: string | null
+          games_name: string | null
+          id: string
+          source: string | null
+          sport_id: string | null
+          sport_raw: string | null
+          sport_std: string | null
+          year: number | null
+          year_raw: string | null
+        }
+        Insert: {
+          athletes?: number | null
+          created_at?: string | null
+          games_name?: string | null
+          id?: string
+          source?: string | null
+          sport_id?: string | null
+          sport_raw?: string | null
+          sport_std?: string | null
+          year?: number | null
+          year_raw?: string | null
+        }
+        Update: {
+          athletes?: number | null
+          created_at?: string | null
+          games_name?: string | null
+          id?: string
+          source?: string | null
+          sport_id?: string | null
+          sport_raw?: string | null
+          sport_std?: string | null
+          year?: number | null
+          year_raw?: string | null
+        }
+        Relationships: []
+      }
+      olympic_participation_legacy: {
         Row: {
           athletes: number | null
           created_at: string | null
