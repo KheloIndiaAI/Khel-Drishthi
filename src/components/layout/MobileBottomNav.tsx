@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Building2, Trophy, BarChart3, User } from "lucide-react";
+import { Home, Building2, Trophy, BarChart3, Globe, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -13,6 +13,7 @@ const navItems: NavItem[] = [
   { path: "/", label: "Home", icon: <Home className="h-5 w-5" /> },
   { path: "/infrastructure", label: "Infra", icon: <Building2 className="h-5 w-5" /> },
   { path: "/medals", label: "Medals", icon: <Trophy className="h-5 w-5" /> },
+  { path: "/benchmark", label: "Benchmark", icon: <Globe className="h-5 w-5" /> },
   { path: "/capacity", label: "Capacity", icon: <BarChart3 className="h-5 w-5" /> },
   { path: "/auth", label: "Account", icon: <User className="h-5 w-5" /> },
 ];
