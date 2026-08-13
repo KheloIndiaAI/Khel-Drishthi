@@ -37,10 +37,11 @@ const FlipDigit = ({ digit, delay }: FlipDigitProps) => {
 interface CountUpNumberProps {
   end: number;
   duration?: number;
+  start?: number;
 }
 
-const CountUpNumber = ({ end, duration = 2000 }: CountUpNumberProps) => {
-  const [count, setCount] = useState(0);
+const CountUpNumber = ({ end, duration = 2000, start = 0 }: CountUpNumberProps) => {
+  const [count, setCount] = useState(start);
   const countRef = useRef<HTMLSpanElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -56,7 +57,7 @@ const CountUpNumber = ({ end, duration = 2000 }: CountUpNumberProps) => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const easeOut = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(easeOut * end));
+            setCount(Math.floor(start + (end - start) * easeOut));
             if (progress < 1) requestAnimationFrame(animate);
           };
           animate();
@@ -67,7 +68,7 @@ const CountUpNumber = ({ end, duration = 2000 }: CountUpNumberProps) => {
 
     if (countRef.current) observer.observe(countRef.current);
     return () => observer.disconnect();
-  }, [end, duration, hasAnimated]);
+  }, [end, duration, hasAnimated, start]);
 
   return (
     <span ref={countRef} className="tabular-nums">
@@ -142,7 +143,7 @@ const CentreCard = ({ centres, delay }: CentreCardProps) => {
       <div className="flex items-center justify-center gap-2 mb-3">
         <Building2 className="h-6 w-6 text-saffron" />
         <span className="text-3xl font-bold text-gray-900">
-          <CountUpNumber end={centres.total} />
+          <CountUpNumber end={centres.total} start={centres.total} />
         </span>
       </div>
       <p className="text-sm text-gray-700 font-semibold mb-2">Training Centres</p>
@@ -190,7 +191,7 @@ const AthleteCard = ({ athletes, sanctioned, ncoeAthletes, stcAthletes, delay }:
       <div className="flex items-center justify-center gap-2 mb-3">
         <Target className="h-6 w-6 text-saffron" />
         <span className="text-3xl font-bold text-gray-900">
-          <CountUpNumber end={athletes} />
+          <CountUpNumber end={athletes} start={athletes} />
         </span>
       </div>
       <p className="text-sm text-gray-700 font-semibold mb-2">Elite Athletes</p>
@@ -262,8 +263,7 @@ const HeroSection = () => {
             style={{ animationDelay: '300ms' }}
           >
             <p className="leading-relaxed">
-              From <span className="text-saffron font-bold">1 medal</span> in 1996 to{" "}
-              <span className="text-saffron font-bold">27 medals</span> today — Building champions for
+              From Norman Pritchard's silver in Paris 1900 to six medals in Paris 2024 — building champions for
             </p>
             <p className="text-white font-bold text-xl md:text-2xl mt-1">
               Los Angeles 2028
