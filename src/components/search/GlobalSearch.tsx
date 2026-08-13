@@ -9,7 +9,9 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useGlobalSearchIndex, SearchEntityType, SearchItem } from "@/hooks/useGlobalSearchIndex";
-import { Trophy, Layers, Flag, Building2, MapPin, Map, Award } from "lucide-react";
+import { useAthleteSearch } from "@/hooks/useAthleteSearch";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Layers, Flag, Building2, MapPin, Map, Award, Medal, Loader2 } from "lucide-react";
 
 interface SearchCtx {
   open: boolean;
@@ -35,6 +37,8 @@ export const GlobalSearchProvider = ({ children }: { children: ReactNode }) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { index, isLoading } = useGlobalSearchIndex();
+  const { athletes, isLoading: athletesLoading } = useAthleteSearch(query);
+
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -113,6 +117,45 @@ export const GlobalSearchProvider = ({ children }: { children: ReactNode }) => {
                     </CommandGroup>
                   );
                 })}
+
+              {athletesLoading && (
+                <div className="flex items-center gap-2 px-4 py-2 text-xs text-muted-foreground">
+                  <Loader2 className="h-3 w-3 animate-spin" /> Searching Olympic athletes…
+                </div>
+              )}
+
+              {athletes.length > 0 && (
+                <CommandGroup heading={`Olympic Athletes (${athletes.length})`}>
+                  {athletes.map((a) => {
+                    const meta = [a.country_noc, a.primary_discipline, a.era].filter(Boolean).join(" • ");
+                    const clickable = Boolean(a.kd_sport_id);
+                    return (
+                      <CommandItem
+                        key={`ath-${a.athlete_id}`}
+                        value={`${a.display_name} ${a.country_noc ?? ""} ${a.primary_discipline ?? ""}`}
+                        onSelect={() => {
+                          if (!a.kd_sport_id) return;
+                          setOpen(false);
+                          setQuery("");
+                          navigate(`/sport/${a.kd_sport_id}`);
+                        }}
+                        className={`flex items-start gap-3 ${clickable ? "" : "cursor-default opacity-80"}`}
+                      >
+                        <Medal className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate">{a.display_name}</div>
+                          {meta && <div className="text-xs text-muted-foreground truncate">{meta}</div>}
+                        </div>
+                        {(a.total_medals ?? 0) > 0 && a.medal_summary && (
+                          <Badge variant="secondary" className="ml-2 shrink-0 font-mono text-[10px]">
+                            {a.medal_summary}
+                          </Badge>
+                        )}
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              )}
             </>
           )}
         </CommandList>
