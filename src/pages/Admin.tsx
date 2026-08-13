@@ -150,6 +150,13 @@ const Admin = () => {
           </CardContent>
         </Card>
         <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><Download className="h-5 w-5" />Export &amp; Documentation</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">Download all portal data (CSV) and the full schema, design and navigation reference</p>
+            <Link to="/admin/export"><Button className="w-full">Open Exports</Button></Link>
+          </CardContent>
+        </Card>
+        <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" />Form Builder</CardTitle></CardHeader>
           <CardContent>
             <p className="text-muted-foreground mb-4">Create custom forms for data collection</p>
