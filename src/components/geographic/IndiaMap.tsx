@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
+import Map, {
+  Marker,
+  Popup,
+  type MapRef,
+  type MapLayerMouseEvent,
+} from 'react-map-gl/maplibre';
 import type { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import useSupercluster from 'use-supercluster';
@@ -27,6 +32,7 @@ import {
   X,
   Building2,
   MapPinOff,
+  Satellite,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppTheme } from '@/components/theme/AppThemeProvider';
@@ -497,6 +503,70 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     [fitStateBounds, onStateSelect]
   );
 
+  // Centre counts per state (all centres, unaffected by type filters)
+  const centreCountByState = useMemo(() => {
+    const counts: Record<string, number> = {};
+    centres.forEach((c) => {
+      if (!c.state) return;
+      counts[c.state] = (counts[c.state] || 0) + 1;
+    });
+    return counts;
+  }, [centres]);
+
+  const setStateHover = useCallback((geoId: string | null) => {
+    const map = mapRef.current?.getMap();
+    if (!map || !map.getSource('india-states')) return;
+    if (hoveredFeatureId.current && hoveredFeatureId.current !== geoId) {
+      map.setFeatureState(
+        { source: 'india-states', id: hoveredFeatureId.current },
+        { hover: false }
+      );
+    }
+    hoveredFeatureId.current = geoId;
+    if (geoId) {
+      map.setFeatureState({ source: 'india-states', id: geoId }, { hover: true });
+    }
+  }, []);
+
+  const handleMapMouseMove = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const now = Date.now();
+      if (now - lastHoverAt.current < 40) return;
+      lastHoverAt.current = now;
+
+      const feature = event.features?.find((f) => f.layer?.id === 'state-fills');
+      if (!feature) {
+        setStateHover(null);
+        setHoveredState(null);
+        return;
+      }
+      const geoName = String(feature.properties?.STNAME_SH ?? '');
+      setStateHover(geoName);
+      setHoveredState({
+        dataName: geoToDataState(geoName),
+        x: event.point.x,
+        y: event.point.y,
+      });
+    },
+    [setStateHover]
+  );
+
+  const handleMapMouseLeave = useCallback(() => {
+    setStateHover(null);
+    setHoveredState(null);
+  }, [setStateHover]);
+
+  const handleMapClick = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const feature = event.features?.find((f) => f.layer?.id === 'state-fills');
+      if (!feature) return;
+      const dataName = geoToDataState(String(feature.properties?.STNAME_SH ?? ''));
+      setHoveredState(null);
+      flyToState(dataName);
+    },
+    [flyToState]
+  );
+
   useEffect(() => {
     if (!selectedState || selectedState === 'all') {
       mapRef.current?.flyTo({ center: INDIA_CENTER, zoom: 4 });
@@ -559,8 +629,15 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         initialViewState={{ longitude: INDIA_CENTER[0], latitude: INDIA_CENTER[1], zoom: 4 }}
         mapStyle={mapStyle}
         style={{ position: 'absolute', inset: 0 }}
-        onLoad={syncViewport}
+        onLoad={() => {
+          setMapLoaded(true);
+          syncViewport();
+        }}
         onMove={syncViewport}
+        interactiveLayerIds={['state-fills']}
+        onMouseMove={handleMapMouseMove}
+        onMouseLeave={handleMapMouseLeave}
+        onClick={handleMapClick}
         attributionControl={{ compact: true }}
       >
         {clusters.map((cluster) => {
@@ -849,14 +926,26 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           <RotateCcw className="h-4 w-4" />
         </Button>
 
+        {!satellite && (
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
+            onClick={cycleMapStyle}
+            title={`Basemap: ${styleVariant}`}
+          >
+            {styleVariant === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </Button>
+        )}
+
         <Button
-          variant="secondary"
+          variant={satellite ? 'default' : 'secondary'}
           size="icon"
-          className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
-          onClick={cycleMapStyle}
-          title={`Basemap: ${styleVariant}`}
+          className={cn('h-8 w-8 shadow-lg', !satellite && 'bg-background/95 backdrop-blur-sm')}
+          onClick={() => setSatellite((prev) => !prev)}
+          title={satellite ? 'Switch to street map' : 'Switch to satellite'}
         >
-          {styleVariant === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          <Satellite className="h-4 w-4" />
         </Button>
       </div>
 
@@ -937,9 +1026,37 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         </div>
       )}
 
+      {/* State hover tooltip */}
+      {hoveredState && !clusterPopup && !selectedCentre && (
+        <div
+          className="pointer-events-none absolute z-20 rounded-md border bg-background/95 px-2.5 py-1.5 shadow-lg backdrop-blur-sm"
+          style={{
+            left: Math.min(hoveredState.x + 14, 1000),
+            top: Math.max(hoveredState.y - 10, 8),
+          }}
+        >
+          <div className="text-xs font-semibold text-foreground">{hoveredState.dataName}</div>
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{
+                background:
+                  REGION_COLORS[regionByState?.[hoveredState.dataName] ?? ''] ?? '#94a3b8',
+              }}
+            />
+            {regionByState?.[hoveredState.dataName]
+              ? `RC ${regionByState[hoveredState.dataName]}`
+              : 'No SAI region'}
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            {centreCountByState[hoveredState.dataName] ?? 0} centres
+          </div>
+        </div>
+      )}
+
       {/* Zoom level indicator */}
       <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs z-10">
-        {styleVariant} • zoom {zoom.toFixed(1)}
+        {satellite ? 'satellite' : styleVariant} • zoom {zoom.toFixed(1)}
       </div>
 
       <style>{`
