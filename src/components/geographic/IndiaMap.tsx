@@ -444,8 +444,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   );
 
   // ---- Controls ------------------------------------------------------------
-  const syncViewport = useCallback(() => {
-    const map = mapRef.current?.getMap();
+  const syncViewport = useCallback((evt?: { target?: unknown }) => {
+    const map =
+      (evt?.target as { getZoom?: () => number; getBounds?: () => unknown } | undefined)
+        ?.getBounds
+        ? (evt!.target as ReturnType<NonNullable<MapRef['getMap']>>)
+        : mapRef.current?.getMap();
     if (!map) return;
     setZoom(map.getZoom());
     const b = map.getBounds();
@@ -639,11 +643,11 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         initialViewState={{ longitude: INDIA_CENTER[0], latitude: INDIA_CENTER[1], zoom: 4 }}
         mapStyle={mapStyle}
         style={{ position: 'absolute', inset: 0 }}
-        onLoad={() => {
+        onLoad={(evt) => {
           setMapLoaded(true);
-          syncViewport();
+          syncViewport(evt as unknown as { target?: unknown });
         }}
-        onMove={syncViewport}
+        onMove={(evt) => syncViewport(evt as unknown as { target?: unknown })}
         interactiveLayerIds={['state-fills']}
         onMouseMove={handleMapMouseMove}
         onMouseLeave={handleMapMouseLeave}
