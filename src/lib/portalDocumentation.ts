@@ -258,7 +258,7 @@ export const ROUTES: { path: string; name: string; description: string; access: 
   { path: '/infrastructure/hostel-dashboard', name: 'Hostel Dashboard', description: 'Cross-centre analysis of hostel capacity, sanitation and quality answers.', access: 'Authenticated' },
   { path: '/infrastructure/hr-dashboard', name: 'HR Dashboard', description: 'Coaching and support staff coverage across centres.', access: 'Authenticated' },
   { path: '/capacity', name: 'Capacity', description: 'NCOE and STC sanctioned vs existing strength, utilisation and vacancy analysis.', access: 'Public' },
-  { path: '/geographic', name: 'Geographic Analytics', description: 'Interactive India map (Mapbox) with state-level centre and capacity metrics.', access: 'Public' },
+  { path: '/geographic', name: 'Geographic Analytics', description: 'Interactive India map (MapLibre) with state-level centre and capacity metrics.', access: 'Public' },
   { path: '/medals', name: 'Medals', description: "India's Olympic medal history with charts, filters and timeline. /history is an alias.", access: 'Public' },
   { path: '/chintan', name: 'Chintan Presentation', description: 'Standalone slide deck (3D carousel, capture-mode PDF export).', access: 'Public' },
   { path: '/nada', name: 'NADA Presentation', description: 'Standalone anti-doping slide deck with keyboard shortcuts and fullscreen mode.', access: 'Public' },
@@ -330,7 +330,7 @@ On top of this sit analytics pages, an admin back office, role-scoped access con
 | Components | shadcn/ui (Radix primitives) |
 | Data fetching | TanStack React Query (staleTime 5 min, gcTime 10 min) |
 | Charts | Recharts |
-| Maps | Mapbox GL (token served by an edge function) |
+| Maps | MapLibre GL with free CARTO and Esri raster tiles |
 | Backend | Lovable Cloud (managed Postgres, auth, storage, edge functions) |
 | Auth | Email/password sessions, role table + security-definer checks |
 | Exports | jsPDF / html2canvas (reports and decks), JSZip (data bundles) |
@@ -451,7 +451,6 @@ Private bucket \`stc-attachments\` holds files uploaded from the STC assessment 
 | --- | --- |
 | \`import-data\` | Bulk CSV import into reference tables. |
 | \`import-centres\` | Centre-specific import with normalisation. |
-| \`get-mapbox-token\` | Serves the public Mapbox token without embedding it in the bundle. |
 | \`bulk-create-users\` | Admin tool to create many accounts with roles and assignments in one pass. |
 `);
 
@@ -580,7 +579,7 @@ A ten-section form (identity, disciplines, infrastructure, hostel, staff, medica
 
 ### 7.6 Capacity, geographic and medals analytics
 
-Capacity compares sanctioned versus existing strength for NCOE and STC with utilisation and vacancy. Geographic analytics renders a Mapbox map of India with state-level metrics. Medals presents historical performance with filters, charts and a timeline; sport linkage falls back to \`sport_std\` when \`sport_id\` is unavailable.
+Capacity compares sanctioned versus existing strength for NCOE and STC with utilisation and vacancy. Geographic analytics renders a MapLibre map of India with state-level metrics. Medals presents historical performance with filters, charts and a timeline; sport linkage falls back to \`sport_std\` when \`sport_id\` is unavailable.
 
 ### 7.7 Admin back office
 
