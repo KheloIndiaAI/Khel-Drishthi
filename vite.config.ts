@@ -74,5 +74,8 @@ export default defineConfig(({ mode }) => ({
       '@tanstack/react-query',
       'framer-motion',
     ],
+    // maplibre-gl ships its own web worker; pre-bundling it breaks the worker URL in dev
+    exclude: ['maplibre-gl'],
   },
+
 }));

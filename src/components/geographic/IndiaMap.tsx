@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
+import Map, {
+  Marker,
+  Popup,
+  type MapRef,
+  type MapLayerMouseEvent,
+} from 'react-map-gl/maplibre';
 import type { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import useSupercluster from 'use-supercluster';
@@ -27,9 +32,13 @@ import {
   X,
   Building2,
   MapPinOff,
+  Satellite,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppTheme } from '@/components/theme/AppThemeProvider';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { dataToGeoStates, geoToDataState } from '@/lib/stateNames';
 
 const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
@@ -68,21 +77,117 @@ const CENTRE_TYPE_COLORS: Record<string, string> = {
   KISCE: '#f59e0b',
 };
 
-const buildMapStyle = (variant: 'light' | 'dark'): StyleSpecification => ({
+// Deterministic hue per SAI region (keyed by regional_centres.display_name)
+export const REGION_COLORS: Record<string, string> = {
+  Bangalore: '#e11d48',
+  Bhopal: '#0ea5e9',
+  Gandhinagar: '#f59e0b',
+  Guwahati: '#10b981',
+  Imphal: '#8b5cf6',
+  Kolkata: '#ec4899',
+  LNCPE: '#14b8a6',
+  Lucknow: '#84cc16',
+  Mumbai: '#6366f1',
+  'NIS Patiala': '#f97316',
+  Sonipat: '#06b6d4',
+  Stadia: '#a855f7',
+  Zirakpur: '#eab308',
+};
+
+const CARTO_ATTRIBUTION =
+  '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
+const ESRI_ATTRIBUTION =
+  'Imagery &copy; <a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community';
+
+const STATES_GEOJSON = '/geo/india_states_simplified.geojson';
+const DISTRICTS_GEOJSON = '/geo/india_district_simplified.geojson';
+
+/**
+ * ONE style object for the lifetime of the map: light, dark and satellite
+ * basemaps live inside it as raster sources whose visibility we toggle.
+ * That way MapLibre never runs setStyle(), so our custom sources/layers
+ * (choropleth, borders, lazily added districts) always survive mode/theme switches.
+ */
+const buildMapStyle = (): StyleSpecification => ({
   version: 8,
   sources: {
-    carto: {
+    'carto-light': {
+      type: 'raster',
+      tiles: ['https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: CARTO_ATTRIBUTION,
+    },
+    'carto-dark': {
+      type: 'raster',
+      tiles: ['https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: CARTO_ATTRIBUTION,
+    },
+    'esri-satellite': {
       type: 'raster',
       tiles: [
-        `https://basemaps.cartocdn.com/${variant === 'dark' ? 'dark_all' : 'light_all'}/{z}/{x}/{y}.png`,
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       ],
       tileSize: 256,
-      attribution:
-        '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+      attribution: ESRI_ATTRIBUTION,
+    },
+    'esri-reference': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      attribution: ESRI_ATTRIBUTION,
+    },
+    'india-states': {
+      type: 'geojson',
+      data: STATES_GEOJSON,
+      promoteId: 'STNAME_SH',
     },
   },
-  layers: [{ id: 'carto-basemap', type: 'raster', source: 'carto' }],
+  layers: [
+    { id: 'carto-light', type: 'raster', source: 'carto-light', layout: { visibility: 'visible' } },
+    { id: 'carto-dark', type: 'raster', source: 'carto-dark', layout: { visibility: 'none' } },
+    {
+      id: 'esri-satellite',
+      type: 'raster',
+      source: 'esri-satellite',
+      layout: { visibility: 'none' },
+    },
+    {
+      id: 'esri-reference',
+      type: 'raster',
+      source: 'esri-reference',
+      layout: { visibility: 'none' },
+    },
+    {
+      id: 'state-fills',
+      type: 'fill',
+      source: 'india-states',
+      paint: {
+        'fill-color': '#94a3b8',
+        'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.45,
+          0.15,
+        ],
+      },
+    },
+    // district-lines gets inserted here lazily (before state-borders)
+    {
+      id: 'state-borders',
+      type: 'line',
+      source: 'india-states',
+      paint: {
+        'line-color': '#64748b',
+        'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 1.6, 0.7],
+        'line-opacity': 0.8,
+      },
+    },
+  ],
 });
+
 
 const toNumber = (value: unknown): number | null => {
   if (value === null || value === undefined || value === '') return null;
@@ -117,13 +222,124 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     latitude: number;
     centres: Centre[];
   } | null>(null);
+  const [satellite, setSatellite] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [hoveredState, setHoveredState] = useState<{
+    dataName: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const hoveredFeatureId = useRef<string | null>(null);
+  const districtsAdded = useRef(false);
+  const lastHoverAt = useRef(0);
 
   // Map style follows portal theme unless the user cycles it manually
   useEffect(() => {
     if (!userPickedStyle) setStyleVariant(resolvedTheme);
   }, [resolvedTheme, userPickedStyle]);
 
-  const mapStyle = useMemo(() => buildMapStyle(styleVariant), [styleVariant]);
+  // The style object is created once — basemaps are toggled by layer visibility
+  const mapStyle = useMemo(() => buildMapStyle(), []);
+
+  // ---- SAI region data -----------------------------------------------------
+  const { data: regionByState } = useQuery({
+    queryKey: ['geo-region-state-mappings'],
+    staleTime: Infinity,
+    queryFn: async () => {
+      const [{ data: mappings, error: mErr }, { data: centresRc, error: cErr }] = await Promise.all([
+        supabase.from('region_state_mappings').select('state_name, region_id'),
+        supabase.from('regional_centres').select('id, display_name'),
+      ]);
+      if (mErr) throw mErr;
+      if (cErr) throw cErr;
+      const nameById: Record<string, string> = {};
+      (centresRc ?? []).forEach((r) => {
+        nameById[r.id as string] = r.display_name as string;
+      });
+      const map: Record<string, string> = {};
+      (mappings ?? []).forEach((m) => {
+        const region = nameById[m.region_id as string];
+        if (region) map[m.state_name as string] = region;
+      });
+      return map;
+    },
+  });
+
+  // Basemap visibility (street light/dark vs satellite hybrid)
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded) return;
+    const vis = (id: string, on: boolean) => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none');
+    };
+    vis('carto-light', !satellite && styleVariant === 'light');
+    vis('carto-dark', !satellite && styleVariant === 'dark');
+    vis('esri-satellite', satellite);
+    vis('esri-reference', satellite);
+
+    if (map.getLayer('state-fills')) {
+      map.setPaintProperty(
+        'state-fills',
+        'fill-opacity',
+        satellite
+          ? (['interpolate', ['linear'], ['zoom'], 6, 0.15, 7, 0] as never)
+          : ([
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              0.45,
+              0.15,
+            ] as never)
+      );
+    }
+    const lineColor = satellite ? '#ffffff' : '#64748b';
+    if (map.getLayer('state-borders')) map.setPaintProperty('state-borders', 'line-color', lineColor);
+    if (map.getLayer('district-lines'))
+      map.setPaintProperty('district-lines', 'line-color', lineColor);
+  }, [satellite, styleVariant, mapLoaded]);
+
+  // Choropleth tint by SAI region
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
+    const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
+    const seen = new Set<string>();
+    Object.entries(regionByState).forEach(([dataState, region]) => {
+      dataToGeoStates(dataState).forEach((geoName) => {
+        if (seen.has(geoName)) return;
+        seen.add(geoName);
+        stops.push(geoName, REGION_COLORS[region] ?? '#94a3b8');
+      });
+    });
+    stops.push('#94a3b8');
+    map.setPaintProperty('state-fills', 'fill-color', stops as never);
+  }, [regionByState, mapLoaded]);
+
+  // Lazily mount district boundary lines the first time zoom crosses 5
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded || districtsAdded.current || zoom < 5) return;
+    districtsAdded.current = true;
+    if (!map.getSource('india-districts')) {
+      map.addSource('india-districts', { type: 'geojson', data: DISTRICTS_GEOJSON });
+    }
+    if (!map.getLayer('district-lines')) {
+      map.addLayer(
+        {
+          id: 'district-lines',
+          type: 'line',
+          source: 'india-districts',
+          minzoom: 5.5,
+          paint: {
+            'line-color': satellite ? '#ffffff' : '#64748b',
+            'line-width': 0.4,
+            'line-opacity': 0.45,
+          },
+        },
+        map.getLayer('state-borders') ? 'state-borders' : undefined
+      );
+    }
+  }, [zoom, mapLoaded, satellite]);
+
 
   // ---- Filtering -----------------------------------------------------------
   const filteredCentres = useMemo(() => {
@@ -218,8 +434,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   );
 
   // ---- Controls ------------------------------------------------------------
-  const syncViewport = useCallback(() => {
-    const map = mapRef.current?.getMap();
+  const syncViewport = useCallback((evt?: { target?: unknown }) => {
+    const map =
+      (evt?.target as { getZoom?: () => number; getBounds?: () => unknown } | undefined)
+        ?.getBounds
+        ? (evt!.target as ReturnType<NonNullable<MapRef['getMap']>>)
+        : mapRef.current?.getMap();
     if (!map) return;
     setZoom(map.getZoom());
     const b = map.getBounds();
@@ -287,6 +507,70 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     [fitStateBounds, onStateSelect]
   );
 
+  // Centre counts per state (all centres, unaffected by type filters)
+  const centreCountByState = useMemo(() => {
+    const counts: Record<string, number> = {};
+    centres.forEach((c) => {
+      if (!c.state) return;
+      counts[c.state] = (counts[c.state] || 0) + 1;
+    });
+    return counts;
+  }, [centres]);
+
+  const setStateHover = useCallback((geoId: string | null) => {
+    const map = mapRef.current?.getMap();
+    if (!map || !map.getSource('india-states')) return;
+    if (hoveredFeatureId.current && hoveredFeatureId.current !== geoId) {
+      map.setFeatureState(
+        { source: 'india-states', id: hoveredFeatureId.current },
+        { hover: false }
+      );
+    }
+    hoveredFeatureId.current = geoId;
+    if (geoId) {
+      map.setFeatureState({ source: 'india-states', id: geoId }, { hover: true });
+    }
+  }, []);
+
+  const handleMapMouseMove = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const now = Date.now();
+      if (now - lastHoverAt.current < 40) return;
+      lastHoverAt.current = now;
+
+      const feature = event.features?.find((f) => f.layer?.id === 'state-fills');
+      if (!feature) {
+        setStateHover(null);
+        setHoveredState(null);
+        return;
+      }
+      const geoName = String(feature.properties?.STNAME_SH ?? '');
+      setStateHover(geoName);
+      setHoveredState({
+        dataName: geoToDataState(geoName),
+        x: event.point.x,
+        y: event.point.y,
+      });
+    },
+    [setStateHover]
+  );
+
+  const handleMapMouseLeave = useCallback(() => {
+    setStateHover(null);
+    setHoveredState(null);
+  }, [setStateHover]);
+
+  const handleMapClick = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const feature = event.features?.find((f) => f.layer?.id === 'state-fills');
+      if (!feature) return;
+      const dataName = geoToDataState(String(feature.properties?.STNAME_SH ?? ''));
+      setHoveredState(null);
+      flyToState(dataName);
+    },
+    [flyToState]
+  );
+
   useEffect(() => {
     if (!selectedState || selectedState === 'all') {
       mapRef.current?.flyTo({ center: INDIA_CENTER, zoom: 4 });
@@ -349,8 +633,15 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         initialViewState={{ longitude: INDIA_CENTER[0], latitude: INDIA_CENTER[1], zoom: 4 }}
         mapStyle={mapStyle}
         style={{ position: 'absolute', inset: 0 }}
-        onLoad={syncViewport}
-        onMove={syncViewport}
+        onLoad={(evt) => {
+          setMapLoaded(true);
+          syncViewport(evt as unknown as { target?: unknown });
+        }}
+        onMove={(evt) => syncViewport(evt as unknown as { target?: unknown })}
+        interactiveLayerIds={['state-fills']}
+        onMouseMove={handleMapMouseMove}
+        onMouseLeave={handleMapMouseLeave}
+        onClick={handleMapClick}
         attributionControl={{ compact: true }}
       >
         {clusters.map((cluster) => {
@@ -639,14 +930,26 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           <RotateCcw className="h-4 w-4" />
         </Button>
 
+        {!satellite && (
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
+            onClick={cycleMapStyle}
+            title={`Basemap: ${styleVariant}`}
+          >
+            {styleVariant === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </Button>
+        )}
+
         <Button
-          variant="secondary"
+          variant={satellite ? 'default' : 'secondary'}
           size="icon"
-          className="h-8 w-8 bg-background/95 backdrop-blur-sm shadow-lg"
-          onClick={cycleMapStyle}
-          title={`Basemap: ${styleVariant}`}
+          className={cn('h-8 w-8 shadow-lg', !satellite && 'bg-background/95 backdrop-blur-sm')}
+          onClick={() => setSatellite((prev) => !prev)}
+          title={satellite ? 'Switch to street map' : 'Switch to satellite'}
         >
-          {styleVariant === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          <Satellite className="h-4 w-4" />
         </Button>
       </div>
 
@@ -727,9 +1030,37 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         </div>
       )}
 
+      {/* State hover tooltip */}
+      {hoveredState && !clusterPopup && !selectedCentre && (
+        <div
+          className="pointer-events-none absolute z-20 rounded-md border bg-background/95 px-2.5 py-1.5 shadow-lg backdrop-blur-sm"
+          style={{
+            left: Math.min(hoveredState.x + 14, 1000),
+            top: Math.max(hoveredState.y - 10, 8),
+          }}
+        >
+          <div className="text-xs font-semibold text-foreground">{hoveredState.dataName}</div>
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{
+                background:
+                  REGION_COLORS[regionByState?.[hoveredState.dataName] ?? ''] ?? '#94a3b8',
+              }}
+            />
+            {regionByState?.[hoveredState.dataName]
+              ? `RC ${regionByState[hoveredState.dataName]}`
+              : 'No SAI region'}
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            {centreCountByState[hoveredState.dataName] ?? 0} centres
+          </div>
+        </div>
+      )}
+
       {/* Zoom level indicator */}
       <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs z-10">
-        {styleVariant} • zoom {zoom.toFixed(1)}
+        {satellite ? 'satellite' : styleVariant} • zoom {zoom.toFixed(1)}
       </div>
 
       <style>{`
