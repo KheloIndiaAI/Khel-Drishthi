@@ -39,6 +39,8 @@ import { useAppTheme } from '@/components/theme/AppThemeProvider';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { dataToGeoStates, geoToDataState } from '@/lib/stateNames';
+import StateReportCard from './StateReportCard';
+
 
 const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
@@ -223,7 +225,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     centres: Centre[];
   } | null>(null);
   const [satellite, setSatellite] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+
   const [hoveredState, setHoveredState] = useState<{
     dataName: string;
     x: number;
@@ -573,11 +577,14 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   useEffect(() => {
     if (!selectedState || selectedState === 'all') {
+      setReportOpen(false);
       mapRef.current?.flyTo({ center: INDIA_CENTER, zoom: 4 });
       return;
     }
+    setReportOpen(true);
     fitStateBounds(selectedState);
   }, [selectedState, fitStateBounds]);
+
 
   const toggleFilter = useCallback((type: string) => {
     setActiveFilters((prev) => {
@@ -1058,10 +1065,24 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         </div>
       )}
 
+      {/* State report card (Phase C) */}
+      <StateReportCard
+        open={reportOpen}
+        stateName={selectedState && selectedState !== 'all' ? selectedState : null}
+        centres={centres}
+        centreSportLinks={centreSportLinks}
+        regionByState={regionByState}
+        regionColors={REGION_COLORS}
+        centreTypeColors={CENTRE_TYPE_COLORS}
+        onClose={() => setReportOpen(false)}
+        onCentreClick={(c) => setSelectedCentre(c)}
+      />
+
       {/* Zoom level indicator */}
       <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs z-10">
         {satellite ? 'satellite' : styleVariant} • zoom {zoom.toFixed(1)}
       </div>
+
 
       <style>{`
         .maplibregl-popup-content {
