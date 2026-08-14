@@ -573,11 +573,14 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   useEffect(() => {
     if (!selectedState || selectedState === 'all') {
+      setReportOpen(false);
       mapRef.current?.flyTo({ center: INDIA_CENTER, zoom: 4 });
       return;
     }
+    setReportOpen(true);
     fitStateBounds(selectedState);
   }, [selectedState, fitStateBounds]);
+
 
   const toggleFilter = useCallback((type: string) => {
     setActiveFilters((prev) => {
