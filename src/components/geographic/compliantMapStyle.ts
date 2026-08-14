@@ -34,7 +34,7 @@ const isNonCompliantLayer = (layer: LayerSpecification): boolean => {
   if (id.includes('boundary') || id.includes('admin')) return true;
   // OSM labels disputed regions as foreign states/provinces
   if (id.includes('place_state') || id.includes('place-state') || id.includes('province')) return true;
-  const filter = JSON.stringify(layer.filter ?? '');
+  const filter = JSON.stringify((layer as { filter?: unknown }).filter ?? '');
   if (sourceLayer === 'place' && /"(state|province|region)"/.test(filter)) return true;
   return false;
 };
