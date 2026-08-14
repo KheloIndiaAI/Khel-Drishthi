@@ -213,13 +213,123 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     latitude: number;
     centres: Centre[];
   } | null>(null);
+  const [satellite, setSatellite] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [hoveredState, setHoveredState] = useState<{
+    dataName: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const hoveredFeatureId = useRef<string | null>(null);
+  const districtsAdded = useRef(false);
+  const lastHoverAt = useRef(0);
 
   // Map style follows portal theme unless the user cycles it manually
   useEffect(() => {
     if (!userPickedStyle) setStyleVariant(resolvedTheme);
   }, [resolvedTheme, userPickedStyle]);
 
-  const mapStyle = useMemo(() => buildMapStyle(styleVariant), [styleVariant]);
+  // The style object is created once — basemaps are toggled by layer visibility
+  const mapStyle = useMemo(() => buildMapStyle(), []);
+
+  // ---- SAI region data -----------------------------------------------------
+  const { data: regionByState } = useQuery({
+    queryKey: ['geo-region-state-mappings'],
+    staleTime: Infinity,
+    queryFn: async () => {
+      const [{ data: mappings, error: mErr }, { data: centresRc, error: cErr }] = await Promise.all([
+        supabase.from('region_state_mappings').select('state_name, region_id'),
+        supabase.from('regional_centres').select('id, display_name'),
+      ]);
+      if (mErr) throw mErr;
+      if (cErr) throw cErr;
+      const nameById = new Map((centresRc ?? []).map((r) => [r.id, r.display_name as string]));
+      const map: Record<string, string> = {};
+      (mappings ?? []).forEach((m) => {
+        const region = nameById.get(m.region_id as string);
+        if (region) map[m.state_name as string] = region;
+      });
+      return map;
+    },
+  });
+
+  // Basemap visibility (street light/dark vs satellite hybrid)
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded) return;
+    const vis = (id: string, on: boolean) => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none');
+    };
+    vis('carto-light', !satellite && styleVariant === 'light');
+    vis('carto-dark', !satellite && styleVariant === 'dark');
+    vis('esri-satellite', satellite);
+    vis('esri-reference', satellite);
+
+    if (map.getLayer('state-fills')) {
+      map.setPaintProperty(
+        'state-fills',
+        'fill-opacity',
+        satellite
+          ? (['interpolate', ['linear'], ['zoom'], 6, 0.15, 7, 0] as never)
+          : ([
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              0.45,
+              0.15,
+            ] as never)
+      );
+    }
+    const lineColor = satellite ? '#ffffff' : '#64748b';
+    if (map.getLayer('state-borders')) map.setPaintProperty('state-borders', 'line-color', lineColor);
+    if (map.getLayer('district-lines'))
+      map.setPaintProperty('district-lines', 'line-color', lineColor);
+  }, [satellite, styleVariant, mapLoaded]);
+
+  // Choropleth tint by SAI region
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
+    const geoJson = (map.getStyle().sources['india-states'] as unknown) as { data?: unknown };
+    void geoJson;
+    const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
+    const seen = new Set<string>();
+    Object.entries(regionByState).forEach(([dataState, region]) => {
+      dataToGeoStates(dataState).forEach((geoName) => {
+        if (seen.has(geoName)) return;
+        seen.add(geoName);
+        stops.push(geoName, REGION_COLORS[region] ?? '#94a3b8');
+      });
+    });
+    stops.push('#94a3b8');
+    map.setPaintProperty('state-fills', 'fill-color', stops as never);
+  }, [regionByState, mapLoaded]);
+
+  // Lazily mount district boundary lines the first time zoom crosses 5
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !mapLoaded || districtsAdded.current || zoom < 5) return;
+    districtsAdded.current = true;
+    if (!map.getSource('india-districts')) {
+      map.addSource('india-districts', { type: 'geojson', data: DISTRICTS_GEOJSON });
+    }
+    if (!map.getLayer('district-lines')) {
+      map.addLayer(
+        {
+          id: 'district-lines',
+          type: 'line',
+          source: 'india-districts',
+          minzoom: 5.5,
+          paint: {
+            'line-color': satellite ? '#ffffff' : '#64748b',
+            'line-width': 0.4,
+            'line-opacity': 0.45,
+          },
+        },
+        map.getLayer('state-borders') ? 'state-borders' : undefined
+      );
+    }
+  }, [zoom, mapLoaded, satellite]);
+
 
   // ---- Filtering -----------------------------------------------------------
   const filteredCentres = useMemo(() => {
