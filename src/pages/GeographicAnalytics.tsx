@@ -50,7 +50,10 @@ import {
   Treemap
 } from "recharts";
 import PageSEO from "@/components/seo/PageSEO";
-import IndiaMap from "@/components/geographic/IndiaMap";
+import IndiaMap, { type ProjectFocus } from "@/components/geographic/IndiaMap";
+import ProjectsTab from "@/components/geographic/ProjectsTab";
+import { HardHat } from "lucide-react";
+
 
 const COLORS = {
   NCOE: "#FF9933",
@@ -71,6 +74,8 @@ const GeographicAnalytics = () => {
   const [showAllStates, setShowAllStates] = useState(false);
   const [activeTab, setActiveTab] = useState("map");
   const [districtSearch, setDistrictSearch] = useState("");
+  const [focusProject, setFocusProject] = useState<ProjectFocus | null>(null);
+
 
   // Fetch centres
   const { data: centres, isLoading: centresLoading } = useQuery({
@@ -578,11 +583,16 @@ const GeographicAnalytics = () => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid lg:grid-cols-7">
           <TabsTrigger value="map" className="gap-2">
             <Globe className="h-4 w-4" />
             Map
           </TabsTrigger>
+          <TabsTrigger value="projects" className="gap-2">
+            <HardHat className="h-4 w-4" />
+            Projects
+          </TabsTrigger>
+
           <TabsTrigger value="districts" className="gap-2">
             <Map className="h-4 w-4" />
             Districts
@@ -625,7 +635,9 @@ const GeographicAnalytics = () => {
                 selectedCentreType={selectedCentreType}
                 selectedSport={selectedSport === "all" ? undefined : sports?.find(s => s.sport_id === selectedSport)?.sport_name}
                 onStateSelect={setSelectedState}
+                focusProject={focusProject}
               />
+
             </CardContent>
           </Card>
           
@@ -647,6 +659,21 @@ const GeographicAnalytics = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Projects Tab */}
+        <TabsContent value="projects" className="space-y-6">
+          <ProjectsTab
+            onFlyToProject={(p) => {
+              if (p.latitude === null || p.longitude === null) return;
+              setFocusProject({
+                project_code: p.project_code,
+                latitude: Number(p.latitude),
+                longitude: Number(p.longitude),
+              });
+              setActiveTab("map");
+            }}
+          />
         </TabsContent>
 
         {/* Districts Tab */}

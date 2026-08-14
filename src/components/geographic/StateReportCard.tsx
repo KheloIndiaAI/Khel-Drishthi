@@ -7,10 +7,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { Building2, MapPin, Users, Target, Trophy, Wallet } from 'lucide-react';
+import { Building2, MapPin, Users, Target, Trophy, Wallet, HardHat } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import {
+  useAllSaiProjects,
+  PROJECT_STATUS_COLORS,
+  PROJECT_STATUSES,
+} from '@/hooks/useSaiProjects';
 import type { Centre } from './IndiaMap';
+
 
 interface CentreSportLink {
   centre_id: string;
@@ -99,6 +105,30 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
     () => (stateName ? centres.filter((c) => c.state === stateName) : []),
     [centres, stateName]
   );
+  const { data: allProjects = [] } = useAllSaiProjects();
+
+  // sai_projects.state has zero drift vs centres.state — safe to filter directly
+  const stateProjects = useMemo(
+    () => (stateName ? allProjects.filter((p) => p.state === stateName) : []),
+    [allProjects, stateName]
+  );
+
+  const projectCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    stateProjects.forEach((p) => {
+      counts[p.status] = (counts[p.status] || 0) + 1;
+    });
+    return counts;
+  }, [stateProjects]);
+
+  const avgProgress = useMemo(() => {
+    const vals = stateProjects
+      .filter((p) => p.status === 'In Progress' && p.progress !== null && p.progress !== undefined)
+      .map((p) => Number(p.progress));
+    if (vals.length === 0) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }, [stateProjects]);
+
 
   const centreById = useMemo(() => {
     const m = new Map<string, Centre>();
@@ -337,6 +367,40 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
       </section>
 
       <Separator />
+
+      {/* 5b. PROJECTS */}
+      <section>
+        <SectionTitle icon={<HardHat className="h-4 w-4" />} hint="SAI infrastructure projects">
+          Projects
+        </SectionTitle>
+        {stateProjects.length === 0 ? (
+          <EmptyNote>No infrastructure projects recorded for this state.</EmptyNote>
+        ) : (
+          <div className="space-y-2">
+            <div className="grid grid-cols-3 gap-2">
+              {PROJECT_STATUSES.map((status) => (
+                <div key={status} className="rounded-lg border p-2">
+                  <p className="text-lg font-bold tabular-nums">{projectCounts[status] || 0}</p>
+                  <p className="text-[10px] font-medium" style={{ color: PROJECT_STATUS_COLORS[status] }}>
+                    {status}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {avgProgress !== null && (
+              <p className="text-xs text-muted-foreground">
+                Average progress of in-progress projects:{' '}
+                <span className="font-medium text-foreground tabular-nums">
+                  {avgProgress.toFixed(1)}%
+                </span>
+              </p>
+            )}
+          </div>
+        )}
+      </section>
+
+      <Separator />
+
 
       {/* 6. KISCE FUNDS BY FY */}
       <section>
