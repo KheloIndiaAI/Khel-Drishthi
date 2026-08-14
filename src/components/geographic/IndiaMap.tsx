@@ -39,6 +39,8 @@ import { useAppTheme } from '@/components/theme/AppThemeProvider';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { dataToGeoStates, geoToDataState } from '@/lib/stateNames';
+import StateReportCard from './StateReportCard';
+
 
 const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
