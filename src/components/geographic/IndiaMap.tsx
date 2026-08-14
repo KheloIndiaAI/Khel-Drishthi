@@ -581,6 +581,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       mapRef.current?.flyTo({ center: INDIA_CENTER, zoom: 4 });
       return;
     }
+    console.log('RC_OPEN', selectedState);
     setReportOpen(true);
     fitStateBounds(selectedState);
   }, [selectedState, fitStateBounds]);
