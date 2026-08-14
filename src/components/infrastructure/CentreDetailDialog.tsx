@@ -346,6 +346,9 @@ export function CentreDetailDialog({
           </div>
         )}
 
+        <CentreKisceSections centreId={centre.centre_id} />
+
+
         {/* STC Data Collection Actions */}
         {centre.centre_type === 'STC' && (
           <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t mt-4">
