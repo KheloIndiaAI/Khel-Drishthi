@@ -109,6 +109,18 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
   );
   const { data: allProjects = [] } = useAllSaiProjects();
 
+  // kisce_funds / kisce_manpower state columns are zero-drift vs centres.state
+  const { data: allFunds = [] } = useKisceFunds();
+  const { data: allManpower = [] } = useKisceManpower();
+  const stateFunds = useMemo(
+    () => (stateName ? allFunds.filter((f) => f.state === stateName) : []),
+    [allFunds, stateName]
+  );
+  const stateManpower = useMemo(
+    () => (stateName ? allManpower.filter((m) => m.state === stateName) : []),
+    [allManpower, stateName]
+  );
+
   // sai_projects.state has zero drift vs centres.state — safe to filter directly
   const stateProjects = useMemo(
     () => (stateName ? allProjects.filter((p) => p.state === stateName) : []),
