@@ -30,6 +30,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppTheme } from '@/components/theme/AppThemeProvider';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { dataToGeoStates, geoToDataState } from '@/lib/stateNames';
 
 const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
@@ -243,10 +246,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       ]);
       if (mErr) throw mErr;
       if (cErr) throw cErr;
-      const nameById = new Map((centresRc ?? []).map((r) => [r.id, r.display_name as string]));
+      const nameById: Record<string, string> = {};
+      (centresRc ?? []).forEach((r) => {
+        nameById[r.id as string] = r.display_name as string;
+      });
       const map: Record<string, string> = {};
       (mappings ?? []).forEach((m) => {
-        const region = nameById.get(m.region_id as string);
+        const region = nameById[m.region_id as string];
         if (region) map[m.state_name as string] = region;
       });
       return map;
@@ -289,8 +295,6 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
-    const geoJson = (map.getStyle().sources['india-states'] as unknown) as { data?: unknown };
-    void geoJson;
     const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
     const seen = new Set<string>();
     Object.entries(regionByState).forEach(([dataState, region]) => {
