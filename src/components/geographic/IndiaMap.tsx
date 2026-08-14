@@ -68,21 +68,117 @@ const CENTRE_TYPE_COLORS: Record<string, string> = {
   KISCE: '#f59e0b',
 };
 
-const buildMapStyle = (variant: 'light' | 'dark'): StyleSpecification => ({
+// Deterministic hue per SAI region (keyed by regional_centres.display_name)
+export const REGION_COLORS: Record<string, string> = {
+  Bangalore: '#e11d48',
+  Bhopal: '#0ea5e9',
+  Gandhinagar: '#f59e0b',
+  Guwahati: '#10b981',
+  Imphal: '#8b5cf6',
+  Kolkata: '#ec4899',
+  LNCPE: '#14b8a6',
+  Lucknow: '#84cc16',
+  Mumbai: '#6366f1',
+  'NIS Patiala': '#f97316',
+  Sonipat: '#06b6d4',
+  Stadia: '#a855f7',
+  Zirakpur: '#eab308',
+};
+
+const CARTO_ATTRIBUTION =
+  '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
+const ESRI_ATTRIBUTION =
+  'Imagery &copy; <a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community';
+
+const STATES_GEOJSON = '/geo/india_states_simplified.geojson';
+const DISTRICTS_GEOJSON = '/geo/india_district_simplified.geojson';
+
+/**
+ * ONE style object for the lifetime of the map: light, dark and satellite
+ * basemaps live inside it as raster sources whose visibility we toggle.
+ * That way MapLibre never runs setStyle(), so our custom sources/layers
+ * (choropleth, borders, lazily added districts) always survive mode/theme switches.
+ */
+const buildMapStyle = (): StyleSpecification => ({
   version: 8,
   sources: {
-    carto: {
+    'carto-light': {
+      type: 'raster',
+      tiles: ['https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: CARTO_ATTRIBUTION,
+    },
+    'carto-dark': {
+      type: 'raster',
+      tiles: ['https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: CARTO_ATTRIBUTION,
+    },
+    'esri-satellite': {
       type: 'raster',
       tiles: [
-        `https://basemaps.cartocdn.com/${variant === 'dark' ? 'dark_all' : 'light_all'}/{z}/{x}/{y}.png`,
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       ],
       tileSize: 256,
-      attribution:
-        '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+      attribution: ESRI_ATTRIBUTION,
+    },
+    'esri-reference': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      attribution: ESRI_ATTRIBUTION,
+    },
+    'india-states': {
+      type: 'geojson',
+      data: STATES_GEOJSON,
+      promoteId: 'STNAME_SH',
     },
   },
-  layers: [{ id: 'carto-basemap', type: 'raster', source: 'carto' }],
+  layers: [
+    { id: 'carto-light', type: 'raster', source: 'carto-light', layout: { visibility: 'visible' } },
+    { id: 'carto-dark', type: 'raster', source: 'carto-dark', layout: { visibility: 'none' } },
+    {
+      id: 'esri-satellite',
+      type: 'raster',
+      source: 'esri-satellite',
+      layout: { visibility: 'none' },
+    },
+    {
+      id: 'esri-reference',
+      type: 'raster',
+      source: 'esri-reference',
+      layout: { visibility: 'none' },
+    },
+    {
+      id: 'state-fills',
+      type: 'fill',
+      source: 'india-states',
+      paint: {
+        'fill-color': '#94a3b8',
+        'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.45,
+          0.15,
+        ],
+      },
+    },
+    // district-lines gets inserted here lazily (before state-borders)
+    {
+      id: 'state-borders',
+      type: 'line',
+      source: 'india-states',
+      paint: {
+        'line-color': '#64748b',
+        'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 1.6, 0.7],
+        'line-opacity': 0.8,
+      },
+    },
+  ],
 });
+
 
 const toNumber = (value: unknown): number | null => {
   if (value === null || value === undefined || value === '') return null;
