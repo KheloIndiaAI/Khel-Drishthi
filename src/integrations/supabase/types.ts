@@ -459,6 +459,36 @@ export type Database = {
           },
         ]
       }
+      facility_crosswalk: {
+        Row: {
+          confidence: number | null
+          kd_centre_id: string
+          latitude: number
+          longitude: number
+          map_facility_id: string
+          map_operational_status: string | null
+          method: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          kd_centre_id: string
+          latitude: number
+          longitude: number
+          map_facility_id: string
+          map_operational_status?: string | null
+          method?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          kd_centre_id?: string
+          latitude?: number
+          longitude?: number
+          map_facility_id?: string
+          map_operational_status?: string | null
+          method?: string | null
+        }
+        Relationships: []
+      }
       form_definitions: {
         Row: {
           created_at: string | null
