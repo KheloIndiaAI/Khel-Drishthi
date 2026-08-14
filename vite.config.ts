@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => ({
           'vendor-charts': ['recharts'],
           
           // Map library (heavy, lazy loaded)
-          'vendor-maps': ['mapbox-gl'],
+          'vendor-maps': ['maplibre-gl'],
           
           // PDF/Document generation (heavy, on-demand)
           'vendor-docs': ['jspdf', 'jspdf-autotable', 'docx'],
