@@ -1335,6 +1335,66 @@ export type Database = {
         }
         Relationships: []
       }
+      sai_projects: {
+        Row: {
+          created_at: string
+          gps_in_india: boolean
+          infra_type: string | null
+          latitude: number | null
+          longitude: number | null
+          parent_centre_id: string | null
+          parent_facility_id: string | null
+          parent_facility_name: string | null
+          parent_is_ncoe: boolean | null
+          progress: number | null
+          project_code: string
+          project_name: string
+          remarks: string | null
+          sort_order: number | null
+          state: string
+          status: string
+          without_gps_images: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          gps_in_india?: boolean
+          infra_type?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          parent_centre_id?: string | null
+          parent_facility_id?: string | null
+          parent_facility_name?: string | null
+          parent_is_ncoe?: boolean | null
+          progress?: number | null
+          project_code: string
+          project_name: string
+          remarks?: string | null
+          sort_order?: number | null
+          state: string
+          status: string
+          without_gps_images?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          gps_in_india?: boolean
+          infra_type?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          parent_centre_id?: string | null
+          parent_facility_id?: string | null
+          parent_facility_name?: string | null
+          parent_is_ncoe?: boolean | null
+          progress?: number | null
+          project_code?: string
+          project_name?: string
+          remarks?: string | null
+          sort_order?: number | null
+          state?: string
+          status?: string
+          without_gps_images?: boolean | null
+        }
+        Relationships: []
+      }
       sport_notes: {
         Row: {
           attachments: string[] | null

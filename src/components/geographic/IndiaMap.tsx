@@ -40,6 +40,13 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { dataToGeoStates, geoToDataState } from '@/lib/stateNames';
 import StateReportCard from './StateReportCard';
+import {
+  useSaiProjects,
+  PROJECT_STATUS_COLORS,
+  PROJECT_STATUSES,
+  type SaiProject,
+} from '@/hooks/useSaiProjects';
+
 
 
 const TOTAL_CENTRES = 1147;
@@ -63,6 +70,12 @@ interface CentreSportLink {
   discipline_name: string | null;
 }
 
+export interface ProjectFocus {
+  project_code: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface IndiaMapProps {
   centres: Centre[];
   centreSportLinks?: CentreSportLink[];
@@ -70,7 +83,9 @@ interface IndiaMapProps {
   selectedCentreType?: string;
   selectedSport?: string;
   onStateSelect?: (state: string) => void;
+  focusProject?: ProjectFocus | null;
 }
+
 
 const CENTRE_TYPE_COLORS: Record<string, string> = {
   NCOE: '#ef4444',
@@ -118,6 +133,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   selectedCentreType,
   selectedSport,
   onStateSelect,
+  focusProject,
 }) => {
   const mapRef = useRef<MapRef | null>(null);
   const { resolvedTheme } = useAppTheme();
@@ -141,6 +157,21 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const [satellite, setSatellite] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+
+  // ---- Infrastructure projects layer ---------------------------------------
+  const { data: projects = [] } = useSaiProjects();
+  const [showProjects, setShowProjects] = useState(true);
+  const [projectStatuses, setProjectStatuses] = useState<Set<string>>(
+    new Set(['Completed', 'In Progress'])
+  );
+  const [selectedProject, setSelectedProject] = useState<SaiProject | null>(null);
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
+  const [projectPopup, setProjectPopup] = useState<{
+    longitude: number;
+    latitude: number;
+    projects: SaiProject[];
+  } | null>(null);
+
 
   const [hoveredState, setHoveredState] = useState<{
     dataName: string;
@@ -359,6 +390,113 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     options: { radius: 50, maxZoom: 11, minPoints: 3 },
   });
 
+  // ---- Projects: state scoping, status filters, own cluster instance -------
+  const stateProjects = useMemo(
+    () =>
+      selectedState && selectedState !== 'all'
+        ? projects.filter((p) => p.state === selectedState)
+        : projects,
+    [projects, selectedState]
+  );
+
+  const projectStatusTotals = useMemo(() => {
+    const totals: Record<string, number> = { Completed: 0, 'In Progress': 0, Cancelled: 0 };
+    stateProjects.forEach((p) => {
+      if (totals[p.status] !== undefined) totals[p.status]++;
+    });
+    return totals;
+  }, [stateProjects]);
+
+  const visibleProjects = useMemo(() => {
+    if (!showProjects) return [];
+    return stateProjects.filter(
+      (p) =>
+        projectStatuses.has(p.status) &&
+        toNumber(p.latitude) !== null &&
+        toNumber(p.longitude) !== null
+    );
+  }, [stateProjects, projectStatuses, showProjects]);
+
+  const projectPoints = useMemo(
+    () =>
+      visibleProjects.map((project) => ({
+        type: 'Feature' as const,
+        properties: { cluster: false, projectCode: project.project_code, status: project.status, project },
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [toNumber(project.longitude)!, toNumber(project.latitude)!],
+        },
+      })),
+    [visibleProjects]
+  );
+
+  const { clusters: projectClusters, supercluster: projectSupercluster } = useSupercluster({
+    points: projectPoints as never,
+    bounds,
+    zoom,
+    options: { radius: 50, maxZoom: 11, minPoints: 3 },
+  });
+
+  const handleProjectClusterClick = useCallback(
+    (clusterId: number, longitude: number, latitude: number) => {
+      if (!projectSupercluster) return;
+      const expansionZoom = Math.min(projectSupercluster.getClusterExpansionZoom(clusterId), 20);
+      const currentZoom = mapRef.current?.getZoom() ?? zoom;
+      if (expansionZoom <= currentZoom + 0.01) {
+        const leaves = projectSupercluster.getLeaves(clusterId, Infinity) as unknown as Array<{
+          properties: { project: SaiProject };
+        }>;
+        setProjectPopup({
+          longitude,
+          latitude,
+          projects: leaves.map((l) => l.properties.project),
+        });
+        return;
+      }
+      mapRef.current?.flyTo({ center: [longitude, latitude], zoom: expansionZoom, duration: 800 });
+    },
+    [projectSupercluster, zoom]
+  );
+
+  const dominantStatus = useCallback(
+    (clusterId: number): string => {
+      if (!projectSupercluster) return 'Completed';
+      const leaves = projectSupercluster.getLeaves(clusterId, Infinity) as unknown as Array<{
+        properties: { status: string };
+      }>;
+      const counts: Record<string, number> = {};
+      leaves.forEach((l) => {
+        counts[l.properties.status] = (counts[l.properties.status] || 0) + 1;
+      });
+      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Completed';
+    },
+    [projectSupercluster]
+  );
+
+  const toggleProjectStatus = useCallback((status: string) => {
+    setProjectStatuses((prev) => {
+      const next = new Set(prev);
+      if (next.has(status)) next.delete(status);
+      else next.add(status);
+      return next;
+    });
+  }, []);
+
+  // Fly to a project requested from the Projects analytics tab
+  useEffect(() => {
+    if (!focusProject) return;
+    const project = projects.find((p) => p.project_code === focusProject.project_code);
+    setShowProjects(true);
+    if (project) setProjectStatuses((prev) => new Set([...prev, project.status]));
+    mapRef.current?.flyTo({
+      center: [focusProject.longitude, focusProject.latitude],
+      zoom: 12,
+      duration: 1200,
+    });
+    if (project) setSelectedProject(project);
+  }, [focusProject, projects]);
+
+
   const typeTotals = useMemo(() => {
     const totals: Record<string, number> = { NCOE: 0, STC: 0, KIC: 0, KISCE: 0 };
     filteredCentres.forEach((c) => {
@@ -412,15 +550,28 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     return availableStates.filter((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [searchQuery, availableStates]);
 
-  // Fly to a state using the real bounds of its plotted centres
+  // Fly to a state using the real bounds of its currently visible markers
+  // (training centres + infrastructure projects)
   const fitStateBounds = useCallback(
     (state: string) => {
       const map = mapRef.current;
       if (!map) return;
-      const coords = centres
-        .filter((c) => c.state === state)
-        .map((c) => [toNumber(c.longitude), toNumber(c.latitude)] as [number | null, number | null])
-        .filter((c): c is [number, number] => c[0] !== null && c[1] !== null);
+      const centreCoords = centres
+        .filter((c) => c.state === state && activeFilters.has(c.centre_type))
+        .map((c) => [toNumber(c.longitude), toNumber(c.latitude)] as [number | null, number | null]);
+      const projectCoords =
+        showProjects
+          ? projects
+              .filter((p) => p.state === state && projectStatuses.has(p.status))
+              .map(
+                (p) => [toNumber(p.longitude), toNumber(p.latitude)] as [number | null, number | null]
+              )
+          : [];
+      const coords = [...centreCoords, ...projectCoords].filter(
+        (c): c is [number, number] => c[0] !== null && c[1] !== null
+      );
+
+
 
       if (coords.length === 0) return;
       if (coords.length === 1) {
@@ -437,7 +588,8 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         { padding: 60, maxZoom: 10, duration: 1200 }
       );
     },
-    [centres]
+    [centres, projects, activeFilters, projectStatuses, showProjects]
+
   );
 
   const flyToState = useCallback(
@@ -514,6 +666,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     [flyToState]
   );
 
+  const fitStateBoundsRef = useRef(fitStateBounds);
+  fitStateBoundsRef.current = fitStateBounds;
+
   useEffect(() => {
     if (!selectedState || selectedState === 'all') {
       setReportOpen(false);
@@ -521,8 +676,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       return;
     }
     setReportOpen(true);
-    fitStateBounds(selectedState);
-  }, [selectedState, fitStateBounds]);
+    fitStateBoundsRef.current(selectedState);
+  }, [selectedState]);
+
 
 
   const toggleFilter = useCallback((type: string) => {
@@ -659,6 +815,116 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
             </Marker>
           );
         })}
+
+        {/* Infrastructure projects — diamond markers */}
+        {projectClusters.map((cluster) => {
+          const [longitude, latitude] = cluster.geometry.coordinates as [number, number];
+          const props = cluster.properties as Record<string, unknown>;
+
+          if (props.cluster) {
+            const count = props.point_count as number;
+            const clusterId = cluster.id as number;
+            const size = Math.min(52, Math.max(26, 22 + Math.log2(count + 1) * 5));
+            const status = dominantStatus(clusterId);
+            return (
+              <Marker
+                key={`pcluster-${clusterId}`}
+                longitude={longitude}
+                latitude={latitude}
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  handleProjectClusterClick(clusterId, longitude, latitude);
+                }}
+              >
+                <div
+                  className="flex items-center justify-center border-2 border-background shadow-lg cursor-pointer transition-transform hover:scale-110"
+                  style={{
+                    width: size,
+                    height: size,
+                    transform: 'rotate(45deg)',
+                    background: PROJECT_STATUS_COLORS[status] || '#64748b',
+                  }}
+                >
+                  <span
+                    className="font-bold text-white"
+                    style={{ transform: 'rotate(-45deg)', fontSize: size > 40 ? 12 : 10 }}
+                  >
+                    {count}
+                  </span>
+                </div>
+              </Marker>
+            );
+          }
+
+          const project = props.project as SaiProject;
+          return (
+            <Marker
+              key={`project-${project.project_code}`}
+              longitude={longitude}
+              latitude={latitude}
+              onClick={(e) => {
+                e.originalEvent.stopPropagation();
+                setSelectedProject(project);
+              }}
+            >
+              <div
+                className="relative flex flex-col items-center"
+                onMouseEnter={() => setHoveredProject(project.project_code)}
+                onMouseLeave={() => setHoveredProject(null)}
+              >
+                {hoveredProject === project.project_code && (
+                  <div className="absolute bottom-full mb-1.5 whitespace-nowrap rounded bg-background/95 px-2 py-1 text-[10px] font-medium shadow-lg border z-10">
+                    {project.project_name}
+                  </div>
+                )}
+                <div
+                  className="h-3 w-3 border-2 border-background shadow-md cursor-pointer transition-transform hover:scale-150"
+                  style={{
+                    transform: 'rotate(45deg)',
+                    background: PROJECT_STATUS_COLORS[project.status] || '#64748b',
+                  }}
+                />
+              </div>
+            </Marker>
+          );
+        })}
+
+        {projectPopup && (
+          <Popup
+            longitude={projectPopup.longitude}
+            latitude={projectPopup.latitude}
+            onClose={() => setProjectPopup(null)}
+            closeOnClick={false}
+            maxWidth="280px"
+          >
+            <div className="p-2 max-h-64 overflow-y-auto">
+              <p className="text-xs font-semibold mb-2 text-foreground">
+                {projectPopup.projects.length} projects at this location
+              </p>
+              <div className="space-y-1">
+                {projectPopup.projects.map((p) => (
+                  <button
+                    key={p.project_code}
+                    onClick={() => {
+                      setSelectedProject(p);
+                      setProjectPopup(null);
+                    }}
+                    className="w-full text-left rounded p-1.5 text-xs hover:bg-muted transition-colors"
+                  >
+                    <span className="block font-medium text-foreground">{p.project_name}</span>
+                    <span
+                      className="mt-0.5 inline-block rounded px-1 py-0.5 text-[9px] text-white"
+                      style={{ background: PROJECT_STATUS_COLORS[p.status] || '#64748b' }}
+                    >
+                      {p.status}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </Popup>
+        )}
+
 
         {clusterPopup && (
           <Popup
@@ -858,7 +1124,64 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
             Hide All
           </button>
         </div>
+
+        {/* PROJECTS */}
+        <div className="mt-3 pt-2 border-t">
+          <div className="flex items-center justify-between mb-1.5">
+            <h4 className="text-xs font-semibold text-muted-foreground">PROJECTS</h4>
+            <button
+              onClick={() => setShowProjects((v) => !v)}
+              className="flex items-center gap-1 text-[10px] text-primary hover:underline"
+            >
+              {showProjects ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+              {showProjects ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          <div className="space-y-1">
+            {PROJECT_STATUSES.map((status) => {
+              const isActive = showProjects && projectStatuses.has(status);
+              return (
+                <button
+                  key={status}
+                  onClick={() => toggleProjectStatus(status)}
+                  className={cn(
+                    'flex items-center gap-2 w-full px-2 py-1 rounded-md text-xs transition-all',
+                    isActive ? 'bg-muted hover:bg-muted/80' : 'opacity-40 hover:opacity-60'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'w-2.5 h-2.5 rotate-45 transition-all',
+                      !isActive && 'ring-1 ring-inset ring-muted-foreground'
+                    )}
+                    style={{
+                      backgroundColor: isActive ? PROJECT_STATUS_COLORS[status] : 'transparent',
+                    }}
+                  />
+                  <span className="flex-1 text-left font-medium">{status}</span>
+                  <Badge variant="secondary" className="text-[10px] h-4 px-1">
+                    {projectStatusTotals[status] || 0}
+                  </Badge>
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-1.5 text-[9px] text-muted-foreground">
+            3 projects with invalid GPS not shown
+          </p>
+          <div className="mt-2 pt-2 border-t space-y-1 text-[9px] text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-muted-foreground" />
+              Circles = training centres
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rotate-45 bg-muted-foreground" />
+              Diamonds = infrastructure projects
+            </div>
+          </div>
+        </div>
       </div>
+
 
       {/* Bottom Right - Map Controls */}
       <div className="absolute bottom-10 right-4 flex flex-col gap-2 z-10">
@@ -982,7 +1305,100 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         </div>
       )}
 
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <div
+          className="absolute inset-0 bg-black/50 flex items-center justify-center z-20"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="bg-background rounded-lg shadow-xl border max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b flex items-start justify-between gap-2">
+              <div>
+                <h3 className="font-bold text-lg">{selectedProject.project_name}</h3>
+                <p className="text-sm text-muted-foreground">{selectedProject.state}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedProject(null)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  className="text-white border-0"
+                  style={{ backgroundColor: PROJECT_STATUS_COLORS[selectedProject.status] }}
+                >
+                  {selectedProject.status}
+                </Badge>
+                {selectedProject.infra_type && (
+                  <Badge variant="outline">{selectedProject.infra_type}</Badge>
+                )}
+              </div>
+
+              {selectedProject.progress !== null && selectedProject.progress !== undefined && (
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="font-medium tabular-nums">{selectedProject.progress}%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${Math.min(100, Math.max(0, selectedProject.progress))}%`,
+                        background: PROJECT_STATUS_COLORS[selectedProject.status],
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="text-muted-foreground">Parent facility</div>
+                <div>{selectedProject.parent_facility_name || '—'}</div>
+                <div className="text-muted-foreground">Coordinates</div>
+                <div className="tabular-nums">
+                  {toNumber(selectedProject.latitude)?.toFixed(4) ?? '—'},{' '}
+                  {toNumber(selectedProject.longitude)?.toFixed(4) ?? '—'}
+                </div>
+              </div>
+
+              {selectedProject.remarks && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-1">Remarks</h4>
+                  <p className="text-xs text-muted-foreground">{selectedProject.remarks}</p>
+                </div>
+              )}
+
+              {(() => {
+                const parent = selectedProject.parent_centre_id
+                  ? centres.find((c) => c.centre_id === selectedProject.parent_centre_id)
+                  : undefined;
+                if (!parent) return null;
+                return (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedProject(null);
+                      setSelectedCentre(parent);
+                    }}
+                  >
+                    <Building2 className="h-4 w-4 mr-2" />
+                    View parent centre
+                  </Button>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* State hover tooltip */}
+
       {hoveredState && !clusterPopup && !selectedCentre && (
         <div
           className="pointer-events-none absolute z-20 rounded-md border bg-background/95 px-2.5 py-1.5 shadow-lg backdrop-blur-sm"
