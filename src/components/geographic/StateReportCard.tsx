@@ -15,6 +15,8 @@ import {
   PROJECT_STATUS_COLORS,
   PROJECT_STATUSES,
 } from '@/hooks/useSaiProjects';
+import { useKisceFunds, useKisceManpower } from '@/hooks/useKisce';
+import { KisceFundsBody, KisceStaffingBody } from '@/components/kisce/KisceSections';
 import type { Centre } from './IndiaMap';
 
 
