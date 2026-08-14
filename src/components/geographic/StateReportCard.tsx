@@ -352,7 +352,6 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
 export const StateReportCard: React.FC<StateReportCardProps> = (props) => {
   const { open, stateName, onClose } = props;
   const isMobile = useIsMobile();
-  console.log('RC_RENDER', open, stateName, isMobile);
 
   if (!stateName) return null;
 
