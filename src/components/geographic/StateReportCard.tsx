@@ -402,13 +402,20 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
       <Separator />
 
 
-      {/* 6. KISCE FUNDS BY FY */}
+      {/* 6. KISCE FUNDS */}
       <section>
-        <SectionTitle icon={<Wallet className="h-4 w-4" />}>KISCE funds by FY</SectionTitle>
-        <div className="rounded-lg border border-dashed p-4 text-center">
-          <p className="text-xs text-muted-foreground">Funds data coming soon</p>
-        </div>
+        <SectionTitle icon={<Wallet className="h-4 w-4" />}>KISCE funds</SectionTitle>
+        <KisceFundsBody rows={stateFunds} />
       </section>
+
+      <Separator />
+
+      {/* 7. KISCE STAFFING */}
+      <section>
+        <SectionTitle icon={<Users className="h-4 w-4" />}>KISCE staffing</SectionTitle>
+        <KisceStaffingBody rows={stateManpower} />
+      </section>
+
     </div>
   );
 };
