@@ -416,7 +416,15 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     options: { radius: 50, maxZoom: 11, minPoints: 3 },
   });
 
-  console.log('DBG', { clusters: clusters.length, points: points.length, zoom, bounds });
+  if (typeof window !== 'undefined') {
+    (window as unknown as Record<string, unknown>).__mapdbg = {
+      clusters: clusters.length,
+      points: points.length,
+      zoom,
+      bounds,
+      map: mapRef.current?.getMap(),
+    };
+  }
 
   const typeTotals = useMemo(() => {
     const totals: Record<string, number> = { NCOE: 0, STC: 0, KIC: 0, KISCE: 0 };
