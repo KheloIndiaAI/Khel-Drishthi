@@ -1063,10 +1063,24 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         </div>
       )}
 
+      {/* State report card (Phase C) */}
+      <StateReportCard
+        open={reportOpen}
+        stateName={selectedState && selectedState !== 'all' ? selectedState : null}
+        centres={centres}
+        centreSportLinks={centreSportLinks}
+        regionByState={regionByState}
+        regionColors={REGION_COLORS}
+        centreTypeColors={CENTRE_TYPE_COLORS}
+        onClose={() => setReportOpen(false)}
+        onCentreClick={(c) => setSelectedCentre(c)}
+      />
+
       {/* Zoom level indicator */}
       <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border text-xs z-10">
         {satellite ? 'satellite' : styleVariant} • zoom {zoom.toFixed(1)}
       </div>
+
 
       <style>{`
         .maplibregl-popup-content {
