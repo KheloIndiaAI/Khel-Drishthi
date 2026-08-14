@@ -423,6 +423,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       zoom,
       bounds,
       map: mapRef.current?.getMap(),
+      mapLoaded,
     };
   }
 
