@@ -572,6 +572,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     [supercluster]
   );
 
+  if (!mapStyle) {
+    return (
+      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse" />
+    );
+  }
+
   return (
     <div className="relative w-full h-[600px] rounded-lg overflow-hidden">
       <Map
