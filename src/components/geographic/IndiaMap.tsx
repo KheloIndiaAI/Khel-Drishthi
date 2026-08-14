@@ -156,8 +156,20 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     if (!userPickedStyle) setStyleVariant(resolvedTheme);
   }, [resolvedTheme, userPickedStyle]);
 
-  // The style object is created once — basemaps are toggled by layer visibility
-  const mapStyle = useMemo(() => buildMapStyle(), []);
+  // The style object is built once (CARTO vector styles with all admin
+  // boundary / state-label layers stripped) — never replaced via setStyle()
+  const [mapStyle, setMapStyle] = useState<StyleSpecification | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    buildCompliantMapStyle()
+      .then((style) => {
+        if (!cancelled) setMapStyle(style);
+      })
+      .catch((err) => console.error('Failed to build map style', err));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // ---- SAI region data -----------------------------------------------------
   const { data: regionByState } = useQuery({
