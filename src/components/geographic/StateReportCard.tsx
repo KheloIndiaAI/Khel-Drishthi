@@ -15,6 +15,8 @@ import {
   PROJECT_STATUS_COLORS,
   PROJECT_STATUSES,
 } from '@/hooks/useSaiProjects';
+import { useKisceFunds, useKisceManpower } from '@/hooks/useKisce';
+import { KisceFundsBody, KisceStaffingBody } from '@/components/kisce/KisceSections';
 import type { Centre } from './IndiaMap';
 
 
@@ -106,6 +108,18 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
     [centres, stateName]
   );
   const { data: allProjects = [] } = useAllSaiProjects();
+
+  // kisce_funds / kisce_manpower state columns are zero-drift vs centres.state
+  const { data: allFunds = [] } = useKisceFunds();
+  const { data: allManpower = [] } = useKisceManpower();
+  const stateFunds = useMemo(
+    () => (stateName ? allFunds.filter((f) => f.state === stateName) : []),
+    [allFunds, stateName]
+  );
+  const stateManpower = useMemo(
+    () => (stateName ? allManpower.filter((m) => m.state === stateName) : []),
+    [allManpower, stateName]
+  );
 
   // sai_projects.state has zero drift vs centres.state — safe to filter directly
   const stateProjects = useMemo(
@@ -402,13 +416,20 @@ const ReportBody: React.FC<Omit<StateReportCardProps, 'open' | 'onClose'>> = ({
       <Separator />
 
 
-      {/* 6. KISCE FUNDS BY FY */}
+      {/* 6. KISCE FUNDS */}
       <section>
-        <SectionTitle icon={<Wallet className="h-4 w-4" />}>KISCE funds by FY</SectionTitle>
-        <div className="rounded-lg border border-dashed p-4 text-center">
-          <p className="text-xs text-muted-foreground">Funds data coming soon</p>
-        </div>
+        <SectionTitle icon={<Wallet className="h-4 w-4" />}>KISCE funds</SectionTitle>
+        <KisceFundsBody rows={stateFunds} />
       </section>
+
+      <Separator />
+
+      {/* 7. KISCE STAFFING */}
+      <section>
+        <SectionTitle icon={<Users className="h-4 w-4" />}>KISCE staffing</SectionTitle>
+        <KisceStaffingBody rows={stateManpower} />
+      </section>
+
     </div>
   );
 };

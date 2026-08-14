@@ -8,6 +8,7 @@ import { Building2, MapPin, Users, Target, ClipboardEdit, FileText } from "lucid
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { AdminMappingControls } from "./AdminMappingControls";
+import { CentreKisceSections } from "@/components/kisce/CentreKisceSections";
 interface CapacityData {
   id: string;
   centre_id: string | null;
@@ -345,6 +346,9 @@ export function CentreDetailDialog({
             <p>No detailed capacity data available for this centre</p>
           </div>
         )}
+
+        <CentreKisceSections centreId={centre.centre_id} />
+
 
         {/* STC Data Collection Actions */}
         {centre.centre_type === 'STC' && (

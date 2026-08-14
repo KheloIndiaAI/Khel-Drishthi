@@ -92,6 +92,36 @@ export type Database = {
         }
         Relationships: []
       }
+      centre_contacts: {
+        Row: {
+          contact_info: string | null
+          contact_number: string | null
+          created_at: string
+          facility_name: string | null
+          kd_centre_id: string | null
+          map_facility_id: string
+          state: string | null
+        }
+        Insert: {
+          contact_info?: string | null
+          contact_number?: string | null
+          created_at?: string
+          facility_name?: string | null
+          kd_centre_id?: string | null
+          map_facility_id: string
+          state?: string | null
+        }
+        Update: {
+          contact_info?: string | null
+          contact_number?: string | null
+          created_at?: string
+          facility_name?: string | null
+          kd_centre_id?: string | null
+          map_facility_id?: string
+          state?: string | null
+        }
+        Relationships: []
+      }
       centre_sport_links: {
         Row: {
           bridge_id: string | null
@@ -550,6 +580,125 @@ export type Database = {
             columns: ["form_id"]
             isOneToOne: false
             referencedRelation: "form_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kisce_funds: {
+        Row: {
+          created_at: string
+          facility_id: string
+          financial_year: string
+          funds_released: number
+          head: string | null
+          id: number
+          kd_centre_id: string | null
+          release_date: string | null
+          sanction_date: string | null
+          state: string
+          uc_pending: boolean
+          uc_status: string | null
+        }
+        Insert: {
+          created_at?: string
+          facility_id: string
+          financial_year: string
+          funds_released: number
+          head?: string | null
+          id?: number
+          kd_centre_id?: string | null
+          release_date?: string | null
+          sanction_date?: string | null
+          state: string
+          uc_pending?: boolean
+          uc_status?: string | null
+        }
+        Update: {
+          created_at?: string
+          facility_id?: string
+          financial_year?: string
+          funds_released?: number
+          head?: string | null
+          id?: number
+          kd_centre_id?: string | null
+          release_date?: string | null
+          sanction_date?: string | null
+          state?: string
+          uc_pending?: boolean
+          uc_status?: string | null
+        }
+        Relationships: []
+      }
+      kisce_manpower: {
+        Row: {
+          created_at: string
+          current_strength: number
+          designation: string
+          facility_id: string
+          id: number
+          kd_centre_id: string | null
+          sanctioned: number
+          staff_category: string
+          state: string
+          status_normalized: string
+          status_raw: string | null
+        }
+        Insert: {
+          created_at?: string
+          current_strength?: number
+          designation: string
+          facility_id: string
+          id?: number
+          kd_centre_id?: string | null
+          sanctioned?: number
+          staff_category: string
+          state: string
+          status_normalized: string
+          status_raw?: string | null
+        }
+        Update: {
+          created_at?: string
+          current_strength?: number
+          designation?: string
+          facility_id?: string
+          id?: number
+          kd_centre_id?: string | null
+          sanctioned?: number
+          staff_category?: string
+          state?: string
+          status_normalized?: string
+          status_raw?: string | null
+        }
+        Relationships: []
+      }
+      kisce_manpower_people: {
+        Row: {
+          candidate_names: string | null
+          created_at: string
+          gender: string | null
+          manpower_id: number
+          mobile: string | null
+        }
+        Insert: {
+          candidate_names?: string | null
+          created_at?: string
+          gender?: string | null
+          manpower_id: number
+          mobile?: string | null
+        }
+        Update: {
+          candidate_names?: string | null
+          created_at?: string
+          gender?: string | null
+          manpower_id?: number
+          mobile?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kisce_manpower_people_manpower_id_fkey"
+            columns: ["manpower_id"]
+            isOneToOne: true
+            referencedRelation: "kisce_manpower"
             referencedColumns: ["id"]
           },
         ]
