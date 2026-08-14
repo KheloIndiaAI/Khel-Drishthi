@@ -756,7 +756,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         <div className="text-xs text-muted-foreground">Showing</div>
         <div className="text-2xl font-bold">{mappedCentres.length}</div>
         <div className="text-xs text-muted-foreground">
-          of {TOTAL_CENTRES.toLocaleString()} centres mapped ZZTEST
+          of {TOTAL_CENTRES.toLocaleString()} centres mapped
         </div>
         <Sheet>
           <SheetTrigger asChild>
