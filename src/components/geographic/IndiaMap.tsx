@@ -195,17 +195,20 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     },
   });
 
-  // Basemap visibility (street light/dark vs satellite hybrid)
+  // Basemap visibility (street light/dark vs pure satellite imagery)
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!map || !mapLoaded) return;
     const vis = (id: string, on: boolean) => {
       if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none');
     };
-    vis('carto-light', !satellite && styleVariant === 'light');
-    vis('carto-dark', !satellite && styleVariant === 'dark');
+    const showLight = !satellite && styleVariant === 'light';
+    const showDark = !satellite && styleVariant === 'dark';
+    map.getStyle().layers.forEach((layer) => {
+      if (layer.id.startsWith(LIGHT_PREFIX)) vis(layer.id, showLight);
+      else if (layer.id.startsWith(DARK_PREFIX)) vis(layer.id, showDark);
+    });
     vis('esri-satellite', satellite);
-    vis('esri-reference', satellite);
 
     if (map.getLayer('state-fills')) {
       map.setPaintProperty(
@@ -225,6 +228,16 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     if (map.getLayer('state-borders')) map.setPaintProperty('state-borders', 'line-color', lineColor);
     if (map.getLayer('district-lines'))
       map.setPaintProperty('district-lines', 'line-color', lineColor);
+
+    // Official external boundary — always the most prominent line on the map
+    if (map.getLayer('india-outline')) {
+      map.setPaintProperty(
+        'india-outline',
+        'line-color',
+        satellite ? '#ffffff' : styleVariant === 'dark' ? '#e2e8f0' : '#0f172a'
+      );
+      map.setPaintProperty('india-outline', 'line-width', satellite ? 2.2 : 1.8);
+    }
   }, [satellite, styleVariant, mapLoaded]);
 
   // Choropleth tint by SAI region
