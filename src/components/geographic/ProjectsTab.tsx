@@ -218,7 +218,9 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ onFlyToProject }) => {
                     />
                   </div>
                 </button>
-              ))}
+                );
+              })}
+
               {watchlist.length === 0 && (
                 <p className="text-sm text-muted-foreground">No in-progress projects.</p>
               )}
