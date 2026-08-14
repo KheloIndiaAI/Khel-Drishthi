@@ -223,7 +223,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     centres: Centre[];
   } | null>(null);
   const [satellite, setSatellite] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+
   const [hoveredState, setHoveredState] = useState<{
     dataName: string;
     x: number;
