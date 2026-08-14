@@ -379,7 +379,12 @@ export const StateReportCard: React.FC<StateReportCardProps> = (props) => {
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()} modal={false}>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-md overflow-y-auto"
+        onInteractOutside={(e) => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <SheetHeader className="text-left">
           <SheetTitle asChild>{title}</SheetTitle>
         </SheetHeader>
