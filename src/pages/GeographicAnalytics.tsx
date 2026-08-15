@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -450,6 +450,21 @@ const GeographicAnalytics = () => {
       </DashboardLayout>
     );
   }
+
+  // Warm the same-origin map assets as soon as the route mounts
+  useEffect(() => {
+    const urls = ["/basemap/compliant-style.json", "/geo/india_states_simplified.geojson"];
+    const links = urls.map((href) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "fetch";
+      link.crossOrigin = "anonymous";
+      link.href = href;
+      document.head.appendChild(link);
+      return link;
+    });
+    return () => links.forEach((l) => l.remove());
+  }, []);
 
   return (
     <DashboardLayout>
