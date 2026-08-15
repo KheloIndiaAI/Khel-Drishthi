@@ -752,7 +752,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   if (!mapStyle) {
     return (
-      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse" />
+      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse">
+        {slowLoad && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Loading map…</span>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -767,6 +773,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           setMapLoaded(true);
           syncViewport(evt as unknown as { target?: unknown });
         }}
+        onError={(evt) => {
+          const message = (evt as unknown as { error?: { message?: string } })?.error?.message;
+          if (!basemapErrorLogged.current) {
+            basemapErrorLogged.current = true;
+            console.warn('[map] basemap resource error (map remains usable)', { message });
+          }
+        }}
         onMove={(evt) => syncViewport(evt as unknown as { target?: unknown })}
         interactiveLayerIds={['state-fills']}
         onMouseMove={handleMapMouseMove}
@@ -774,6 +787,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         onClick={handleMapClick}
         attributionControl={{ compact: true }}
       >
+
         {clusters.map((cluster) => {
           const [longitude, latitude] = cluster.geometry.coordinates as [number, number];
           const props = cluster.properties as Record<string, unknown>;
