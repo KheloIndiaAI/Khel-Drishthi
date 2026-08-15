@@ -1,3 +1,4 @@
+import './maplibreWorker';
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import Map, {
   Marker,
@@ -198,6 +199,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const [retrying, setRetrying] = useState(false);
   const [slowLoad, setSlowLoad] = useState(false);
   const [styleEpoch, setStyleEpoch] = useState(0);
+  const [dataStalled, setDataStalled] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -221,8 +223,41 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     districtsAdded.current = false;
     setMapStyle(result.style);
     setDegraded(false);
+    setDataStalled(false);
     setStyleEpoch((n) => n + 1);
   }, []);
+
+  // ---- Data watchdog -------------------------------------------------------
+  // Guards against the class of failure where the map instance mounts fine
+  // (DOM markers + attribution render) but nothing that requires worker-parsed
+  // data ever paints — e.g. the MapLibre web worker failing to start in a
+  // production bundle. Six seconds after 'load', if no source has data, we
+  // surface the chip instead of leaving a silent blank canvas.
+  useEffect(() => {
+    if (!mapLoaded) return;
+    const timer = setTimeout(() => {
+      const map = mapRef.current?.getMap?.();
+      if (!map) return;
+      let statesLoaded = false;
+      try {
+        statesLoaded = map.isSourceLoaded('india-states');
+      } catch {
+        statesLoaded = false;
+      }
+      const tilesLoaded = typeof map.areTilesLoaded === 'function' ? map.areTilesLoaded() : false;
+      if (!statesLoaded && !tilesLoaded) {
+        console.warn('[map] no source data rendered 6s after load — worker or network failure', {
+          statesLoaded,
+          tilesLoaded,
+          styleEpoch,
+        });
+        setDataStalled(true);
+        setDegradedDismissed(false);
+      }
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [mapLoaded, styleEpoch]);
+
 
 
   // ---- SAI region data -----------------------------------------------------
@@ -1000,9 +1035,11 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         )}
       </Map>
 
-      {degraded && !degradedDismissed && (
+      {(degraded || dataStalled) && !degradedDismissed && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full border border-border bg-card/95 px-3 py-1.5 shadow-md backdrop-blur">
-          <span className="text-xs text-muted-foreground">Street basemap unavailable</span>
+          <span className="text-xs text-muted-foreground">
+            {dataStalled ? 'Map data failed to load' : 'Street basemap unavailable'}
+          </span>
           <Button
             size="sm"
             variant="secondary"

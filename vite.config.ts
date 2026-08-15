@@ -48,9 +48,10 @@ export default defineConfig(({ mode }) => ({
           
           // Chart library (heavy, lazy loaded)
           'vendor-charts': ['recharts'],
-          
-          // Map library (heavy, lazy loaded)
-          'vendor-maps': ['maplibre-gl'],
+          // NOTE: maplibre-gl is deliberately NOT manually chunked — manual
+          // chunking breaks its worker/asset URL resolution in production.
+
+
           
           // PDF/Document generation (heavy, on-demand)
           'vendor-docs': ['jspdf', 'jspdf-autotable', 'docx'],
