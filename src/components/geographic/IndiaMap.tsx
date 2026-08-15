@@ -1035,9 +1035,11 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         )}
       </Map>
 
-      {degraded && !degradedDismissed && (
+      {(degraded || dataStalled) && !degradedDismissed && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full border border-border bg-card/95 px-3 py-1.5 shadow-md backdrop-blur">
-          <span className="text-xs text-muted-foreground">Street basemap unavailable</span>
+          <span className="text-xs text-muted-foreground">
+            {dataStalled ? 'Map data failed to load' : 'Street basemap unavailable'}
+          </span>
           <Button
             size="sm"
             variant="secondary"
