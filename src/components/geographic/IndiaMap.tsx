@@ -1000,6 +1000,29 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         )}
       </Map>
 
+      {degraded && !degradedDismissed && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full border border-border bg-card/95 px-3 py-1.5 shadow-md backdrop-blur">
+          <span className="text-xs text-muted-foreground">Street basemap unavailable</span>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="h-6 px-2 text-xs"
+            disabled={retrying}
+            onClick={handleRetryStyle}
+          >
+            {retrying ? 'Retrying…' : 'Retry'}
+          </Button>
+          <button
+            type="button"
+            aria-label="Dismiss"
+            className="text-muted-foreground hover:text-foreground"
+            onClick={() => setDegradedDismissed(true)}
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Top Left - Stats */}
       <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
         <div className="text-xs text-muted-foreground">Showing</div>
