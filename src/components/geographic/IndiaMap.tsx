@@ -112,7 +112,8 @@ export const REGION_COLORS: Record<string, string> = {
 };
 
 import {
-  buildCompliantMapStyle,
+  getCompliantMapStyle,
+  retryCompliantMapStyle,
   DISTRICTS_GEOJSON,
   DARK_PREFIX,
   LIGHT_PREFIX,
@@ -180,6 +181,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   } | null>(null);
   const hoveredFeatureId = useRef<string | null>(null);
   const districtsAdded = useRef(false);
+  const basemapErrorLogged = useRef(false);
   const lastHoverAt = useRef(0);
 
   // Map style follows portal theme unless the user cycles it manually
@@ -188,19 +190,40 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }, [resolvedTheme, userPickedStyle]);
 
   // The style object is built once (CARTO vector styles with all admin
-  // boundary / state-label layers stripped) — never replaced via setStyle()
+  // boundary / state-label layers stripped), cached in module scope.
+  // If CARTO is unreachable we mount a compliant degraded style instead.
   const [mapStyle, setMapStyle] = useState<StyleSpecification | null>(null);
+  const [degraded, setDegraded] = useState(false);
+  const [degradedDismissed, setDegradedDismissed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
+  const [styleEpoch, setStyleEpoch] = useState(0);
+
   useEffect(() => {
     let cancelled = false;
-    buildCompliantMapStyle()
-      .then((style) => {
-        if (!cancelled) setMapStyle(style);
-      })
-      .catch((err) => console.error('Failed to build map style', err));
+    const slowTimer = setTimeout(() => !cancelled && setSlowLoad(true), 3000);
+    getCompliantMapStyle().then(({ style, degraded: isDegraded }) => {
+      if (cancelled) return;
+      setMapStyle(style);
+      setDegraded(isDegraded);
+    });
     return () => {
       cancelled = true;
+      clearTimeout(slowTimer);
     };
   }, []);
+
+  const handleRetryStyle = useCallback(async () => {
+    setRetrying(true);
+    const result = await retryCompliantMapStyle();
+    setRetrying(false);
+    if (!result) return;
+    districtsAdded.current = false;
+    setMapStyle(result.style);
+    setDegraded(false);
+    setStyleEpoch((n) => n + 1);
+  }, []);
+
 
   // ---- SAI region data -----------------------------------------------------
   const { data: regionByState } = useQuery({
@@ -269,7 +292,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       );
       map.setPaintProperty('india-outline', 'line-width', satellite ? 2.2 : 1.8);
     }
-  }, [satellite, styleVariant, mapLoaded]);
+  }, [satellite, styleVariant, mapLoaded, styleEpoch]);
 
   // Choropleth tint by SAI region
   useEffect(() => {
@@ -286,7 +309,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     });
     stops.push('#94a3b8');
     map.setPaintProperty('state-fills', 'fill-color', stops as never);
-  }, [regionByState, mapLoaded]);
+  }, [regionByState, mapLoaded, styleEpoch]);
 
   // Lazily mount district boundary lines the first time zoom crosses 5
   useEffect(() => {
@@ -312,7 +335,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         map.getLayer('state-borders') ? 'state-borders' : undefined
       );
     }
-  }, [zoom, mapLoaded, satellite]);
+  }, [zoom, mapLoaded, satellite, styleEpoch]);
 
 
   // ---- Filtering -----------------------------------------------------------
@@ -730,7 +753,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   if (!mapStyle) {
     return (
-      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse" />
+      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse">
+        {slowLoad && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Loading map…</span>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -745,6 +774,13 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           setMapLoaded(true);
           syncViewport(evt as unknown as { target?: unknown });
         }}
+        onError={(evt) => {
+          const message = (evt as unknown as { error?: { message?: string } })?.error?.message;
+          if (!basemapErrorLogged.current) {
+            basemapErrorLogged.current = true;
+            console.warn('[map] basemap resource error (map remains usable)', { message });
+          }
+        }}
         onMove={(evt) => syncViewport(evt as unknown as { target?: unknown })}
         interactiveLayerIds={['state-fills']}
         onMouseMove={handleMapMouseMove}
@@ -752,6 +788,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         onClick={handleMapClick}
         attributionControl={{ compact: true }}
       >
+
         {clusters.map((cluster) => {
           const [longitude, latitude] = cluster.geometry.coordinates as [number, number];
           const props = cluster.properties as Record<string, unknown>;
@@ -962,6 +999,29 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           </Popup>
         )}
       </Map>
+
+      {degraded && !degradedDismissed && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full border border-border bg-card/95 px-3 py-1.5 shadow-md backdrop-blur">
+          <span className="text-xs text-muted-foreground">Street basemap unavailable</span>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="h-6 px-2 text-xs"
+            disabled={retrying}
+            onClick={handleRetryStyle}
+          >
+            {retrying ? 'Retrying…' : 'Retry'}
+          </Button>
+          <button
+            type="button"
+            aria-label="Dismiss"
+            className="text-muted-foreground hover:text-foreground"
+            onClick={() => setDegradedDismissed(true)}
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Top Left - Stats */}
       <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
