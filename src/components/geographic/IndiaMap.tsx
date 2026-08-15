@@ -1,3 +1,4 @@
+import './maplibreWorker';
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import Map, {
   Marker,
