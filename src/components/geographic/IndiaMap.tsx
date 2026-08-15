@@ -189,19 +189,40 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }, [resolvedTheme, userPickedStyle]);
 
   // The style object is built once (CARTO vector styles with all admin
-  // boundary / state-label layers stripped) — never replaced via setStyle()
+  // boundary / state-label layers stripped), cached in module scope.
+  // If CARTO is unreachable we mount a compliant degraded style instead.
   const [mapStyle, setMapStyle] = useState<StyleSpecification | null>(null);
+  const [degraded, setDegraded] = useState(false);
+  const [degradedDismissed, setDegradedDismissed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
+  const [styleEpoch, setStyleEpoch] = useState(0);
+
   useEffect(() => {
     let cancelled = false;
-    buildCompliantMapStyle()
-      .then((style) => {
-        if (!cancelled) setMapStyle(style);
-      })
-      .catch((err) => console.error('Failed to build map style', err));
+    const slowTimer = setTimeout(() => !cancelled && setSlowLoad(true), 3000);
+    getCompliantMapStyle().then(({ style, degraded: isDegraded }) => {
+      if (cancelled) return;
+      setMapStyle(style);
+      setDegraded(isDegraded);
+    });
     return () => {
       cancelled = true;
+      clearTimeout(slowTimer);
     };
   }, []);
+
+  const handleRetryStyle = useCallback(async () => {
+    setRetrying(true);
+    const result = await retryCompliantMapStyle();
+    setRetrying(false);
+    if (!result) return;
+    districtsAdded.current = false;
+    setMapStyle(result.style);
+    setDegraded(false);
+    setStyleEpoch((n) => n + 1);
+  }, []);
+
 
   // ---- SAI region data -----------------------------------------------------
   const { data: regionByState } = useQuery({
