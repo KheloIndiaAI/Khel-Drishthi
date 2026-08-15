@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -68,6 +68,21 @@ const COLORS = {
 const CHART_COLORS = ["#FF9933", "#138808", "#000080", "#9333ea", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6"];
 
 const GeographicAnalytics = () => {
+  // Warm the same-origin map assets as soon as the route mounts
+  useEffect(() => {
+    const urls = ["/basemap/compliant-style.json", "/geo/india_states_simplified.geojson"];
+    const links = urls.map((href) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "fetch";
+      link.crossOrigin = "anonymous";
+      link.href = href;
+      document.head.appendChild(link);
+      return link;
+    });
+    return () => links.forEach((l) => l.remove());
+  }, []);
+
   const [selectedState, setSelectedState] = useState<string>("all");
   const [selectedCentreType, setSelectedCentreType] = useState<string>("all");
   const [selectedSport, setSelectedSport] = useState<string>("all");
