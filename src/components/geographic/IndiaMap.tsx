@@ -181,6 +181,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   } | null>(null);
   const hoveredFeatureId = useRef<string | null>(null);
   const districtsAdded = useRef(false);
+  const basemapErrorLogged = useRef(false);
   const lastHoverAt = useRef(0);
 
   // Map style follows portal theme unless the user cycles it manually
