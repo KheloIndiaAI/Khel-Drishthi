@@ -208,67 +208,23 @@ export function buildDegradedMapStyle(): StyleSpecification {
 }
 
 // ---------------------------------------------------------------------------
-// Full style
+// Full style — self-hosted processed snapshot
 // ---------------------------------------------------------------------------
 
+/**
+ * The compliance stripping (boundary/admin/state-label removal, layer
+ * prefixing, source merging) happens ONCE at build time in
+ * scripts/generate-basemap-style.mjs, producing
+ * public/basemap/compliant-style.json. At runtime we only fetch that
+ * same-origin, browser-cacheable static asset — no third-party dependency
+ * for style assembly.
+ */
+export const COMPLIANT_STYLE_URL = '/basemap/compliant-style.json';
+
 async function buildFullMapStyle(): Promise<StyleSpecification> {
-  const [light, dark] = await Promise.all([
-    fetchJsonWithRetry<StyleSpecification>(CARTO_LIGHT_STYLE),
-    fetchJsonWithRetry<StyleSpecification>(CARTO_DARK_STYLE),
-  ]);
-
-  const [lightSprite, darkSprite] = await Promise.all([
-    spriteReachable(light.sprite as string | undefined),
-    spriteReachable(dark.sprite as string | undefined),
-  ]);
-
-  const sources: Record<string, SourceSpecification> = {};
-
-  // Both CARTO styles share the same vector source name/url
-  Object.entries(light.sources).forEach(([key, src]) => {
-    sources[key] = { ...(src as SourceSpecification), attribution: CARTO_ATTRIBUTION } as SourceSpecification;
-  });
-
-  Object.assign(sources, ownSources());
-
-  const glyphsOk = Boolean(light.glyphs);
-
-  const prepare = (
-    style: StyleSpecification,
-    prefix: string,
-    spriteId: string | null,
-    visible: boolean
-  ) =>
-    style.layers
-      .filter((l) => !isNonCompliantLayer(l))
-      // sprite unavailable → drop icon layers; glyphs unavailable → drop symbols
-      .filter((l) => (spriteId ? true : !usesSprite(l)))
-      .filter((l) => (glyphsOk ? true : l.type !== 'symbol'))
-      .map((l) => prefixLayer(l, prefix, spriteId, visible));
-
-  const layers: LayerSpecification[] = [
-    ...prepare(light, LIGHT_PREFIX, lightSprite ? 'light' : null, true),
-    ...prepare(dark, DARK_PREFIX, darkSprite ? 'dark' : null, false),
-    ...ownLayers(),
-  ];
-
-  const sprite: { id: string; url: string }[] = [];
-  if (lightSprite) sprite.push({ id: 'light', url: light.sprite as string });
-  if (darkSprite) sprite.push({ id: 'dark', url: dark.sprite as string });
-
-  const style: StyleSpecification = {
-    version: 8,
-    name: 'khel-drishti-compliant',
-    sources,
-    layers,
-  } as StyleSpecification;
-
-  // maplibre-gl v6 supports sprite arrays
-  if (sprite.length) (style as { sprite?: unknown }).sprite = sprite;
-  if (glyphsOk) style.glyphs = light.glyphs;
-
-  return style;
+  return fetchJsonWithRetry<StyleSpecification>(COMPLIANT_STYLE_URL, 2);
 }
+
 
 // ---------------------------------------------------------------------------
 // Module-level promise singleton
