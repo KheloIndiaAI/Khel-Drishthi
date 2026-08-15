@@ -291,7 +291,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       );
       map.setPaintProperty('india-outline', 'line-width', satellite ? 2.2 : 1.8);
     }
-  }, [satellite, styleVariant, mapLoaded]);
+  }, [satellite, styleVariant, mapLoaded, styleEpoch]);
 
   // Choropleth tint by SAI region
   useEffect(() => {
@@ -308,7 +308,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     });
     stops.push('#94a3b8');
     map.setPaintProperty('state-fills', 'fill-color', stops as never);
-  }, [regionByState, mapLoaded]);
+  }, [regionByState, mapLoaded, styleEpoch]);
 
   // Lazily mount district boundary lines the first time zoom crosses 5
   useEffect(() => {
@@ -334,7 +334,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         map.getLayer('state-borders') ? 'state-borders' : undefined
       );
     }
-  }, [zoom, mapLoaded, satellite]);
+  }, [zoom, mapLoaded, satellite, styleEpoch]);
 
 
   // ---- Filtering -----------------------------------------------------------
