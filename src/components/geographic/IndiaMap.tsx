@@ -112,7 +112,8 @@ export const REGION_COLORS: Record<string, string> = {
 };
 
 import {
-  buildCompliantMapStyle,
+  getCompliantMapStyle,
+  retryCompliantMapStyle,
   DISTRICTS_GEOJSON,
   DARK_PREFIX,
   LIGHT_PREFIX,
