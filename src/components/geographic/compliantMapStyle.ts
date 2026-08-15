@@ -182,7 +182,7 @@ function load(): Promise<CompliantStyleResult> {
   return buildFullMapStyle()
     .then((style) => ({ style, degraded: false }))
     .catch((err) => {
-      console.warn('[map] CARTO basemap unavailable — using compliant degraded style', err);
+      console.warn('[map] self-hosted basemap style unavailable — using compliant degraded style', err);
       return { style: buildDegradedMapStyle(), degraded: true };
     });
 }
@@ -200,7 +200,7 @@ export function getCompliantMapStyle(): Promise<CompliantStyleResult> {
   return stylePromise;
 }
 
-/** Re-attempt the full CARTO style (used by the "Retry" chip). */
+/** Re-attempt the self-hosted style (used by the "Retry" chip). */
 export async function retryCompliantMapStyle(): Promise<CompliantStyleResult | null> {
   try {
     const style = await buildFullMapStyle();
@@ -208,7 +208,7 @@ export async function retryCompliantMapStyle(): Promise<CompliantStyleResult | n
     stylePromise = Promise.resolve(result);
     return result;
   } catch (err) {
-    console.warn('[map] retry of CARTO basemap failed', err);
+    console.warn('[map] retry of self-hosted basemap style failed', err);
     return null;
   }
 }
