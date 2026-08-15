@@ -25,58 +25,14 @@ export const STATES_GEOJSON = '/geo/india_states_simplified.geojson';
 export const DISTRICTS_GEOJSON = '/geo/india_district_simplified.geojson';
 export const COUNTRY_OUTLINE_GEOJSON = '/geo/india_country_outline.geojson';
 
-const CARTO_LIGHT_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
-const CARTO_DARK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
 export const LIGHT_PREFIX = 'l-';
 export const DARK_PREFIX = 'd-';
 
 export interface CompliantStyleResult {
   style: StyleSpecification;
-  /** true when the CARTO street basemap could not be loaded */
+  /** true when the self-hosted street basemap style could not be loaded */
   degraded: boolean;
 }
-
-/** Any layer that draws an administrative boundary or a state/province label. */
-const isNonCompliantLayer = (layer: LayerSpecification): boolean => {
-  const id = layer.id.toLowerCase();
-  const sourceLayer = ((layer as { 'source-layer'?: string })['source-layer'] || '').toLowerCase();
-  if (sourceLayer === 'boundary') return true;
-  if (id.includes('boundary') || id.includes('admin')) return true;
-  // OSM labels disputed regions as foreign states/provinces
-  if (id.includes('place_state') || id.includes('place-state') || id.includes('province')) return true;
-  const filter = JSON.stringify((layer as { filter?: unknown }).filter ?? '');
-  if (sourceLayer === 'place' && /"(state|province|region)"/.test(filter)) return true;
-  return false;
-};
-
-const prefixLayer = (
-  layer: LayerSpecification,
-  prefix: string,
-  spriteId: string | null,
-  visible: boolean
-): LayerSpecification => {
-  const next = JSON.parse(JSON.stringify(layer)) as LayerSpecification & {
-    layout?: Record<string, unknown>;
-  };
-  next.id = `${prefix}${layer.id}`;
-  const layout = { ...(next.layout ?? {}) } as Record<string, unknown>;
-  if (typeof layout['icon-image'] === 'string' && layout['icon-image'] !== '') {
-    if (spriteId) layout['icon-image'] = `${spriteId}:${layout['icon-image'] as string}`;
-    else delete layout['icon-image'];
-  }
-  layout.visibility = visible ? 'visible' : 'none';
-  next.layout = layout as never;
-  return next;
-};
-
-const usesSprite = (layer: LayerSpecification): boolean => {
-  const layout = ((layer as { layout?: Record<string, unknown> }).layout ?? {}) as Record<
-    string,
-    unknown
-  >;
-  return typeof layout['icon-image'] !== 'undefined';
-};
 
 // ---------------------------------------------------------------------------
 // Resilient fetching
@@ -112,16 +68,6 @@ async function fetchJsonWithRetry<T>(url: string, attempts = 3): Promise<T> {
   throw lastErr instanceof Error ? lastErr : new Error(`Failed to fetch ${url}`);
 }
 
-/** HEAD-ish probe: a sprite is usable when its .json manifest is reachable. */
-async function spriteReachable(spriteUrl: string | undefined): Promise<boolean> {
-  if (!spriteUrl) return false;
-  try {
-    await fetchWithTimeout(`${spriteUrl}.json`, 5000);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Our own (always-compliant) sources + layers
