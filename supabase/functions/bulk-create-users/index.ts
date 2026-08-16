@@ -17,7 +17,7 @@ interface CreateUserRequest {
 interface CreatedCredential {
   username: string;
   email: string;
-  password: string;
+  password: string | null;
   name: string;
   state?: string;
   type: 'stc' | 'region';
@@ -28,7 +28,18 @@ interface CreatedCredential {
 }
 
 const DOMAIN = '@kheldrishti.local';
-const DEFAULT_PASSWORD = 'india@2036';
+
+/**
+ * Generates a unique, cryptographically random password for a single account.
+ * The returned value is shown to the admin exactly once in the response; it is
+ * never stored and cannot be recovered afterwards. Lost passwords must go
+ * through the built-in password reset flow.
+ */
+function generatePassword(): string {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("") + "!Aa1";
+}
 
 function generateUsername(name: string, type: 'stc' | 'region'): string {
   // Remove special characters, spaces, and convert to lowercase
@@ -111,6 +122,8 @@ Deno.serve(async (req) => {
     for (const item of items) {
       const username = generateUsername(item.name, type);
       const email = `${username}${DOMAIN}`;
+      // Unique per-user password; surfaced once in the response and never recoverable.
+      const password = generatePassword();
       
       console.log(`Creating user: ${username} (${email})`);
 
@@ -123,7 +136,7 @@ Deno.serve(async (req) => {
           results.push({
             username,
             email,
-            password: DEFAULT_PASSWORD,
+            password: null,
             name: item.name,
             state: item.state,
             type,
@@ -138,7 +151,7 @@ Deno.serve(async (req) => {
         // Create user with admin API
         const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
           email,
-          password: DEFAULT_PASSWORD,
+          password,
           email_confirm: true,
           user_metadata: {
             name: item.name,
@@ -154,7 +167,7 @@ Deno.serve(async (req) => {
           results.push({
             username,
             email,
-            password: DEFAULT_PASSWORD,
+            password: null,
             name: item.name,
             state: item.state,
             type,
@@ -199,7 +212,7 @@ Deno.serve(async (req) => {
         results.push({
           username,
           email,
-          password: DEFAULT_PASSWORD,
+          password,
           name: item.name,
           state: item.state,
           type,
@@ -215,7 +228,7 @@ Deno.serve(async (req) => {
         results.push({
           username,
           email,
-          password: DEFAULT_PASSWORD,
+          password: null,
           name: item.name,
           state: item.state,
           type,
