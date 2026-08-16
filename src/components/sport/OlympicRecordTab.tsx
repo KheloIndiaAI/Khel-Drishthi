@@ -661,7 +661,7 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
         </Card>
       )}
 
-      {/* 9. Biometrics — only with 20+ recorded heights */}
+      {/* 9. Biometrics — only when the sport has 20+ recorded heights */}
       {biometrics && (
         <Card>
           <CardHeader className="pb-2">
@@ -669,34 +669,40 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </CardHeader>
           <CardContent>
             <div className="grid sm:grid-cols-3 gap-3">
-              {[
-                { label: "All athletes", d: biometrics.all },
-                { label: "Men", d: biometrics.male },
-                { label: "Women", d: biometrics.female },
-              ]
-                .filter((x) => x.d.n > 0)
-                .map((x) => (
-                  <div key={x.label} className="rounded-md border p-3">
-                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                      {x.label} (n={x.d.n})
-                    </p>
-                    <p className="text-sm mt-1">
-                      Median height:{" "}
-                      <span className="font-semibold">
-                        {x.d.height == null ? DASH : `${x.d.height.toFixed(0)} cm`}
-                      </span>
-                    </p>
-                    <p className="text-sm">
-                      Median weight:{" "}
-                      <span className="font-semibold">
-                        {x.d.weight == null ? DASH : `${x.d.weight.toFixed(0)} kg`}
-                      </span>
-                    </p>
-                  </div>
-                ))}
+              {(biometrics.genders.length
+                ? biometrics.genders
+                : [{ label: "All athletes", d: biometrics.dominant }]
+              ).map((x) => (
+                <div key={x.label} className="rounded-md border p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {x.label} (n={x.d.n_height ?? 0})
+                  </p>
+                  <p className="text-sm mt-1">
+                    Median height:{" "}
+                    <span className="font-semibold">
+                      {x.d.median_height_cm == null
+                        ? DASH
+                        : `${num(x.d.median_height_cm)} cm (n=${x.d.n_height ?? 0})`}
+                    </span>
+                  </p>
+                  <p className="text-sm">
+                    Median weight:{" "}
+                    <span className="font-semibold">
+                      {x.d.median_weight_kg == null
+                        ? DASH
+                        : `${num(x.d.median_weight_kg)} kg (n=${x.d.n_weight ?? 0})`}
+                    </span>
+                  </p>
+                </div>
+              ))}
             </div>
             <p className="text-[11px] text-muted-foreground mt-3">
-              Based only on athletes with a recorded height; most Indian Olympians have none.
+              Based only on the {biometrics.sportN} athletes in this sport with a recorded height;
+              most Indian Olympians have none.
+              {biometrics.tooSmall.length > 0 &&
+                ` ${biometrics.tooSmall
+                  .map((x) => `${x.label.toLowerCase()} (n=${x.d.n_height ?? 0})`)
+                  .join(" and ")} — sample too small to report separately.`}
             </p>
           </CardContent>
         </Card>
