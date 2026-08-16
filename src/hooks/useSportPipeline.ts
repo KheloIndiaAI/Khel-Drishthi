@@ -19,6 +19,9 @@ export interface SportPipelineRow {
   states: number | null;
   india_medals: number | null;
   india_gold: number | null;
+  india_silver: number | null;
+  india_bronze: number | null;
+
   india_olympians: number | null;
   india_games: number | null;
   india_first_year: number | null;

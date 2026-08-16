@@ -2469,6 +2469,33 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_v_india_medalists: {
+        Row: {
+          athlete_id: string | null
+          athlete_name: string | null
+          birth_year: number | null
+          canonical_discipline: string | null
+          event: string | null
+          gender: string | null
+          kd_sport_id: string | null
+          medal_type: string | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_india_near_miss_events: {
+        Row: {
+          athlete_count: number | null
+          athletes: string | null
+          canonical_discipline: string | null
+          event_name: string | null
+          is_medal: boolean | null
+          kd_sport_id: string | null
+          place: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
       oly_v_india_olympians: {
         Row: {
           appearances: number | null
@@ -2491,6 +2518,25 @@ export type Database = {
           sport_name: string | null
           top8_entries: number | null
           weight_kg: number | null
+        }
+        Relationships: []
+      }
+      oly_v_india_sport_timeline: {
+        Row: {
+          athletes: number | null
+          bronze: number | null
+          entries: number | null
+          entries_without_place: number | null
+          events_contested: number | null
+          female_athletes: number | null
+          fourth_entries: number | null
+          gold: number | null
+          kd_sport_id: string | null
+          male_athletes: number | null
+          medals: number | null
+          silver: number | null
+          top8_entries: number | null
+          year: number | null
         }
         Relationships: []
       }
@@ -2549,16 +2595,20 @@ export type Database = {
           centres_linked: number | null
           centres_mappable: number | null
           existing_athletes: number | null
+          india_bronze: number | null
           india_conversion: number | null
           india_female_olympians: number | null
+          india_first_medal_year: number | null
           india_first_year: number | null
           india_fourth: number | null
           india_games: number | null
           india_gold: number | null
+          india_last_medal_year: number | null
           india_last_year: number | null
           india_medals: number | null
           india_medals_last3: number | null
           india_olympians: number | null
+          india_silver: number | null
           india_top8: number | null
           india_top8_no_medal: number | null
           india_with_biometrics: number | null
