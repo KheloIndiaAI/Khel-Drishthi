@@ -592,6 +592,20 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Gender split over time</CardTitle>
+          <p className="text-xs text-muted-foreground">
+            Athletes at each Games — an athlete who competed at several Games is counted once per
+            Games.
+            {(pipeline?.india_female_olympians ?? null) != null && (
+              <>
+                {" "}
+                India has fielded{" "}
+                <span className="font-medium text-foreground">
+                  {pipeline!.india_female_olympians}
+                </span>{" "}
+                distinct female athletes in this sport.
+              </>
+            )}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="h-56">
@@ -599,7 +613,17 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
                 <XAxis dataKey="year" tick={{ fontSize: 11 }} interval="preserveStartEnd" />
-                <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  allowDecimals={false}
+                  label={{
+                    value: "Athletes at each Games",
+                    angle: -90,
+                    position: "insideLeft",
+                    style: { fontSize: 10, textAnchor: "middle" },
+                  }}
+                />
+
                 <RTooltip contentStyle={{ fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar
