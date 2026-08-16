@@ -74,7 +74,13 @@ export type RosterSort = "display_name" | "first_year" | "appearances" | "best_p
 
 export const ROSTER_PAGE_SIZE = 25;
 
-/** Server-side paged roster. Never fetches the whole table. */
+/** Project knowledge §4 — never search these tables on fewer than 3 characters. */
+export const MIN_SEARCH_LENGTH = 3;
+
+/**
+ * Server-side paged roster. Never fetches the whole table.
+ * The exact count is requested only on page 0 and reused by the caller.
+ */
 export const useIndiaOlympiansPage = (
   sportId: string | undefined,
   {
@@ -83,28 +89,34 @@ export const useIndiaOlympiansPage = (
     sortKey,
     ascending,
   }: { page: number; search: string; sortKey: RosterSort; ascending: boolean }
-) =>
-  useQuery({
-    queryKey: ["india-olympians", sportId, page, search, sortKey, ascending],
-    enabled: !!sportId,
+) => {
+  const searchActive = search.length >= MIN_SEARCH_LENGTH;
+  const searchBlocked = search.length > 0 && !searchActive;
+  return useQuery({
+    queryKey: ["india-olympians", sportId, page, searchActive ? search : "", sortKey, ascending],
+    // Below the minimum search length we do not fire a request at all.
+    enabled: !!sportId && !searchBlocked,
     staleTime: Infinity,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const from = page * ROSTER_PAGE_SIZE;
+      const wantCount = page === 0;
       let q = db()
         .from("oly_v_india_olympians")
-        .select(ROSTER_COLS, { count: "exact" })
+        .select(ROSTER_COLS, wantCount ? { count: "exact" } : undefined)
         .eq("kd_sport_id", sportId!);
-      if (search.length >= 2) q = q.ilike("display_name", `%${search}%`);
+      if (searchActive) q = q.ilike("display_name", `%${search}%`);
       q = q
         .order(sortKey, { ascending, nullsFirst: false })
         .order("athlete_id", { ascending: true })
         .range(from, from + ROSTER_PAGE_SIZE - 1);
       const { data, error, count } = await q;
       if (error) throw error;
-      return { rows: (data ?? []) as OlympianRow[], total: count ?? 0 };
+      return { rows: (data ?? []) as OlympianRow[], total: wantCount ? (count ?? 0) : null };
     },
   });
+};
+
 
 /** Debounce helper for the roster search box. */
 export const useDebounced = (value: string, ms = 300) => {

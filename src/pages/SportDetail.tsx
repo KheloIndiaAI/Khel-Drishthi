@@ -53,9 +53,15 @@ const SportDetail = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editForm, setEditForm] = useState({ title: "", content: "", note_type: "" });
 
+  // Which tab is open — heavy reference queries only fire for the tab that needs them.
+  const [activeTab, setActiveTab] = useState("overview");
+  const needsEvents = activeTab === "events";
+  const needsPipeline = activeTab === "pipeline";
+
   // Fetch sport details
   const { data: sport, isLoading: sportLoading } = useQuery({
     queryKey: ["sport", sportId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("sports")
@@ -71,11 +77,10 @@ const SportDetail = () => {
   const { data: pipeline, isLoading: pipelineLoading } = useSportPipeline(sportId);
   const showOlympicRecord = pipeline?.archetype !== "C_non_olympic";
 
-
-
   // Fetch events for this sport
   const { data: events } = useQuery({
     queryKey: ["sport-events", sportId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("events")
@@ -85,12 +90,13 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!sportId,
+    enabled: !!sportId && needsEvents,
   });
 
   // Fetch disciplines for this sport
   const { data: disciplines } = useQuery({
     queryKey: ["sport-disciplines", sportId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("disciplines")
@@ -100,12 +106,13 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!sportId,
+    enabled: !!sportId && needsEvents,
   });
 
   // Fetch NCOE capacity for this sport
   const { data: ncoeCapacity } = useQuery({
     queryKey: ["sport-ncoe", sportId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("ncoe_capacity")
@@ -115,12 +122,13 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!sportId,
+    enabled: !!sportId && needsPipeline,
   });
 
   // Fetch STC capacity for this sport
   const { data: stcCapacity } = useQuery({
     queryKey: ["sport-stc", sportId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stc_capacity")
@@ -130,64 +138,12 @@ const SportDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!sportId,
+    enabled: !!sportId && needsPipeline,
   });
 
-  // Fetch medals for this sport (match by sport_id OR sport_std)
-  const { data: medals } = useQuery({
-    queryKey: ["sport-medals", sportId, sport?.sport_name],
-    queryFn: async () => {
-      // First try by sport_id
-      let { data, error } = await supabase
-        .from("olympic_medals")
-        .select("*")
-        .eq("sport_id", sportId!)
-        .order("year", { ascending: false });
-      
-      // If no results, try matching by sport_std (sport name)
-      if ((!data || data.length === 0) && sport?.sport_name) {
-        const result = await supabase
-          .from("olympic_medals")
-          .select("*")
-          .ilike("sport_std", sport.sport_name)
-          .order("year", { ascending: false });
-        data = result.data;
-        error = result.error;
-      }
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!sportId && !!sport,
-  });
 
-  // Fetch participation data for this sport
-  const { data: participation } = useQuery({
-    queryKey: ["sport-participation", sportId, sport?.sport_name],
-    queryFn: async () => {
-      // First try by sport_id
-      let { data, error } = await supabase
-        .from("olympic_participation")
-        .select("*")
-        .eq("sport_id", sportId!)
-        .order("year", { ascending: false });
-      
-      // If no results, try matching by sport_std (sport name)
-      if ((!data || data.length === 0) && sport?.sport_name) {
-        const result = await supabase
-          .from("olympic_participation")
-          .select("*")
-          .ilike("sport_std", sport.sport_name)
-          .order("year", { ascending: false });
-        data = result.data;
-        error = result.error;
-      }
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!sportId && !!sport,
-  });
+
+
 
   // Fetch notes for this sport
   const { data: notes } = useQuery({
@@ -279,9 +235,8 @@ const SportDetail = () => {
   const totalSanctioned = ncoeSanctioned + stcSanctioned;
   const utilizationPct = totalSanctioned > 0 ? Math.round((totalAthletes / totalSanctioned) * 100) : 0;
 
-  const goldCount = medals?.filter(m => m.medal === "Gold").length || 0;
-  const silverCount = medals?.filter(m => m.medal === "Silver").length || 0;
-  const bronzeCount = medals?.filter(m => m.medal === "Bronze").length || 0;
+
+
 
   // Status helpers
   const getNisDiplomaStatus = () => {
@@ -433,7 +388,7 @@ const SportDetail = () => {
       {/* Hero strip — persistent, above the tabs */}
       <SportHeroStrip row={pipeline} isLoading={pipelineLoading} />
 
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto mb-4 -mx-1 px-1">
           <TabsList className="inline-flex w-max">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -814,6 +769,7 @@ const SportDetail = () => {
             sportId={sportId!}
             sportName={sport.sport_name}
             pipeline={pipeline}
+            pipelineLoading={pipelineLoading}
           />
         </TabsContent>
         )}
@@ -852,7 +808,9 @@ const SportDetail = () => {
                         </div>
                         <div className="space-y-1 max-h-80 overflow-y-auto">
                           {ncoeCapacity.map((centre) => {
-                            const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
+                            // Unknown / zero sanctioned capacity must never render as 0% — show an em-dash.
+                            const sanctioned = centre.san_grand_total ?? null;
+                            const pct = sanctioned && sanctioned > 0 ? Math.round((centre.ex_grand_total || 0) / sanctioned * 100) : null;
                             return (
                               <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
                                 <div className="flex-1 min-w-0">
@@ -866,12 +824,16 @@ const SportDetail = () => {
                                 <div className="text-right flex-shrink-0">
                                   <div className="flex items-center justify-end gap-1">
                                     <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
-                                    <span className="text-muted-foreground text-sm">/ {centre.san_grand_total || 0}</span>
+                                    <span className="text-muted-foreground text-sm">/ {sanctioned && sanctioned > 0 ? sanctioned : "—"}</span>
                                   </div>
-                                  <div className="flex items-center gap-1.5 mt-0.5">
-                                    <Progress value={pct} className="h-1.5 w-20" />
-                                    <span className="text-xs text-muted-foreground w-9">{pct}%</span>
-                                  </div>
+                                  {pct == null ? (
+                                    <span className="text-xs text-muted-foreground">Sanctioned capacity not recorded</span>
+                                  ) : (
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                      <Progress value={pct} className="h-1.5 w-20" />
+                                      <span className="text-xs text-muted-foreground w-9">{pct}%</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             );
@@ -890,7 +852,9 @@ const SportDetail = () => {
                         </div>
                         <div className="space-y-1 max-h-80 overflow-y-auto">
                           {stcCapacity.map((centre) => {
-                            const pct = centre.san_grand_total ? Math.round((centre.ex_grand_total || 0) / centre.san_grand_total * 100) : 0;
+                            // Unknown / zero sanctioned capacity must never render as 0% — show an em-dash.
+                            const sanctioned = centre.san_grand_total ?? null;
+                            const pct = sanctioned && sanctioned > 0 ? Math.round((centre.ex_grand_total || 0) / sanctioned * 100) : null;
                             return (
                               <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
                                 <div className="flex-1 min-w-0">
@@ -904,12 +868,16 @@ const SportDetail = () => {
                                 <div className="text-right flex-shrink-0">
                                   <div className="flex items-center justify-end gap-1">
                                     <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
-                                    <span className="text-muted-foreground text-sm">/ {centre.san_grand_total || 0}</span>
+                                    <span className="text-muted-foreground text-sm">/ {sanctioned && sanctioned > 0 ? sanctioned : "—"}</span>
                                   </div>
-                                  <div className="flex items-center gap-1.5 mt-0.5">
-                                    <Progress value={pct} className="h-1.5 w-20" />
-                                    <span className="text-xs text-muted-foreground w-9">{pct}%</span>
-                                  </div>
+                                  {pct == null ? (
+                                    <span className="text-xs text-muted-foreground">Sanctioned capacity not recorded</span>
+                                  ) : (
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                      <Progress value={pct} className="h-1.5 w-20" />
+                                      <span className="text-xs text-muted-foreground w-9">{pct}%</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             );
@@ -964,11 +932,12 @@ const SportDetail = () => {
                           {note.is_pinned && <Pin className="h-3 w-3 text-primary flex-shrink-0" />}
                           <span className="font-medium truncate">{note.title}</span>
                         </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                           <Button 
                             variant="ghost" 
                             size="icon" 
                             className="h-6 w-6"
+                            aria-label={note.is_pinned ? `Unpin note ${note.title}` : `Pin note ${note.title}`}
                             onClick={() => handleTogglePin(note)}
                           >
                             {note.is_pinned ? (
@@ -981,10 +950,12 @@ const SportDetail = () => {
                             variant="ghost" 
                             size="icon" 
                             className="h-6 w-6"
+                            aria-label={`Edit note ${note.title}`}
                             onClick={() => handleEditNote(note)}
                           >
                             <Edit2 className="h-3 w-3" />
                           </Button>
+
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mb-1.5">

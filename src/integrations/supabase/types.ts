@@ -2612,6 +2612,7 @@ export type Database = {
           existing_athletes: number | null
           india_bronze: number | null
           india_conversion: number | null
+          india_conversion_is_reliable: boolean | null
           india_female_olympians: number | null
           india_first_medal_year: number | null
           india_first_year: number | null
@@ -2623,6 +2624,8 @@ export type Database = {
           india_medals: number | null
           india_medals_last3: number | null
           india_olympians: number | null
+          india_place_coverage_pct: number | null
+          india_podium_finishes: number | null
           india_silver: number | null
           india_top8: number | null
           india_top8_no_medal: number | null
@@ -2674,6 +2677,9 @@ export type Database = {
         Row: {
           bronze: number | null
           conversion: number | null
+          conversion_is_reliable: boolean | null
+          entries_all: number | null
+          entries_with_place: number | null
           event_entries: number | null
           female_olympians: number | null
           first_medal_year: number | null
@@ -2688,6 +2694,8 @@ export type Database = {
           medals: number | null
           medals_last3: number | null
           olympians: number | null
+          place_coverage_pct: number | null
+          podium_finishes: number | null
           silver: number | null
           sport_name: string | null
           top8: number | null

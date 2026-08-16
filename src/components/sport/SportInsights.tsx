@@ -1,8 +1,10 @@
 import InsightCard, { InsightTone } from "./InsightCard";
 import type { SportPipelineRow } from "@/hooks/useSportPipeline";
+import { PLACE_FOOTNOTE } from "@/hooks/useIndiaSportRecord";
 
-const PLACES_FOOTNOTE =
-  "Finishing places are complete through Tokyo 2020; Paris 2024 was loaded at roster grain.";
+/** Single canonical source — never re-word this locally. */
+const PLACES_FOOTNOTE = PLACE_FOOTNOTE;
+
 
 interface Insight {
   key: string;

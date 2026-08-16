@@ -38,7 +38,14 @@ export interface SportPipelineRow {
   world_leader_medals: number | null;
   medals_per_100_trainees: number | null;
   utilisation_pct: number | null;
+  /** Share of India's entries in this sport that carry a recorded finishing place. */
+  india_place_coverage_pct: number | null;
+  /** False when place coverage < 40% or top-8 finishes < 5 — suppress conversion then. */
+  india_conversion_is_reliable: boolean | null;
+  /** Podium finishes recorded in participations — NOT the medal count. */
+  india_podium_finishes: number | null;
   archetype: SportArchetype | null;
+
 }
 
 /**
