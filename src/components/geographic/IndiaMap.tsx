@@ -185,8 +185,11 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const [mapLoaded, setMapLoaded] = useState(false);
 
   // ---- Infrastructure projects layer ---------------------------------------
-  const { data: projects = [] } = useSaiProjects();
-  const [showProjects, setShowProjects] = useState(true);
+  const {
+    data: projects = [],
+    isError: projectsError,
+  } = useSaiProjects(showProjectsDefault);
+  const [showProjects, setShowProjects] = useState(showProjectsDefault);
   const [projectStatuses, setProjectStatuses] = useState<Set<string>>(
     new Set(['Completed', 'In Progress'])
   );
@@ -285,7 +288,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
 
   // ---- SAI region data -----------------------------------------------------
-  const { data: regionByState } = useQuery({
+  const { data: regionByState, isError: regionError } = useQuery({
     queryKey: ['geo-region-state-mappings'],
     staleTime: Infinity,
     queryFn: async () => {
@@ -356,6 +359,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   // Choropleth tint by SAI region
   useEffect(() => {
     const map = mapRef.current?.getMap();
+    if (!showChoropleth) return;
     if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
     const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
     const seen = new Set<string>();
@@ -368,11 +372,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     });
     stops.push('#94a3b8');
     map.setPaintProperty('state-fills', 'fill-color', stops as never);
-  }, [regionByState, mapLoaded, styleEpoch]);
+  }, [regionByState, mapLoaded, styleEpoch, showChoropleth]);
 
   // Lazily mount district boundary lines the first time zoom crosses 5
   useEffect(() => {
     const map = mapRef.current?.getMap();
+    if (!showDistricts) return;
     if (!map || !mapLoaded || districtsAdded.current || zoom < 5) return;
     districtsAdded.current = true;
     if (!map.getSource('india-districts')) {
@@ -394,7 +399,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         map.getLayer('state-borders') ? 'state-borders' : undefined
       );
     }
-  }, [zoom, mapLoaded, satellite, styleEpoch]);
+  }, [zoom, mapLoaded, satellite, styleEpoch, showDistricts]);
 
 
   // ---- Filtering -----------------------------------------------------------
@@ -813,7 +818,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   if (!mapStyle) {
     return (
-      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse">
+      <div className="relative w-full rounded-lg overflow-hidden bg-muted animate-pulse" style={{ height }}>
         {slowLoad && (
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-sm text-muted-foreground">Loading map…</span>
@@ -824,7 +829,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }
 
   return (
-    <div className="relative w-full h-[600px] rounded-lg overflow-hidden">
+    <div className="relative w-full rounded-lg overflow-hidden" style={{ height }}>
       <Map
         ref={mapRef}
         initialViewState={{ longitude: INDIA_CENTER[0], latitude: INDIA_CENTER[1], zoom: 4 }}
@@ -1090,7 +1095,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         <div className="text-xs text-muted-foreground">Showing</div>
         <div className="text-2xl font-bold">{mappedCentres.length}</div>
         <div className="text-xs text-muted-foreground">
-          of {TOTAL_CENTRES.toLocaleString()} centres mapped
+          of {(totalCentres ?? centres.length).toLocaleString()} centres mapped
         </div>
         <Sheet>
           <SheetTrigger asChild>
