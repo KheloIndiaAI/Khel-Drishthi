@@ -147,6 +147,15 @@ const GeographicAnalytics = () => {
     },
   });
 
+  // Non-fatal: sport filtering degrades to "all centres" if the links fail.
+  useEffect(() => {
+    if (centreSportLinksError) {
+      console.warn("[geographic] centre_sport_links query failed — sport filter unavailable");
+    }
+  }, [centreSportLinksError]);
+
+
+
   // Fetch events for event type distribution
   const { data: events } = useQuery({
     queryKey: ["events-geo"],
