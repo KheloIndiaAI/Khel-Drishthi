@@ -27,10 +27,11 @@ export const PROJECT_STATUS_COLORS: Record<string, string> = {
 export const PROJECT_STATUSES = ['Completed', 'In Progress', 'Cancelled'] as const;
 
 /** Projects with verified GPS inside India — the only ones that may be plotted. */
-export const useSaiProjects = () =>
+export const useSaiProjects = (enabled = true) =>
   useQuery({
     queryKey: ['sai-projects-plottable'],
     staleTime: Infinity,
+    enabled,
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sai_projects')
@@ -42,6 +43,7 @@ export const useSaiProjects = () =>
       return (data ?? []) as SaiProject[];
     },
   });
+
 
 /** Every project row (373) — for analytics/report counts, never for plotting. */
 export const useAllSaiProjects = () =>
