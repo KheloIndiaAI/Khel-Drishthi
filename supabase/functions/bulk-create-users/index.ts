@@ -122,6 +122,8 @@ Deno.serve(async (req) => {
     for (const item of items) {
       const username = generateUsername(item.name, type);
       const email = `${username}${DOMAIN}`;
+      // Unique per-user password; surfaced once in the response and never recoverable.
+      const password = generatePassword();
       
       console.log(`Creating user: ${username} (${email})`);
 
@@ -134,7 +136,7 @@ Deno.serve(async (req) => {
           results.push({
             username,
             email,
-            password: DEFAULT_PASSWORD,
+            password: null,
             name: item.name,
             state: item.state,
             type,
@@ -149,7 +151,7 @@ Deno.serve(async (req) => {
         // Create user with admin API
         const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
           email,
-          password: DEFAULT_PASSWORD,
+          password,
           email_confirm: true,
           user_metadata: {
             name: item.name,
@@ -165,7 +167,7 @@ Deno.serve(async (req) => {
           results.push({
             username,
             email,
-            password: DEFAULT_PASSWORD,
+            password: null,
             name: item.name,
             state: item.state,
             type,
@@ -210,7 +212,7 @@ Deno.serve(async (req) => {
         results.push({
           username,
           email,
-          password: DEFAULT_PASSWORD,
+          password,
           name: item.name,
           state: item.state,
           type,
@@ -226,7 +228,7 @@ Deno.serve(async (req) => {
         results.push({
           username,
           email,
-          password: DEFAULT_PASSWORD,
+          password: null,
           name: item.name,
           state: item.state,
           type,
