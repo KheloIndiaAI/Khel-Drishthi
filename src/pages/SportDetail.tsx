@@ -65,6 +65,12 @@ const SportDetail = () => {
     },
   });
 
+  // Pre-aggregated sport row (oly_v_pipeline) — powers hero strip + insights
+  const { data: pipeline, isLoading: pipelineLoading } = useSportPipeline(sportId);
+  const showOlympicRecord = pipeline?.archetype !== "C_non_olympic";
+
+
+
   // Fetch events for this sport
   const { data: events } = useQuery({
     queryKey: ["sport-events", sportId],
