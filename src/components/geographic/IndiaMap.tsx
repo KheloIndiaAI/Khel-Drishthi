@@ -50,7 +50,6 @@ import {
 
 
 
-const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
 
 export interface Centre {
@@ -67,6 +66,7 @@ export interface Centre {
 
 interface CentreSportLink {
   centre_id: string;
+  sport_id?: string | null;
   sport_name: string | null;
   discipline_name: string | null;
 }
@@ -82,10 +82,26 @@ interface IndiaMapProps {
   centreSportLinks?: CentreSportLink[];
   selectedState?: string;
   selectedCentreType?: string;
-  selectedSport?: string;
+  /** Matched against centre_sport_links.sport_id (id, never name). */
+  selectedSportId?: string;
   onStateSelect?: (state: string) => void;
   focusProject?: ProjectFocus | null;
+  /** Wrapper height (also applied to the loading skeleton). */
+  height?: string;
+  /** Denominator of the "X of N centres mapped" overlay. */
+  totalCentres?: number;
+  /** Paint the SAI-region choropleth on state fills. */
+  showChoropleth?: boolean;
+  /** Initial visibility of the infrastructure projects layer; false skips the query. */
+  showProjects?: boolean;
+  /** Lazy-add district boundary lines on zoom. */
+  showDistricts?: boolean;
+  /** Fit viewport to supplied centres' bounds on first load. */
+  fitToBounds?: boolean;
+  /** Extra callback fired alongside internal centre selection. */
+  onCentreClick?: (centre: Centre) => void;
 }
+
 
 
 const CENTRE_TYPE_COLORS: Record<string, string> = {
@@ -133,10 +149,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   centreSportLinks = [],
   selectedState,
   selectedCentreType,
-  selectedSport,
+  selectedSportId,
   onStateSelect,
   focusProject,
+  height = '600px',
+  totalCentres,
+  showChoropleth = true,
+  showProjects: showProjectsDefault = true,
+  showDistricts = true,
+  fitToBounds = false,
+  onCentreClick,
 }) => {
+
   const mapRef = useRef<MapRef | null>(null);
   const { resolvedTheme } = useAppTheme();
 
@@ -161,8 +185,11 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   const [mapLoaded, setMapLoaded] = useState(false);
 
   // ---- Infrastructure projects layer ---------------------------------------
-  const { data: projects = [] } = useSaiProjects();
-  const [showProjects, setShowProjects] = useState(true);
+  const {
+    data: projects = [],
+    isError: projectsError,
+  } = useSaiProjects(showProjectsDefault);
+  const [showProjects, setShowProjects] = useState(showProjectsDefault);
   const [projectStatuses, setProjectStatuses] = useState<Set<string>>(
     new Set(['Completed', 'In Progress'])
   );
@@ -227,6 +254,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     setStyleEpoch((n) => n + 1);
   }, []);
 
+  // Query failures are non-fatal for the map surface; log once so they are
+  // observable rather than silently rendering empty layers.
+  useEffect(() => {
+    if (projectsError) console.warn('[map] SAI projects query failed — projects layer empty');
+  }, [projectsError]);
+
   // ---- Data watchdog -------------------------------------------------------
   // Guards against the class of failure where the map instance mounts fine
   // (DOM markers + attribution render) but nothing that requires worker-parsed
@@ -261,7 +294,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
 
   // ---- SAI region data -----------------------------------------------------
-  const { data: regionByState } = useQuery({
+  const { data: regionByState, isError: regionError } = useQuery({
     queryKey: ['geo-region-state-mappings'],
     staleTime: Infinity,
     queryFn: async () => {
@@ -283,6 +316,10 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       return map;
     },
   });
+
+  useEffect(() => {
+    if (regionError) console.warn('[map] SAI region mapping query failed — choropleth not tinted');
+  }, [regionError]);
 
   // Basemap visibility (street light/dark vs pure satellite imagery)
   useEffect(() => {
@@ -332,6 +369,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   // Choropleth tint by SAI region
   useEffect(() => {
     const map = mapRef.current?.getMap();
+    if (!showChoropleth) return;
     if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
     const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
     const seen = new Set<string>();
@@ -344,11 +382,12 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     });
     stops.push('#94a3b8');
     map.setPaintProperty('state-fills', 'fill-color', stops as never);
-  }, [regionByState, mapLoaded, styleEpoch]);
+  }, [regionByState, mapLoaded, styleEpoch, showChoropleth]);
 
   // Lazily mount district boundary lines the first time zoom crosses 5
   useEffect(() => {
     const map = mapRef.current?.getMap();
+    if (!showDistricts) return;
     if (!map || !mapLoaded || districtsAdded.current || zoom < 5) return;
     districtsAdded.current = true;
     if (!map.getSource('india-districts')) {
@@ -370,7 +409,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         map.getLayer('state-borders') ? 'state-borders' : undefined
       );
     }
-  }, [zoom, mapLoaded, satellite, styleEpoch]);
+  }, [zoom, mapLoaded, satellite, styleEpoch, showDistricts]);
 
 
   // ---- Filtering -----------------------------------------------------------
@@ -387,17 +426,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       filtered = filtered.filter((c) => activeFilters.has(c.centre_type));
     }
 
-    if (selectedSport && selectedSport !== 'all') {
+    if (selectedSportId && selectedSportId !== 'all') {
       const centreIdsWithSport = new Set(
         centreSportLinks
-          .filter((link) => link.sport_name === selectedSport)
+          .filter((link) => link.sport_id === selectedSportId)
           .map((link) => link.centre_id)
       );
       filtered = filtered.filter((c) => centreIdsWithSport.has(c.centre_id));
     }
 
     return filtered;
-  }, [centres, selectedState, selectedCentreType, selectedSport, centreSportLinks, activeFilters]);
+  }, [centres, selectedState, selectedCentreType, selectedSportId, centreSportLinks, activeFilters]);
+
 
   // Only centres with real coordinates get plotted
   const mappedCentres = useMemo(
@@ -584,6 +624,14 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     const b = map.getBounds();
     setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
   }, []);
+
+  const selectCentre = useCallback(
+    (centre: Centre) => {
+      setSelectedCentre(centre);
+      onCentreClick?.(centre);
+    },
+    [onCentreClick]
+  );
 
   const handleZoomIn = useCallback(() => mapRef.current?.zoomIn(), []);
   const handleZoomOut = useCallback(() => mapRef.current?.zoomOut(), []);
@@ -788,7 +836,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   if (!mapStyle) {
     return (
-      <div className="relative w-full h-[600px] rounded-lg overflow-hidden bg-muted animate-pulse">
+      <div className="relative w-full rounded-lg overflow-hidden bg-muted animate-pulse" style={{ height }}>
         {slowLoad && (
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-sm text-muted-foreground">Loading map…</span>
@@ -799,7 +847,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   }
 
   return (
-    <div className="relative w-full h-[600px] rounded-lg overflow-hidden">
+    <div className="relative w-full rounded-lg overflow-hidden" style={{ height }}>
       <Map
         ref={mapRef}
         initialViewState={{ longitude: INDIA_CENTER[0], latitude: INDIA_CENTER[1], zoom: 4 }}
@@ -807,6 +855,17 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         style={{ position: 'absolute', inset: 0 }}
         onLoad={(evt) => {
           setMapLoaded(true);
+          if (fitToBounds && mappedCentres.length > 0) {
+            const lngs = mappedCentres.map((c) => c.lng);
+            const lats = mappedCentres.map((c) => c.lat);
+            mapRef.current?.fitBounds(
+              [
+                [Math.min(...lngs), Math.min(...lats)],
+                [Math.max(...lngs), Math.max(...lats)],
+              ],
+              { padding: 48, duration: 0, maxZoom: 10 }
+            );
+          }
           syncViewport(evt as unknown as { target?: unknown });
         }}
         onError={(evt) => {
@@ -866,7 +925,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
               latitude={latitude}
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
-                setSelectedCentre(centre);
+                selectCentre(centre);
               }}
             >
               <div
@@ -1015,7 +1074,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
                   <button
                     key={c.centre_id}
                     onClick={() => {
-                      setSelectedCentre(c);
+                      selectCentre(c);
                       setClusterPopup(null);
                     }}
                     className="w-full text-left rounded p-1.5 text-xs hover:bg-muted transition-colors"
@@ -1065,7 +1124,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         <div className="text-xs text-muted-foreground">Showing</div>
         <div className="text-2xl font-bold">{mappedCentres.length}</div>
         <div className="text-xs text-muted-foreground">
-          of {TOTAL_CENTRES.toLocaleString()} centres mapped
+          of {(totalCentres ?? centres.length).toLocaleString()} centres mapped
         </div>
         <Sheet>
           <SheetTrigger asChild>
@@ -1481,7 +1540,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
                     className="w-full"
                     onClick={() => {
                       setSelectedProject(null);
-                      setSelectedCentre(parent);
+                      selectCentre(parent);
                     }}
                   >
                     <Building2 className="h-4 w-4 mr-2" />
@@ -1505,6 +1564,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           }}
         >
           <div className="text-xs font-semibold text-foreground">{hoveredState.dataName}</div>
+          {showChoropleth && (
           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <span
               className="inline-block h-2 w-2 rounded-full"
@@ -1517,6 +1577,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
               ? `RC ${regionByState[hoveredState.dataName]}`
               : 'No SAI region'}
           </div>
+          )}
           <div className="text-[10px] text-muted-foreground">
             {centreCountByState[hoveredState.dataName] ?? 0} centres
           </div>
@@ -1533,7 +1594,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         regionColors={REGION_COLORS}
         centreTypeColors={CENTRE_TYPE_COLORS}
         onClose={() => setReportOpen(false)}
-        onCentreClick={(c) => setSelectedCentre(c)}
+        onCentreClick={(c) => selectCentre(c)}
       />
 
       {/* Zoom level indicator */}
