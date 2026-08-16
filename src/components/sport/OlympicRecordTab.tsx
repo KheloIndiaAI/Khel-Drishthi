@@ -52,8 +52,12 @@ import {
   useIndiaSportTimeline,
   useMostCapped,
   useSportBiometrics,
+  type BiometricRow,
   type RosterSort,
 } from "@/hooks/useIndiaSportRecord";
+
+/** Compact number: 172 → "172", 166.5 → "166.5" */
+const num = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
 
 const DASH = "—";
 const NATIONAL_CONVERSION = 35.9;
