@@ -12,7 +12,6 @@ import {
   YAxis,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, Globe, Info, Scale, TrendingUp, Users } from "lucide-react";
@@ -211,11 +210,7 @@ export const WorldContextTab = ({ sportId, sportName }: Props) => {
                         <td className="py-1.5 tabular-nums text-muted-foreground">{c.rank}</td>
                         <td className="py-1.5 pr-2">
                           {c.name}
-                          {isIndia && (
-                            <Badge className="ml-2 align-middle" variant="default">
-                              India
-                            </Badge>
-                          )}
+                          {isIndia && <span className="sr-only"> (India)</span>}
                         </td>
                         <td className="py-1.5 text-right tabular-nums">{num(c.gold)}</td>
                         <td className="py-1.5 text-right tabular-nums">{num(c.silver)}</td>
@@ -232,9 +227,6 @@ export const WorldContextTab = ({ sportId, sportName }: Props) => {
                       <td className="py-1.5 tabular-nums">{ownership.india ? ownership.india.rank : DASH}</td>
                       <td className="py-1.5 pr-2">
                         India
-                        <Badge className="ml-2 align-middle" variant="default">
-                          India
-                        </Badge>
                       </td>
                       <td className="py-1.5 text-right tabular-nums">{ownership.india ? num(ownership.india.gold) : DASH}</td>
                       <td className="py-1.5 text-right tabular-nums">{ownership.india ? num(ownership.india.silver) : DASH}</td>
@@ -247,6 +239,9 @@ export const WorldContextTab = ({ sportId, sportName }: Props) => {
                   </tfoot>
                 )}
               </table>
+              <p className="text-xs text-muted-foreground mt-2">
+                India's row is shown in bold with a tinted background, and labelled for screen readers.
+              </p>
               {!ownership.indiaInTop10 && !ownership.india && (
                 <p className="text-xs text-muted-foreground mt-2">
                   India has not medalled in {label} in the last three Games.
