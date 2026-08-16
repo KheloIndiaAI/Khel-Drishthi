@@ -18,6 +18,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import GlobalContextSection from "@/components/sport/GlobalContextSection";
+import SportHeroStrip from "@/components/sport/SportHeroStrip";
+import SportInsights from "@/components/sport/SportInsights";
+import { useSportPipeline } from "@/hooks/useSportPipeline";
 
 import { 
   ArrowLeft, 
@@ -61,6 +64,12 @@ const SportDetail = () => {
       return data;
     },
   });
+
+  // Pre-aggregated sport row (oly_v_pipeline) — powers hero strip + insights
+  const { data: pipeline, isLoading: pipelineLoading } = useSportPipeline(sportId);
+  const showOlympicRecord = pipeline?.archetype !== "C_non_olympic";
+
+
 
   // Fetch events for this sport
   const { data: events } = useQuery({
@@ -419,92 +428,22 @@ const SportDetail = () => {
         </div>
       </div>
 
-      {/* Overview Dashboard - All key info at a glance */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {/* Events Card */}
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Trophy className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase">Events</span>
-            </div>
-            <div className="flex items-baseline gap-4">
-              <div>
-                <span className="text-2xl font-display">{la28Events.length}</span>
-                <span className="text-xs text-muted-foreground ml-1">LA28</span>
-              </div>
-              <div>
-                <span className="text-2xl font-display">{ag2026Events.length}</span>
-                <span className="text-xs text-muted-foreground ml-1">AG26</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Hero strip — persistent, above the tabs */}
+      <SportHeroStrip row={pipeline} isLoading={pipelineLoading} />
 
-        {/* Medals Card */}
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Medal className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase">Olympic Medals</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-2xl font-display">{medals?.length || 0}</span>
-              {(medals?.length || 0) > 0 && (
-                <div className="flex gap-1.5 text-xs">
-                  {goldCount > 0 && <span className="text-yellow-500">{goldCount}G</span>}
-                  {silverCount > 0 && <span className="text-gray-400">{silverCount}S</span>}
-                  {bronzeCount > 0 && <span className="text-amber-700">{bronzeCount}B</span>}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="overview" className="w-full">
+        <div className="overflow-x-auto mb-4 -mx-1 px-1">
+          <TabsList className="inline-flex w-max">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            {showOlympicRecord && <TabsTrigger value="record">Olympic Record</TabsTrigger>}
+            <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+            <TabsTrigger value="events">Events</TabsTrigger>
+          </TabsList>
+        </div>
 
-        {/* Infrastructure Card */}
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Building2 className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase">Centres</span>
-            </div>
-            <div className="flex flex-wrap items-baseline gap-3">
-              <div>
-                <span className="text-xl font-display">{ncoeCapacity?.length || 0}</span>
-                <span className="text-xs text-muted-foreground ml-1">NCOE</span>
-              </div>
-              <div>
-                <span className="text-xl font-display">{stcCapacity?.length || 0}</span>
-                <span className="text-xs text-muted-foreground ml-1">STC</span>
-              </div>
-              <div>
-                <span className="text-xl font-display">{sport.kic_centres || 0}</span>
-                <span className="text-xs text-muted-foreground ml-1">KIC</span>
-              </div>
-              <div>
-                <span className="text-xl font-display">{sport.kisce_centres || 0}</span>
-                <span className="text-xs text-muted-foreground ml-1">KISCE</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <TabsContent value="events" className="mt-0">
 
-        {/* Athletes Card */}
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Users className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase">Athletes</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-display">{totalAthletes}</span>
-              <span className="text-xs text-muted-foreground">/ {totalSanctioned}</span>
-            </div>
-            <Progress value={utilizationPct} className="h-1.5 mt-2" />
-            <p className="text-xs text-muted-foreground mt-1">{utilizationPct}% capacity</p>
-          </CardContent>
-        </Card>
-      </div>
+
 
       {/* Events Analysis Section - Reworked for clarity */}
       <Card className="mb-6">
@@ -865,7 +804,10 @@ const SportDetail = () => {
           </div>
         </CardContent>
       </Card>
+        </TabsContent>
 
+        {showOlympicRecord && (
+        <TabsContent value="record" className="mt-0">
       {/* Olympic History Section */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Medals */}
@@ -935,11 +877,12 @@ const SportDetail = () => {
           </CardContent>
         </Card>
       </div>
+        </TabsContent>
+        )}
 
-      {/* Infrastructure & Notes Section */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Column - Training Centres */}
-        <div className="lg:col-span-2">
+        {/* Pipeline */}
+        <TabsContent value="pipeline" className="mt-0">
+        <div>
           {(ncoeCapacity && ncoeCapacity.length > 0) || (stcCapacity && stcCapacity.length > 0) ? (
             <Card>
               <CardHeader className="pb-2">
@@ -1047,17 +990,19 @@ const SportDetail = () => {
               </CardContent>
             </Card>
           )}
-
-          {/* Global Olympic Context */}
-          <div className="mt-6">
-            <GlobalContextSection sportId={sportId!} />
-          </div>
         </div>
+        </TabsContent>
 
+        {/* Overview */}
+        <TabsContent value="overview" className="mt-0 space-y-6">
+          <SportInsights row={pipeline} />
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <GlobalContextSection sportId={sportId!} />
+            </div>
 
-        {/* Right Column - Notes */}
+        {/* Notes */}
         <div className="space-y-4">
-          {/* Notes */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -1119,7 +1064,9 @@ const SportDetail = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+          </div>
+        </TabsContent>
+      </Tabs>
       {/* Edit Note Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
