@@ -24,6 +24,7 @@ import { useSportPipeline } from "@/hooks/useSportPipeline";
 import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
 import SportMapTab, { useSportCentres } from "@/components/sport/SportMapTab";
 import WorldContextTab from "@/components/sport/WorldContextTab";
+import PipelineTab from "@/components/sport/PipelineTab";
 
 
 import { 
