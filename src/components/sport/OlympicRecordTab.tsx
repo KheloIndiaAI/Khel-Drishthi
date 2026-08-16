@@ -318,15 +318,33 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
   }, [medalists]);
 
   const biometrics = useMemo(() => {
-    const rows = (bio ?? []).filter((r) => r.height_cm != null);
-    if (rows.length < 20) return null;
-    const by = (g: string) => rows.filter((r) => (r.gender || "").toLowerCase() === g);
-    const build = (list: typeof rows) => ({
-      n: list.length,
-      height: median(list.map((r) => Number(r.height_cm)).filter((v) => !!v)),
-      weight: median(list.map((r) => Number(r.weight_kg)).filter((v) => !!v)),
-    });
-    return { male: build(by("male")), female: build(by("female")), all: build(rows) };
+    const rows = (bio ?? []).filter(
+      (r) => (r.gender || "").toLowerCase() !== "unknown" && (r.n_height ?? 0) > 0
+    );
+    if (!rows.length) return null;
+    // Sport-wide total — identical on every row for a sport.
+    const sportN = Number(rows[0].sport_n_height ?? 0);
+    if (sportN < 20) return null;
+
+    const pick = (g: string) =>
+      rows.find((r) => (r.gender || "").toLowerCase() === g.toLowerCase()) || null;
+    const male = pick("Male");
+    const female = pick("Female");
+    const big = (r: typeof male) => !!r && (r.n_height ?? 0) >= 5;
+
+    const genders = [
+      { label: "Men", d: male },
+      { label: "Women", d: female },
+    ].filter((x) => big(x.d)) as { label: string; d: BiometricRow }[];
+
+    // If neither gender clears the n>=5 bar, fall back to the sport-level figure.
+    const dominant = rows.reduce((a, b) => ((b.n_height ?? 0) > (a.n_height ?? 0) ? b : a));
+    const tooSmall = [
+      { label: "Women", d: female },
+      { label: "Men", d: male },
+    ].filter((x) => x.d && !big(x.d)) as { label: string; d: BiometricRow }[];
+
+    return { sportN, genders, dominant, tooSmall };
   }, [bio]);
 
   const hasOlympians = (pipeline?.india_olympians ?? 0) > 0 || (timeline?.length ?? 0) > 0;
