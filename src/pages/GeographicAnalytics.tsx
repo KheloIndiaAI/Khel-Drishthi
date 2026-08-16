@@ -127,7 +127,7 @@ const GeographicAnalytics = () => {
   });
 
   // Fetch centre-sport links
-  const { data: centreSportLinks } = useQuery({
+  const { data: centreSportLinks, isError: centreSportLinksError } = useQuery({
     queryKey: ["centre-sport-links-geo"],
     queryFn: async () => {
       const pageSize = 1000;
@@ -648,7 +648,7 @@ const GeographicAnalytics = () => {
                 centreSportLinks={centreSportLinks || []}
                 selectedState={selectedState}
                 selectedCentreType={selectedCentreType}
-                selectedSport={selectedSport === "all" ? undefined : sports?.find(s => s.sport_id === selectedSport)?.sport_name}
+                selectedSportId={selectedSport === "all" ? undefined : selectedSport}
                 onStateSelect={setSelectedState}
                 focusProject={focusProject}
               />
