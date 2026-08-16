@@ -428,7 +428,7 @@ const Infrastructure = () => {
   }, [centresWithRegion, searchTerm, activeTab, stateFilter, sportCentreIds]);
 
   const centreTypeColors: Record<string, string> = {
-    NCOE: "bg-saffron text-white",
+    NCOE: "bg-saffron text-on-saffron",
     STC: "bg-india-green text-white",
     KISCE: "bg-india-navy text-white",
     KIC: "bg-purple-600 text-white",
@@ -684,7 +684,7 @@ const Infrastructure = () => {
         
         <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => { setMainView("type"); setActiveTab("NCOE"); }}>
           <CardContent className="pt-4">
-            <Badge className="bg-saffron text-white mb-1">NCOE</Badge>
+            <Badge className="bg-saffron text-on-saffron mb-1">NCOE</Badge>
             <p className="text-2xl font-display">{stats.ncoe}</p>
             <p className="text-[10px] text-muted-foreground">National Centres</p>
           </CardContent>

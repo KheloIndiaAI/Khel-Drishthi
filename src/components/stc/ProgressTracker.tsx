@@ -95,7 +95,7 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold",
                     progress >= milestone
-                      ? "bg-gradient-to-br from-primary to-accent text-primary-foreground"
+                      ? "bg-gradient-to-br from-primary to-accent text-accent-foreground"
                       : "bg-muted text-muted-foreground"
                   )}
                 >

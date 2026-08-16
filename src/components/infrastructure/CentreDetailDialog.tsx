@@ -52,7 +52,7 @@ interface CentreDetailDialogProps {
 }
 
 const centreTypeColors: Record<string, string> = {
-  NCOE: "bg-saffron text-white",
+  NCOE: "bg-saffron text-on-saffron",
   STC: "bg-india-green text-white",
   KISCE: "bg-india-navy text-white",
   KIC: "bg-purple-600 text-white",

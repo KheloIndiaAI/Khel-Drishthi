@@ -1120,7 +1120,9 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       )}
 
       {/* Top Left - Stats */}
-      <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
+      {/* z-20: the honesty counter must never be covered by the legend on short maps. */}
+      <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-20">
+
         <div className="text-xs text-muted-foreground">Showing</div>
         <div className="text-2xl font-bold">{mappedCentres.length}</div>
         <div className="text-xs text-muted-foreground">
@@ -1281,7 +1283,8 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           </button>
         </div>
 
-        {/* PROJECTS */}
+        {/* PROJECTS — omitted entirely when the projects layer is disabled. */}
+        {showProjectsDefault && (
         <div className="mt-3 pt-2 border-t">
           <div className="flex items-center justify-between mb-1.5">
             <h4 className="text-xs font-semibold text-muted-foreground">PROJECTS</h4>
@@ -1336,6 +1339,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
             </div>
           </div>
         </div>
+        )}
       </div>
 
 

@@ -324,7 +324,7 @@ const HeroSection = () => {
           <Button 
             asChild 
             size="lg" 
-            className="bg-saffron hover:bg-saffron/90 text-white font-semibold px-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="bg-saffron hover:bg-saffron/90 text-on-saffron font-semibold px-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             <Link to="/#sports">
               <Target className="mr-2 h-5 w-5" />
