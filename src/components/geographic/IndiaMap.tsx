@@ -1283,7 +1283,8 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           </button>
         </div>
 
-        {/* PROJECTS */}
+        {/* PROJECTS — omitted entirely when the projects layer is disabled. */}
+        {showProjectsDefault && (
         <div className="mt-3 pt-2 border-t">
           <div className="flex items-center justify-between mb-1.5">
             <h4 className="text-xs font-semibold text-muted-foreground">PROJECTS</h4>
