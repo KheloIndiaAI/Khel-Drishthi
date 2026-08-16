@@ -748,6 +748,8 @@ const GeographicAnalytics = () => {
                 selectedSportId={selectedSport === "all" ? undefined : selectedSport}
                 onStateSelect={setSelectedState}
                 focusProject={focusProject}
+                choroplethValues={sportStatesLoading ? undefined : sportChoropleth}
+                choroplethLabel={sportLabel ? `${sportLabel} centres` : 'centres'}
               />
 
             </CardContent>
