@@ -51,6 +51,8 @@ import {
 } from "recharts";
 import PageSEO from "@/components/seo/PageSEO";
 import IndiaMap, { type ProjectFocus } from "@/components/geographic/IndiaMap";
+import { useSportStates, summariseSportStates } from "@/hooks/useSportStates";
+import { Link } from "react-router-dom";
 import ProjectsTab from "@/components/geographic/ProjectsTab";
 import { HardHat } from "lucide-react";
 
@@ -451,6 +453,35 @@ const GeographicAnalytics = () => {
     };
   }, [centres, sports, centreSportLinks, events, states]);
 
+  // ---- Sport-aware narration (kd_v_sport_state) -----------------------------
+  const sportId = selectedSport === "all" ? undefined : selectedSport;
+  const {
+    data: sportStates,
+    isLoading: sportStatesLoading,
+    isError: sportStatesError,
+  } = useSportStates(sportId);
+
+  useEffect(() => {
+    if (sportStatesError) {
+      console.warn("[geographic] kd_v_sport_state query failed — page stays portal-wide");
+    }
+  }, [sportStatesError]);
+
+  const sportSummary = useMemo(() => summariseSportStates(sportStates), [sportStates]);
+
+  /** State name -> centres for the selected sport; drives the sequential choropleth. */
+  const sportChoropleth = useMemo(() => {
+    if (!sportId || !sportStates || sportStates.length === 0) return undefined;
+    const out: Record<string, number> = {};
+    sportStates.forEach((r) => {
+      out[r.state] = Number(r.centres) || 0;
+    });
+    return out;
+  }, [sportId, sportStates]);
+
+  const sportLabel = sportSummary?.sportName || sports?.find((s) => s.sport_id === sportId)?.sport_name || "";
+
+
   const clearFilters = () => {
     setSelectedState("all");
     setSelectedCentreType("all");
@@ -492,7 +523,63 @@ const GeographicAnalytics = () => {
         </p>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards — sport-scoped when a sport is selected */}
+      {sportId && sportSummary ? (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Building2 className="h-4 w-4" />
+                  <span className="text-xs font-medium">{sportLabel} centres</span>
+                </div>
+                <p className="text-3xl font-display">{sportSummary.centres.toLocaleString()}</p>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  {sportSummary.centresMappable} mapped
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-xs font-medium">States with {sportLabel}</span>
+                </div>
+                <p className="text-3xl font-display">{sportSummary.statesLinked}</p>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  {sportSummary.statesWithMappedCentre} with a mapped centre
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Users className="h-4 w-4" />
+                  <span className="text-xs font-medium">{sportLabel} trainees</span>
+                </div>
+                <p className="text-3xl font-display">{sportSummary.existing.toLocaleString()}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Target className="h-4 w-4" />
+                  <span className="text-xs font-medium">{sportLabel} sanctioned capacity</span>
+                </div>
+                <p className="text-3xl font-display">{sportSummary.sanctioned.toLocaleString()}</p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="mb-6">
+            <Link
+              to={`/sport/${sportId}`}
+              className="text-sm font-medium text-saffron-ink hover:underline"
+            >
+              View full {sportLabel} dossier →
+            </Link>
+          </div>
+        </>
+      ) : (
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
         <Card>
           <CardContent className="pt-4">
@@ -549,6 +636,7 @@ const GeographicAnalytics = () => {
           </CardContent>
         </Card>
       </div>
+      )}
 
       {/* Filters */}
       <Card className="mb-6">
@@ -660,6 +748,8 @@ const GeographicAnalytics = () => {
                 selectedSportId={selectedSport === "all" ? undefined : selectedSport}
                 onStateSelect={setSelectedState}
                 focusProject={focusProject}
+                choroplethValues={sportStatesLoading ? undefined : sportChoropleth}
+                choroplethLabel={sportLabel ? `${sportLabel} centres` : 'centres'}
               />
 
             </CardContent>
@@ -720,9 +810,9 @@ const GeographicAnalytics = () => {
                   <span className="text-xs font-medium">Avg Centres/District</span>
                 </div>
                 <p className="text-3xl font-display">
-                  {districtAnalytics.length > 0 
-                    ? (centres?.length || 0 / districtAnalytics.length).toFixed(1) 
-                    : 0}
+                  {districtAnalytics.length > 0 && (centres?.length ?? 0) > 0
+                    ? ((centres?.length ?? 0) / districtAnalytics.length).toFixed(1)
+                    : "—"}
                 </p>
               </CardContent>
             </Card>
