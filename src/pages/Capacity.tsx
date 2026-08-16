@@ -297,7 +297,7 @@ const Capacity = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Badge className="bg-saffron text-white">NCOE</Badge>
+                  <Badge className="bg-saffron text-on-saffron">NCOE</Badge>
                   {ncoeUniqueCentres} Centres ({filteredNcoe?.length || 0} sport entries)
                 </CardTitle>
               </CardHeader>

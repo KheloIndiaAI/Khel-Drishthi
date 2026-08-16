@@ -215,7 +215,7 @@ const Benchmark = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-2">
-              <Badge className="bg-saffron text-white hover:bg-saffron">India (IND)</Badge>
+              <Badge className="bg-saffron text-on-saffron hover:bg-saffron">India (IND)</Badge>
               {PEERS.map((p) => {
                 const active = selectedPeers.includes(p.noc);
                 const disabled = !active && selectedPeers.length >= MAX_PEERS;

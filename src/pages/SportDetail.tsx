@@ -22,6 +22,7 @@ import SportHeroStrip from "@/components/sport/SportHeroStrip";
 import SportInsights from "@/components/sport/SportInsights";
 import { useSportPipeline } from "@/hooks/useSportPipeline";
 import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
+import SportMapTab, { useSportCentres } from "@/components/sport/SportMapTab";
 
 
 import { 
@@ -57,6 +58,7 @@ const SportDetail = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const needsEvents = activeTab === "events";
   const needsPipeline = activeTab === "pipeline";
+  const needsMap = activeTab === "map";
 
   // Fetch sport details
   const { data: sport, isLoading: sportLoading } = useQuery({
@@ -76,6 +78,11 @@ const SportDetail = () => {
   // Pre-aggregated sport row (oly_v_pipeline) — powers hero strip + insights
   const { data: pipeline, isLoading: pipelineLoading } = useSportPipeline(sportId);
   const showOlympicRecord = pipeline?.archetype !== "C_non_olympic";
+
+  // Map tab is hidden entirely when no centre in the system lists this sport.
+  const { data: sportCentres, isError: sportCentresError } = useSportCentres(sportId);
+  const showMap = (sportCentres?.length ?? 0) > 0;
+  if (sportCentresError) console.warn("[sport] centre locations query failed");
 
   // Fetch events for this sport
   const { data: events } = useQuery({
@@ -329,13 +336,13 @@ const SportDetail = () => {
         
         {/* Unified Status Row */}
         <div className="flex flex-wrap items-center gap-2">
-          {sport.present_la28 && <Badge className="bg-saffron text-white">LA 2028</Badge>}
+          {sport.present_la28 && <Badge className="bg-saffron text-on-saffron">LA 2028</Badge>}
           {sport.present_ag2026 && <Badge className="bg-india-green text-white">AG 2026</Badge>}
           
           {sport.is_tops && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-saffron hover:bg-saffron/90 text-white gap-1 cursor-help">
+                <Badge className="bg-saffron hover:bg-saffron/90 text-on-saffron gap-1 cursor-help">
                   <Trophy className="h-3 w-3" />
                   TOPS
                 </Badge>
@@ -394,9 +401,15 @@ const SportDetail = () => {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {showOlympicRecord && <TabsTrigger value="record">Olympic Record</TabsTrigger>}
             <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+            {showMap && <TabsTrigger value="map">Map</TabsTrigger>}
             <TabsTrigger value="events">Events</TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="map" className="mt-0">
+          {needsMap && <SportMapTab sportId={sportId} sportName={sport?.sport_name ?? undefined} />}
+        </TabsContent>
+
 
         <TabsContent value="events" className="mt-0">
 
@@ -790,7 +803,7 @@ const SportDetail = () => {
                 <Tabs defaultValue={ncoeCapacity && ncoeCapacity.length > 0 ? "ncoe" : "stc"} className="w-full">
                   <TabsList className="w-full grid grid-cols-2 h-9 mb-4">
                     <TabsTrigger value="ncoe" className="gap-2" disabled={!ncoeCapacity || ncoeCapacity.length === 0}>
-                      <Badge className="bg-saffron text-white text-[10px] px-1.5">NCOE</Badge>
+                      <Badge className="bg-saffron text-on-saffron text-[10px] px-1.5">NCOE</Badge>
                       {ncoeCapacity?.length || 0} Centres
                     </TabsTrigger>
                     <TabsTrigger value="stc" className="gap-2" disabled={!stcCapacity || stcCapacity.length === 0}>

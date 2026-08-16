@@ -17,9 +17,10 @@
     --popover: 40 30% 99%;
     --popover-foreground: 220 25% 10%;
 
-    /* Saffron Primary #FF9933 */
+    /* Saffron Primary #FF9933 — brand colour, unchanged.
+       Foreground is near-black ink: #FF9933 vs 220 25% 10% = 8.39:1 (white was 2.13:1). */
     --primary: 30 100% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 220 25% 10%;
 
     /* Subtle secondary with warm tint */
     --secondary: 35 20% 92%;
@@ -52,10 +53,16 @@
     --warning: 30 100% 60%;
     --info: 240 100% 25%;
 
-    /* India Flag Colors */
+    /* India Flag Colors — fills, borders, chart marks. Never use for text. */
     --saffron: 30 100% 60%;
     --india-green: 114 89% 28%;
     --india-navy: 240 100% 25%;
+
+    /* Saffron as a TEXT colour only. Darkened so it clears AA on --background
+       (4.92:1) and on --card (5.22:1). Do not use as a fill. */
+    --saffron-ink: 30 100% 33%;
+    /* Ink placed on top of a saffron fill (#FF9933): 8.39:1 */
+    --on-saffron: 220 25% 10%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(30, 100%, 60%) 0%, hsl(35, 100%, 55%) 100%);
@@ -92,7 +99,7 @@
     --popover-foreground: 220 15% 95%;
 
     --primary: 30 100% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 220 25% 10%;
 
     --secondary: 220 20% 18%;
     --secondary-foreground: 220 15% 90%;
@@ -105,6 +112,10 @@
 
     --navy: 240 100% 35%;
 
+    /* Saffron text on the dark background needs no darkening: 8.75:1 */
+    --saffron-ink: 30 100% 60%;
+    --on-saffron: 220 25% 10%;
+
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
@@ -115,7 +126,7 @@
     --sidebar-background: 220 25% 10%;
     --sidebar-foreground: 220 15% 90%;
     --sidebar-primary: 30 100% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary-foreground: 220 25% 10%;
     --sidebar-accent: 220 20% 15%;
     --sidebar-accent-foreground: 220 15% 90%;
     --sidebar-border: 220 20% 15%;
@@ -291,8 +302,15 @@
     background-clip: text;
   }
 
+  /* Saffron used as TEXT resolves to the darkened ink token so it clears AA.
+     Backgrounds, borders and chart marks keep the pure brand #FF9933. */
   .text-saffron {
-    color: #FF9933;
+    color: hsl(var(--saffron-ink));
+  }
+
+  /* Ink for text/icons sitting on a saffron fill. */
+  .text-on-saffron {
+    color: hsl(var(--on-saffron));
   }
 
   .text-india-green {
