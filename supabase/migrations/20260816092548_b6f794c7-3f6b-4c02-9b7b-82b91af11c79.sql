@@ -1,0 +1,1 @@
+GRANT SELECT ON public.oly_v_india_biometrics TO anon, authenticated;
