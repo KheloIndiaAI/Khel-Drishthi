@@ -1301,30 +1301,31 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
       {/* Bottom Left - Filter Buttons */}
       <div className="absolute bottom-10 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
-        {sequentialMode && (
-          <div className="mb-3 pb-2 border-b">
-            <h4 className="text-xs font-semibold mb-1.5 text-muted-foreground uppercase">
+        {sequentialMode && buckets.length > 0 && (
+          <div className="mb-3 pb-2 border-b max-w-[180px]">
+            <h4 className="text-[10px] font-semibold mb-1.5 text-muted-foreground uppercase leading-tight">
               {choroplethLabel} per state
             </h4>
-            <div className="space-y-1">
+            <div className="flex items-center gap-0.5">
               {buckets.map((b) => (
-                <div key={b.min} className="flex items-center gap-2 text-[10px]">
-                  <span
-                    className="inline-block h-3 w-5 rounded-sm border border-border/50"
-                    style={{ backgroundColor: b.color }}
-                  />
-                  <span className="text-muted-foreground">
-                    {b.min === b.max ? b.min : `${b.min}–${b.max}`}
-                  </span>
-                </div>
-              ))}
-              <div className="flex items-center gap-2 text-[10px] pt-0.5">
                 <span
-                  className="inline-block h-3 w-5 rounded-sm border border-border/50"
-                  style={{ backgroundColor: NO_PRESENCE_FILL }}
+                  key={b.min}
+                  title={b.min === b.max ? `${b.min}` : `${b.min}–${b.max}`}
+                  className="h-2.5 flex-1 first:rounded-l-sm last:rounded-r-sm"
+                  style={{ backgroundColor: b.color }}
                 />
-                <span className="text-muted-foreground">No presence</span>
-              </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5">
+              <span>{buckets[0].min}</span>
+              <span>{buckets[buckets.length - 1].max}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] mt-1">
+              <span
+                className="inline-block h-2.5 w-4 rounded-sm border border-border/50"
+                style={{ backgroundColor: NO_PRESENCE_FILL }}
+              />
+              <span className="text-muted-foreground">No presence</span>
             </div>
           </div>
         )}
