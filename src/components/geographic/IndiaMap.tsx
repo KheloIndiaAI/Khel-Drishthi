@@ -411,17 +411,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       filtered = filtered.filter((c) => activeFilters.has(c.centre_type));
     }
 
-    if (selectedSport && selectedSport !== 'all') {
+    if (selectedSportId && selectedSportId !== 'all') {
       const centreIdsWithSport = new Set(
         centreSportLinks
-          .filter((link) => link.sport_name === selectedSport)
+          .filter((link) => link.sport_id === selectedSportId)
           .map((link) => link.centre_id)
       );
       filtered = filtered.filter((c) => centreIdsWithSport.has(c.centre_id));
     }
 
     return filtered;
-  }, [centres, selectedState, selectedCentreType, selectedSport, centreSportLinks, activeFilters]);
+  }, [centres, selectedState, selectedCentreType, selectedSportId, centreSportLinks, activeFilters]);
+
 
   // Only centres with real coordinates get plotted
   const mappedCentres = useMemo(
