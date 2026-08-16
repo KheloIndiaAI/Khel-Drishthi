@@ -2673,6 +2673,20 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_v_sport_country_year: {
+        Row: {
+          bronze: number | null
+          country_name: string | null
+          country_noc: string | null
+          gold: number | null
+          kd_sport_id: string | null
+          silver: number | null
+          sport_name: string | null
+          total: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
       oly_v_sport_india: {
         Row: {
           bronze: number | null
