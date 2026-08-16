@@ -21,6 +21,8 @@ import GlobalContextSection from "@/components/sport/GlobalContextSection";
 import SportHeroStrip from "@/components/sport/SportHeroStrip";
 import SportInsights from "@/components/sport/SportInsights";
 import { useSportPipeline } from "@/hooks/useSportPipeline";
+import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
+
 
 import { 
   ArrowLeft, 
@@ -808,77 +810,14 @@ const SportDetail = () => {
 
         {showOlympicRecord && (
         <TabsContent value="record" className="mt-0">
-      {/* Olympic History Section */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        {/* Medals */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Medal className="h-4 w-4" />
-              Olympic Medals ({medals?.length || 0})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {medals && medals.length > 0 ? (
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {medals.map((medal) => (
-                  <div key={medal.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate">{medal.athlete_or_team}</p>
-                      <p className="text-xs text-muted-foreground truncate">{medal.event_raw}</p>
-                    </div>
-                    <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                      <Badge className={
-                        medal.medal === "Gold" ? "medal-gold" :
-                        medal.medal === "Silver" ? "medal-silver" :
-                        "medal-bronze"
-                      }>
-                        {medal.medal}
-                      </Badge>
-                      <span className="text-xs font-medium">{medal.year}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No Olympic medals yet</p>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Participation History */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Olympic Participation
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {participation && participation.length > 0 ? (
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {participation.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm">{p.games_name || 'Olympics'}</span>
-                      <span className="text-xs text-muted-foreground">({p.year})</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="font-medium">{p.athletes}</span>
-                      <span className="text-xs text-muted-foreground">athletes</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No participation data available</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          <OlympicRecordTab
+            sportId={sportId!}
+            sportName={sport.sport_name}
+            pipeline={pipeline}
+          />
         </TabsContent>
         )}
+
 
         {/* Pipeline */}
         <TabsContent value="pipeline" className="mt-0">

@@ -15,13 +15,19 @@ const num = (v: number | null | undefined) => (v == null ? DASH : Number(v).toLo
 const medalsLabel = (row: SportPipelineRow) => {
   if (row.india_medals == null) return DASH;
   if (row.india_medals === 0) return "None";
-  return String(row.india_medals);
+  const parts = [
+    `${row.india_gold ?? 0}G`,
+    `${row.india_silver ?? 0}S`,
+    `${row.india_bronze ?? 0}B`,
+  ];
+  return parts.join(" ");
 };
 
 const medalsSub = (row: SportPipelineRow) => {
   if (!row.india_medals) return undefined;
-  return row.india_gold ? `${row.india_gold}G of ${row.india_medals}` : "no gold yet";
+  return `${row.india_medals} medal${row.india_medals === 1 ? "" : "s"} total`;
 };
+
 
 const pct = (v: number | null | undefined, scale = 1) =>
   v == null ? DASH : `${(Number(v) * scale).toFixed(1)}%`;
