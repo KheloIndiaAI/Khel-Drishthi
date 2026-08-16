@@ -180,6 +180,27 @@ export type Database = {
             referencedColumns: ["centre_id"]
           },
           {
+            foreignKeyName: "centre_sport_links_centre_id_fkey"
+            columns: ["centre_id"]
+            isOneToOne: false
+            referencedRelation: "kd_v_sport_centres"
+            referencedColumns: ["centre_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
             foreignKeyName: "centre_sport_links_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
@@ -280,6 +301,20 @@ export type Database = {
           sport_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "disciplines_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "disciplines_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
           {
             foreignKeyName: "disciplines_sport_id_fkey"
             columns: ["sport_id"]
@@ -406,6 +441,20 @@ export type Database = {
             foreignKeyName: "event_overlap_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "event_overlap_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "event_overlap_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
             referencedRelation: "sports"
             referencedColumns: ["sport_id"]
           },
@@ -479,6 +528,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "disciplines"
             referencedColumns: ["discipline_id"]
+          },
+          {
+            foreignKeyName: "events_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "events_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
           },
           {
             foreignKeyName: "events_sport_id_fkey"
@@ -786,6 +849,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "centres"
             referencedColumns: ["centre_id"]
+          },
+          {
+            foreignKeyName: "ncoe_capacity_centre_id_fkey"
+            columns: ["centre_id"]
+            isOneToOne: false
+            referencedRelation: "kd_v_sport_centres"
+            referencedColumns: ["centre_id"]
+          },
+          {
+            foreignKeyName: "ncoe_capacity_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "ncoe_capacity_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
           },
           {
             foreignKeyName: "ncoe_capacity_sport_id_fkey"
@@ -1228,6 +1312,20 @@ export type Database = {
             foreignKeyName: "olympic_medals_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "olympic_medals_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "olympic_medals_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
             referencedRelation: "sports"
             referencedColumns: ["sport_id"]
           },
@@ -1314,6 +1412,20 @@ export type Database = {
             foreignKeyName: "olympic_participation_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "olympic_participation_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "olympic_participation_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
             referencedRelation: "sports"
             referencedColumns: ["sport_id"]
           },
@@ -1363,6 +1475,20 @@ export type Database = {
           years_raw?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "olympic_timeline_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "olympic_timeline_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
           {
             foreignKeyName: "olympic_timeline_sport_id_fkey"
             columns: ["sport_id"]
@@ -1592,6 +1718,20 @@ export type Database = {
             foreignKeyName: "sport_notes_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "sport_notes_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "sport_notes_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
             referencedRelation: "sports"
             referencedColumns: ["sport_id"]
           },
@@ -1761,6 +1901,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "centres"
             referencedColumns: ["centre_id"]
+          },
+          {
+            foreignKeyName: "stc_capacity_centre_id_fkey"
+            columns: ["centre_id"]
+            isOneToOne: false
+            referencedRelation: "kd_v_sport_centres"
+            referencedColumns: ["centre_id"]
+          },
+          {
+            foreignKeyName: "stc_capacity_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "stc_capacity_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
           },
           {
             foreignKeyName: "stc_capacity_sport_id_fkey"
@@ -2189,7 +2350,303 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      kd_v_sport_centres: {
+        Row: {
+          centre_id: string | null
+          centre_name: string | null
+          centre_type: string | null
+          district: string | null
+          is_mappable: boolean | null
+          latitude: number | null
+          longitude: number | null
+          operational_status: string | null
+          region_unit: string | null
+          sport_id: string | null
+          sport_name: string | null
+          state: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["sport_id"]
+          },
+        ]
+      }
+      kd_v_sport_state: {
+        Row: {
+          centres: number | null
+          centres_mappable: number | null
+          existing: number | null
+          kic: number | null
+          kisce: number | null
+          ncoe: number | null
+          sanctioned: number | null
+          sport_id: string | null
+          sport_name: string | null
+          state: string | null
+          stc: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["sport_id"]
+          },
+        ]
+      }
+      oly_v_country_cycle: {
+        Row: {
+          athletes_sent: number | null
+          bronze: number | null
+          country_name: string | null
+          country_noc: string | null
+          edition_seq: number | null
+          gold: number | null
+          medals_per_100_athletes: number | null
+          rolling3_gold: number | null
+          rolling3_total: number | null
+          silver: number | null
+          total: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_gender: {
+        Row: {
+          country_noc: string | null
+          gender: string | null
+          kd_sport_id: string | null
+          medal_rows: number | null
+          medalists: number | null
+          season: string | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_host_bump: {
+        Row: {
+          baseline: number | null
+          baseline_editions: number | null
+          bump: number | null
+          bump_pct: number | null
+          host_country_noc: string | null
+          host_medals: number | null
+          host_name: string | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_india_olympians: {
+        Row: {
+          appearances: number | null
+          athlete_id: string | null
+          best_place: number | null
+          birth_year: number | null
+          bronze: number | null
+          display_name: string | null
+          entry_rows: number | null
+          events_contested: number | null
+          first_year: number | null
+          fourth_places: number | null
+          gender: string | null
+          gold: number | null
+          height_cm: number | null
+          kd_sport_id: string | null
+          last_year: number | null
+          medals: number | null
+          silver: number | null
+          sport_name: string | null
+          top8_entries: number | null
+          weight_kg: number | null
+        }
+        Relationships: []
+      }
+      oly_v_leaps: {
+        Row: {
+          country_name: string | null
+          country_noc: string | null
+          from_avg: number | null
+          from_year: number | null
+          gain: number | null
+          gain_rank_in_country: number | null
+          horizon: number | null
+          ratio: number | null
+          to_avg: number | null
+          to_year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_medal_table: {
+        Row: {
+          bronze: number | null
+          country_name: string | null
+          country_noc: string | null
+          edition_id: number | null
+          gold: number | null
+          host_city: string | null
+          host_country_noc: string | null
+          nations_ranked: number | null
+          rank_gold: number | null
+          rank_total: number | null
+          season: string | null
+          silver: number | null
+          total: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_near_miss: {
+        Row: {
+          canonical_discipline: string | null
+          conversion: number | null
+          country_noc: string | null
+          event_entries: number | null
+          fourth: number | null
+          kd_sport_id: string | null
+          medals: number | null
+          top8: number | null
+          top8_no_medal: number | null
+        }
+        Relationships: []
+      }
+      oly_v_pipeline: {
+        Row: {
+          ag2026_events: number | null
+          archetype: string | null
+          centres_linked: number | null
+          centres_mappable: number | null
+          existing_athletes: number | null
+          india_conversion: number | null
+          india_female_olympians: number | null
+          india_first_year: number | null
+          india_fourth: number | null
+          india_games: number | null
+          india_gold: number | null
+          india_last_year: number | null
+          india_medals: number | null
+          india_medals_last3: number | null
+          india_olympians: number | null
+          india_top8: number | null
+          india_top8_no_medal: number | null
+          india_with_biometrics: number | null
+          is_tagg: boolean | null
+          is_teams: boolean | null
+          is_tops: boolean | null
+          kic_centres: number | null
+          kisce_centres: number | null
+          la28_events: number | null
+          medals_per_100_trainees: number | null
+          ncoe_centres: number | null
+          present_ag2026: boolean | null
+          present_la28: boolean | null
+          sanctioned_capacity: number | null
+          sport_category: string | null
+          sport_id: string | null
+          sport_name: string | null
+          states: number | null
+          stc_centres: number | null
+          trainees_per_la28_event: number | null
+          utilisation_pct: number | null
+          world_gold_events_last3: number | null
+          world_hhi: number | null
+          world_leader_medals: number | null
+          world_leader_name: string | null
+          world_leader_noc: string | null
+          world_nations_last3: number | null
+          world_openness: number | null
+        }
+        Relationships: []
+      }
+      oly_v_rca: {
+        Row: {
+          canonical_discipline: string | null
+          country_medals: number | null
+          country_name: string | null
+          country_noc: string | null
+          era: string | null
+          kd_sport_id: string | null
+          medals: number | null
+          rca: number | null
+          sport_share_of_country: number | null
+          world_sport_share: number | null
+        }
+        Relationships: []
+      }
+      oly_v_sport_india: {
+        Row: {
+          bronze: number | null
+          conversion: number | null
+          event_entries: number | null
+          female_olympians: number | null
+          first_medal_year: number | null
+          first_year: number | null
+          fourth: number | null
+          games_contested: number | null
+          gold: number | null
+          gold_last3: number | null
+          kd_sport_id: string | null
+          last_medal_year: number | null
+          last_year: number | null
+          medals: number | null
+          medals_last3: number | null
+          olympians: number | null
+          silver: number | null
+          sport_name: string | null
+          top8: number | null
+          top8_no_medal: number | null
+          with_biometrics: number | null
+        }
+        Relationships: []
+      }
+      oly_v_sport_world: {
+        Row: {
+          era: string | null
+          gold_events: number | null
+          hhi: number | null
+          kd_sport_id: string | null
+          leader_medals: number | null
+          leader_name: string | null
+          leader_noc: string | null
+          medals: number | null
+          nations_medalling: number | null
+          openness: number | null
+          sport_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       can_edit_centre: {
