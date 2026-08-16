@@ -1055,7 +1055,9 @@ const SportDetail = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+          </div>
+        </TabsContent>
+      </Tabs>
       {/* Edit Note Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
