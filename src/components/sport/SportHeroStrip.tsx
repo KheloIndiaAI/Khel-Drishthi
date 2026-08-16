@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PLACE_FOOTNOTE } from "@/hooks/useIndiaSportRecord";
 import type { SportPipelineRow } from "@/hooks/useSportPipeline";
+
 
 interface Tile {
   label: string;
@@ -64,7 +66,9 @@ export const buildHeroTiles = (row: SportPipelineRow): Tile[] => {
         states,
         { label: "Pipeline", value: DASH, sublabel: "No centre in the system" },
       ];
-    default:
+    default: {
+      const reliable = row.india_conversion_is_reliable === true;
+      const coverage = row.india_place_coverage_pct;
       return [
         { label: "LA28 events", value: num(row.la28_events) },
         { label: "India medals", value: medalsLabel(row), sublabel: medalsSub(row) },
@@ -73,12 +77,17 @@ export const buildHeroTiles = (row: SportPipelineRow): Tile[] => {
         trainees,
         {
           label: "Conversion rate",
-          value: row.india_conversion == null ? DASH : pct(row.india_conversion, 100),
-          sublabel: row.india_conversion == null ? "not measurable" : "medals per entry",
+          value: reliable && row.india_conversion != null ? pct(row.india_conversion, 100) : DASH,
+          sublabel:
+            reliable && row.india_conversion != null
+              ? "medals per top-8 finish"
+              : `not measurable${coverage == null ? "" : ` — ${Number(coverage).toFixed(1)}% of entries have a place`}`,
         },
       ];
+    }
   }
 };
+
 
 export const buildVerdict = (row: SportPipelineRow): string => {
   const sport = row.sport_name || "This sport";
@@ -136,6 +145,8 @@ export const SportHeroStrip = ({
         ))}
       </div>
       <p className="text-sm text-muted-foreground mt-3">{buildVerdict(row)}</p>
+      <p className="text-[11px] text-muted-foreground mt-1">{PLACE_FOOTNOTE}</p>
+
     </div>
   );
 };

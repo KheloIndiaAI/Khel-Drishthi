@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -43,6 +43,7 @@ import {
 } from "lucide-react";
 import type { SportPipelineRow } from "@/hooks/useSportPipeline";
 import {
+  MIN_SEARCH_LENGTH,
   PLACE_FOOTNOTE,
   ROSTER_PAGE_SIZE,
   useDebounced,
@@ -60,7 +61,12 @@ import {
 const num = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
 
 const DASH = "—";
-const NATIONAL_CONVERSION = 35.9;
+
+/**
+ * India's national top-8 → medal conversion rate: 41 Summer medals ÷ 132 top-8
+ * finishes (both event grain, from oly_medal_tally and the corrected place parsing).
+ */
+export const NATIONAL_CONVERSION_PCT = 31.1;
 
 const Footnote = () => (
   <p className="text-[11px] text-muted-foreground mt-3 flex gap-1.5 items-start">
@@ -76,6 +82,7 @@ const ordinal = (n: number) => {
 };
 
 const placeLabel = (p: number | null | undefined) => (p == null ? DASH : ordinal(p));
+
 
 const MedalChips = ({
   gold,
@@ -116,6 +123,7 @@ const RosterTable = ({ sportId }: { sportId: string }) => {
   const [sortKey, setSortKey] = useState<RosterSort>("medals");
   const [ascending, setAscending] = useState(false);
   const search = useDebounced(searchInput);
+  const searchActive = search.length >= MIN_SEARCH_LENGTH;
 
   const { data, isLoading } = useIndiaOlympiansPage(sportId, {
     page,
@@ -124,7 +132,10 @@ const RosterTable = ({ sportId }: { sportId: string }) => {
     ascending,
   });
 
-  const total = data?.total ?? 0;
+  // The exact count only comes back on page 0 — cache and reuse it while paging.
+  const totalRef = useRef(0);
+  if (data?.total != null) totalRef.current = data.total;
+  const total = totalRef.current;
   const pages = Math.max(1, Math.ceil(total / ROSTER_PAGE_SIZE));
 
   const toggleSort = (key: RosterSort) => {
@@ -137,19 +148,26 @@ const RosterTable = ({ sportId }: { sportId: string }) => {
     }
   };
 
-  const SortHead = ({ col }: { col: (typeof SORT_COLUMNS)[number] }) => (
-    <TableHead className={col.numeric ? "text-right" : undefined}>
-      <button
-        type="button"
-        onClick={() => toggleSort(col.key)}
-        className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
+  const SortHead = ({ col }: { col: (typeof SORT_COLUMNS)[number] }) => {
+    const active = sortKey === col.key;
+    const dir = ascending ? "ascending" : "descending";
+    return (
+      <TableHead
+        className={col.numeric ? "text-right" : undefined}
+        aria-sort={active ? (dir as "ascending" | "descending") : "none"}
       >
-        {col.label}
-        {sortKey === col.key &&
-          (ascending ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
-      </button>
-    </TableHead>
-  );
+        <button
+          type="button"
+          onClick={() => toggleSort(col.key)}
+          aria-label={`Sort by ${col.label.toLowerCase()}, ${active ? (ascending ? "descending" : "ascending") : "descending"}`}
+          className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
+        >
+          {col.label}
+          {active && (ascending ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+        </button>
+      </TableHead>
+    );
+  };
 
   return (
     <Card>
@@ -159,20 +177,27 @@ const RosterTable = ({ sportId }: { sportId: string }) => {
             <Users className="h-4 w-4" />
             Indian Olympians ({total.toLocaleString()})
           </CardTitle>
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-            <Input
-              value={searchInput}
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-                setPage(0);
-              }}
-              placeholder="Search name (2+ characters)"
-              className="pl-8 h-9"
-            />
+          <div className="w-full sm:w-64">
+            <label htmlFor="roster-search" className="sr-only">
+              Search Indian Olympians by name
+            </label>
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                id="roster-search"
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setPage(0);
+                }}
+                placeholder={`Search name (${MIN_SEARCH_LENGTH}+ characters)`}
+                className="pl-8 h-9"
+              />
+            </div>
           </div>
         </div>
       </CardHeader>
+
       <CardContent>
         <div className="overflow-x-auto">
           <Table>
@@ -200,7 +225,12 @@ const RosterTable = ({ sportId }: { sportId: string }) => {
               {!isLoading && (data?.rows.length ?? 0) === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-sm text-muted-foreground py-6">
-                    {search.length >= 2 ? "No athlete matches that name." : "No Indian Olympian recorded in this sport."}
+                    {searchActive
+                      ? "No athlete matches that name."
+                      : search.length > 0
+                        ? `Type at least ${MIN_SEARCH_LENGTH} characters to search.`
+                        : "No Indian Olympian recorded in this sport."}
+
                   </TableCell>
                 </TableRow>
               )}
@@ -271,14 +301,15 @@ interface Props {
   sportId: string;
   sportName: string;
   pipeline: SportPipelineRow | null | undefined;
+  pipelineLoading?: boolean;
 }
 
-export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
+export const OlympicRecordTab = ({ sportId, sportName, pipeline, pipelineLoading }: Props) => {
   const { data: timeline, isLoading: timelineLoading } = useIndiaSportTimeline(sportId);
-  const { data: medalists } = useIndiaMedalists(sportId);
-  const { data: nearMiss } = useIndiaNearMiss(sportId);
-  const { data: mostCapped } = useMostCapped(sportId);
-  const { data: bio } = useSportBiometrics(sportId);
+  const { data: medalists, isLoading: medalistsLoading } = useIndiaMedalists(sportId);
+  const { data: nearMiss, isLoading: nearMissLoading } = useIndiaNearMiss(sportId);
+  const { data: mostCapped, isLoading: mostCappedLoading } = useMostCapped(sportId);
+  const { data: bio, isLoading: bioLoading } = useSportBiometrics(sportId);
 
   const summary = useMemo(() => {
     const rows = timeline ?? [];
@@ -288,20 +319,20 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
       games: rows.length,
       first: rows.length ? rows[0].year : null,
       last: rows.length ? rows[rows.length - 1].year : null,
-      entries: sum("entries"),
-      top8: sum("top8_entries"),
-      fourth: sum("fourth_entries"),
-      medals: sum("medals"),
+      // Athlete-entry grain — never mix with the event-grain figures from oly_v_pipeline.
+      athleteEntries: sum("entries"),
+      eventEntries: sum("events_contested"),
     };
   }, [timeline]);
 
+  /** Display grouping only — never a medal count (two bronzes share an event). */
   const medalGroups = useMemo(() => {
     const map = new Map<
       string,
       { year: number; event: string; medal: string; athletes: string[] }
     >();
     (medalists ?? []).forEach((m) => {
-      const key = `${m.year}|${m.event}|${m.medal_type}`;
+      const key = `${m.year}|${m.canonical_discipline ?? ""}|${m.event ?? ""}|${m.medal_type}`;
       if (!map.has(key)) {
         map.set(key, {
           year: m.year,
@@ -345,10 +376,17 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
     return { sportN, genders, dominant, tooSmall };
   }, [bio]);
 
+  const coreLoading = timelineLoading || !!pipelineLoading;
   const hasOlympians = (pipeline?.india_olympians ?? 0) > 0 || (timeline?.length ?? 0) > 0;
 
-  if (timelineLoading) {
-    return <Skeleton className="h-64 w-full rounded-lg" />;
+  if (coreLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-64 w-full rounded-lg" />
+        <Skeleton className="h-24 w-full rounded-lg" />
+        <Skeleton className="h-64 w-full rounded-lg" />
+      </div>
+    );
   }
 
   if (!hasOlympians) {
@@ -374,8 +412,22 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
     noPlace: r.entries_without_place ?? 0,
   }));
 
+  const medalYears = chartData.filter((d) => d.medals > 0).map((d) => d.year);
+  const timelineAriaLabel = `Indian athletes at each Summer Games in ${sportName}, ${
+    summary.first ?? DASH
+  } to ${summary.last ?? DASH}. ${medalYears.length} Games with a medal${
+    medalYears.length ? `: ${medalYears.join(", ")}` : ""
+  }.`;
+  const genderAriaLabel = `Men and women among Indian athletes at each Summer Games in ${sportName}.`;
+
+  const top8 = pipeline?.india_top8 ?? null;
+  const fourth = pipeline?.india_fourth ?? null;
+  const medalTotal = pipeline?.india_medals ?? null;
+  const conversionReliable = pipeline?.india_conversion_is_reliable === true;
   const conversion =
     pipeline?.india_conversion == null ? null : Number(pipeline.india_conversion) * 100;
+  const coverage = pipeline?.india_place_coverage_pct;
+
 
   return (
     <div className="space-y-6">
@@ -388,7 +440,7 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-64" role="img" aria-label={timelineAriaLabel}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
@@ -408,6 +460,9 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
                       key={d.year}
                       fill={d.medals > 0 ? "hsl(var(--saffron, 33 100% 50%))" : "hsl(var(--primary))"}
                       fillOpacity={d.medals > 0 ? 1 : 0.45}
+                      stroke={d.medals > 0 ? "hsl(var(--foreground))" : "none"}
+                      strokeWidth={d.medals > 0 ? 1.5 : 0}
+                      strokeDasharray={d.medals > 0 ? "3 2" : undefined}
                     />
                   ))}
                 </Bar>
@@ -415,13 +470,33 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
             </ResponsiveContainer>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            Highlighted bars are Games where India medalled in {sportName}.
+            Games where India medalled in {sportName} are highlighted and outlined with a dashed
+            border.
           </p>
+          <table className="sr-only">
+            <caption>Indian athletes and medals at each Summer Games in {sportName}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Year</th>
+                <th scope="col">Athletes</th>
+                <th scope="col">Medals</th>
+              </tr>
+            </thead>
+            <tbody>
+              {chartData.map((d) => (
+                <tr key={d.year}>
+                  <th scope="row">{d.year}</th>
+                  <td>{d.athletes}</td>
+                  <td>{d.medals}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <Footnote />
         </CardContent>
       </Card>
 
-      {/* 2. Summary strip */}
+      {/* 2. Summary strip — event-grain figures come from oly_v_pipeline */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           { label: "Olympians all-time", value: (pipeline?.india_olympians ?? DASH).toLocaleString?.() ?? DASH },
@@ -430,9 +505,9 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
             label: "First / last",
             value: summary.first ? `${summary.first}–${summary.last}` : DASH,
           },
-          { label: "Event entries", value: summary.entries.toLocaleString() },
-          { label: "Top-8 entries", value: summary.top8.toLocaleString() },
-          { label: "Fourth places", value: summary.fourth.toLocaleString() },
+          { label: "Event entries", value: summary.eventEntries.toLocaleString() },
+          { label: "Top-8 finishes", value: top8 == null ? DASH : top8.toLocaleString() },
+          { label: "Fourth places", value: fourth == null ? DASH : fourth.toLocaleString() },
         ].map((t) => (
           <Card key={t.label}>
             <CardContent className="p-3">
@@ -442,6 +517,14 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </Card>
         ))}
       </div>
+      <p className="text-[11px] text-muted-foreground -mt-3 flex gap-1.5 items-start">
+        <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
+        <span>
+          Top-8 finishes and fourth places are counted per event, not per athlete.{" "}
+          {PLACE_FOOTNOTE}
+        </span>
+      </p>
+
 
       {/* 3. Roster */}
       <RosterTable sportId={sportId} />
@@ -451,15 +534,23 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2">
             <Medal className="h-4 w-4" />
-            Medalists ({medalGroups.length} medal{medalGroups.length === 1 ? "" : "s"})
+            Medalists
+            {medalTotal != null && ` (${medalTotal} medal${medalTotal === 1 ? "" : "s"})`}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {medalGroups.length === 0 ? (
+          {medalistsLoading ? (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          ) : medalGroups.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
               No Olympic medal in {sportName} yet.
             </p>
           ) : (
+
             <Accordion type="multiple" className="w-full">
               {medalGroups.map((g, i) => (
                 <AccordionItem key={`${g.year}-${g.event}-${i}`} value={`${g.year}-${i}`}>
@@ -504,11 +595,18 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {(nearMiss?.length ?? 0) === 0 ? (
+          {nearMissLoading ? (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
+          ) : (nearMiss?.length ?? 0) === 0 ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
               No top-8 finish in {summary.games} Games.
             </p>
           ) : (
+
             <div className="space-y-2">
               {nearMiss!.map((r, i) => {
                 const fourth = r.place === 4;
@@ -552,35 +650,42 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
         <CardContent>
           <div className="grid grid-cols-3 gap-3 text-center">
             {[
-              { label: "Entries", value: summary.entries },
-              { label: "Top-8", value: pipeline?.india_top8 ?? summary.top8 },
-              { label: "Medals", value: pipeline?.india_medals ?? summary.medals },
+              { label: "Event entries", value: summary.eventEntries },
+              { label: "Top-8 finishes", value: top8 },
+              { label: "Medals", value: medalTotal },
             ].map((s) => (
               <div key={s.label} className="rounded-md border p-3">
                 <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
                   {s.label}
                 </p>
-                <p className="font-display text-2xl mt-1">{Number(s.value).toLocaleString()}</p>
+                <p className="font-display text-2xl mt-1">
+                  {s.value == null ? DASH : Number(s.value).toLocaleString()}
+                </p>
               </div>
             ))}
           </div>
-          <p className="text-sm mt-4">
-            Conversion of top-8 finishes into medals:{" "}
-            <span className="font-semibold">
-              {conversion == null ? DASH : `${conversion.toFixed(1)}%`}
-            </span>{" "}
-            <span className="text-muted-foreground">
-              vs {NATIONAL_CONVERSION}% national average
-              {conversion == null
-                ? " (not measurable for this sport)"
-                : conversion >= NATIONAL_CONVERSION
-                  ? " — above average"
-                  : " — below average"}
-            </span>
+          <p className="text-[11px] text-muted-foreground mt-2">
+            All three stages are counted per event, not per athlete.
           </p>
+          {conversionReliable && conversion != null ? (
+            <p className="text-sm mt-4">
+              Conversion of top-8 finishes into medals:{" "}
+              <span className="font-semibold">{conversion.toFixed(1)}%</span>{" "}
+              <span className="text-muted-foreground">
+                vs {NATIONAL_CONVERSION_PCT}% national average
+                {conversion >= NATIONAL_CONVERSION_PCT ? " — above average" : " — below average"}
+              </span>
+            </p>
+          ) : (
+            <p className="text-sm mt-4 text-muted-foreground">
+              Not enough recorded finishing places to measure conversion
+              {coverage == null ? "" : ` (${Number(coverage).toFixed(1)}% of entries have a place)`}.
+            </p>
+          )}
           <Footnote />
         </CardContent>
       </Card>
+
 
       {/* 7. Gender split over time */}
       <Card>
@@ -602,7 +707,7 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </p>
         </CardHeader>
         <CardContent>
-          <div className="h-56">
+          <div className="h-56" role="img" aria-label={genderAriaLabel}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
@@ -641,7 +746,10 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
       </Card>
 
       {/* 8. Most-capped athletes */}
-      {(mostCapped?.length ?? 0) > 0 && (
+      {mostCappedLoading ? (
+        <Skeleton className="h-40 w-full rounded-lg" />
+      ) : (mostCapped?.length ?? 0) > 0 ? (
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Most-capped athletes</CardTitle>
@@ -681,10 +789,13 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
             </div>
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
       {/* 9. Biometrics — only when the sport has 20+ recorded heights */}
-      {biometrics && (
+      {bioLoading ? (
+        <Skeleton className="h-32 w-full rounded-lg" />
+      ) : biometrics ? (
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Biometrics</CardTitle>
@@ -728,7 +839,8 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
             </p>
           </CardContent>
         </Card>
-      )}
+      ) : null}
+
     </div>
   );
 };
