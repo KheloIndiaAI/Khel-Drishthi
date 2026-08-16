@@ -52,8 +52,12 @@ import {
   useIndiaSportTimeline,
   useMostCapped,
   useSportBiometrics,
+  type BiometricRow,
   type RosterSort,
 } from "@/hooks/useIndiaSportRecord";
+
+/** Compact number: 172 → "172", 166.5 → "166.5" */
+const num = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
 
 const DASH = "—";
 const NATIONAL_CONVERSION = 35.9;
@@ -95,12 +99,6 @@ const MedalChips = ({
   );
 };
 
-const median = (values: number[]) => {
-  if (!values.length) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-};
 
 /* ------------------------------- roster ---------------------------------- */
 
@@ -318,15 +316,33 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
   }, [medalists]);
 
   const biometrics = useMemo(() => {
-    const rows = (bio ?? []).filter((r) => r.height_cm != null);
-    if (rows.length < 20) return null;
-    const by = (g: string) => rows.filter((r) => (r.gender || "").toLowerCase() === g);
-    const build = (list: typeof rows) => ({
-      n: list.length,
-      height: median(list.map((r) => Number(r.height_cm)).filter((v) => !!v)),
-      weight: median(list.map((r) => Number(r.weight_kg)).filter((v) => !!v)),
-    });
-    return { male: build(by("male")), female: build(by("female")), all: build(rows) };
+    const rows = (bio ?? []).filter(
+      (r) => (r.gender || "").toLowerCase() !== "unknown" && (r.n_height ?? 0) > 0
+    );
+    if (!rows.length) return null;
+    // Sport-wide total — identical on every row for a sport.
+    const sportN = Number(rows[0].sport_n_height ?? 0);
+    if (sportN < 20) return null;
+
+    const pick = (g: string) =>
+      rows.find((r) => (r.gender || "").toLowerCase() === g.toLowerCase()) || null;
+    const male = pick("Male");
+    const female = pick("Female");
+    const big = (r: typeof male) => !!r && (r.n_height ?? 0) >= 5;
+
+    const genders = [
+      { label: "Men", d: male },
+      { label: "Women", d: female },
+    ].filter((x) => big(x.d)) as { label: string; d: BiometricRow }[];
+
+    // If neither gender clears the n>=5 bar, fall back to the sport-level figure.
+    const dominant = rows.reduce((a, b) => ((b.n_height ?? 0) > (a.n_height ?? 0) ? b : a));
+    const tooSmall = [
+      { label: "Women", d: female },
+      { label: "Men", d: male },
+    ].filter((x) => x.d && !big(x.d)) as { label: string; d: BiometricRow }[];
+
+    return { sportN, genders, dominant, tooSmall };
   }, [bio]);
 
   const hasOlympians = (pipeline?.india_olympians ?? 0) > 0 || (timeline?.length ?? 0) > 0;
@@ -570,6 +586,20 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Gender split over time</CardTitle>
+          <p className="text-xs text-muted-foreground">
+            Athletes at each Games — an athlete who competed at several Games is counted once per
+            Games.
+            {(pipeline?.india_female_olympians ?? null) != null && (
+              <>
+                {" "}
+                India has fielded{" "}
+                <span className="font-medium text-foreground">
+                  {pipeline!.india_female_olympians}
+                </span>{" "}
+                distinct female athletes in this sport.
+              </>
+            )}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="h-56">
@@ -577,7 +607,17 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
                 <XAxis dataKey="year" tick={{ fontSize: 11 }} interval="preserveStartEnd" />
-                <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  allowDecimals={false}
+                  label={{
+                    value: "Athletes at each Games",
+                    angle: -90,
+                    position: "insideLeft",
+                    style: { fontSize: 10, textAnchor: "middle" },
+                  }}
+                />
+
                 <RTooltip contentStyle={{ fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar
@@ -643,7 +683,7 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
         </Card>
       )}
 
-      {/* 9. Biometrics — only with 20+ recorded heights */}
+      {/* 9. Biometrics — only when the sport has 20+ recorded heights */}
       {biometrics && (
         <Card>
           <CardHeader className="pb-2">
@@ -651,34 +691,40 @@ export const OlympicRecordTab = ({ sportId, sportName, pipeline }: Props) => {
           </CardHeader>
           <CardContent>
             <div className="grid sm:grid-cols-3 gap-3">
-              {[
-                { label: "All athletes", d: biometrics.all },
-                { label: "Men", d: biometrics.male },
-                { label: "Women", d: biometrics.female },
-              ]
-                .filter((x) => x.d.n > 0)
-                .map((x) => (
-                  <div key={x.label} className="rounded-md border p-3">
-                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                      {x.label} (n={x.d.n})
-                    </p>
-                    <p className="text-sm mt-1">
-                      Median height:{" "}
-                      <span className="font-semibold">
-                        {x.d.height == null ? DASH : `${x.d.height.toFixed(0)} cm`}
-                      </span>
-                    </p>
-                    <p className="text-sm">
-                      Median weight:{" "}
-                      <span className="font-semibold">
-                        {x.d.weight == null ? DASH : `${x.d.weight.toFixed(0)} kg`}
-                      </span>
-                    </p>
-                  </div>
-                ))}
+              {(biometrics.genders.length
+                ? biometrics.genders
+                : [{ label: "All athletes", d: biometrics.dominant }]
+              ).map((x) => (
+                <div key={x.label} className="rounded-md border p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {x.label} (n={x.d.n_height ?? 0})
+                  </p>
+                  <p className="text-sm mt-1">
+                    Median height:{" "}
+                    <span className="font-semibold">
+                      {x.d.median_height_cm == null
+                        ? DASH
+                        : `${num(x.d.median_height_cm)} cm (n=${x.d.n_height ?? 0})`}
+                    </span>
+                  </p>
+                  <p className="text-sm">
+                    Median weight:{" "}
+                    <span className="font-semibold">
+                      {x.d.median_weight_kg == null
+                        ? DASH
+                        : `${num(x.d.median_weight_kg)} kg (n=${x.d.n_weight ?? 0})`}
+                    </span>
+                  </p>
+                </div>
+              ))}
             </div>
             <p className="text-[11px] text-muted-foreground mt-3">
-              Based only on athletes with a recorded height; most Indian Olympians have none.
+              Based only on the {biometrics.sportN} athletes in this sport with a recorded height;
+              most Indian Olympians have none.
+              {biometrics.tooSmall.length > 0 &&
+                ` ${biometrics.tooSmall
+                  .map((x) => `${x.label.toLowerCase()} (n=${x.d.n_height ?? 0})`)
+                  .join(" and ")} — sample too small to report separately.`}
             </p>
           </CardContent>
         </Card>

@@ -2469,6 +2469,21 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_v_india_biometrics: {
+        Row: {
+          gender: string | null
+          kd_sport_id: string | null
+          max_height_cm: number | null
+          median_height_cm: number | null
+          median_weight_kg: number | null
+          min_height_cm: number | null
+          n_height: number | null
+          n_weight: number | null
+          sport_n_height: number | null
+          sport_name: string | null
+        }
+        Relationships: []
+      }
       oly_v_india_medalists: {
         Row: {
           athlete_id: string | null
