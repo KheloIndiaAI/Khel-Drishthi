@@ -135,21 +135,35 @@ export const useMostCapped = (sportId?: string) =>
     },
   });
 
-/** Athletes with a recorded height — bounded by the sport roster size. */
+export interface BiometricRow {
+  gender: string | null;
+  n_height: number | null;
+  n_weight: number | null;
+  median_height_cm: number | null;
+  median_weight_kg: number | null;
+  min_height_cm: number | null;
+  max_height_cm: number | null;
+  sport_n_height: number | null;
+}
+
+/**
+ * Server-side aggregated biometrics — one row per sport per gender.
+ * Gate on `sport_n_height` (sport-wide total); never count rows client-side.
+ */
 export const useSportBiometrics = (sportId?: string) =>
   useQuery({
-    queryKey: ["india-biometrics", sportId],
+    queryKey: ["india-biometrics-view", sportId],
     enabled: !!sportId,
     staleTime: Infinity,
     queryFn: async () => {
       const { data, error } = await db()
-        .from("oly_v_india_olympians")
-        .select("gender, height_cm, weight_kg")
-        .eq("kd_sport_id", sportId!)
-        .not("height_cm", "is", null)
-        .limit(1000);
+        .from("oly_v_india_biometrics")
+        .select(
+          "gender, n_height, n_weight, median_height_cm, median_weight_kg, min_height_cm, max_height_cm, sport_n_height"
+        )
+        .eq("kd_sport_id", sportId!);
       if (error) throw error;
-      return (data ?? []) as { gender: string | null; height_cm: number | null; weight_kg: number | null }[];
+      return (data ?? []) as BiometricRow[];
     },
   });
 
