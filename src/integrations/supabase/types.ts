@@ -2350,6 +2350,23 @@ export type Database = {
       }
     }
     Views: {
+      kd_v_sport_centre_capacity: {
+        Row: {
+          centre_id: string | null
+          centre_name: string | null
+          centre_type: string | null
+          district: string | null
+          existing: number | null
+          existing_girls: number | null
+          has_para: boolean | null
+          is_mappable: boolean | null
+          sanctioned: number | null
+          sanctioned_girls: number | null
+          sport_id: string | null
+          state: string | null
+        }
+        Relationships: []
+      }
       kd_v_sport_centres: {
         Row: {
           centre_id: string | null
@@ -2364,6 +2381,83 @@ export type Database = {
           sport_id: string | null
           sport_name: string | null
           state: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["sport_id"]
+          },
+        ]
+      }
+      kd_v_sport_funds: {
+        Row: {
+          centre_name: string | null
+          financial_year: string | null
+          fund_id: number | null
+          funds_released: number | null
+          head: string | null
+          kd_centre_id: string | null
+          release_date: string | null
+          sport_id: string | null
+          state: string | null
+          uc_pending: boolean | null
+          uc_status: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_pipeline"
+            referencedColumns: ["sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "oly_v_sport_india"
+            referencedColumns: ["kd_sport_id"]
+          },
+          {
+            foreignKeyName: "centre_sport_links_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["sport_id"]
+          },
+        ]
+      }
+      kd_v_sport_projects: {
+        Row: {
+          gps_in_india: boolean | null
+          infra_type: string | null
+          latitude: number | null
+          longitude: number | null
+          parent_centre_id: string | null
+          parent_facility_name: string | null
+          progress: number | null
+          project_code: string | null
+          project_name: string | null
+          sport_id: string | null
+          state: string | null
+          status: string | null
         }
         Relationships: [
           {
