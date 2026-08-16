@@ -50,7 +50,6 @@ import {
 
 
 
-const TOTAL_CENTRES = 1147;
 const INDIA_CENTER: [number, number] = [78.9629, 22.5937];
 
 export interface Centre {
@@ -67,6 +66,7 @@ export interface Centre {
 
 interface CentreSportLink {
   centre_id: string;
+  sport_id?: string | null;
   sport_name: string | null;
   discipline_name: string | null;
 }
@@ -82,10 +82,26 @@ interface IndiaMapProps {
   centreSportLinks?: CentreSportLink[];
   selectedState?: string;
   selectedCentreType?: string;
-  selectedSport?: string;
+  /** Matched against centre_sport_links.sport_id (id, never name). */
+  selectedSportId?: string;
   onStateSelect?: (state: string) => void;
   focusProject?: ProjectFocus | null;
+  /** Wrapper height (also applied to the loading skeleton). */
+  height?: string;
+  /** Denominator of the "X of N centres mapped" overlay. */
+  totalCentres?: number;
+  /** Paint the SAI-region choropleth on state fills. */
+  showChoropleth?: boolean;
+  /** Initial visibility of the infrastructure projects layer; false skips the query. */
+  showProjects?: boolean;
+  /** Lazy-add district boundary lines on zoom. */
+  showDistricts?: boolean;
+  /** Fit viewport to supplied centres' bounds on first load. */
+  fitToBounds?: boolean;
+  /** Extra callback fired alongside internal centre selection. */
+  onCentreClick?: (centre: Centre) => void;
 }
+
 
 
 const CENTRE_TYPE_COLORS: Record<string, string> = {
