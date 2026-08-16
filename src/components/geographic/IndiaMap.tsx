@@ -1410,6 +1410,35 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           </div>
         </div>
         )}
+
+        {sequentialMode && buckets.length > 0 && (
+          <div className="mt-3 pt-2 border-t max-w-[180px]">
+            <h4 className="text-[10px] font-semibold mb-1.5 text-muted-foreground uppercase leading-tight">
+              {choroplethLabel} per state
+            </h4>
+            <div className="flex items-center gap-0.5">
+              {buckets.map((b) => (
+                <span
+                  key={b.min}
+                  title={b.min === b.max ? `${b.min}` : `${b.min}–${b.max}`}
+                  className="h-2.5 flex-1 first:rounded-l-sm last:rounded-r-sm"
+                  style={{ backgroundColor: b.color }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5">
+              <span>{buckets[0].min}</span>
+              <span>{buckets[buckets.length - 1].max}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] mt-1">
+              <span
+                className="inline-block h-2.5 w-4 rounded-sm border border-border/50"
+                style={{ backgroundColor: NO_PRESENCE_FILL }}
+              />
+              <span className="text-muted-foreground">No presence</span>
+            </div>
+          </div>
+        )}
       </div>
 
 
