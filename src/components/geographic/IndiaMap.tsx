@@ -149,10 +149,18 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   centreSportLinks = [],
   selectedState,
   selectedCentreType,
-  selectedSport,
+  selectedSportId,
   onStateSelect,
   focusProject,
+  height = '600px',
+  totalCentres,
+  showChoropleth = true,
+  showProjects: showProjectsDefault = true,
+  showDistricts = true,
+  fitToBounds = false,
+  onCentreClick,
 }) => {
+
   const mapRef = useRef<MapRef | null>(null);
   const { resolvedTheme } = useAppTheme();
 
