@@ -259,9 +259,6 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   useEffect(() => {
     if (projectsError) console.warn('[map] SAI projects query failed — projects layer empty');
   }, [projectsError]);
-  useEffect(() => {
-    if (regionError) console.warn('[map] SAI region mapping query failed — choropleth not tinted');
-  }, [regionError]);
 
   // ---- Data watchdog -------------------------------------------------------
   // Guards against the class of failure where the map instance mounts fine
@@ -319,6 +316,10 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       return map;
     },
   });
+
+  useEffect(() => {
+    if (regionError) console.warn('[map] SAI region mapping query failed — choropleth not tinted');
+  }, [regionError]);
 
   // Basemap visibility (street light/dark vs pure satellite imagery)
   useEffect(() => {
