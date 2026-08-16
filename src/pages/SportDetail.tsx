@@ -18,6 +18,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import GlobalContextSection from "@/components/sport/GlobalContextSection";
+import SportHeroStrip from "@/components/sport/SportHeroStrip";
+import SportInsights from "@/components/sport/SportInsights";
+import { useSportPipeline } from "@/hooks/useSportPipeline";
 
 import { 
   ArrowLeft, 
