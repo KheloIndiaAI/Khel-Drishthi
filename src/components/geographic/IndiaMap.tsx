@@ -254,6 +254,15 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     setStyleEpoch((n) => n + 1);
   }, []);
 
+  // Query failures are non-fatal for the map surface; log once so they are
+  // observable rather than silently rendering empty layers.
+  useEffect(() => {
+    if (projectsError) console.warn('[map] SAI projects query failed — projects layer empty');
+  }, [projectsError]);
+  useEffect(() => {
+    if (regionError) console.warn('[map] SAI region mapping query failed — choropleth not tinted');
+  }, [regionError]);
+
   // ---- Data watchdog -------------------------------------------------------
   // Guards against the class of failure where the map instance mounts fine
   // (DOM markers + attribution render) but nothing that requires worker-parsed
@@ -615,6 +624,14 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
   }, []);
 
+  const selectCentre = useCallback(
+    (centre: Centre) => {
+      setSelectedCentre(centre);
+      onCentreClick?.(centre);
+    },
+    [onCentreClick]
+  );
+
   const handleZoomIn = useCallback(() => mapRef.current?.zoomIn(), []);
   const handleZoomOut = useCallback(() => mapRef.current?.zoomOut(), []);
 
@@ -837,6 +854,17 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         style={{ position: 'absolute', inset: 0 }}
         onLoad={(evt) => {
           setMapLoaded(true);
+          if (fitToBounds && mappedCentres.length > 0) {
+            const lngs = mappedCentres.map((c) => c.lng);
+            const lats = mappedCentres.map((c) => c.lat);
+            mapRef.current?.fitBounds(
+              [
+                [Math.min(...lngs), Math.min(...lats)],
+                [Math.max(...lngs), Math.max(...lats)],
+              ],
+              { padding: 48, duration: 0, maxZoom: 10 }
+            );
+          }
           syncViewport(evt as unknown as { target?: unknown });
         }}
         onError={(evt) => {
@@ -896,7 +924,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
               latitude={latitude}
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
-                setSelectedCentre(centre);
+                selectCentre(centre);
               }}
             >
               <div
@@ -1045,7 +1073,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
                   <button
                     key={c.centre_id}
                     onClick={() => {
-                      setSelectedCentre(c);
+                      selectCentre(c);
                       setClusterPopup(null);
                     }}
                     className="w-full text-left rounded p-1.5 text-xs hover:bg-muted transition-colors"
@@ -1511,7 +1539,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
                     className="w-full"
                     onClick={() => {
                       setSelectedProject(null);
-                      setSelectedCentre(parent);
+                      selectCentre(parent);
                     }}
                   >
                     <Building2 className="h-4 w-4 mr-2" />
@@ -1535,6 +1563,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           }}
         >
           <div className="text-xs font-semibold text-foreground">{hoveredState.dataName}</div>
+          {showChoropleth && (
           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <span
               className="inline-block h-2 w-2 rounded-full"
@@ -1547,6 +1576,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
               ? `RC ${regionByState[hoveredState.dataName]}`
               : 'No SAI region'}
           </div>
+          )}
           <div className="text-[10px] text-muted-foreground">
             {centreCountByState[hoveredState.dataName] ?? 0} centres
           </div>
@@ -1563,7 +1593,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
         regionColors={REGION_COLORS}
         centreTypeColors={CENTRE_TYPE_COLORS}
         onClose={() => setReportOpen(false)}
-        onCentreClick={(c) => setSelectedCentre(c)}
+        onCentreClick={(c) => selectCentre(c)}
       />
 
       {/* Zoom level indicator */}
