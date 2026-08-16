@@ -24,6 +24,7 @@ import { useSportPipeline } from "@/hooks/useSportPipeline";
 import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
 import SportMapTab, { useSportCentres } from "@/components/sport/SportMapTab";
 import WorldContextTab from "@/components/sport/WorldContextTab";
+import PipelineTab from "@/components/sport/PipelineTab";
 
 
 import { 
@@ -799,127 +800,14 @@ const SportDetail = () => {
 
         {/* Pipeline */}
         <TabsContent value="pipeline" className="mt-0">
-        <div>
-          {(ncoeCapacity && ncoeCapacity.length > 0) || (stcCapacity && stcCapacity.length > 0) ? (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  Training Centres
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue={ncoeCapacity && ncoeCapacity.length > 0 ? "ncoe" : "stc"} className="w-full">
-                  <TabsList className="w-full grid grid-cols-2 h-9 mb-4">
-                    <TabsTrigger value="ncoe" className="gap-2" disabled={!ncoeCapacity || ncoeCapacity.length === 0}>
-                      <Badge className="bg-saffron text-on-saffron text-[10px] px-1.5">NCOE</Badge>
-                      {ncoeCapacity?.length || 0} Centres
-                    </TabsTrigger>
-                    <TabsTrigger value="stc" className="gap-2" disabled={!stcCapacity || stcCapacity.length === 0}>
-                      <Badge className="bg-india-green text-white text-[10px] px-1.5">STC</Badge>
-                      {stcCapacity?.length || 0} Centres
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="ncoe" className="mt-0">
-                    {ncoeCapacity && ncoeCapacity.length > 0 && (
-                      <>
-                        <div className="flex items-center justify-between mb-3 text-sm text-muted-foreground">
-                          <span>Total: {ncoeCapacity.length} centres</span>
-                          <span className="font-medium">{ncoeAthletes} / {ncoeSanctioned} athletes</span>
-                        </div>
-                        <div className="space-y-1 max-h-80 overflow-y-auto">
-                          {ncoeCapacity.map((centre) => {
-                            // Unknown / zero sanctioned capacity must never render as 0% — show an em-dash.
-                            const sanctioned = centre.san_grand_total ?? null;
-                            const pct = sanctioned && sanctioned > 0 ? Math.round((centre.ex_grand_total || 0) / sanctioned * 100) : null;
-                            return (
-                              <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
-                                <div className="flex-1 min-w-0">
-                                  <span className="font-medium text-sm">{centre.centre_name}</span>
-                                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                                    <MapPin className="h-3 w-3" />
-                                    <span>{centre.state}</span>
-                                    {centre.is_para && <Badge variant="outline" className="text-[10px] h-4 ml-1">Para</Badge>}
-                                  </div>
-                                </div>
-                                <div className="text-right flex-shrink-0">
-                                  <div className="flex items-center justify-end gap-1">
-                                    <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
-                                    <span className="text-muted-foreground text-sm">/ {sanctioned && sanctioned > 0 ? sanctioned : "—"}</span>
-                                  </div>
-                                  {pct == null ? (
-                                    <span className="text-xs text-muted-foreground">Sanctioned capacity not recorded</span>
-                                  ) : (
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                      <Progress value={pct} className="h-1.5 w-20" />
-                                      <span className="text-xs text-muted-foreground w-9">{pct}%</span>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </TabsContent>
-                  
-                  <TabsContent value="stc" className="mt-0">
-                    {stcCapacity && stcCapacity.length > 0 && (
-                      <>
-                        <div className="flex items-center justify-between mb-3 text-sm text-muted-foreground">
-                          <span>Total: {stcCapacity.length} centres</span>
-                          <span className="font-medium">{stcAthletes} / {stcSanctioned} athletes</span>
-                        </div>
-                        <div className="space-y-1 max-h-80 overflow-y-auto">
-                          {stcCapacity.map((centre) => {
-                            // Unknown / zero sanctioned capacity must never render as 0% — show an em-dash.
-                            const sanctioned = centre.san_grand_total ?? null;
-                            const pct = sanctioned && sanctioned > 0 ? Math.round((centre.ex_grand_total || 0) / sanctioned * 100) : null;
-                            return (
-                              <div key={centre.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors border-b last:border-0">
-                                <div className="flex-1 min-w-0">
-                                  <span className="font-medium text-sm">{centre.centre_name}</span>
-                                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                                    <MapPin className="h-3 w-3" />
-                                    <span>{centre.state}</span>
-                                    {centre.is_para && <Badge variant="outline" className="text-[10px] h-4 ml-1">Para</Badge>}
-                                  </div>
-                                </div>
-                                <div className="text-right flex-shrink-0">
-                                  <div className="flex items-center justify-end gap-1">
-                                    <span className="font-bold text-lg">{centre.ex_grand_total || 0}</span>
-                                    <span className="text-muted-foreground text-sm">/ {sanctioned && sanctioned > 0 ? sanctioned : "—"}</span>
-                                  </div>
-                                  {pct == null ? (
-                                    <span className="text-xs text-muted-foreground">Sanctioned capacity not recorded</span>
-                                  ) : (
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                      <Progress value={pct} className="h-1.5 w-20" />
-                                      <span className="text-xs text-muted-foreground w-9">{pct}%</span>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="py-8 text-center text-muted-foreground">
-                <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                No training centres found for this sport
-              </CardContent>
-            </Card>
-          )}
-        </div>
+        <PipelineTab
+          sportId={sportId!}
+          sportName={sport.sport_name}
+          pipeline={pipeline}
+          pipelineLoading={pipelineLoading}
+          mapAvailable={showMap}
+          onOpenMap={() => setActiveTab("map")}
+        />
         </TabsContent>
 
         {/* Overview */}
