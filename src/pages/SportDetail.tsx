@@ -868,11 +868,12 @@ const SportDetail = () => {
           </CardContent>
         </Card>
       </div>
+        </TabsContent>
+        )}
 
-      {/* Infrastructure & Notes Section */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Column - Training Centres */}
-        <div className="lg:col-span-2">
+        {/* Pipeline */}
+        <TabsContent value="pipeline" className="mt-0">
+        <div>
           {(ncoeCapacity && ncoeCapacity.length > 0) || (stcCapacity && stcCapacity.length > 0) ? (
             <Card>
               <CardHeader className="pb-2">
@@ -980,17 +981,19 @@ const SportDetail = () => {
               </CardContent>
             </Card>
           )}
-
-          {/* Global Olympic Context */}
-          <div className="mt-6">
-            <GlobalContextSection sportId={sportId!} />
-          </div>
         </div>
+        </TabsContent>
 
+        {/* Overview */}
+        <TabsContent value="overview" className="mt-0 space-y-6">
+          <SportInsights row={pipeline} />
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <GlobalContextSection sportId={sportId!} />
+            </div>
 
-        {/* Right Column - Notes */}
+        {/* Notes */}
         <div className="space-y-4">
-          {/* Notes */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
