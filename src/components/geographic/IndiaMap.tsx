@@ -1339,6 +1339,7 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
             </div>
           </div>
         </div>
+        )}
       </div>
 
 
