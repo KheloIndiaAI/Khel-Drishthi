@@ -92,6 +92,14 @@ interface IndiaMapProps {
   totalCentres?: number;
   /** Paint the SAI-region choropleth on state fills. */
   showChoropleth?: boolean;
+  /**
+   * Database state name -> value. When supplied (and showChoropleth is true) the
+   * state fills switch from categorical SAI-region colours to a sequential ramp.
+   * A state missing from this map is a real zero ("no presence"), not missing data.
+   */
+  choroplethValues?: Record<string, number>;
+  /** Noun used in the sequential legend and hover tooltip, e.g. "Archery centres". */
+  choroplethLabel?: string;
   /** Initial visibility of the infrastructure projects layer; false skips the query. */
   showProjects?: boolean;
   /** Lazy-add district boundary lines on zoom. */
@@ -128,6 +136,38 @@ export const REGION_COLORS: Record<string, string> = {
   Zirakpur: '#eab308',
 };
 
+// Sequential single-hue ramp used when choroplethValues is supplied.
+const SEQUENTIAL_RAMP = ['#bbf7d0', '#86efac', '#4ade80', '#22c55e', '#15803d'];
+// A state with no presence at all — deliberately off-hue so it can never be
+// mistaken for the lowest bucket (nor for a state whose data failed to load,
+// in which case the sequential ramp is not applied at all).
+const NO_PRESENCE_FILL = '#94a3b8';
+
+/** Equal-interval buckets across the positive values, low -> high. */
+const buildBuckets = (values: number[]) => {
+  const positives = values.filter((v) => v > 0);
+  if (positives.length === 0) return [] as { min: number; max: number; color: string }[];
+  const max = Math.max(...positives);
+  const steps = Math.min(SEQUENTIAL_RAMP.length, Math.max(1, max));
+  const width = max / steps;
+  return Array.from({ length: steps }, (_, i) => ({
+    min: i === 0 ? 1 : Math.floor(i * width) + 1,
+    max: i === steps - 1 ? max : Math.floor((i + 1) * width),
+    color: SEQUENTIAL_RAMP[SEQUENTIAL_RAMP.length - steps + i],
+  }));
+};
+
+const bucketColor = (
+  value: number,
+  buckets: { min: number; max: number; color: string }[]
+) => {
+  if (value <= 0 || buckets.length === 0) return NO_PRESENCE_FILL;
+  const hit = buckets.find((b) => value >= b.min && value <= b.max);
+  return hit?.color ?? buckets[buckets.length - 1].color;
+};
+
+
+
 import {
   getCompliantMapStyle,
   retryCompliantMapStyle,
@@ -155,6 +195,8 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
   height = '600px',
   totalCentres,
   showChoropleth = true,
+  choroplethValues,
+  choroplethLabel = 'centres',
   showProjects: showProjectsDefault = true,
   showDistricts = true,
   fitToBounds = false,
@@ -163,6 +205,16 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
   const mapRef = useRef<MapRef | null>(null);
   const { resolvedTheme } = useAppTheme();
+
+  // Sequential shading only when caller supplied values AND the choropleth is on.
+  const sequentialMode =
+    showChoropleth && !!choroplethValues && Object.keys(choroplethValues).length > 0;
+  const buckets = useMemo(
+    () => (choroplethValues ? buildBuckets(Object.values(choroplethValues).map(Number)) : []),
+    [choroplethValues]
+  );
+
+
 
   const [styleVariant, setStyleVariant] = useState<'light' | 'dark'>(resolvedTheme);
   const [userPickedStyle, setUserPickedStyle] = useState(false);
@@ -337,16 +389,19 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
     vis('esri-satellite', satellite);
 
     if (map.getLayer('state-fills')) {
+      // A sequential ramp carries meaning in its shade, so it needs more opacity
+      // than the purely decorative categorical region tint.
+      const base = sequentialMode ? 0.6 : 0.15;
       map.setPaintProperty(
         'state-fills',
         'fill-opacity',
         satellite
-          ? (['interpolate', ['linear'], ['zoom'], 6, 0.15, 7, 0] as never)
+          ? (['interpolate', ['linear'], ['zoom'], 6, base, 7, 0] as never)
           : ([
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              0.45,
-              0.15,
+              sequentialMode ? 0.8 : 0.45,
+              base,
             ] as never)
       );
     }
@@ -364,25 +419,40 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
       );
       map.setPaintProperty('india-outline', 'line-width', satellite ? 2.2 : 1.8);
     }
-  }, [satellite, styleVariant, mapLoaded, styleEpoch]);
+  }, [satellite, styleVariant, mapLoaded, styleEpoch, sequentialMode]);
 
-  // Choropleth tint by SAI region
+  // Choropleth tint — sequential when values are supplied, else SAI-region categorical
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!showChoropleth) return;
-    if (!map || !mapLoaded || !regionByState || !map.getLayer('state-fills')) return;
+    if (!map || !mapLoaded || !map.getLayer('state-fills')) return;
+
     const stops: unknown[] = ['match', ['get', 'STNAME_SH']];
     const seen = new Set<string>();
-    Object.entries(regionByState).forEach(([dataState, region]) => {
-      dataToGeoStates(dataState).forEach((geoName) => {
-        if (seen.has(geoName)) return;
-        seen.add(geoName);
-        stops.push(geoName, REGION_COLORS[region] ?? '#94a3b8');
+
+    if (sequentialMode && choroplethValues) {
+      Object.entries(choroplethValues).forEach(([dataState, value]) => {
+        dataToGeoStates(dataState).forEach((geoName) => {
+          if (seen.has(geoName)) return;
+          seen.add(geoName);
+          stops.push(geoName, bucketColor(Number(value) || 0, buckets));
+        });
       });
-    });
-    stops.push('#94a3b8');
+      // Every other polygon is a genuine "no presence", not missing data.
+      stops.push(NO_PRESENCE_FILL);
+    } else {
+      if (!regionByState) return;
+      Object.entries(regionByState).forEach(([dataState, region]) => {
+        dataToGeoStates(dataState).forEach((geoName) => {
+          if (seen.has(geoName)) return;
+          seen.add(geoName);
+          stops.push(geoName, REGION_COLORS[region] ?? '#94a3b8');
+        });
+      });
+      stops.push('#94a3b8');
+    }
     map.setPaintProperty('state-fills', 'fill-color', stops as never);
-  }, [regionByState, mapLoaded, styleEpoch, showChoropleth]);
+  }, [regionByState, mapLoaded, styleEpoch, showChoropleth, sequentialMode, choroplethValues, buckets]);
 
   // Lazily mount district boundary lines the first time zoom crosses 5
   useEffect(() => {
@@ -1231,6 +1301,33 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
 
       {/* Bottom Left - Filter Buttons */}
       <div className="absolute bottom-10 left-4 bg-background/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-10">
+        {sequentialMode && (
+          <div className="mb-3 pb-2 border-b">
+            <h4 className="text-xs font-semibold mb-1.5 text-muted-foreground uppercase">
+              {choroplethLabel} per state
+            </h4>
+            <div className="space-y-1">
+              {buckets.map((b) => (
+                <div key={b.min} className="flex items-center gap-2 text-[10px]">
+                  <span
+                    className="inline-block h-3 w-5 rounded-sm border border-border/50"
+                    style={{ backgroundColor: b.color }}
+                  />
+                  <span className="text-muted-foreground">
+                    {b.min === b.max ? b.min : `${b.min}–${b.max}`}
+                  </span>
+                </div>
+              ))}
+              <div className="flex items-center gap-2 text-[10px] pt-0.5">
+                <span
+                  className="inline-block h-3 w-5 rounded-sm border border-border/50"
+                  style={{ backgroundColor: NO_PRESENCE_FILL }}
+                />
+                <span className="text-muted-foreground">No presence</span>
+              </div>
+            </div>
+          </div>
+        )}
         <h4 className="text-xs font-semibold mb-2 flex items-center gap-1 text-muted-foreground">
           <Layers className="h-3 w-3" />
           FILTER BY TYPE
@@ -1568,7 +1665,23 @@ const IndiaMap: React.FC<IndiaMapProps> = ({
           }}
         >
           <div className="text-xs font-semibold text-foreground">{hoveredState.dataName}</div>
-          {showChoropleth && (
+          {showChoropleth && sequentialMode && (
+            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{
+                  background: bucketColor(
+                    choroplethValues?.[hoveredState.dataName] ?? 0,
+                    buckets
+                  ),
+                }}
+              />
+              {choroplethValues?.[hoveredState.dataName]
+                ? `${choroplethValues[hoveredState.dataName]} ${choroplethLabel}`
+                : `No ${choroplethLabel}`}
+            </div>
+          )}
+          {showChoropleth && !sequentialMode && (
           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <span
               className="inline-block h-2 w-2 rounded-full"
