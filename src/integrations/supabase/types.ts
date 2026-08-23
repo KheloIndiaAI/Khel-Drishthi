@@ -880,6 +880,45 @@ export type Database = {
           },
         ]
       }
+      oly_athlete_alias: {
+        Row: {
+          birth_year: number | null
+          canonical_athlete_id: string
+          canonical_name: string | null
+          confidence: number | null
+          created_at: string | null
+          duplicate_athlete_id: string
+          duplicate_name: string | null
+          kd_sport_id: string | null
+          method: string | null
+          note: string | null
+        }
+        Insert: {
+          birth_year?: number | null
+          canonical_athlete_id: string
+          canonical_name?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          duplicate_athlete_id: string
+          duplicate_name?: string | null
+          kd_sport_id?: string | null
+          method?: string | null
+          note?: string | null
+        }
+        Update: {
+          birth_year?: number | null
+          canonical_athlete_id?: string
+          canonical_name?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          duplicate_athlete_id?: string
+          duplicate_name?: string | null
+          kd_sport_id?: string | null
+          method?: string | null
+          note?: string | null
+        }
+        Relationships: []
+      }
       oly_athletes: {
         Row: {
           athlete_id: string
@@ -1027,6 +1066,36 @@ export type Database = {
           is_intercalated?: boolean | null
           season?: string
           year?: number
+        }
+        Relationships: []
+      }
+      oly_event_alias: {
+        Row: {
+          canonical_discipline: string
+          canonical_event_name: string
+          created_at: string
+          method: string
+          note: string | null
+          paris_event_name: string
+          relation: string
+        }
+        Insert: {
+          canonical_discipline: string
+          canonical_event_name: string
+          created_at?: string
+          method: string
+          note?: string | null
+          paris_event_name: string
+          relation?: string
+        }
+        Update: {
+          canonical_discipline?: string
+          canonical_event_name?: string
+          created_at?: string
+          method?: string
+          note?: string | null
+          paris_event_name?: string
+          relation?: string
         }
         Relationships: []
       }
@@ -2694,6 +2763,26 @@ export type Database = {
           medals: number | null
           top8: number | null
           top8_no_medal: number | null
+        }
+        Relationships: []
+      }
+      oly_v_participations_canon: {
+        Row: {
+          athlete_id: string | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          country_noc: string | null
+          data_completeness: string | null
+          edition_id: number | null
+          event_alias_relation: string | null
+          event_name: string | null
+          event_was_realigned: boolean | null
+          is_medal_winning: boolean | null
+          kd_sport_id: string | null
+          participation_id: number | null
+          result_place: string | null
+          season: string | null
+          year: number | null
         }
         Relationships: []
       }
