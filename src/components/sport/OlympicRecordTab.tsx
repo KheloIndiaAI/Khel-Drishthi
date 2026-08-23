@@ -63,10 +63,13 @@ const num = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
 const DASH = "—";
 
 /**
- * India's national top-8 → medal conversion rate: 41 Summer medals ÷ 132 top-8
+ * India's national top-8 → medal conversion rate: 41 Summer medals ÷ 149 top-8
  * finishes (both event grain, from oly_medal_tally and the corrected place parsing).
+ * The rate fell from the old 31.1% because Paris 2024 non-medal placings are now in
+ * the database for the first time, so the denominator is finally complete — this is
+ * a data-coverage correction, not a decline in performance. Do not "restore" 31.1.
  */
-export const NATIONAL_CONVERSION_PCT = 31.1;
+export const NATIONAL_CONVERSION_PCT = 27.5;
 
 const Footnote = () => (
   <p className="text-[11px] text-muted-foreground mt-3 flex gap-1.5 items-start">
