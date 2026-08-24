@@ -108,12 +108,26 @@ export const MomentumCard = ({
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
               <RTooltip contentStyle={tooltipStyle} />
               <Legend />
-              <Bar dataKey="raw" name="Raw top-8 gain" fill="hsl(var(--saffron))" />
+              <Bar dataKey="raw" name="Raw top-8 gain" fill="hsl(var(--saffron))">
+                <LabelList
+                  dataKey="raw"
+                  position="top"
+                  fontSize={11}
+                  fill="hsl(var(--foreground))"
+                />
+              </Bar>
               <Bar
                 dataKey="normalised"
                 name="Depth-normalised gain"
-                fill="hsl(var(--primary))"
-              />
+                fill="hsl(var(--chart-2, 200 80% 45%))"
+              >
+                <LabelList
+                  dataKey="normalised"
+                  position="top"
+                  fontSize={11}
+                  fill="hsl(var(--foreground))"
+                />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         )}
