@@ -150,22 +150,23 @@ export const useEventBoard = (sportId?: string) =>
     },
   });
 
-export const useEventRisers = (disciplines: string[], event?: string | null) =>
+export const useEventRisers = (discipline?: string | null, event?: string | null) =>
   useQuery({
-    queryKey: ["oly-v-event-risers", disciplines, event],
+    queryKey: ["oly-v-event-risers", discipline, event],
     staleTime: Infinity,
-    enabled: disciplines.length > 0 && !!event,
+    enabled: !!discipline && !!event,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("oly_v_event_risers")
         .select(RISER_COLS)
-        .in("canonical_discipline", disciplines)
         .eq("season", "Summer")
+        .eq("canonical_discipline", discipline!)
         .eq("canonical_event", event!);
       if (error) throw error;
       return (data || []) as EventRiserRow[];
     },
   });
+
 
 export const useDisciplineAge = (disciplines: string[]) =>
   useQuery({
