@@ -24,6 +24,7 @@ import { useSportPipeline } from "@/hooks/useSportPipeline";
 import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
 import SportMapTab, { useSportCentres } from "@/components/sport/SportMapTab";
 import WorldContextTab from "@/components/sport/WorldContextTab";
+import EventExplorerTab from "@/components/sport/EventExplorerTab";
 import PipelineTab from "@/components/sport/PipelineTab";
 
 
@@ -62,6 +63,7 @@ const SportDetail = () => {
   const needsPipeline = activeTab === "pipeline";
   const needsMap = activeTab === "map";
   const needsWorld = activeTab === "world";
+  const needsExplorer = activeTab === "explorer";
 
   // Fetch sport details
   const { data: sport, isLoading: sportLoading } = useQuery({
