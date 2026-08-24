@@ -86,29 +86,33 @@ export type RiserRow = {
 const RISER_COLS =
   "season,canonical_discipline,canonical_event,country_noc,medals_last3,medals_prev3,medal_gain,top8_last3,top8_prev3,top8_gain,topdecile_last3,topdecile_prev3,topdecile_gain,event_last_year";
 
-/** One query per NOC — the view is expensive and a multi-country IN() times out. */
+const fetchRisers = async (noc: string) => {
+  const { data, error } = await supabase
+    .from("oly_v_event_risers")
+    .select(RISER_COLS)
+    .eq("season", "Summer")
+    .eq("country_noc", noc)
+    .eq("event_last_year", 2024);
+  if (error) throw error;
+  return (data || []) as RiserRow[];
+};
+
+/** Sequential, one NOC at a time — the view is expensive and both a multi-country
+ *  IN() and concurrent single-country calls exceed the statement timeout. */
 export const useEventRisers = (nocs: string[]) => {
-  const results = useQueries({
-    queries: nocs.map((noc) => ({
-      queryKey: ["oly-v-event-risers-benchmark", noc],
-      staleTime: Infinity,
-      queryFn: async () => {
-        const { data, error } = await supabase
-          .from("oly_v_event_risers")
-          .select(RISER_COLS)
-          .eq("season", "Summer")
-          .eq("country_noc", noc)
-          .eq("event_last_year", 2024);
-        if (error) throw error;
-        return (data || []) as RiserRow[];
-      },
-    })),
+  const q = useQuery({
+    queryKey: ["oly-v-event-risers-benchmark", [...nocs].sort().join(",")],
+    staleTime: Infinity,
+    retry: 1,
+    enabled: nocs.length > 0,
+    queryFn: async () => {
+      const out: RiserRow[] = [];
+      for (const noc of nocs) out.push(...(await fetchRisers(noc)));
+      return out;
+    },
   });
 
-  return {
-    data: results.flatMap((r) => r.data || []) as RiserRow[],
-    isLoading: results.some((r) => r.isLoading),
-    isError: results.some((r) => r.isError),
-  };
+  return { data: q.data || [], isLoading: q.isLoading, isError: q.isError };
 };
+
 
