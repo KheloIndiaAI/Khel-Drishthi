@@ -64,6 +64,8 @@ const PALETTE = [
 const Benchmark = () => {
   const [selectedPeers, setSelectedPeers] = useState<string[]>(["CHN", "GBR", "JPN"]);
   const [merged, setMerged] = useState(false);
+  const [era, setEra] = useState<EraKey>("all");
+  const [drillSport, setDrillSport] = useState<string | null>(null);
 
   const countries = useMemo(() => ["IND", ...selectedPeers], [selectedPeers]);
 
@@ -120,12 +122,24 @@ const Benchmark = () => {
     },
   });
 
+  const strike = useCountryStrike(fetchNocs);
+  const risers = useEventRisers(fetchNocs);
+
+  // The three most recent Summer years present in the data.
+  const lastThreeYears = useMemo(() => {
+    const years = [...new Set((rows || []).map((r) => r.year))].sort((a, b) => b - a);
+    return years.slice(0, 3);
+  }, [rows]);
+
+  const eraFilter = useMemo(() => makeEraFilter(era, lastThreeYears), [era, lastThreeYears]);
+  const eraLabel = ERA_CHART_LABEL[era];
+
   const keyed = useMemo(
     () =>
       (rows || [])
         .map((r) => ({ ...r, noc: reverseMap[r.country_noc] || r.country_noc }))
-        .filter((r) => countries.includes(r.noc)),
-    [rows, reverseMap, countries]
+        .filter((r) => countries.includes(r.noc) && eraFilter(r.year)),
+    [rows, reverseMap, countries, eraFilter]
   );
 
   const colorFor = (noc: string) =>
@@ -143,7 +157,7 @@ const Benchmark = () => {
       .sort((a, b) => a.year - b.year);
   }, [keyed]);
 
-  // Chart B: by sport all-time (top 8)
+  // Chart B: by sport (top 8 in the selected era)
   const sportData = useMemo(() => {
     const bySport: Record<string, { label: string; totals: Record<string, number>; combined: number }> = {};
     keyed
@@ -169,6 +183,7 @@ const Benchmark = () => {
         return {
           noc,
           name: NAMES[noc] || noc,
+          hasData: rs.length > 0,
           gold: rs.reduce((s, r) => s + (r.gold || 0), 0),
           silver: rs.reduce((s, r) => s + (r.silver || 0), 0),
           bronze: rs.reduce((s, r) => s + (r.bronze || 0), 0),
@@ -192,10 +207,11 @@ const Benchmark = () => {
     <DashboardLayout>
       <PageSEO
         title="Global Benchmark — India vs the world | Khel Drishti"
-        description="Compare India's Olympic medal performance against peer nations across Games, sports and eras."
+        description="Compare India's Olympic performance against peer nations by era, with strike rate — medals per event contested — and depth-adjusted momentum."
         canonicalPath="/benchmark"
-        keywords={["Olympic benchmark", "India vs China Olympics", "medal comparison"]}
+        keywords={["Olympic benchmark", "India vs China Olympics", "medal comparison", "strike rate"]}
       />
+
 
       <div className="space-y-6 pb-20 md:pb-8">
         <div>
