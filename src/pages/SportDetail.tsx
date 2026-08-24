@@ -24,6 +24,7 @@ import { useSportPipeline } from "@/hooks/useSportPipeline";
 import OlympicRecordTab from "@/components/sport/OlympicRecordTab";
 import SportMapTab, { useSportCentres } from "@/components/sport/SportMapTab";
 import WorldContextTab from "@/components/sport/WorldContextTab";
+import EventExplorerTab from "@/components/sport/EventExplorerTab";
 import PipelineTab from "@/components/sport/PipelineTab";
 
 
@@ -62,6 +63,7 @@ const SportDetail = () => {
   const needsPipeline = activeTab === "pipeline";
   const needsMap = activeTab === "map";
   const needsWorld = activeTab === "world";
+  const needsExplorer = activeTab === "explorer";
 
   // Fetch sport details
   const { data: sport, isLoading: sportLoading } = useQuery({
@@ -404,6 +406,7 @@ const SportDetail = () => {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {showOlympicRecord && <TabsTrigger value="record">Olympic Record</TabsTrigger>}
             {showOlympicRecord && <TabsTrigger value="world">World Context</TabsTrigger>}
+            {showOlympicRecord && <TabsTrigger value="explorer">Event Explorer</TabsTrigger>}
             <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
             {showMap && <TabsTrigger value="map">Map</TabsTrigger>}
             <TabsTrigger value="events">Events</TabsTrigger>
@@ -415,6 +418,13 @@ const SportDetail = () => {
             <WorldContextTab sportId={sportId} sportName={sport?.sport_name ?? undefined} />
           )}
         </TabsContent>
+
+        <TabsContent value="explorer" className="mt-0">
+          {needsExplorer && showOlympicRecord && (
+            <EventExplorerTab sportId={sportId} sportName={sport?.sport_name ?? undefined} />
+          )}
+        </TabsContent>
+
 
         <TabsContent value="map" className="mt-0">
           {needsMap && <SportMapTab sportId={sportId} sportName={sport?.sport_name ?? undefined} />}

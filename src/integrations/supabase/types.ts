@@ -647,6 +647,27 @@ export type Database = {
           },
         ]
       }
+      kd_state_alias: {
+        Row: {
+          note: string | null
+          relation: string
+          state_canonical: string
+          state_raw: string
+        }
+        Insert: {
+          note?: string | null
+          relation: string
+          state_canonical: string
+          state_raw: string
+        }
+        Update: {
+          note?: string | null
+          relation?: string
+          state_canonical?: string
+          state_raw?: string
+        }
+        Relationships: []
+      }
       kisce_funds: {
         Row: {
           created_at: string
@@ -922,6 +943,8 @@ export type Database = {
       oly_athletes: {
         Row: {
           athlete_id: string
+          birth_date: string | null
+          birth_place: string | null
           birth_year: number | null
           country_noc: string | null
           display_name: string | null
@@ -939,6 +962,8 @@ export type Database = {
         }
         Insert: {
           athlete_id: string
+          birth_date?: string | null
+          birth_place?: string | null
           birth_year?: number | null
           country_noc?: string | null
           display_name?: string | null
@@ -956,6 +981,8 @@ export type Database = {
         }
         Update: {
           athlete_id?: string
+          birth_date?: string | null
+          birth_place?: string | null
           birth_year?: number | null
           country_noc?: string | null
           display_name?: string | null
@@ -1096,6 +1123,117 @@ export type Database = {
           note?: string | null
           paris_event_name?: string
           relation?: string
+        }
+        Relationships: []
+      }
+      oly_event_board_cache: {
+        Row: {
+          alltime_leader_medals: number | null
+          alltime_leader_noc: string | null
+          alltime_leader_share_pct: number | null
+          best_place_recent: number | null
+          best_year: number | null
+          board_tier: string | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          depth_year: number | null
+          distance_to_podium: number | null
+          editions: number | null
+          era_winners: string | null
+          field_units: number | null
+          first_year: number | null
+          games_contested_recent: number | null
+          games_held_recent: number | null
+          gold_streak_len: number | null
+          gold_streak_noc: string | null
+          hhi: number | null
+          is_team_event: boolean | null
+          kd_sport_id: string | null
+          last_year: number | null
+          last3_leader_noc: string | null
+          medalist_nations: number | null
+          medals_total: number | null
+          nations_medalling_recent: number | null
+          openness_band: string | null
+          pipeline_archetype: string | null
+          pipeline_athletes: number | null
+          ranked_coverage: number | null
+          refreshed_at: string | null
+          season: string | null
+          trail: string | null
+          trend: string | null
+        }
+        Insert: {
+          alltime_leader_medals?: number | null
+          alltime_leader_noc?: string | null
+          alltime_leader_share_pct?: number | null
+          best_place_recent?: number | null
+          best_year?: number | null
+          board_tier?: string | null
+          canonical_discipline?: string | null
+          canonical_event?: string | null
+          depth_year?: number | null
+          distance_to_podium?: number | null
+          editions?: number | null
+          era_winners?: string | null
+          field_units?: number | null
+          first_year?: number | null
+          games_contested_recent?: number | null
+          games_held_recent?: number | null
+          gold_streak_len?: number | null
+          gold_streak_noc?: string | null
+          hhi?: number | null
+          is_team_event?: boolean | null
+          kd_sport_id?: string | null
+          last_year?: number | null
+          last3_leader_noc?: string | null
+          medalist_nations?: number | null
+          medals_total?: number | null
+          nations_medalling_recent?: number | null
+          openness_band?: string | null
+          pipeline_archetype?: string | null
+          pipeline_athletes?: number | null
+          ranked_coverage?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+          trail?: string | null
+          trend?: string | null
+        }
+        Update: {
+          alltime_leader_medals?: number | null
+          alltime_leader_noc?: string | null
+          alltime_leader_share_pct?: number | null
+          best_place_recent?: number | null
+          best_year?: number | null
+          board_tier?: string | null
+          canonical_discipline?: string | null
+          canonical_event?: string | null
+          depth_year?: number | null
+          distance_to_podium?: number | null
+          editions?: number | null
+          era_winners?: string | null
+          field_units?: number | null
+          first_year?: number | null
+          games_contested_recent?: number | null
+          games_held_recent?: number | null
+          gold_streak_len?: number | null
+          gold_streak_noc?: string | null
+          hhi?: number | null
+          is_team_event?: boolean | null
+          kd_sport_id?: string | null
+          last_year?: number | null
+          last3_leader_noc?: string | null
+          medalist_nations?: number | null
+          medals_total?: number | null
+          nations_medalling_recent?: number | null
+          openness_band?: string | null
+          pipeline_archetype?: string | null
+          pipeline_athletes?: number | null
+          ranked_coverage?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+          trail?: string | null
+          trend?: string | null
         }
         Relationships: []
       }
@@ -2307,6 +2445,24 @@ export type Database = {
         }
         Relationships: []
       }
+      stg_athlete_birth: {
+        Row: {
+          athlete_id: string
+          birth_date_raw: string | null
+          birth_place: string | null
+        }
+        Insert: {
+          athlete_id: string
+          birth_date_raw?: string | null
+          birth_place?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          birth_date_raw?: string | null
+          birth_place?: string | null
+        }
+        Relationships: []
+      }
       user_centre_assignments: {
         Row: {
           assigned_at: string | null
@@ -2590,6 +2746,60 @@ export type Database = {
           },
         ]
       }
+      oly_v_athlete_career: {
+        Row: {
+          athletes: number | null
+          avg_games_to_first_medal: number | null
+          canonical_discipline: string | null
+          debut_age_medallists: number | null
+          debut_age_non_medallists: number | null
+          first_medal_on_debut: number | null
+          medallists: number | null
+          medallists_multigames: number | null
+          pct_on_debut_multigames: number | null
+          pct_on_debut_raw: number | null
+          season: string | null
+        }
+        Relationships: []
+      }
+      oly_v_athlete_games: {
+        Row: {
+          age: number | null
+          athlete_id: string | null
+          best_place: number | null
+          country_noc: string | null
+          events_entered: number | null
+          games_no: number | null
+          is_debut: boolean | null
+          is_first_medal: boolean | null
+          kd_sport_id: string | null
+          medal_that_year: boolean | null
+          primary_discipline: string | null
+          season: string | null
+          total_games: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_athlete_origin: {
+        Row: {
+          alias_relation: string | null
+          appearances: number | null
+          athlete_id: string | null
+          birth_date: string | null
+          birth_place: string | null
+          birth_year: number | null
+          city_raw: string | null
+          display_name: string | null
+          gender: string | null
+          kd_sport_id: string | null
+          medals: number | null
+          state_canonical: string | null
+          state_raw: string | null
+          state_resolved: boolean | null
+        }
+        Relationships: []
+      }
       oly_v_country_cycle: {
         Row: {
           athletes_sent: number | null
@@ -2604,6 +2814,153 @@ export type Database = {
           silver: number | null
           total: number | null
           year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_discipline_age: {
+        Row: {
+          age_gap_yrs: number | null
+          birth_cohort_for_2028: number | null
+          birth_cohort_for_2036: number | null
+          canonical_discipline: string | null
+          entrant_age_p50: number | null
+          era: string | null
+          india_age_p50: number | null
+          india_entrants_n: number | null
+          medal_age_p10: number | null
+          medal_age_p50: number | null
+          medal_age_p90: number | null
+          medal_age_window: number | null
+          medallists_n: number | null
+          season: string | null
+        }
+        Relationships: []
+      }
+      oly_v_event_dominance: {
+        Row: {
+          alltime_leader_golds: number | null
+          alltime_leader_medals: number | null
+          alltime_leader_noc: string | null
+          alltime_leader_share_pct: number | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          editions: number | null
+          era_winners: string | null
+          first_year: number | null
+          gold_streak_from: number | null
+          gold_streak_len: number | null
+          gold_streak_noc: string | null
+          gold_streak_to: number | null
+          hhi: number | null
+          last_year: number | null
+          last3_leader_golds: number | null
+          last3_leader_medals: number | null
+          last3_leader_noc: string | null
+          medalist_nations: number | null
+          medals_total: number | null
+          season: string | null
+        }
+        Relationships: []
+      }
+      oly_v_event_field_depth: {
+        Row: {
+          athletes: number | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          depth_index: number | null
+          field_units: number | null
+          is_team_event: boolean | null
+          nations: number | null
+          ranked_coverage: number | null
+          ranked_positions: number | null
+          season: string | null
+          top_decile_cutoff: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_event_history: {
+        Row: {
+          bronze_noc: string | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          entrants: number | null
+          gold_noc: string | null
+          india_best_place: number | null
+          india_entrants: number | null
+          kd_sport_id: string | null
+          medal_rows: number | null
+          nations: number | null
+          season: string | null
+          silver_noc: string | null
+          year: number | null
+        }
+        Relationships: []
+      }
+      oly_v_event_india: {
+        Row: {
+          alltime_leader_medals: number | null
+          alltime_leader_noc: string | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          event_editions: number | null
+          event_first_year: number | null
+          event_last_year: number | null
+          hhi: number | null
+          india_athletes: number | null
+          india_best_athletes: string | null
+          india_best_place: number | null
+          india_best_year: number | null
+          india_editions: number | null
+          india_entries: number | null
+          india_first_year: number | null
+          india_last_year: number | null
+          kd_sport_id: string | null
+          last3_leader_medals: number | null
+          last3_leader_noc: string | null
+          medalist_nations: number | null
+          on_2024_programme: boolean | null
+          pipeline_archetype: string | null
+          pipeline_athletes: number | null
+          season: string | null
+        }
+        Relationships: []
+      }
+      oly_v_event_proximity: {
+        Row: {
+          best_place_recent: number | null
+          best_year: number | null
+          canonical_discipline: string | null
+          canonical_event: string | null
+          distance_to_podium: number | null
+          games_contested_recent: number | null
+          games_held_recent: number | null
+          kd_sport_id: string | null
+          nations_medalling_recent: number | null
+          pipeline_archetype: string | null
+          pipeline_athletes: number | null
+          season: string | null
+          trail: string | null
+          trend: string | null
+        }
+        Relationships: []
+      }
+      oly_v_event_risers: {
+        Row: {
+          canonical_discipline: string | null
+          canonical_event: string | null
+          country_noc: string | null
+          event_last_year: number | null
+          medal_gain: number | null
+          medals_last3: number | null
+          medals_prev3: number | null
+          season: string | null
+          top8_gain: number | null
+          top8_last3: number | null
+          top8_prev3: number | null
+          topdecile_gain: number | null
+          topdecile_last3: number | null
+          topdecile_prev3: number | null
         }
         Relationships: []
       }
@@ -2870,6 +3227,16 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_v_sport_discipline_map: {
+        Row: {
+          canonical_discipline: string | null
+          kd_sport_id: string | null
+          last_year: number | null
+          participation_rows: number | null
+          season: string | null
+        }
+        Relationships: []
+      }
       oly_v_sport_india: {
         Row: {
           bronze: number | null
@@ -2944,6 +3311,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      refresh_event_board_cache: { Args: never; Returns: number }
       setup_first_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
