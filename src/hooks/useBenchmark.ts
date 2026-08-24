@@ -83,36 +83,59 @@ export type RiserRow = {
   event_last_year: number | null;
 };
 
-const RISER_COLS =
-  "season,canonical_discipline,canonical_event,country_noc,medals_last3,medals_prev3,medal_gain,top8_last3,top8_prev3,top8_gain,topdecile_last3,topdecile_prev3,topdecile_gain,event_last_year";
-
-const fetchRisers = async (noc: string) => {
-  const { data, error } = await supabase
-    .from("oly_v_event_risers")
-    .select(RISER_COLS)
-    .eq("season", "Summer")
-    .eq("country_noc", noc)
-    .eq("event_last_year", 2024);
-  if (error) throw error;
-  return (data || []) as RiserRow[];
+export type MomentumRow = {
+  season: string | null;
+  country_noc: string | null;
+  events_live: number | null;
+  medal_gain: number | null;
+  top8_gain: number | null;
+  topdecile_gain: number | null;
+  divergent_events: number | null;
 };
 
-/** Sequential, one NOC at a time — the view is expensive and both a multi-country
- *  IN() and concurrent single-country calls exceed the statement timeout. */
-export const useEventRisers = (nocs: string[]) => {
+/** Precomputed country rollup — one row per country per season. Already summed
+ *  across events, so never re-aggregate per event on the client. */
+export const useCountryMomentum = (nocs: string[]) => {
   const q = useQuery({
-    queryKey: ["oly-v-event-risers-benchmark", [...nocs].sort().join(",")],
+    queryKey: ["oly-country-momentum-cache", [...nocs].sort().join(",")],
     staleTime: Infinity,
-    retry: 1,
     enabled: nocs.length > 0,
     queryFn: async () => {
-      const out: RiserRow[] = [];
-      for (const noc of nocs) out.push(...(await fetchRisers(noc)));
-      return out;
+      const { data, error } = await supabase
+        .from("oly_country_momentum_cache")
+        .select(
+          "season,country_noc,events_live,medal_gain,top8_gain,topdecile_gain,divergent_events"
+        )
+        .eq("season", "Summer")
+        .in("country_noc", nocs);
+      if (error) throw error;
+      return (data || []) as MomentumRow[];
     },
   });
-
   return { data: q.data || [], isLoading: q.isLoading, isError: q.isError };
 };
+
+/** India-only per-event rows, for the divergence list. A single-NOC query on
+ *  the risers view is fast; multi-country aggregation is not. */
+export const useIndiaDivergence = () => {
+  const q = useQuery({
+    queryKey: ["oly-v-event-risers-ind-divergence"],
+    staleTime: Infinity,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("oly_v_event_risers")
+        .select(
+          "season,canonical_discipline,canonical_event,country_noc,medals_last3,medals_prev3,medal_gain,top8_last3,top8_prev3,top8_gain,topdecile_last3,topdecile_prev3,topdecile_gain,event_last_year"
+        )
+        .eq("season", "Summer")
+        .eq("country_noc", "IND")
+        .eq("event_last_year", 2024);
+      if (error) throw error;
+      return (data || []) as RiserRow[];
+    },
+  });
+  return { data: q.data || [], isLoading: q.isLoading, isError: q.isError };
+};
+
 
 

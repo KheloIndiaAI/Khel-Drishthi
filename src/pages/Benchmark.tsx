@@ -15,8 +15,10 @@ import {
   EraKey,
   makeEraFilter,
   useCountryStrike,
-  useEventRisers,
+  useCountryMomentum,
+  useIndiaDivergence,
 } from "@/hooks/useBenchmark";
+
 import StrikeRateCard from "@/components/benchmark/StrikeRateCard";
 import MomentumCard from "@/components/benchmark/MomentumCard";
 import SportDrilldownDialog from "@/components/benchmark/SportDrilldownDialog";
@@ -134,7 +136,9 @@ const Benchmark = () => {
   });
 
   const strike = useCountryStrike(fetchNocs);
-  const risers = useEventRisers(fetchNocs);
+  const momentum = useCountryMomentum(fetchNocs);
+  const divergence = useIndiaDivergence();
+
 
   // The three most recent Summer years present in the data.
   const lastThreeYears = useMemo(() => {
@@ -459,13 +463,15 @@ const Benchmark = () => {
         />
 
         <MomentumCard
-          rows={risers.data}
-          isLoading={risers.isLoading}
-          isError={risers.isError}
+          rows={momentum.data}
+          isLoading={momentum.isLoading || divergence.isLoading}
+          isError={momentum.isError}
+          divergenceRows={divergence.data}
           countries={countries}
           names={NAMES}
           reverseMap={reverseMap}
         />
+
 
         <SportDrilldownDialog
           sport={drillSport}
