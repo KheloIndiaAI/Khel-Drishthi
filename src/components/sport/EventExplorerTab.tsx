@@ -140,16 +140,22 @@ export const EventExplorerTab = ({ sportId, sportName }: Props) => {
 
   const boardByEvent = useMemo(() => {
     const m = new Map<string, EventBoardRow>();
-    boardRows.forEach((r) => r.canonical_event && m.set(r.canonical_event, r));
+    boardRows.forEach(
+      (r) => r.canonical_event && m.set(eventKey(r.canonical_discipline, r.canonical_event), r)
+    );
     return m;
   }, [boardRows]);
 
+  const multiDiscipline = disciplines.length > 1;
+
   const eventOptions = useMemo(() => {
     const rows = dominanceRows.filter((r) => !!r.canonical_event);
-    const contested = rows.filter((r) => boardByEvent.has(r.canonical_event!));
-    const rest = rows.filter((r) => !boardByEvent.has(r.canonical_event!));
+    const has = (r: typeof rows[number]) => boardByEvent.has(eventKey(r.canonical_discipline, r.canonical_event));
+    const contested = rows.filter(has);
+    const rest = rows.filter((r) => !has(r));
     const byName = (a: typeof rows[number], b: typeof rows[number]) =>
-      (a.canonical_event || "").localeCompare(b.canonical_event || "");
+      (a.canonical_event || "").localeCompare(b.canonical_event || "") ||
+      (a.canonical_discipline || "").localeCompare(b.canonical_discipline || "");
     return [...contested.sort(byName), ...rest.sort(byName)];
   }, [dominanceRows, boardByEvent]);
 
@@ -159,30 +165,48 @@ export const EventExplorerTab = ({ sportId, sportName }: Props) => {
     const withPlace = boardRows.filter((r) => isNum(r.best_place_recent) && r.canonical_event);
     if (withPlace.length > 0) {
       const best = withPlace.reduce((a, b) => (b.best_place_recent! < a.best_place_recent! ? b : a));
-      setSelected(best.canonical_event!);
+      setSelected(eventKey(best.canonical_discipline, best.canonical_event));
       return;
     }
     const byRecency = [...eventOptions].sort((a, b) => (b.last_year || 0) - (a.last_year || 0));
-    setSelected(byRecency[0]?.canonical_event || null);
+    const first = byRecency[0];
+    setSelected(first ? eventKey(first.canonical_discipline, first.canonical_event) : null);
   }, [selected, eventOptions, boardRows]);
 
-  const risersQ = useEventRisers(disciplines, selected);
+  const { discipline: selectedDiscipline, event: selectedEvent } = useMemo(
+    () => parseEventKey(selected),
+    [selected]
+  );
+
+  const risersQ = useEventRisers(selectedDiscipline || null, selectedEvent || null);
 
   const dom = useMemo(
-    () => dominanceRows.find((r) => r.canonical_event === selected),
-    [dominanceRows, selected]
+    () =>
+      dominanceRows.find(
+        (r) => r.canonical_discipline === selectedDiscipline && r.canonical_event === selectedEvent
+      ),
+    [dominanceRows, selectedDiscipline, selectedEvent]
   );
   const board = selected ? boardByEvent.get(selected) : undefined;
 
   /* ---------- age panel state ---------- */
-  const ageRows = useMemo(() => ageQ.data || [], [ageQ.data]);
+  const allAgeRows = useMemo(() => ageQ.data || [], [ageQ.data]);
+  const ageRows = useMemo(
+    () =>
+      selectedDiscipline
+        ? allAgeRows.filter((r) => r.canonical_discipline === selectedDiscipline)
+        : allAgeRows,
+    [allAgeRows, selectedDiscipline]
+  );
   const eras = useMemo(() => ageRows.map((r) => r.era).filter((e): e is string => !!e), [ageRows]);
   const [era, setEra] = useState<string | null>(null);
   useEffect(() => {
-    if (era || eras.length === 0) return;
+    if (eras.length === 0) return;
+    if (era && eras.includes(era)) return;
     setEra(eras.includes("last3") ? "last3" : eras.includes("2000-2024") ? "2000-2024" : eras[0]);
   }, [era, eras]);
   const ageRow = ageRows.find((r) => r.era === era);
+
 
   if (discQ.isLoading) {
     return (
