@@ -150,22 +150,23 @@ export const useEventBoard = (sportId?: string) =>
     },
   });
 
-export const useEventRisers = (disciplines: string[], event?: string | null) =>
+export const useEventRisers = (discipline?: string | null, event?: string | null) =>
   useQuery({
-    queryKey: ["oly-v-event-risers", disciplines, event],
+    queryKey: ["oly-v-event-risers", discipline, event],
     staleTime: Infinity,
-    enabled: disciplines.length > 0 && !!event,
+    enabled: !!discipline && !!event,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("oly_v_event_risers")
         .select(RISER_COLS)
-        .in("canonical_discipline", disciplines)
         .eq("season", "Summer")
+        .eq("canonical_discipline", discipline!)
         .eq("canonical_event", event!);
       if (error) throw error;
       return (data || []) as EventRiserRow[];
     },
   });
+
 
 export const useDisciplineAge = (disciplines: string[]) =>
   useQuery({
@@ -183,7 +184,18 @@ export const useDisciplineAge = (disciplines: string[]) =>
     },
   });
 
+/** Composite identity for an event: discipline + event name. */
+export const eventKey = (discipline: string | null | undefined, event: string | null | undefined) =>
+  `${discipline ?? ""}||${event ?? ""}`;
+
+/** Split a composite key back into its parts. */
+export const parseEventKey = (key: string | null | undefined) => {
+  const [discipline = "", event = ""] = (key ?? "").split("||");
+  return { discipline, event };
+};
+
 /** "2016:14 2020:12 2024:3" -> [{year:2016, place:14}, ...] */
+
 export const parseTrail = (trail: string | null | undefined) => {
   if (!trail) return [] as { year: number; place: number }[];
   return trail
