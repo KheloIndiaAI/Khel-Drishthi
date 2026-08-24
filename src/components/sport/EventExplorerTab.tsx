@@ -296,16 +296,23 @@ export const EventExplorerTab = ({ sportId, sportName }: Props) => {
                 <SelectValue placeholder="Select an event" />
               </SelectTrigger>
               <SelectContent className="max-h-80">
-                {eventOptions.map((e) => (
-                  <SelectItem key={e.canonical_event!} value={e.canonical_event!}>
-                    <span className="flex items-center gap-2">
-                      <span>{e.canonical_event}</span>
-                      {boardByEvent.has(e.canonical_event!) && (
-                        <Badge variant="secondary" className="text-[10px]">India contests</Badge>
-                      )}
-                    </span>
-                  </SelectItem>
-                ))}
+                {eventOptions.map((e) => {
+                  const k = eventKey(e.canonical_discipline, e.canonical_event);
+                  return (
+                    <SelectItem key={k} value={k}>
+                      <span className="flex items-center gap-2">
+                        <span>{e.canonical_event}</span>
+                        {multiDiscipline && e.canonical_discipline && (
+                          <span className="text-muted-foreground">· {e.canonical_discipline}</span>
+                        )}
+                        {boardByEvent.has(k) && (
+                          <Badge variant="secondary" className="text-[10px]">India contests</Badge>
+                        )}
+                      </span>
+                    </SelectItem>
+                  );
+                })}
+
               </SelectContent>
             </Select>
           )}
