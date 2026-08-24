@@ -2817,6 +2817,19 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_v_country_games_strike: {
+        Row: {
+          athletes: number | null
+          country_noc: string | null
+          era: string | null
+          events_contested: number | null
+          events_medalled: number | null
+          season: string | null
+          strike_rate_pct: number | null
+          year: number | null
+        }
+        Relationships: []
+      }
       oly_v_discipline_age: {
         Row: {
           age_gap_yrs: number | null
