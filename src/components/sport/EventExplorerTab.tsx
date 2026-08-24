@@ -523,8 +523,10 @@ export const EventExplorerTab = ({ sportId, sportName }: Props) => {
               ) : (
                 <>
                   <p className="text-xs text-muted-foreground">
-                    Age figures are for the whole discipline, not this single event.
+                    Age figures are for the whole {selectedDiscipline || "discipline"} discipline, not this single
+                    event.
                   </p>
+
                   {eras.length > 1 && (
                     <Select value={era || undefined} onValueChange={setEra}>
                       <SelectTrigger className="w-48 h-8 text-xs">
