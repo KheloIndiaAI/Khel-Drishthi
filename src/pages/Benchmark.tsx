@@ -305,14 +305,21 @@ const Benchmark = () => {
                       <span className="font-semibold">{s.name}</span>
                       <span className="text-xs text-muted-foreground">{s.noc}</span>
                     </div>
-                    <div className="text-2xl font-bold mt-1">{s.total}</div>
-                    <div className="flex gap-3 mt-2 text-xs">
-                      <span style={{ color: "hsl(var(--gold))" }}>G {s.gold}</span>
-                      <span style={{ color: "hsl(var(--silver))" }}>S {s.silver}</span>
-                      <span style={{ color: "hsl(var(--bronze))" }}>B {s.bronze}</span>
-                    </div>
+                    {s.hasData ? (
+                      <>
+                        <div className="text-2xl font-bold mt-1">{s.total}</div>
+                        <div className="flex gap-3 mt-2 text-xs">
+                          <span style={{ color: "hsl(var(--gold))" }}>G {s.gold}</span>
+                          <span style={{ color: "hsl(var(--silver))" }}>S {s.silver}</span>
+                          <span style={{ color: "hsl(var(--bronze))" }}>B {s.bronze}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground mt-2">No data in this era</p>
+                    )}
                   </CardContent>
                 </Card>
+
               ))}
         </div>
 
