@@ -168,14 +168,16 @@ export const useEventRisers = (discipline?: string | null, event?: string | null
   });
 
 
+/** Reads the materialised cache: the underlying view recomputes percentiles over
+ *  ~229k rows and times out even for one discipline. */
 export const useDisciplineAge = (disciplines: string[]) =>
   useQuery({
-    queryKey: ["oly-v-discipline-age", disciplines],
+    queryKey: ["oly-discipline-age-cache", disciplines],
     staleTime: Infinity,
     enabled: disciplines.length > 0,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("oly_v_discipline_age")
+        .from("oly_discipline_age_cache")
         .select(AGE_COLS)
         .in("canonical_discipline", disciplines)
         .eq("season", "Summer");
@@ -183,6 +185,7 @@ export const useDisciplineAge = (disciplines: string[]) =>
       return (data || []) as DisciplineAgeRow[];
     },
   });
+
 
 /** Composite identity for an event: discipline + event name. */
 export const eventKey = (discipline: string | null | undefined, event: string | null | undefined) =>

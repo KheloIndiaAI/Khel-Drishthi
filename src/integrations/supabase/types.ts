@@ -1072,6 +1072,60 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_discipline_age_cache: {
+        Row: {
+          age_gap_yrs: number | null
+          birth_cohort_for_2028: number | null
+          birth_cohort_for_2036: number | null
+          canonical_discipline: string | null
+          entrant_age_p50: number | null
+          era: string | null
+          india_age_p50: number | null
+          india_entrants_n: number | null
+          medal_age_p10: number | null
+          medal_age_p50: number | null
+          medal_age_p90: number | null
+          medal_age_window: number | null
+          medallists_n: number | null
+          refreshed_at: string | null
+          season: string | null
+        }
+        Insert: {
+          age_gap_yrs?: number | null
+          birth_cohort_for_2028?: number | null
+          birth_cohort_for_2036?: number | null
+          canonical_discipline?: string | null
+          entrant_age_p50?: number | null
+          era?: string | null
+          india_age_p50?: number | null
+          india_entrants_n?: number | null
+          medal_age_p10?: number | null
+          medal_age_p50?: number | null
+          medal_age_p90?: number | null
+          medal_age_window?: number | null
+          medallists_n?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+        }
+        Update: {
+          age_gap_yrs?: number | null
+          birth_cohort_for_2028?: number | null
+          birth_cohort_for_2036?: number | null
+          canonical_discipline?: string | null
+          entrant_age_p50?: number | null
+          era?: string | null
+          india_age_p50?: number | null
+          india_entrants_n?: number | null
+          medal_age_p10?: number | null
+          medal_age_p50?: number | null
+          medal_age_p90?: number | null
+          medal_age_window?: number | null
+          medallists_n?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+        }
+        Relationships: []
+      }
       oly_disciplines: {
         Row: {
           canonical_name: string
@@ -3358,6 +3412,7 @@ export type Database = {
         Returns: boolean
       }
       refresh_country_momentum_cache: { Args: never; Returns: number }
+      refresh_discipline_age_cache: { Args: never; Returns: number }
       refresh_event_board_cache: { Args: never; Returns: number }
       setup_first_admin: { Args: { _user_id: string }; Returns: boolean }
     }
