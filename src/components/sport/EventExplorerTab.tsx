@@ -663,14 +663,20 @@ export const EventExplorerTab = ({ sportId, sportName }: Props) => {
                     <TableBody>
                       {boardSorted.map((r) => (
                         <TableRow
-                          key={r.canonical_event!}
+                          key={eventKey(r.canonical_discipline, r.canonical_event)}
                           className="cursor-pointer"
                           onClick={() => {
-                            setSelected(r.canonical_event!);
+                            setSelected(eventKey(r.canonical_discipline, r.canonical_event));
                             panelsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                           }}
                         >
-                          <TableCell className="whitespace-nowrap">{r.canonical_event}</TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {r.canonical_event}
+                            {multiDiscipline && r.canonical_discipline && (
+                              <span className="text-muted-foreground"> · {r.canonical_discipline}</span>
+                            )}
+                          </TableCell>
+
                           <TableCell><TierBadge tier={r.board_tier} /></TableCell>
                           <TableCell className="whitespace-nowrap tabular-nums">
                             {isNum(r.best_place_recent) ? r.best_place_recent : DASH}
