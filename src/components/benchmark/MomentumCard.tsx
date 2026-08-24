@@ -118,6 +118,23 @@ export const MomentumCard = ({
           </ResponsiveContainer>
         )}
 
+        {!isLoading && !isError && !noData && (
+          <div className="flex flex-wrap gap-x-6 gap-y-1">
+            {chartData
+              .filter((c) => c.hasData)
+              .map((c) => (
+                <p key={c.noc} className="text-xs text-muted-foreground">
+                  <span className="font-semibold text-foreground tabular-nums">
+                    {c.divergent}
+                  </span>{" "}
+                  events where the two measures disagree — {c.country}
+                </p>
+              ))}
+          </div>
+        )}
+
+
+
         <p className="text-xs text-muted-foreground leading-relaxed">
           Raw top-8 counts rise when the field grows. The depth-normalised measure adjusts for
           how many athletes actually competed, so it reflects a change in standing rather than a
