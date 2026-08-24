@@ -463,13 +463,15 @@ const Benchmark = () => {
         />
 
         <MomentumCard
-          rows={risers.data}
-          isLoading={risers.isLoading}
-          isError={risers.isError}
+          rows={momentum.data}
+          isLoading={momentum.isLoading || divergence.isLoading}
+          isError={momentum.isError}
+          divergenceRows={divergence.data}
           countries={countries}
           names={NAMES}
           reverseMap={reverseMap}
         />
+
 
         <SportDrilldownDialog
           sport={drillSport}
