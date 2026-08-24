@@ -136,7 +136,9 @@ const Benchmark = () => {
   });
 
   const strike = useCountryStrike(fetchNocs);
-  const risers = useEventRisers(fetchNocs);
+  const momentum = useCountryMomentum(fetchNocs);
+  const divergence = useIndiaDivergence();
+
 
   // The three most recent Summer years present in the data.
   const lastThreeYears = useMemo(() => {
