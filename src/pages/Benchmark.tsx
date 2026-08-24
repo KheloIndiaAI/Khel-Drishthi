@@ -10,6 +10,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Globe, Info, Trophy } from "lucide-react";
 import {
+  ERA_CHART_LABEL,
+  ERA_OPTIONS,
+  EraKey,
+  makeEraFilter,
+  useCountryStrike,
+  useEventRisers,
+} from "@/hooks/useBenchmark";
+import StrikeRateCard from "@/components/benchmark/StrikeRateCard";
+import MomentumCard from "@/components/benchmark/MomentumCard";
+import SportDrilldownDialog from "@/components/benchmark/SportDrilldownDialog";
+import {
   LineChart,
   Line,
   BarChart,
@@ -64,6 +75,8 @@ const PALETTE = [
 const Benchmark = () => {
   const [selectedPeers, setSelectedPeers] = useState<string[]>(["CHN", "GBR", "JPN"]);
   const [merged, setMerged] = useState(false);
+  const [era, setEra] = useState<EraKey>("all");
+  const [drillSport, setDrillSport] = useState<string | null>(null);
 
   const countries = useMemo(() => ["IND", ...selectedPeers], [selectedPeers]);
 
@@ -120,12 +133,24 @@ const Benchmark = () => {
     },
   });
 
+  const strike = useCountryStrike(fetchNocs);
+  const risers = useEventRisers(fetchNocs);
+
+  // The three most recent Summer years present in the data.
+  const lastThreeYears = useMemo(() => {
+    const years = [...new Set((rows || []).map((r) => r.year))].sort((a, b) => b - a);
+    return years.slice(0, 3);
+  }, [rows]);
+
+  const eraFilter = useMemo(() => makeEraFilter(era, lastThreeYears), [era, lastThreeYears]);
+  const eraLabel = ERA_CHART_LABEL[era];
+
   const keyed = useMemo(
     () =>
       (rows || [])
         .map((r) => ({ ...r, noc: reverseMap[r.country_noc] || r.country_noc }))
-        .filter((r) => countries.includes(r.noc)),
-    [rows, reverseMap, countries]
+        .filter((r) => countries.includes(r.noc) && eraFilter(r.year)),
+    [rows, reverseMap, countries, eraFilter]
   );
 
   const colorFor = (noc: string) =>
@@ -143,7 +168,7 @@ const Benchmark = () => {
       .sort((a, b) => a.year - b.year);
   }, [keyed]);
 
-  // Chart B: by sport all-time (top 8)
+  // Chart B: by sport (top 8 in the selected era)
   const sportData = useMemo(() => {
     const bySport: Record<string, { label: string; totals: Record<string, number>; combined: number }> = {};
     keyed
@@ -169,6 +194,7 @@ const Benchmark = () => {
         return {
           noc,
           name: NAMES[noc] || noc,
+          hasData: rs.length > 0,
           gold: rs.reduce((s, r) => s + (r.gold || 0), 0),
           silver: rs.reduce((s, r) => s + (r.silver || 0), 0),
           bronze: rs.reduce((s, r) => s + (r.bronze || 0), 0),
@@ -192,10 +218,11 @@ const Benchmark = () => {
     <DashboardLayout>
       <PageSEO
         title="Global Benchmark — India vs the world | Khel Drishti"
-        description="Compare India's Olympic medal performance against peer nations across Games, sports and eras."
+        description="Compare India's Olympic performance against peer nations by era, with strike rate — medals per event contested — and depth-adjusted momentum."
         canonicalPath="/benchmark"
-        keywords={["Olympic benchmark", "India vs China Olympics", "medal comparison"]}
+        keywords={["Olympic benchmark", "India vs China Olympics", "medal comparison", "strike rate"]}
       />
+
 
       <div className="space-y-6 pb-20 md:pb-8">
         <div>
@@ -264,6 +291,27 @@ const Benchmark = () => {
                 </p>
               )}
             </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex flex-wrap rounded-lg border p-1">
+                {ERA_OPTIONS.map((opt) => (
+                  <Button
+                    key={opt.key}
+                    size="sm"
+                    variant={era === opt.key ? "default" : "ghost"}
+                    onClick={() => setEra(opt.key)}
+                  >
+                    {opt.label}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Era cuts follow Olympic history: the post-war resumption of the Games in 1948 and
+                the post-Soviet reordering of the medal table from 1992. The era filter and the
+                Historical/Merged toggle apply independently.
+              </p>
+            </div>
+
           </CardContent>
         </Card>
 
@@ -278,14 +326,21 @@ const Benchmark = () => {
                       <span className="font-semibold">{s.name}</span>
                       <span className="text-xs text-muted-foreground">{s.noc}</span>
                     </div>
-                    <div className="text-2xl font-bold mt-1">{s.total}</div>
-                    <div className="flex gap-3 mt-2 text-xs">
-                      <span style={{ color: "hsl(var(--gold))" }}>G {s.gold}</span>
-                      <span style={{ color: "hsl(var(--silver))" }}>S {s.silver}</span>
-                      <span style={{ color: "hsl(var(--bronze))" }}>B {s.bronze}</span>
-                    </div>
+                    {s.hasData ? (
+                      <>
+                        <div className="text-2xl font-bold mt-1">{s.total}</div>
+                        <div className="flex gap-3 mt-2 text-xs">
+                          <span style={{ color: "hsl(var(--gold))" }}>G {s.gold}</span>
+                          <span style={{ color: "hsl(var(--silver))" }}>S {s.silver}</span>
+                          <span style={{ color: "hsl(var(--bronze))" }}>B {s.bronze}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground mt-2">No data in this era</p>
+                    )}
                   </CardContent>
                 </Card>
+
               ))}
         </div>
 
@@ -334,16 +389,31 @@ const Benchmark = () => {
         {/* Chart B */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">By sport (all-time)</CardTitle>
+            <CardTitle className="text-base">By sport ({eraLabel})</CardTitle>
           </CardHeader>
           <CardContent>
+            <p className="text-xs text-muted-foreground mb-3">
+              Click any bar to open that sport's detail.
+            </p>
             {isLoading ? (
               <Skeleton className="h-[420px] w-full" />
             ) : sportData.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No sport-level data available.</p>
+              <p className="text-sm text-muted-foreground">
+                No sport-level data for the selected countries in this era.
+              </p>
             ) : (
               <ResponsiveContainer width="100%" height={420}>
-                <BarChart data={sportData} layout="vertical" margin={{ left: 20 }}>
+                <BarChart
+                  data={sportData}
+                  layout="vertical"
+                  margin={{ left: 20 }}
+                  role="img"
+                  aria-label={`Medals by sport, ${eraLabel}, for the selected countries`}
+                  className="cursor-pointer"
+                  onClick={(state: { activeLabel?: string }) =>
+                    state?.activeLabel && setDrillSport(state.activeLabel)
+                  }
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis
@@ -362,14 +432,52 @@ const Benchmark = () => {
                   />
                   <Legend />
                   {countries.map((noc) => (
-                    <Bar key={noc} dataKey={noc} name={NAMES[noc] || noc} fill={colorFor(noc)} />
+                    <Bar
+                      key={noc}
+                      dataKey={noc}
+                      name={NAMES[noc] || noc}
+                      fill={colorFor(noc)}
+                      cursor="pointer"
+                    />
                   ))}
                 </BarChart>
               </ResponsiveContainer>
             )}
           </CardContent>
         </Card>
+
+        <StrikeRateCard
+          rows={strike.data}
+          isLoading={strike.isLoading}
+          isError={strike.isError}
+          countries={countries}
+          names={NAMES}
+          colorFor={colorFor}
+          reverseMap={reverseMap}
+          eraFilter={eraFilter}
+          eraLabel={eraLabel}
+        />
+
+        <MomentumCard
+          rows={risers.data}
+          isLoading={risers.isLoading}
+          isError={risers.isError}
+          countries={countries}
+          names={NAMES}
+          reverseMap={reverseMap}
+        />
+
+        <SportDrilldownDialog
+          sport={drillSport}
+          onClose={() => setDrillSport(null)}
+          rows={keyed}
+          countries={countries}
+          names={NAMES}
+          colorFor={colorFor}
+          eraLabel={eraLabel}
+        />
       </div>
+
     </DashboardLayout>
   );
 };
