@@ -18,12 +18,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import type { RiserRow } from "@/hooks/useBenchmark";
+import type { MomentumRow, RiserRow } from "@/hooks/useBenchmark";
 
 interface Props {
-  rows: RiserRow[] | undefined;
+  rows: MomentumRow[] | undefined;
   isLoading: boolean;
   isError: boolean;
+  divergenceRows: RiserRow[] | undefined;
   countries: string[];
   names: Record<string, string>;
   reverseMap: Record<string, string>;
@@ -39,50 +40,45 @@ export const MomentumCard = ({
   rows,
   isLoading,
   isError,
+  divergenceRows,
   countries,
   names,
   reverseMap,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
-  const keyed = useMemo(
-    () =>
-      (rows || [])
-        .map((r) => ({ ...r, noc: reverseMap[r.country_noc] || r.country_noc }))
-        .filter((r) => countries.includes(r.noc)),
-    [rows, reverseMap, countries]
-  );
-
-  const chartData = useMemo(
-    () =>
-      countries.map((noc) => {
-        const rs = keyed.filter((r) => r.noc === noc);
-        return {
-          country: names[noc] || noc,
-          noc,
-          hasData: rs.length > 0,
-          raw: rs.reduce((s, r) => s + (r.top8_gain ?? 0), 0),
-          normalised: rs.reduce((s, r) => s + (r.topdecile_gain ?? 0), 0),
-        };
-      }),
-    [keyed, countries, names]
-  );
+  // Cache rows are already summed across events. Merging historical NOCs into a
+  // modern one sums counts — correct here, unlike the strike-rate ratio.
+  const chartData = useMemo(() => {
+    const keyed = (rows || [])
+      .map((r) => ({ ...r, noc: reverseMap[r.country_noc || ""] || r.country_noc || "" }))
+      .filter((r) => countries.includes(r.noc));
+    return countries.map((noc) => {
+      const rs = keyed.filter((r) => r.noc === noc);
+      return {
+        country: names[noc] || noc,
+        noc,
+        hasData: rs.length > 0,
+        raw: rs.reduce((s, r) => s + (r.top8_gain ?? 0), 0),
+        normalised: rs.reduce((s, r) => s + (r.topdecile_gain ?? 0), 0),
+        divergent: rs.reduce((s, r) => s + (r.divergent_events ?? 0), 0),
+      };
+    });
+  }, [rows, reverseMap, countries, names]);
 
   const divergence = useMemo(
     () =>
-      keyed
+      (divergenceRows || [])
         .filter(
           (r) =>
-            r.noc === "IND" &&
-            (r.top8_gain ?? 0) > 0 &&
-            r.topdecile_gain != null &&
-            r.topdecile_gain <= 0
+            (r.top8_gain ?? 0) > 0 && r.topdecile_gain != null && r.topdecile_gain <= 0
         )
         .sort((a, b) => (b.top8_gain ?? 0) - (a.top8_gain ?? 0)),
-    [keyed]
+    [divergenceRows]
   );
 
   const noData = chartData.every((c) => !c.hasData);
+
 
   return (
     <Card>
