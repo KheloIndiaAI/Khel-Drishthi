@@ -291,6 +291,27 @@ const Benchmark = () => {
                 </p>
               )}
             </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex flex-wrap rounded-lg border p-1">
+                {ERA_OPTIONS.map((opt) => (
+                  <Button
+                    key={opt.key}
+                    size="sm"
+                    variant={era === opt.key ? "default" : "ghost"}
+                    onClick={() => setEra(opt.key)}
+                  >
+                    {opt.label}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Era cuts follow Olympic history: the post-war resumption of the Games in 1948 and
+                the post-Soviet reordering of the medal table from 1992. The era filter and the
+                Historical/Merged toggle apply independently.
+              </p>
+            </div>
+
           </CardContent>
         </Card>
 
