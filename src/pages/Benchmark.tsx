@@ -320,7 +320,16 @@ const Benchmark = () => {
         </Card>
 
         {/* Summary strip */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div
+          className={cn(
+            "grid gap-4 grid-cols-1 sm:grid-cols-2",
+            countries.length <= 2 && "lg:grid-cols-2",
+            countries.length === 3 && "lg:grid-cols-3",
+            countries.length === 4 && "lg:grid-cols-2 xl:grid-cols-4",
+            countries.length === 5 && "lg:grid-cols-3 xl:grid-cols-5",
+            countries.length >= 6 && "lg:grid-cols-3 xl:grid-cols-6"
+          )}
+        >
           {isLoading
             ? countries.map((c) => <Skeleton key={c} className="h-28 w-full" />)
             : summary.map((s) => (
