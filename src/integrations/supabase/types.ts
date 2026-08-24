@@ -1039,6 +1039,39 @@ export type Database = {
         }
         Relationships: []
       }
+      oly_country_momentum_cache: {
+        Row: {
+          country_noc: string | null
+          divergent_events: number | null
+          events_live: number | null
+          medal_gain: number | null
+          refreshed_at: string | null
+          season: string | null
+          top8_gain: number | null
+          topdecile_gain: number | null
+        }
+        Insert: {
+          country_noc?: string | null
+          divergent_events?: number | null
+          events_live?: number | null
+          medal_gain?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+          top8_gain?: number | null
+          topdecile_gain?: number | null
+        }
+        Update: {
+          country_noc?: string | null
+          divergent_events?: number | null
+          events_live?: number | null
+          medal_gain?: number | null
+          refreshed_at?: string | null
+          season?: string | null
+          top8_gain?: number | null
+          topdecile_gain?: number | null
+        }
+        Relationships: []
+      }
       oly_disciplines: {
         Row: {
           canonical_name: string
@@ -3324,6 +3357,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      refresh_country_momentum_cache: { Args: never; Returns: number }
       refresh_event_board_cache: { Args: never; Returns: number }
       setup_first_admin: { Args: { _user_id: string }; Returns: boolean }
     }
