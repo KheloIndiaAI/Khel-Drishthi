@@ -14,6 +14,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  LabelList,
   Tooltip as RTooltip,
   Legend,
   ResponsiveContainer,
