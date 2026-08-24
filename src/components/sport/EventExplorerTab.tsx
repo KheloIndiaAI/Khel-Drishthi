@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ChevronDown, Crown, Info, LineChart, Timer, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
+  eventKey,
+  parseEventKey,
   parseEraWinners,
   parseTrail,
   useDisciplineAge,
@@ -18,6 +20,7 @@ import {
   useSportDisciplines,
   type EventBoardRow,
 } from "@/hooks/useEventExplorer";
+
 
 const DASH = "—";
 const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
