@@ -361,16 +361,31 @@ const Benchmark = () => {
         {/* Chart B */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">By sport (all-time)</CardTitle>
+            <CardTitle className="text-base">By sport ({eraLabel})</CardTitle>
           </CardHeader>
           <CardContent>
+            <p className="text-xs text-muted-foreground mb-3">
+              Click any bar to open that sport's detail.
+            </p>
             {isLoading ? (
               <Skeleton className="h-[420px] w-full" />
             ) : sportData.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No sport-level data available.</p>
+              <p className="text-sm text-muted-foreground">
+                No sport-level data for the selected countries in this era.
+              </p>
             ) : (
               <ResponsiveContainer width="100%" height={420}>
-                <BarChart data={sportData} layout="vertical" margin={{ left: 20 }}>
+                <BarChart
+                  data={sportData}
+                  layout="vertical"
+                  margin={{ left: 20 }}
+                  role="img"
+                  aria-label={`Medals by sport, ${eraLabel}, for the selected countries`}
+                  className="cursor-pointer"
+                  onClick={(state: { activeLabel?: string }) =>
+                    state?.activeLabel && setDrillSport(state.activeLabel)
+                  }
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis
@@ -389,14 +404,52 @@ const Benchmark = () => {
                   />
                   <Legend />
                   {countries.map((noc) => (
-                    <Bar key={noc} dataKey={noc} name={NAMES[noc] || noc} fill={colorFor(noc)} />
+                    <Bar
+                      key={noc}
+                      dataKey={noc}
+                      name={NAMES[noc] || noc}
+                      fill={colorFor(noc)}
+                      cursor="pointer"
+                    />
                   ))}
                 </BarChart>
               </ResponsiveContainer>
             )}
           </CardContent>
         </Card>
+
+        <StrikeRateCard
+          rows={strike.data}
+          isLoading={strike.isLoading}
+          isError={strike.isError}
+          countries={countries}
+          names={NAMES}
+          colorFor={colorFor}
+          reverseMap={reverseMap}
+          eraFilter={eraFilter}
+          eraLabel={eraLabel}
+        />
+
+        <MomentumCard
+          rows={risers.data}
+          isLoading={risers.isLoading}
+          isError={risers.isError}
+          countries={countries}
+          names={NAMES}
+          reverseMap={reverseMap}
+        />
+
+        <SportDrilldownDialog
+          sport={drillSport}
+          onClose={() => setDrillSport(null)}
+          rows={keyed}
+          countries={countries}
+          names={NAMES}
+          colorFor={colorFor}
+          eraLabel={eraLabel}
+        />
       </div>
+
     </DashboardLayout>
   );
 };
