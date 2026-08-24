@@ -15,8 +15,10 @@ import {
   EraKey,
   makeEraFilter,
   useCountryStrike,
-  useEventRisers,
+  useCountryMomentum,
+  useIndiaDivergence,
 } from "@/hooks/useBenchmark";
+
 import StrikeRateCard from "@/components/benchmark/StrikeRateCard";
 import MomentumCard from "@/components/benchmark/MomentumCard";
 import SportDrilldownDialog from "@/components/benchmark/SportDrilldownDialog";
