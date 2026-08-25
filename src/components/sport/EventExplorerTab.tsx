@@ -36,6 +36,11 @@ const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFin
 const num = (v: number | null | undefined, digits = 0) =>
   isNum(v) ? v.toLocaleString("en-IN", { maximumFractionDigits: digits, minimumFractionDigits: digits }) : DASH;
 
+const PanelError = () => (
+  <p className="text-sm text-muted-foreground">Could not load this panel.</p>
+);
+
+
 interface Props {
   sportId?: string;
   sportName?: string;
