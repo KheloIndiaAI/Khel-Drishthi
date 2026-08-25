@@ -11,6 +11,7 @@ import {
   X,
   MapPin,
   Globe,
+  Target,
   LogOut,
   User
 } from "lucide-react";
@@ -40,6 +41,7 @@ const navItems = [
   { path: "/geographic", label: "Geographic", icon: MapPin },
   { path: "/capacity", label: "Capacity", icon: BarChart3 },
   { path: "/medals", label: "Medals", icon: Medal },
+  { path: "/opportunities", label: "Opportunities", icon: Target },
   { path: "/benchmark", label: "Benchmark", icon: Globe },
   { path: "/admin", label: "Admin", icon: Settings },
 ];
