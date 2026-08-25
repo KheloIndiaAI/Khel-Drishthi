@@ -20,6 +20,8 @@ const InfrastructureInsights = lazy(() => import("./pages/InfrastructureInsights
 const Capacity = lazy(() => import("./pages/Capacity"));
 const Medals = lazy(() => import("./pages/Medals"));
 const Benchmark = lazy(() => import("./pages/Benchmark"));
+const Opportunities = lazy(() => import("./pages/Opportunities"));
+
 const GeographicAnalytics = lazy(() => import("./pages/GeographicAnalytics"));
 const SchemaDocumentation = lazy(() => import("./pages/SchemaDocumentation"));
 
