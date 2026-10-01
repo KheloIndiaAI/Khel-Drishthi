@@ -1,10 +1,7 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Admin-only CSV import. Auth/CORS live in ../_shared (see auth.ts for why the old
+// has_role RPC check always returned 403 under the service-role client).
+import { corsHeaders as buildCorsHeaders, preflight } from "../_shared/http.ts";
+import { requireAdmin } from "../_shared/auth.ts";
 
 // Allowed table names - prevents table name injection
 const ALLOWED_TABLES = ["centre_sport_links", "events", "event_overlap", "ncoe_capacity", "stc_capacity", "disciplines"] as const;
@@ -37,52 +34,17 @@ function safeParseBoolean(value: unknown): boolean {
   return false;
 }
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+Deno.serve(async (req) => {
+  const early = preflight(req);
+  if (early) return early;
+  const corsHeaders = buildCorsHeaders(req);
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    // ==================== AUTHENTICATION CHECK ====================
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.log("No authorization header provided");
-      return new Response(
-        JSON.stringify({ success: false, error: "Unauthorized: No authorization header" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
-    if (authError || !user) {
-      console.log("Invalid token or user not found:", authError?.message);
-      return new Response(
-        JSON.stringify({ success: false, error: "Unauthorized: Invalid token" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // ==================== AUTHORIZATION CHECK ====================
-    const { data: isAdmin, error: roleError } = await supabase.rpc('has_role', {
-      _user_id: user.id,
-      _role: 'admin'
-    });
-
-    if (roleError || !isAdmin) {
-      console.log(`User ${user.id} is not an admin. Access denied.`);
-      return new Response(
-        JSON.stringify({ success: false, error: "Forbidden: Admin role required" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    console.log(`Admin user ${user.id} authorized for data import`);
+    // ==================== AUTHENTICATION + AUTHORIZATION ====================
+    const ctx = await requireAdmin(req);
+    if (ctx instanceof Response) return ctx;
+    const { admin: supabase, user } = ctx;
+    console.log(`Admin user ${user.id} authorized`);
 
     // ==================== INPUT VALIDATION ====================
     const { table, data } = await req.json();

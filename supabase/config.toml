@@ -1,5 +1,13 @@
 project_id = "cvzmuynfmdivlflgnjra"
 
+# verify_jwt = false is deliberate for every function below.
+# Gateway JWT verification is Supabase's legacy mechanism and does not work with
+# the newer asymmetric JWT signing keys. Each function instead verifies the
+# caller's token with auth.getUser() and checks the admin role in code before
+# doing any work — see functions/_shared/auth.ts. CORS is restricted to the
+# portal's origins in functions/_shared/http.ts. Do not add a function here
+# without calling requireAdmin() (or an equivalent check) first.
+
 [functions.import-centres]
 verify_jwt = false
 

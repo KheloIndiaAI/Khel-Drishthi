@@ -1,0 +1,20 @@
+# Keep the build context small and secret-free.
+.git
+.github
+.lovable
+node_modules
+dist
+coverage
+*.log
+.DS_Store
+
+# Secrets / per-environment config: never baked into an image.
+.env
+.env.*
+docker/.env
+docker/.env.*
+!docker/env.example
+
+# Not needed to build the web image.
+supabase/.temp
+scripts/db/tests

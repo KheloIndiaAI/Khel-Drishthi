@@ -81,7 +81,7 @@ const STCReport: React.FC = () => {
           <p className="text-muted-foreground mb-6">
             The data collection form for this STC has not been completed yet.
           </p>
-          <Button onClick={() => navigate(`/infrastructure/stc/${centreId}`)}>
+          <Button onClick={() => navigate(`/infrastructure/stc/${centreId}/form`)}>
             Complete the Form
           </Button>
         </div>

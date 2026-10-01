@@ -1,0 +1,25 @@
+# =============================================================================
+# Overlay: laptop development
+# =============================================================================
+# - Attachments stored on a Docker volume instead of S3 (no AWS account needed)
+# - Mailpit catches every email (sign-up confirmations, password resets);
+#   open http://localhost:8025 to read them.
+# =============================================================================
+services:
+  storage:
+    environment:
+      STORAGE_BACKEND: file
+
+  auth:
+    depends_on:
+      mail:
+        condition: service_started
+
+  mail:
+    image: axllent/mailpit:${MAILPIT_VERSION:-v1.21}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"   # web UI
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"

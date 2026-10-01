@@ -1,0 +1,225 @@
+# =============================================================================
+# Khel Drishti — self-hosted stack (core)
+# =============================================================================
+# Services
+#   web        React build + Caddy gateway (the only public entry point)
+#   auth       GoTrue      — sign-up, login, password reset, JWT issuing
+#   rest       PostgREST   — the /rest/v1 API the frontend calls directly
+#   storage    Storage API — STC attachments on S3 (AWS) or local disk (dev)
+#   functions  Edge Runtime — supabase/functions/* (bulk-create-users, imports)
+#   db-init    one-shot: roles/schemas bootstrap (works on RDS, no superuser)
+#   migrate    one-shot: applies supabase/migrations after auth/storage are up
+#
+# Postgres is NOT in this file. Add docker/compose.db.yml for a Postgres
+# container (local dev, or EC2 without RDS), or point DB_HOST at RDS.
+# Use docker/kd.sh rather than calling compose directly:
+#   ./docker/kd.sh local up        laptop: Postgres container + local disk + Mailpit
+#   ./docker/kd.sh ec2 up          EC2 + RDS + S3
+#   ./docker/kd.sh ec2-selfdb up   EC2 + Postgres container on the instance + S3
+# =============================================================================
+name: kheldrishti
+
+x-db-admin-env: &db-admin-env
+  PGHOST: ${DB_HOST:?set DB_HOST}
+  PGPORT: ${DB_PORT:-5432}
+  PGDATABASE: ${DB_NAME:-postgres}
+  PGUSER: ${DB_ADMIN_USER:-postgres}
+  PGPASSWORD: ${DB_ADMIN_PASSWORD:?set DB_ADMIN_PASSWORD}
+  PGSSLMODE: ${DB_SSLMODE:-prefer}
+  PGCONNECT_TIMEOUT: "10"
+
+x-restart: &restart
+  restart: unless-stopped
+
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+services:
+  # ---------------------------------------------------------------- db-init ----
+  db-init:
+    image: postgres:${POSTGRES_VERSION:-15.10}-alpine
+    <<: *logging
+    environment:
+      <<: *db-admin-env
+      AUTHENTICATOR_PASSWORD: ${AUTHENTICATOR_PASSWORD:?}
+      AUTH_ADMIN_PASSWORD: ${AUTH_ADMIN_PASSWORD:?}
+      STORAGE_ADMIN_PASSWORD: ${STORAGE_ADMIN_PASSWORD:?}
+    volumes:
+      - ./docker/db:/db:ro
+    entrypoint: ["sh", "/db/init.sh"]   # waits for the database itself (RDS or container)
+    restart: "no"
+
+  # ------------------------------------------------------------------- auth ----
+  auth:
+    image: supabase/gotrue:${GOTRUE_VERSION:-v2.170.0}
+    <<: [*restart, *logging]
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9999/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: "9999"
+      API_EXTERNAL_URL: ${SITE_URL:?set SITE_URL}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${AUTH_ADMIN_PASSWORD}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME:-postgres}?sslmode=${DB_SSLMODE:-prefer}
+      GOTRUE_SITE_URL: ${SITE_URL}
+      # Redirect targets the app uses: /infrastructure/stc (sign-up) and /reset-password.
+      GOTRUE_URI_ALLOW_LIST: ${SITE_URL}/**
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP:-false}
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY:-3600}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET:?}
+      GOTRUE_PASSWORD_MIN_LENGTH: ${PASSWORD_MIN_LENGTH:-10}
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
+      GOTRUE_MAILER_AUTOCONFIRM: ${MAILER_AUTOCONFIRM:-false}
+      GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "true"
+      GOTRUE_MAILER_URLPATHS_INVITE: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
+      GOTRUE_SMTP_HOST: ${SMTP_HOST:?}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT:-587}
+      GOTRUE_SMTP_USER: ${SMTP_USER:-}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS:-}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL:?}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME:-Khel Drishti}
+
+  # ------------------------------------------------------------------- rest ----
+  rest:
+    image: postgrest/postgrest:${POSTGREST_VERSION:-v12.2.8}
+    <<: [*restart, *logging]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME:-postgres}?sslmode=${DB_SSLMODE:-prefer}
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      # Hosted Supabase caps responses at 1000 rows; the app's batching relies on it.
+      PGRST_DB_MAX_ROWS: "1000"
+      PGRST_DB_POOL: ${PGRST_DB_POOL:-10}
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY:-3600}
+    command: ["postgrest"]
+
+  # ---------------------------------------------------------------- storage ----
+  storage:
+    image: supabase/storage-api:${STORAGE_API_VERSION:-v1.19.3}
+    <<: [*restart, *logging]
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5000/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      ANON_KEY: ${ANON_KEY:?}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY:?}
+      POSTGREST_URL: http://rest:3000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      AUTH_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${STORAGE_ADMIN_PASSWORD}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME:-postgres}?sslmode=${DB_SSLMODE:-prefer}
+      FILE_SIZE_LIMIT: "52428800"
+      TENANT_ID: kheldrishti
+      REGION: ${AWS_REGION:-ap-south-1}
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+      # s3 on AWS. Credentials come from the EC2 instance role (leave keys empty);
+      # docker/compose.local.yml switches this to "file" for laptops.
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-s3}
+      GLOBAL_S3_BUCKET: ${S3_BUCKET:?set S3_BUCKET}
+      GLOBAL_S3_ENDPOINT: ${S3_ENDPOINT:-}
+      GLOBAL_S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+    volumes:
+      - storage-data:/var/lib/storage
+
+  # ---------------------------------------------------------------- migrate ----
+  migrate:
+    image: postgres:${POSTGRES_VERSION:-15.10}-alpine
+    <<: *logging
+    environment:
+      <<: *db-admin-env
+      MIGRATE_SKIP: ${MIGRATE_SKIP:-}
+    volumes:
+      - ./docker/db:/db:ro
+      - ./supabase/migrations:/migrations:ro
+    entrypoint: ["sh", "/db/migrate.sh"]
+    depends_on:
+      auth:
+        condition: service_healthy   # GoTrue has created auth.users / auth.uid()
+      storage:
+        condition: service_healthy   # Storage API has created storage.objects
+    restart: "no"
+
+  # -------------------------------------------------------------- functions ----
+  functions:
+    image: supabase/edge-runtime:${EDGE_RUNTIME_VERSION:-v1.67.4}
+    <<: [*restart, *logging]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      # Functions reach auth/rest through the internal gateway, never the internet.
+      SUPABASE_URL: http://web:8000
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      # Browser origins allowed by supabase/functions/_shared/http.ts.
+      ALLOWED_ORIGINS: ${SITE_URL}
+    volumes:
+      - ./supabase/functions:/home/deno/functions:ro
+      - ./docker/functions/main:/home/deno/main:ro
+    command: ["start", "--main-service", "/home/deno/main"]
+
+  # -------------------------------------------------------------------- web ----
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${SITE_URL}
+        VITE_SUPABASE_PUBLISHABLE_KEY: ${ANON_KEY}
+    image: kheldrishti-web:${WEB_IMAGE_TAG:-latest}
+    <<: [*restart, *logging]
+    depends_on:
+      auth:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+      rest:
+        condition: service_started
+      functions:
+        condition: service_started
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@localhost}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - caddy-data:/data       # TLS certificates — must persist across restarts
+      - caddy-config:/config
+
+volumes:
+  storage-data:
+  caddy-data:
+  caddy-config:

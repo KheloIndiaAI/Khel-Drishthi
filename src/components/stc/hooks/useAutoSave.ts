@@ -17,18 +17,41 @@ interface UseAutoSaveReturn {
   isSaving: boolean;
 }
 
+class SavePermissionError extends Error {
+  constructor() {
+    super('You are not assigned to edit this centre, so your changes were not saved. Contact your regional office or an administrator.');
+    this.name = 'SavePermissionError';
+  }
+}
+
+/** Turns Supabase/RLS failures into a message a centre in-charge can act on. */
+function describeSaveError(error: unknown): string {
+  if (error instanceof SavePermissionError) return error.message;
+  const e = error as { code?: string; message?: string } | null;
+  if (e?.code === '42501' || /row-level security|permission denied/i.test(e?.message ?? '')) {
+    return new SavePermissionError().message;
+  }
+  if (e?.message === 'No active session') return 'Your session has expired. Please sign in again; your changes were not saved.';
+  return 'Failed to save. Please check your connection and try again.';
+}
+
 export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps): UseAutoSaveReturn {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastDataRef = useRef<string>('');
   const saveInProgressRef = useRef<boolean>(false);
+  // Set when a save is requested while another is in flight; that save re-runs afterwards
+  // so edits made during an in-flight save are never dropped behind a "Saved!" toast.
+  const pendingSaveRef = useRef<boolean>(false);
+  const rerunRef = useRef<() => void>(() => {});
 
   const saveMutation = useMutation({
     mutationFn: async () => {
       if (saveInProgressRef.current) {
-        console.log('[AutoSave] Save already in progress, skipping');
-        return;
+        console.log('[AutoSave] Save in progress, queueing another save');
+        pendingSaveRef.current = true;
+        return 'queued' as const;
       }
       
       saveInProgressRef.current = true;
@@ -90,14 +113,20 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
 
       if (existing) {
         console.log('[AutoSave] Updating existing record:', existing.id);
-        const { error } = await supabase
+        // RLS turns an unauthorised UPDATE into a 0-row no-op rather than an error,
+        // so confirm a row actually changed before reporting "Saved".
+        const { data: updated, error } = await supabase
           .from('stc_detailed_data')
           .update(savePayload)
-          .eq('centre_id', centreId);
+          .eq('centre_id', centreId)
+          .select('id');
 
         if (error) {
           console.error('[AutoSave] Update error:', error);
           throw error;
+        }
+        if (!updated?.length) {
+          throw new SavePermissionError();
         }
         console.log('[AutoSave] Update successful');
       } else {
@@ -107,7 +136,8 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
           .insert({
             centre_id: centreId,
             ...savePayload,
-          });
+          })
+          .select('id');
 
         if (error) {
           console.error('[AutoSave] Insert error:', error);
@@ -115,14 +145,21 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
         }
         console.log('[AutoSave] Insert successful');
       }
+      return 'saved' as const;
     },
     onMutate: () => {
       setSaveStatus('saving');
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
+      if (result === 'queued') return; // the in-flight save owns status/toasts
+      saveInProgressRef.current = false;
+      if (pendingSaveRef.current) {
+        pendingSaveRef.current = false;
+        setTimeout(() => rerunRef.current(), 0);
+        return; // stay in 'saving' until the queued save lands
+      }
       setSaveStatus('saved');
       setLastSaved(new Date());
-      saveInProgressRef.current = false;
       // Show brief toast on successful save
       toast.success('Saved!', {
         duration: 1500,
@@ -133,7 +170,8 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
       console.error('[AutoSave] Save failed:', error);
       setSaveStatus('error');
       saveInProgressRef.current = false;
-      toast.error('Failed to save. Please try again.');
+      pendingSaveRef.current = false; // the next edit triggers a fresh save
+      toast.error(describeSaveError(error), { duration: 8000 });
     },
   });
 
@@ -145,6 +183,7 @@ export function useAutoSave({ centreId, formData, respondent }: UseAutoSaveProps
     console.log('[AutoSave] Manual save triggered');
     saveMutation.mutate();
   }, [centreId, saveMutation]);
+  rerunRef.current = triggerSave;
 
   // Debounced auto-save on data changes - reduced to 1 second
   useEffect(() => {

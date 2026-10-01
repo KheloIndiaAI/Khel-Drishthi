@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -11,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Lock } from "lucide-react";
+import { useSession } from "@/hooks/useAuthSession";
 
 interface FormField {
   id: string;
@@ -27,6 +28,8 @@ interface FormDefinition {
   description: string | null;
   fields: FormField[];
   is_active: boolean;
+  /** When false, visitors must sign in before submitting (enforced by RLS). */
+  allow_anonymous: boolean;
 }
 
 const PublicForm = () => {
@@ -37,6 +40,8 @@ const PublicForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
+  const session = useSession();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (formId) fetchForm();
@@ -72,13 +77,21 @@ const PublicForm = () => {
     }
 
     setSubmitting(true);
+    // submitted_by is not sent: the database fills it from the session and rejects any other value.
     const { error } = await supabase.from('form_submissions').insert([{
       form_id: form.id,
       data: formData as Json
     }]);
 
     if (error) {
-      toast({ title: "Error", description: "Failed to submit form", variant: "destructive" });
+      const denied = error.code === '42501' || /row-level security/i.test(error.message);
+      toast({
+        title: "Could not submit",
+        description: denied
+          ? (session ? "This form is no longer accepting submissions." : "Please sign in to submit this form.")
+          : "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
     } else {
       setSubmitted(true);
     }
@@ -105,6 +118,24 @@ const PublicForm = () => {
         <Card className="max-w-md mx-auto mt-12">
           <CardContent className="py-8 text-center">
             <p className="text-muted-foreground">Form not found or is no longer active.</p>
+          </CardContent>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  if (!form.allow_anonymous && session === null) {
+    return (
+      <DashboardLayout>
+        <Card className="max-w-md mx-auto mt-12">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5" aria-hidden="true" /> Sign-in required
+            </CardTitle>
+            <CardDescription>{form.name} only accepts submissions from signed-in users.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => navigate('/auth')}>Go to login</Button>
           </CardContent>
         </Card>
       </DashboardLayout>

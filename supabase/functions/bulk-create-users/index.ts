@@ -1,17 +1,23 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1'
+// Bulk-creates login accounts for STC in-charges and regional officers.
+//
+// Admin only. For each item it creates an auth user, promotes the default
+// `viewer` role to `editor`, and records the centre/region assignment. If any
+// step after user creation fails, the user is deleted again so no half-provisioned
+// account (login without assignment, or assignment without editor role) is left
+// behind.
+//
+// Passwords are random per user, returned exactly once in this response, and
+// never stored. Lost passwords go through the normal reset flow.
+import { json, preflight } from "../_shared/http.ts";
+import { requireAdmin } from "../_shared/auth.ts";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+type UserType = "stc" | "region";
 
-interface CreateUserRequest {
-  type: 'stc' | 'region';
-  items: Array<{
-    id: string;
-    name: string;
-    state?: string;
-  }>;
+interface Item {
+  id: string;
+  name: string;
+  state?: string;
 }
 
 interface CreatedCredential {
@@ -20,249 +26,170 @@ interface CreatedCredential {
   password: string | null;
   name: string;
   state?: string;
-  type: 'stc' | 'region';
+  type: UserType;
   centreId?: string;
   regionId?: string;
   success: boolean;
   error?: string;
 }
 
-const DOMAIN = '@kheldrishti.local';
+const DOMAIN = "@kheldrishti.local";
+const MAX_ITEMS = 200;          // keeps one call well inside the edge-function time limit
+const MAX_FIELD_LENGTH = 200;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/**
- * Generates a unique, cryptographically random password for a single account.
- * The returned value is shown to the admin exactly once in the response; it is
- * never stored and cannot be recovered afterwards. Lost passwords must go
- * through the built-in password reset flow.
- */
 function generatePassword(): string {
   const bytes = new Uint8Array(12);
   crypto.getRandomValues(bytes);
-  return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("") + "!Aa1";
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("") + "!Aa1";
 }
 
-function generateUsername(name: string, type: 'stc' | 'region'): string {
-  // Remove special characters, spaces, and convert to lowercase
-  const cleanName = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-    .substring(0, 30); // Limit length
-  
-  const prefix = type === 'stc' ? 'stc' : 'rc';
-  return `${prefix}${cleanName}`;
+function generateUsername(name: string, type: UserType): string {
+  const clean = name.toLowerCase().replace(/[^a-z0-9]/g, "").substring(0, 30);
+  return `${type === "stc" ? "stc" : "rc"}${clean}`;
+}
+
+function isEmailTaken(err: { code?: string; status?: number; message?: string }): boolean {
+  return err.code === "email_exists" || err.code === "user_already_exists" ||
+    /already (been )?registered|already exists/i.test(err.message ?? "");
+}
+
+function parseBody(body: unknown): { type: UserType; items: Item[] } | string {
+  if (!body || typeof body !== "object") return "Invalid request body";
+  const { type, items } = body as { type?: unknown; items?: unknown };
+  if (type !== "stc" && type !== "region") return "type must be 'stc' or 'region'";
+  if (!Array.isArray(items) || items.length === 0) return "items must be a non-empty array";
+  if (items.length > MAX_ITEMS) return `Too many items (max ${MAX_ITEMS} per request)`;
+
+  const clean: Item[] = [];
+  for (const raw of items) {
+    const it = raw as Partial<Item>;
+    if (typeof it?.id !== "string" || !it.id.trim() || it.id.length > MAX_FIELD_LENGTH) return "Each item needs a valid id";
+    if (typeof it.name !== "string" || !it.name.trim() || it.name.length > MAX_FIELD_LENGTH) return "Each item needs a valid name";
+    if (type === "region" && !UUID_RE.test(it.id)) return `Invalid region id: ${it.id}`;
+    clean.push({
+      id: it.id.trim(),
+      name: it.name.trim(),
+      state: typeof it.state === "string" ? it.state.slice(0, MAX_FIELD_LENGTH) : undefined,
+    });
+  }
+  return { type, items: clean };
+}
+
+/** Ids that do not exist in the reference tables, so we never create orphan assignments. */
+async function unknownIds(admin: SupabaseClient, type: UserType, ids: string[]): Promise<Set<string>> {
+  const { data, error } = type === "stc"
+    ? await admin.from("centres").select("centre_id").eq("centre_type", "STC").in("centre_id", ids)
+    : await admin.from("regional_centres").select("id").in("id", ids);
+  if (error) throw new Error(`Reference lookup failed: ${error.message}`);
+  const found = new Set((data ?? []).map((r: Record<string, string>) => r.centre_id ?? r.id));
+  return new Set(ids.filter((id) => !found.has(id)));
+}
+
+async function provision(
+  admin: SupabaseClient, type: UserType, item: Item, assignedBy: string,
+): Promise<CreatedCredential> {
+  const username = generateUsername(item.name, type);
+  const email = `${username}${DOMAIN}`;
+  const base = {
+    username, email, name: item.name, state: item.state, type,
+    centreId: type === "stc" ? item.id : undefined,
+    regionId: type === "region" ? item.id : undefined,
+  };
+  const fail = (error: string): CreatedCredential => ({ ...base, password: null, success: false, error });
+
+  const password = generatePassword();
+  const { data: created, error: createError } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: {
+      name: item.name,
+      assignment_type: type === "stc" ? "centre_incharge" : "regional_officer",
+      requested_centre_id: type === "stc" ? item.id : undefined,
+      requested_region_id: type === "region" ? item.id : undefined,
+    },
+  });
+
+  if (createError || !created?.user) {
+    if (createError && isEmailTaken(createError)) return fail("User already exists");
+    return fail(createError?.message ?? "Unknown error creating user");
+  }
+
+  const userId = created.user.id;
+  try {
+    // The auth trigger inserts a 'viewer' row; promote it and confirm exactly one row changed.
+    const { data: roleRows, error: roleError } = await admin
+      .from("user_roles").update({ role: "editor" }).eq("user_id", userId).select("user_id");
+    if (roleError) throw new Error(`Role update failed: ${roleError.message}`);
+    if (!roleRows?.length) {
+      const { error: insertRoleError } = await admin.from("user_roles").insert({ user_id: userId, role: "editor" });
+      if (insertRoleError) throw new Error(`Role insert failed: ${insertRoleError.message}`);
+    }
+
+    const { error: assignError } = type === "stc"
+      ? await admin.from("user_centre_assignments").insert({
+          user_id: userId, centre_id: item.id, assigned_by: assignedBy, is_active: true,
+        })
+      : await admin.from("user_region_assignments").insert({
+          user_id: userId, region_id: item.id, access_level: "view_edit", assigned_by: assignedBy, is_active: true,
+        });
+    if (assignError) throw new Error(`Assignment failed: ${assignError.message}`);
+
+    return { ...base, password, success: true };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    const { error: rollbackError } = await admin.auth.admin.deleteUser(userId);
+    if (rollbackError) {
+      console.error(`Rollback failed for ${email}:`, rollbackError.message);
+      return fail(`${message}. Rollback also failed — delete ${email} manually.`);
+    }
+    return fail(`${message} (account rolled back)`);
+  }
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const early = preflight(req);
+  if (early) return early;
+
+  const ctx = await requireAdmin(req);
+  if (ctx instanceof Response) return ctx;
+  const { admin, user } = ctx;
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
-    // Create admin client with service role key
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    });
+    const parsed = parseBody(await req.json().catch(() => null));
+    if (typeof parsed === "string") return json(req, { success: false, error: parsed }, 400);
+    const { type, items } = parsed;
 
-    // Verify the caller is an admin
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'No authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
-    
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check if user is admin
-    const { data: roleData, error: roleError } = await supabaseAdmin
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .single();
-
-    if (roleError || !roleData) {
-      return new Response(
-        JSON.stringify({ error: 'Admin access required' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Parse request body
-    const body: CreateUserRequest = await req.json();
-    const { type, items } = body;
-
-    if (!type || !items || !Array.isArray(items) || items.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid request: type and items required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    console.log(`Creating ${items.length} ${type} users...`);
+    const missing = await unknownIds(admin, type, [...new Set(items.map((i) => i.id))]);
+    console.log(`bulk-create-users: admin ${user.id} creating ${items.length} ${type} users`);
 
     const results: CreatedCredential[] = [];
-
+    const seenEmails = new Set<string>();
     for (const item of items) {
       const username = generateUsername(item.name, type);
       const email = `${username}${DOMAIN}`;
-      // Unique per-user password; surfaced once in the response and never recoverable.
-      const password = generatePassword();
-      
-      console.log(`Creating user: ${username} (${email})`);
-
-      try {
-        // Check if user already exists
-        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-        const userExists = existingUsers?.users?.some(u => u.email === email);
-
-        if (userExists) {
-          results.push({
-            username,
-            email,
-            password: null,
-            name: item.name,
-            state: item.state,
-            type,
-            centreId: type === 'stc' ? item.id : undefined,
-            regionId: type === 'region' ? item.id : undefined,
-            success: false,
-            error: 'User already exists',
-          });
-          continue;
-        }
-
-        // Create user with admin API
-        const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-          email,
-          password,
-          email_confirm: true,
-          user_metadata: {
-            name: item.name,
-            // Must satisfy public.profiles check constraint: profiles_assignment_type_check
-            assignment_type: type === 'stc' ? 'centre_incharge' : 'regional_officer',
-            requested_centre_id: type === 'stc' ? item.id : undefined,
-            requested_region_id: type === 'region' ? item.id : undefined,
-          },
-        });
-
-        if (createError || !newUser?.user) {
-          console.error(`Failed to create user ${email}:`, createError);
-          results.push({
-            username,
-            email,
-            password: null,
-            name: item.name,
-            state: item.state,
-            type,
-            centreId: type === 'stc' ? item.id : undefined,
-            regionId: type === 'region' ? item.id : undefined,
-            success: false,
-            error: createError?.message || 'Unknown error',
-          });
-          continue;
-        }
-
-        const userId = newUser.user.id;
-
-        // Update user role to editor
-        await supabaseAdmin
-          .from('user_roles')
-          .update({ role: 'editor' })
-          .eq('user_id', userId);
-
-        // Create centre or region assignment
-        if (type === 'stc') {
-          await supabaseAdmin
-            .from('user_centre_assignments')
-            .insert({
-              user_id: userId,
-              centre_id: item.id,
-              assigned_by: user.id,
-              is_active: true,
-            });
-        } else {
-          await supabaseAdmin
-            .from('user_region_assignments')
-            .insert({
-              user_id: userId,
-              region_id: item.id,
-              access_level: 'view_edit',
-              assigned_by: user.id,
-              is_active: true,
-            });
-        }
-
-        results.push({
-          username,
-          email,
-          password,
-          name: item.name,
-          state: item.state,
-          type,
-          centreId: type === 'stc' ? item.id : undefined,
-          regionId: type === 'region' ? item.id : undefined,
-          success: true,
-        });
-
-        console.log(`Successfully created user: ${username}`);
-
-      } catch (err) {
-        console.error(`Error creating user ${email}:`, err);
-        results.push({
-          username,
-          email,
-          password: null,
-          name: item.name,
-          state: item.state,
-          type,
-          centreId: type === 'stc' ? item.id : undefined,
-          regionId: type === 'region' ? item.id : undefined,
-          success: false,
-          error: err instanceof Error ? err.message : 'Unknown error',
-        });
+      if (missing.has(item.id)) {
+        results.push({ username, email, password: null, name: item.name, state: item.state, type,
+          centreId: type === "stc" ? item.id : undefined, regionId: type === "region" ? item.id : undefined,
+          success: false, error: `Unknown ${type === "stc" ? "centre" : "region"} id` });
+        continue;
       }
+      if (seenEmails.has(email)) {
+        results.push({ username, email, password: null, name: item.name, state: item.state, type,
+          centreId: type === "stc" ? item.id : undefined, regionId: type === "region" ? item.id : undefined,
+          success: false, error: "Duplicate username in this batch (two items share the same name)" });
+        continue;
+      }
+      seenEmails.add(email);
+      results.push(await provision(admin, type, item, user.id));
     }
 
-    const successCount = results.filter(r => r.success).length;
-    const failCount = results.filter(r => !r.success).length;
-
-    console.log(`Bulk creation complete: ${successCount} success, ${failCount} failed`);
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        created: successCount,
-        failed: failCount,
-        credentials: results,
-      }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
-
-  } catch (error) {
-    console.error('Bulk create users error:', error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    const created = results.filter((r) => r.success).length;
+    console.log(`bulk-create-users: ${created} created, ${results.length - created} failed`);
+    return json(req, { success: true, created, failed: results.length - created, credentials: results });
+  } catch (e) {
+    console.error("bulk-create-users error:", e);
+    return json(req, { success: false, error: e instanceof Error ? e.message : "Internal server error" }, 500);
   }
 });

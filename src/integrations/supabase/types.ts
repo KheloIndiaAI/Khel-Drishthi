@@ -584,6 +584,7 @@ export type Database = {
       }
       form_definitions: {
         Row: {
+          allow_anonymous: boolean
           created_at: string | null
           created_by: string | null
           description: string | null
@@ -594,6 +595,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          allow_anonymous?: boolean
           created_at?: string | null
           created_by?: string | null
           description?: string | null
@@ -604,6 +606,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          allow_anonymous?: boolean
           created_at?: string | null
           created_by?: string | null
           description?: string | null

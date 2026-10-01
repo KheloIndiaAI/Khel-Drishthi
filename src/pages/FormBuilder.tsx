@@ -30,6 +30,7 @@ interface FormDefinition {
   description: string | null;
   fields: FormField[];
   is_active: boolean;
+  allow_anonymous: boolean;
   created_at: string;
 }
 
@@ -171,6 +172,19 @@ const FormBuilder = () => {
       .eq('id', formId);
 
     if (!error) fetchForms();
+  };
+
+  const toggleAllowAnonymous = async (formId: string, allow: boolean) => {
+    const { error } = await supabase
+      .from('form_definitions')
+      .update({ allow_anonymous: allow })
+      .eq('id', formId);
+
+    if (error) {
+      toast({ title: "Error", description: "Could not update form access", variant: "destructive" });
+    } else {
+      fetchForms();
+    }
   };
 
   const deleteForm = async (formId: string) => {
@@ -361,9 +375,25 @@ const FormBuilder = () => {
                   <CardTitle className="text-lg">{form.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{form.description}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Switch checked={form.is_active ?? true} onCheckedChange={(v) => toggleFormActive(form.id, v)} />
-                  <span className="text-sm">{form.is_active ? 'Active' : 'Inactive'}</span>
+                <div className="flex flex-col items-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id={`active-${form.id}`}
+                      checked={form.is_active ?? true}
+                      onCheckedChange={(v) => toggleFormActive(form.id, v)}
+                    />
+                    <label htmlFor={`active-${form.id}`} className="text-sm">{form.is_active ? 'Active' : 'Inactive'}</label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id={`anon-${form.id}`}
+                      checked={form.allow_anonymous ?? false}
+                      onCheckedChange={(v) => toggleAllowAnonymous(form.id, v)}
+                    />
+                    <label htmlFor={`anon-${form.id}`} className="text-sm">
+                      {form.allow_anonymous ? 'Anyone can submit' : 'Sign-in required'}
+                    </label>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="flex items-center justify-between">

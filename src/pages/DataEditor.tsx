@@ -168,12 +168,17 @@ const DataEditor = () => {
     }
 
     try {
-      const { error } = await supabase
+      const { data: updatedRows, error } = await supabase
         .from(activeTable as never)
         .update(updateData as never)
-        .eq(tableConfig.idField as never, editingRow);
+        .eq(tableConfig.idField as never, editingRow)
+        .select(tableConfig.idField as never);
 
       if (error) throw error;
+      // RLS silently filters unauthorised UPDATEs to 0 rows; don't log or report success for those.
+      if (!(updatedRows as unknown[] | null)?.length) {
+        throw new Error('You do not have permission to edit this table. No changes were saved.');
+      }
 
       // Get user profile for audit log
       const { data: profile } = await supabase
@@ -201,7 +206,11 @@ const DataEditor = () => {
       setOriginalData({});
       fetchTableData(activeTable);
     } catch (error) {
-      toast({ title: "Error", description: "Failed to save changes", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to save changes",
+        variant: "destructive",
+      });
     }
   };
 

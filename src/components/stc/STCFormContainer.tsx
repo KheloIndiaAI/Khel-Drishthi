@@ -467,7 +467,7 @@ export const STCFormContainer: React.FC<STCFormContainerProps> = ({ centreId }) 
 
       const progress = data.complete ? 100 : Math.round((currentGlobalQuestion / totalQuestions) * 100);
 
-      const { error } = await supabase
+      const { data: saved, error } = await supabase
         .from('stc_detailed_data')
         .upsert({
           centre_id: centreId,
@@ -479,9 +479,11 @@ export const STCFormContainer: React.FC<STCFormContainerProps> = ({ centreId }) 
           current_section: currentSection + 1,
           last_section_completed: data.complete ? 'challenges' : sections[currentSection].id,
           submitted_at: data.complete ? new Date().toISOString() : null,
-        }, { onConflict: 'centre_id' });
+        }, { onConflict: 'centre_id' })
+        .select('id');
 
       if (error) throw error;
+      if (!saved?.length) throw new Error('Not authorised to edit this centre; changes were not saved.');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stc-detailed', centreId] });
