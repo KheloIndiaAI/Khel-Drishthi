@@ -31,3 +31,6 @@ docker/.env.*
 .env
 .env.local
 .env.*.local
+
+# Downloaded at deploy time by docker/kd.sh (public CA, but environment-specific)
+docker/certs/*.pem

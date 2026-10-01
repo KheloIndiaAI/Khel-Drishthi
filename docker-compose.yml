@@ -149,8 +149,15 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      # Storage API is Node.js: node-postgres treats sslmode=require as full
+      # certificate verification, and Node does not ship Amazon's RDS CA.
+      # docker/kd.sh downloads the regional RDS bundle into docker/certs/ when
+      # DB_SSLMODE requires TLS; without the file (local Postgres) Node only
+      # logs a warning and carries on.
+      NODE_EXTRA_CA_CERTS: /certs/rds-ca.pem
     volumes:
       - storage-data:/var/lib/storage
+      - ./docker/certs:/certs:ro
 
   # ---------------------------------------------------------------- migrate ----
   migrate:

@@ -36,6 +36,26 @@ check_env() {
   fi
 }
 
+# RDS enforces TLS (rds.force_ssl=1). Node-based services verify the server
+# certificate, so they need Amazon's CA bundle for the database's region.
+ensure_rds_ca() {
+  mode=$(grep -E '^DB_SSLMODE=' "$ENV_FILE" | cut -d= -f2- || true)
+  case "$mode" in require|verify-ca|verify-full) ;; *) return 0 ;; esac
+  [ -s docker/certs/rds-ca.pem ] && return 0
+  region=$(grep -E '^AWS_REGION=' "$ENV_FILE" | cut -d= -f2- || true)
+  region=${region:-ap-south-1}
+  url="https://truststore.pki.rds.amazonaws.com/${region}/${region}-bundle.pem"
+  echo "Fetching RDS CA bundle for ${region}"
+  mkdir -p docker/certs
+  if ! curl -fsS --max-time 30 -o docker/certs/rds-ca.pem.tmp "$url" \
+     || ! grep -q "BEGIN CERTIFICATE" docker/certs/rds-ca.pem.tmp; then
+    rm -f docker/certs/rds-ca.pem.tmp
+    echo "Could not download $url; storage cannot verify the RDS certificate." >&2
+    exit 1
+  fi
+  mv docker/certs/rds-ca.pem.tmp docker/certs/rds-ca.pem
+}
+
 [ $# -ge 1 ] || usage
 
 [ "$1" = env-local ] && exec node docker/generate-env.mjs local
@@ -45,6 +65,7 @@ C=$(compose_for "$stack")
 case "$cmd" in
   up)
     check_env
+    ensure_rds_ca
     $C up -d --build
     if [ "$stack" = local ]; then
       echo "Portal: http://localhost:8080   Mail: http://localhost:8025   DB: 127.0.0.1:54322"
