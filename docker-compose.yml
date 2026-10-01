@@ -61,7 +61,7 @@ services:
       db-init:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9999/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9999/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -125,7 +125,7 @@ services:
       db-init:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5000/status"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5000/status"]
       interval: 10s
       timeout: 5s
       retries: 10
